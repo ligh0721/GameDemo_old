@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+      <key>GameLevel</key>
+	<array>
+          <dict>
+            <key>Level</key>
+	    <integer>1</integer>
+	    <key>Title</key>
+	    <string>上古轮回路</string>
+	    <key>Desc</key>
+	    <string>一波上古时期的被冰封的怪物复活了，正在通向人类世界的道路上，人类需要有勇有谋的英雄来击败这些怪物，只许成功，不许失败。</string>
+         </dict>
+       </array>
+    </dict>
+</plist>

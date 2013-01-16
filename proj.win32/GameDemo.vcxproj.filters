@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="win32">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Classes\Logic">
+      <UniqueIdentifier>{80510395-0731-4754-9211-6a7e53babee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Logic\include">
+      <UniqueIdentifier>{06d8b345-75cd-4841-ac19-151aff2f23b8}</UniqueIdentifier>
+      <Extensions>h;hpp;inl</Extensions>
+    </Filter>
+    <Filter Include="Classes\Display">
+      <UniqueIdentifier>{3c65fb20-1fb1-4716-86ae-469788418fab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Display\include">
+      <UniqueIdentifier>{a81052c2-9c31-41fa-9b78-3dac14512bae}</UniqueIdentifier>
+      <Extensions>h;hpp;inl</Extensions>
+    </Filter>
+    <Filter Include="Classes\Display\source">
+      <UniqueIdentifier>{021e5391-800d-4cb6-8415-4b7329e0aade}</UniqueIdentifier>
+      <Extensions>c;cpp;cc</Extensions>
+    </Filter>
+    <Filter Include="Classes\Logic\source">
+      <UniqueIdentifier>{47c9a4ea-ef24-4713-8e5c-71fa1e949b6d}</UniqueIdentifier>
+      <Extensions>c;cpp;cc</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameDisplay.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameLogic.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BulletSprite.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TankSprite.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Skill.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Unit.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Action.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Box2DEx.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GLES-Render.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Prop.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PropUI.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Package.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SkillUI.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BattleGroundScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MainScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameChapterScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UnitShowScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\DemoScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BattleScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SomeScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\testScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MissionInfo.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ChildOfGameUnit.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\WHomeScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\DotaScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\HomeScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UnitInfo.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TechTreeScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SkillInfo.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PlayerInfo.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameCtrl.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ComplexUnit.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameLevel.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UnitEditorScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Tower.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameFile.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CommDef.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameDisplay.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameLogic.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TankSprite.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BulletSprite.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Skill.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Unit.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CommDef.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Action.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DEx.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GLES-Render.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Prop.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PropUI.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Package.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SkillUI.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BattleGroundScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MainScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UnitShowScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameChapterScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DemoScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BattleScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CommInc.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SomeScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\testScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MissionInfo.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ChildOfGameUnit.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\WHomeScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DotaScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\HomeScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UnitInfo.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TechTreeScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SkillInfo.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PlayerInfo.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameCtrl.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppMacros.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ComplexUnit.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameLevel.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UnitEditorScene.h">
+      <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Tower.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameFile.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GameDemo.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\GameDemo64.ico" />
+  </ItemGroup>
+</Project>

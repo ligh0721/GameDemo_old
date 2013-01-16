@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{54B4B8EE-AA76-4A13-A5DB-539A2A8D5F07}</ProjectGuid>
+    <ProjectName>GameDemo</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration).win32\</OutDir>
+    <IntDir>$(Configuration).win32\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration).win32\</OutDir>
+    <IntDir>$(Configuration).win32\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\Classes;..\..\cocos2dx;..\..\cocos2dx\include;..\..\cocos2dx\kazmath\include;..\..\cocos2dx\platform\win32;..\..\cocos2dx\platform\third_party\win32;..\..\cocos2dx\platform\third_party\win32\OGLES;..\..\;..\..\CocosDenshion\Include;..\..\external\chipmunk\include;..\..\extensions;..\..\cocos2dx\platform\third_party\win32\iconv;..\..\cocos2dx\platform\third_party\win32\libxml2;..\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS_DEBUG;COCOS2D_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4305;4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcocos2d.lib;opengl32.lib;glew32.lib;libBox2d.lib;libCocosDenshion.lib;libchipmunk.lib;libExtensions.lib;libxml2.lib;libiconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <HeaderFileName>CommInc.h</HeaderFileName>
+      <InterfaceIdentifierFileName>CommInc_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>CommInc_p.c</ProxyFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>$(IntDir)/CommInc.tlb</TypeLibraryName>
+      <DllDataFileName>
+      </DllDataFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\Classes;..\..\cocos2dx;..\..\cocos2dx\include;..\..\cocos2dx\kazmath\include;..\..\cocos2dx\platform\win32;..\..\cocos2dx\platform\third_party\win32;..\..\cocos2dx\platform\third_party\win32\OGLES;..\..\;..\..\CocosDenshion\Include;..\..\external\chipmunk\include;..\..\extensions;..\..\cocos2dx\platform\third_party\win32\iconv;..\..\cocos2dx\platform\third_party\win32\libxml2;..\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGSNDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4530;4305;4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcocos2d.lib;opengl32.lib;glew32.lib;libBox2d.lib;libCocosDenshion.lib;libchipmunk.lib;libExtensions.lib;libxml2.lib;libiconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <HeaderFileName>CommInc.h</HeaderFileName>
+      <InterfaceIdentifierFileName>CommInc_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>CommInc_p.c</ProxyFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>$(IntDir)/CommInc.tlb</TypeLibraryName>
+      <DllDataFileName>
+      </DllDataFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Classes\Action.h" />
+    <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\AppMacros.h" />
+    <ClInclude Include="..\Classes\BattleScene.h" />
+    <ClInclude Include="..\Classes\Box2DEx.h" />
+    <ClInclude Include="..\Classes\BulletSprite.h" />
+    <ClInclude Include="..\Classes\ChildOfGameUnit.h" />
+    <ClInclude Include="..\Classes\CommInc.h" />
+    <ClInclude Include="..\Classes\CommDef.h" />
+    <ClInclude Include="..\Classes\ComplexUnit.h" />
+    <ClInclude Include="..\Classes\DemoScene.h" />
+    <ClInclude Include="..\Classes\DotaScene.h" />
+    <ClInclude Include="..\Classes\GameChapterScene.h" />
+    <ClInclude Include="..\Classes\GameCtrl.h" />
+    <ClInclude Include="..\Classes\GameDisplay.h" />
+    <ClInclude Include="..\Classes\GameFile.h" />
+    <ClInclude Include="..\Classes\GameLevel.h" />
+    <ClInclude Include="..\Classes\GameLogic.h" />
+    <ClInclude Include="..\Classes\GLES-Render.h" />
+    <ClInclude Include="..\Classes\BattleGroundScene.h" />
+    <ClInclude Include="..\Classes\HomeScene.h" />
+    <ClInclude Include="..\Classes\MainScene.h" />
+    <ClInclude Include="..\Classes\MissionInfo.h" />
+    <ClInclude Include="..\Classes\Package.h" />
+    <ClInclude Include="..\Classes\PlayerInfo.h" />
+    <ClInclude Include="..\Classes\Prop.h" />
+    <ClInclude Include="..\Classes\PropUI.h" />
+    <ClInclude Include="..\Classes\Skill.h" />
+    <ClInclude Include="..\Classes\SkillInfo.h" />
+    <ClInclude Include="..\Classes\SkillUI.h" />
+    <ClInclude Include="..\Classes\SomeScene.h" />
+    <ClInclude Include="..\Classes\TankSprite.h" />
+    <ClInclude Include="..\Classes\TechTreeScene.h" />
+    <ClInclude Include="..\Classes\testScene.h" />
+    <ClInclude Include="..\Classes\Tower.h" />
+    <ClInclude Include="..\Classes\Unit.h" />
+    <ClInclude Include="..\Classes\UnitEditorScene.h" />
+    <ClInclude Include="..\Classes\UnitInfo.h" />
+    <ClInclude Include="..\Classes\UnitShowScene.h" />
+    <ClInclude Include="..\Classes\WHomeScene.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Classes\Action.cpp" />
+    <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\BattleGroundScene.cpp" />
+    <ClCompile Include="..\Classes\BattleScene.cpp" />
+    <ClCompile Include="..\Classes\Box2DEx.cpp" />
+    <ClCompile Include="..\Classes\BulletSprite.cpp" />
+    <ClCompile Include="..\Classes\ChildOfGameUnit.cpp" />
+    <ClCompile Include="..\Classes\CommDef.cpp" />
+    <ClCompile Include="..\Classes\ComplexUnit.cpp" />
+    <ClCompile Include="..\Classes\DemoScene.cpp" />
+    <ClCompile Include="..\Classes\DotaScene.cpp" />
+    <ClCompile Include="..\Classes\GameChapterScene.cpp" />
+    <ClCompile Include="..\Classes\GameCtrl.cpp" />
+    <ClCompile Include="..\Classes\GameDisplay.cpp" />
+    <ClCompile Include="..\Classes\GameFile.cpp" />
+    <ClCompile Include="..\Classes\GameLevel.cpp" />
+    <ClCompile Include="..\Classes\GameLogic.cpp" />
+    <ClCompile Include="..\Classes\GLES-Render.cpp" />
+    <ClCompile Include="..\Classes\HomeScene.cpp" />
+    <ClCompile Include="..\Classes\MainScene.cpp" />
+    <ClCompile Include="..\Classes\MissionInfo.cpp" />
+    <ClCompile Include="..\Classes\Package.cpp" />
+    <ClCompile Include="..\Classes\PlayerInfo.cpp" />
+    <ClCompile Include="..\Classes\Prop.cpp" />
+    <ClCompile Include="..\Classes\PropUI.cpp" />
+    <ClCompile Include="..\Classes\Skill.cpp" />
+    <ClCompile Include="..\Classes\SkillInfo.cpp" />
+    <ClCompile Include="..\Classes\SkillUI.cpp" />
+    <ClCompile Include="..\Classes\SomeScene.cpp" />
+    <ClCompile Include="..\Classes\TankSprite.cpp" />
+    <ClCompile Include="..\Classes\TechTreeScene.cpp" />
+    <ClCompile Include="..\Classes\testScene.cpp" />
+    <ClCompile Include="..\Classes\Tower.cpp" />
+    <ClCompile Include="..\Classes\Unit.cpp" />
+    <ClCompile Include="..\Classes\UnitEditorScene.cpp" />
+    <ClCompile Include="..\Classes\UnitInfo.cpp" />
+    <ClCompile Include="..\Classes\UnitShowScene.cpp" />
+    <ClCompile Include="..\Classes\WHomeScene.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GameDemo.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\GameDemo64.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
