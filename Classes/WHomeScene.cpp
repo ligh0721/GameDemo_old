@@ -41,17 +41,14 @@ bool CCWHomeSceneLayer::init()
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
     g_oOrgUnitInfo.init();
     g_oOrgSkillInfo.init();
-    m_oUipm.initWithFile("LevelDemo2HD.uip");
     setUnitTickInterval(0.1);
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
     M_DEF_FC(pFc);
     pFc->addSpriteFramesWithFile("background.plist");
     pFc->addSpriteFramesWithFile("UI.plist");
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("skill.plist");
-    CCSprite* pSprite = CCSprite::create("LevelDemo2HD.png");
-    setBackGroundSprite(pSprite);
+    setBackGroundSprite(CCSprite::create("levels/level01/LevelHD.png"));
     setBufferEffectParam(0.9, 10, 0.1);
-    pSprite->setScale(1.0);
     m_oMenu.init();
     addChild(&m_oMenu);
     m_oMenu.setPosition(CCPointZero);
@@ -72,7 +69,7 @@ bool CCWHomeSceneLayer::init()
     M_DEF_UM(pUm);
     CGameUnit* midTower= pUm->unitByInfo(COrgUnitInfo::kArcane);
     addUnit(midTower);
-    midTower->setPosition(ccp(1000, 750));
+    midTower->setPosition(ccp(1804,793));
     midTower->setForceByIndex(2);
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
@@ -82,7 +79,7 @@ bool CCWHomeSceneLayer::init()
 
     midTower= pUm->unitByInfo(COrgUnitInfo::kTesla);
     addUnit(midTower);
-    midTower->setPosition(ccp(1000, 650));
+    midTower->setPosition(ccp(1704, 793));
     midTower->setForceByIndex(2);
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
@@ -94,7 +91,7 @@ bool CCWHomeSceneLayer::init()
     CGameUnit* heroUnit=CCWHomeSceneLayer::getHeroUnit();
 
     addUnit(heroUnit);
-    heroUnit->setPosition(ccp(1000,600));
+    heroUnit->setPosition(ccp(1804,793));
     heroUnit->setForceByIndex(2);
     heroUnit->setAlly(1<<2);
     heroUnit->addSkill(CStatusShowPas::create());
@@ -160,7 +157,8 @@ bool CCWHomeSceneLayer::init()
     m_bCanBuild = false;
     m_oSkillPanel.addButton(&m_oBuildBtn, 0, 0);
 
-    curMission=this->DemoRound();
+    //curMission=this->DemoRound();
+    m_pCurMission = g_oDemoMission.mission01();
 
     m_oGold.initWithString("      ", "fonts/Comic Book.ttf", 24, CCSizeMake(100, 48), kCCTextAlignmentLeft);
     //m_oGold.initWithString("55", "fonts/Abberancy.ttf", 24);
@@ -200,22 +198,22 @@ void CCWHomeSceneLayer::onTick( float fDt )
     fS += fDt;
 
     //DemoMission
-    int r = curMission->curRound();
-    int n = curMission->rushCount();
+    int r = m_pCurMission->curRound();
+    int n = m_pCurMission->rushCount();
     // static int rushFinishedNumber=0;
     bool bAllRushEnd = true;
     for (int i = 0; i < n; ++i)
     {
-        int iRes = curMission->rush(i, fDt);
+        int iRes = m_pCurMission->rush(i, fDt);
         if (iRes >= 0)
         {
             // TODO: createUnitHere;
             bAllRushEnd = false;
-            CUnitPath* p = curMission->pathOfRush(i);
+            CUnitPath* p = m_pCurMission->pathOfRush(i);
             const CCPoint* pPos = p->getCurTargetPoint(0);
             if (pPos)
             {
-                CPathGameUnit* u = m_oUipm.pathUnitByIndex(iRes);
+                CPathGameUnit* u = m_pCurMission->m_oUipm.pathUnitByIndex(iRes);
                 addUnit(u);
                 u->setForceByIndex(3);
                 u->setAlly(1<<3);
@@ -259,7 +257,7 @@ void CCWHomeSceneLayer::onTick( float fDt )
     if (bAllRushEnd)
     {
         // TODO: curRoundEnd
-        curMission->nextRound();
+        m_pCurMission->nextRound();
     }
 }
 
@@ -364,98 +362,6 @@ CGameUnit* CCWHomeSceneLayer::getHeroUnit()
         reHeroUnit=pUm->unitByInfo(COrgUnitInfo::kJt);
     }
     return reHeroUnit;
-}
-
-CGameMission* CCWHomeSceneLayer::DemoRound()
-{
-    enum
-    {
-        kMalik,
-        kPaladin,
-        kMagnus,
-        kJt,
-        kVeznan
-    };
-    CUnitPath* pPath;
-    int iPath, iPath2;
-    CUnitRush oRush;
-    int iRound;
-
-    // add paths
-    pPath = CUnitPath::createWithFile("LevelDemo2HD.pth");
-    iPath = m_oMission.addPath(pPath);
-    pPath = CUnitPath::createWithFile("LevelDemo2HD2.pth");
-    iPath2 = m_oMission.addPath(pPath);
-
-    // add a rush
-    iRound = m_oMission.addNewRound();
-    oRush.init(iPath);
-    oRush.addUnit(kMalik, 1, 1);
-    oRush.addUnit(kMagnus, 1, 5);
-    m_oMission.addRush(iRound, oRush);
-
-    oRush.init(iPath2);
-    oRush.addUnit(kMalik, 1, 10);
-    oRush.addUnit(kMagnus, 2, 3);
-    oRush.addUnit(kMalik, 1, 2);
-    m_oMission.addRush(iRound, oRush);
-
-    iRound = m_oMission.addNewRound();
-    oRush.init(iPath2);
-    oRush.addUnit(kPaladin, 1, 30);
-    oRush.addUnit(kMalik, 2, 1);
-    oRush.addUnit(kMagnus, 2, 3);
-    oRush.addUnit(kJt, 2, 5);
-    m_oMission.addRush(iRound, oRush);
-
-    iRound = m_oMission.addNewRound();
-    oRush.init(iPath);
-    oRush.addUnit(kPaladin, 1, 30);
-    oRush.addUnit(kMalik, 2, 1);
-    oRush.addUnit(kMagnus, 2, 3);
-    oRush.addUnit(kJt, 2, 5);
-    m_oMission.addRush(iRound, oRush);
-
-    oRush.init(iPath2);
-    oRush.addUnit(kPaladin, 1, 30);
-    oRush.addUnit(kMagnus, 2, 3);
-    oRush.addUnit(kJt, 1, 5);
-    m_oMission.addRush(iRound, oRush);
-
-    iRound = m_oMission.addNewRound();
-    oRush.init(iPath);
-    oRush.addUnit(kPaladin, 1, 30);
-    oRush.addUnit(kMalik, 2, 2);
-    oRush.addUnit(kMagnus, 2, 2);
-    oRush.addUnit(kJt, 2, 4);
-    m_oMission.addRush(iRound, oRush);
-
-    oRush.init(iPath2);
-    oRush.addUnit(kPaladin, 1, 30);
-    oRush.addUnit(kMalik, 2, 2);
-    oRush.addUnit(kMagnus, 2, 2);
-    oRush.addUnit(kJt, 2, 4);
-    m_oMission.addRush(iRound, oRush);
-
-    for (int i = 0; i < 20; ++i)
-    {
-        iRound = m_oMission.addNewRound();
-        oRush.init(iPath);
-        oRush.addUnit(kPaladin, 1, 30);
-        oRush.addUnit(kMalik, 2 + i / 2, 2);
-        oRush.addUnit(kMagnus, 2 + i / 2, 2);
-        oRush.addUnit(kJt, 2 + i / 4, 4);
-        m_oMission.addRush(iRound, oRush);
-
-        oRush.init(iPath2);
-        oRush.addUnit(kPaladin, 1, 30);
-        oRush.addUnit(kVeznan, 2 + i / 3, 3);
-        oRush.addUnit(kMagnus, 2 + i / 2, 2);
-        oRush.addUnit(kJt, 2 + i / 4, 4);
-        m_oMission.addRush(iRound, oRush);
-    }
-
-    return &m_oMission;
 }
 
 void CCWHomeSceneLayer::onBtnBuildClick( CCNode* pObject )

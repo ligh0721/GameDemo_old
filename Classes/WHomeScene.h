@@ -46,8 +46,6 @@ public:
     bool addTower(const CCPoint& roPos);
     void addTowerEnd(CCObject* pObject);
 
-    CGameMission *DemoRound();
-
 public:
     
     CCMenu m_oMenu;
@@ -65,13 +63,11 @@ public:
     CCButtonPanel m_oSkillPanel;
     //CCSkillButtonAdvance skillButton[4];
     int m_iTouchActionFlag;
-    CGameMission *curMission;
-    CGameMission m_oMission;
+    CGameMission *m_pCurMission;
 
     CCSkillButtonNormal m_oBuildBtn;
     bool m_bCanBuild;
     CCLabelTTF m_oGold;
-    CUnitInfoPatchManager m_oUipm;
 };
 
 

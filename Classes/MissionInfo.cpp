@@ -305,6 +305,11 @@ CUnitPath* CGameMission::pathOfRush( int iRushIndex )
     return NULL;
 }
 
+bool CGameMission::initWithUnitInfoPatch( const char* pUipName )
+{
+    return m_oUipm.initWithFile(pUipName);
+}
+
 int CGameMission::addPath( CUnitPath* pPath )
 {
     m_oArrPaths.addObject(pPath);
@@ -324,4 +329,71 @@ void CGameMission::addRush( int iRound, const CUnitRush& roRush )
         m_vecRounds[iRound].push_back(roRush);
     }
 }
+
+
+bool CDemoMission::init()
+{
+    
+    return true;
+}
+
+CGameMission* CDemoMission::mission( int iMissIndex )
+{
+    return NULL;
+}
+
+CGameMission* CDemoMission::mission01()
+{
+    static CGameMission oMission;
+    static const int CONST_LEVEL = 1;
+    static const int CONST_MAX_PATH = 4;
+    enum
+    {
+        kMalik,
+        kPaladin,
+        kMagnus,
+        kJt,
+        kVeznan
+    };
+
+    CUnitPath* pPath;
+    int aiPath[4];
+    CUnitRush oRush;
+    int iRound;
+
+    oMission.initWithUnitInfoPatch("levels/level01/Level.uip");
+
+    // add paths
+    for (int i = 0; i < CONST_MAX_PATH; ++i)
+    {
+        char sz[256];
+        sprintf(sz, "levels/level%02d/LevelHD%02d.pth", CONST_LEVEL, i);
+        pPath = CUnitPath::createWithFile(sz);
+        aiPath[i] = oMission.addPath(pPath);
+    }
+
+    // add a rush
+    for (int i = 0; i < 5; ++i)
+    {
+        iRound = oMission.addNewRound();
+        oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+        oRush.addUnit(kMalik, 1, 10);
+        oRush.addUnit(kMalik, 2, 8);
+
+        oMission.addRush(iRound, oRush);
+        oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+        oRush.addUnit(kMalik, 1, 12);
+        oRush.addUnit(kMalik, 2, 8);
+        oMission.addRush(iRound, oRush);
+
+        oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+        oRush.addUnit(kMalik, 1, 14);
+        oRush.addUnit(kMalik, 2, 8);
+        oMission.addRush(iRound, oRush);
+    }
+    
+    return &oMission;
+}
+
+CDemoMission g_oDemoMission;
 
