@@ -46,7 +46,7 @@ public:
     bool addTower(const CCPoint& roPos);
     void addTowerEnd(CCObject* pObject);
 
-public:
+public:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     
     CCMenu m_oMenu;
     CCMenuItemImage m_oStart;
