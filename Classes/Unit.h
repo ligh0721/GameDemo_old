@@ -457,12 +457,13 @@ class CGameUnit : public CUnit, public CUnitForce, public CLevelExp
 public:
     enum DOING_FLAG
     {
-        kMoving = 1,
-        kWithHostility = 1 << 1,
-        kAttacking = 1 << 2,
-        kSuspended = 1 << 3
-
+        kSuspended = 1 << 0,
+        kMoving = 1 << 1,
+        //kWithHostility = 1 << 2,
+        kAttacking = 1 << 3,
+        kAutoAttack = 1 << 4
     };
+    static const int kWithHostility = kAutoAttack;
 
     enum ACTION_TAG
     {
@@ -554,7 +555,7 @@ public: // Attack
     virtual void setExAttackSpeed(const CExtraCoeff& roExAttackSpeed);
     virtual CExtraCoeff getExAttackSpeed() const;
     virtual void updateAttackAnimationSpeed(float fRealAttackInterval);
-    virtual void attack(int iTargetKey);
+    virtual void attack(int iTargetKey, bool bAuto = false);
     virtual void stopAttack();
     virtual void setBaseAttackValue(const CAttackValue& roAttackValue);
     virtual float getBaseAttackValue(CAttackValue::ATTACK_TYPE eAttackType) const;
@@ -580,7 +581,7 @@ protected:
     virtual void onActAttackEffect(CCNode* pNode);
     virtual void onActAttackEnd(CCNode* pNode);
     bool checkAttackDistance(const CCPoint& roPos, CGameUnit* pTarget);
-    void moveToAttackPosition(CGameUnit* pTarget);
+    void moveToAttackPosition(CGameUnit* pTarget, bool bAuto);
     
 public:
     static const float CONST_MAX_REWARD_RANGE;

@@ -168,6 +168,8 @@ bool CCWHomeSceneLayer::init()
     pFr->onGoldChange(0);
     //m_oGold.setString(UTEXT("ฮารว"));
 
+    onBtnCfgClick(&m_oCfg);
+
     return true;
 }
 
