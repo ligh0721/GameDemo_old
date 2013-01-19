@@ -297,6 +297,7 @@ void CUipEditor::on_btnClear_clicked()
     ui->lstUnits->clear();
     ui->txtIndex->clear();
     m_oUipm.m_vecPatches.clear();
+    setChanged();
 }
 
 void CUipEditor::on_lstUnits_currentRowChanged(int currentRow)
@@ -357,5 +358,5 @@ void CUipEditor::on_btnSkillClear_clicked()
 
 void CUipEditor::on_lstUnits_itemDoubleClicked(QListWidgetItem *item)
 {
-    on_btnDel_clicked();
+    //on_btnDel_clicked();
 }

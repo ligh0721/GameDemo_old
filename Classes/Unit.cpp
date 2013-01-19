@@ -3055,6 +3055,7 @@ bool CUnitInfoPatchManager::init()
 
 bool CUnitInfoPatchManager::initWithFile( const char* pFileName )
 {
+    m_vecPatches.clear();
     return addPatches(pFileName) > 0;
 }
 
@@ -3338,6 +3339,7 @@ CPathGameUnit::~CPathGameUnit()
 
 bool CUnitPath::init()
 {
+    m_vecPoints.clear();
     return true;
 }
 
@@ -3373,6 +3375,10 @@ void CUnitPath::addPoints( const char* pFileName )
 {
     M_DEF_FU(pFu);
     CGameFile* pFile = CGameFile::create(pFileName, "rb");
+    if (!pFile)
+    {
+        return;
+    }
     uint32_t dwHdr = 0;
     pFile->read(&dwHdr);
     if (dwHdr != 'HTP')
@@ -3476,4 +3482,14 @@ void CPathGameUnit::moveAlongPath( CUnitPath* pPath, bool bRestart /*= false*/, 
     {
         moveTo(*pTarget, m_bWithHostility);
     }
+}
+
+void CPathGameUnit::setMovingWithHostility( bool bWithHostility /*= true*/ )
+{
+    m_bWithHostility = bWithHostility;
+}
+
+bool CPathGameUnit::isMovingWithHostility() const
+{
+    return m_bWithHostility;
 }

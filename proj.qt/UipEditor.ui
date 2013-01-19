@@ -352,7 +352,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>双击删除</string>
+         <string/>
         </property>
        </widget>
       </item>

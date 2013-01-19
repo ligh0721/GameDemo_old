@@ -854,6 +854,8 @@ public:
     CREATEWITH_FUNC_PARAM(Info, CPathGameUnit, (const CUnitInfo& roUnitInfo), roUnitInfo);
 
     M_SYNTHESIZE(uint32_t, m_dwCurPos, CurPos);
+    virtual void setMovingWithHostility(bool bWithHostility = true);
+    virtual bool isMovingWithHostility() const;
 
     virtual void onTick(float fDt);
     virtual void moveAlongPath(CUnitPath* pPath, bool bRestart = false, bool bWithHostility = true, float fBuffArrive = 5.0);
