@@ -256,6 +256,15 @@ float CAttackValue::getAttack(ATTACK_TYPE eAttackType) const
     return m_afAttack[eAttackType];
 }
 
+float CAttackValue::getAttack( int iAttackType ) const
+{
+    if (iAttackType > CONST_MAX_ATTACK_TYPE)
+    {
+        return 0;
+    }
+    return m_afAttack[iAttackType];
+}
+
 void CAttackValue::setAttack(ATTACK_TYPE eAttackType, float fAttack)
 {
     if (eAttackType > CONST_MAX_ATTACK_TYPE)
@@ -268,6 +277,15 @@ void CAttackValue::setAttack(ATTACK_TYPE eAttackType, float fAttack)
 void CAttackValue::setAttack( const CAttackValue& roAv )
 {
     memmove(m_afAttack, roAv.m_afAttack, sizeof(m_afAttack));
+}
+
+void CAttackValue::setAttack( int iAttackType, float fAttack )
+{
+    if (iAttackType > CONST_MAX_ATTACK_TYPE)
+    {
+        return;
+    }
+    m_afAttack[iAttackType] = fAttack;
 }
 
 void CAttackValue::setZero()
@@ -1197,6 +1215,7 @@ bool CGameUnit::init()
     setProjectileBirthOffsetY(0);
     setRewardGold(0);
     setRewardExp(0);
+    setExAttackRandomRange(0.000);
     m_pRes = NULL;
 
     return true;
@@ -1227,6 +1246,7 @@ bool CGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor )
     setProjectileBirthOffsetY(0);
     setRewardGold(0);
     setRewardExp(0);
+    setExAttackRandomRange(0.000);
     m_pRes = NULL;
 
     return true;
@@ -1287,6 +1307,7 @@ bool CGameUnit::initWithInfo( const CUnitInfo& roUnitInfo )
     setProjectileBirthOffsetX(roUnitInfo.m_fProjectileBirthOffsetX);
     setProjectileBirthOffsetY(roUnitInfo.m_fProjectileBirthOffsetY);
     setBaseAttackValue(roUnitInfo.m_oBaseAttackValue);
+    setExAttackRandomRange(roUnitInfo.m_fExAttackRandomRange);
     setArmorType(roUnitInfo.m_eArmorType);
     setBaseArmorValue(roUnitInfo.m_fBaseArmorValue);
     setForceByIndex(roUnitInfo.m_iForceIndex);
@@ -1846,8 +1867,13 @@ float CGameUnit::getBaseAttackValue(CAttackValue::ATTACK_TYPE eAttackType) const
     return m_oBaseAttackValue.getAttack(eAttackType);
 }
 
-float CGameUnit::getRealAttackValue( CAttackValue::ATTACK_TYPE eAttackType ) const
+float CGameUnit::getRealAttackValue( CAttackValue::ATTACK_TYPE eAttackType, bool bUseRandomRange /*= true*/ ) const
 {
+    if (bUseRandomRange)
+    {
+        //CCLOG("Atk: %.2f", m_aoExAttackValue[eAttackType].getValue(m_oBaseAttackValue.getAttack(eAttackType)) * (1 - m_fExAttackRandomRange + (rand() % (int)(m_fExAttackRandomRange * 2000.0)) / 1000.0));
+        return m_aoExAttackValue[eAttackType].getValue(m_oBaseAttackValue.getAttack(eAttackType)) * (1 - m_fExAttackRandomRange + (rand() % (int)(m_fExAttackRandomRange * 2000.0)) / 1000.0);
+    }
     return m_aoExAttackValue[eAttackType].getValue(m_oBaseAttackValue.getAttack(eAttackType));
 }
 
@@ -2853,7 +2879,7 @@ bool CUnitGroup::isLivingEnemyOf( CGameUnit* pUnit, CUnitForce* pParam)
     return !pUnit->isDead() && pUnit->isEnemyOf(pParam);
 }
 
-CUnitInfo::CUnitInfo( const char* pName, const CCPoint& roAnchor, float fHalfOfWidth, float fHalfOfHeight, float fScale, float fActMoveDelay, float fActDieDelay, float fAct1Delay, float fAct2Delay, float fAct3Delay, float fAct4Delay, float fAct5Delay, float fAct6Delay, const ARR_ATTACK_ANI& roArrAttackAnis, float fBaseMoveSpeed, float fBaseAttackInterval, float fAttackEffectDelay, float fAttackMinRange, float fAttackRange, float fHostilityRange, CGameUnit::WEAPON_TYPE eWeaponType, int iProjectileKey, float fProjectileMoveSpeed, float fProjectileScale, float fProjectileMaxOffsetY, float fProjectileBirthOffsetX, float fProjectileBirthOffsetY, const CAttackValue& roBaseAttackValue, CArmorValue::ARMOR_TYPE eArmorType, float fBaseArmorValue, int iForceIndex, uint32_t dwForceAlly, float fMaxHp, bool bIsFixed, int iRewardGold, int iRewardExp )
+CUnitInfo::CUnitInfo( const char* pName, const CCPoint& roAnchor, float fHalfOfWidth, float fHalfOfHeight, float fScale, float fActMoveDelay, float fActDieDelay, float fAct1Delay, float fAct2Delay, float fAct3Delay, float fAct4Delay, float fAct5Delay, float fAct6Delay, const ARR_ATTACK_ANI& roArrAttackAnis, float fBaseMoveSpeed, float fBaseAttackInterval, float fAttackEffectDelay, float fAttackMinRange, float fAttackRange, float fHostilityRange, CGameUnit::WEAPON_TYPE eWeaponType, int iProjectileKey, float fProjectileMoveSpeed, float fProjectileScale, float fProjectileMaxOffsetY, float fProjectileBirthOffsetX, float fProjectileBirthOffsetY, const CAttackValue& roBaseAttackValue, float fExAttackRandomRange, CArmorValue::ARMOR_TYPE eArmorType, float fBaseArmorValue, int iForceIndex, uint32_t dwForceAlly, float fMaxHp, bool bIsFixed, int iRewardGold, int iRewardExp )
     : m_sName(pName)
     , m_oAnchor(roAnchor)
     , m_fHalfOfWidth(fHalfOfWidth)
@@ -2881,6 +2907,7 @@ CUnitInfo::CUnitInfo( const char* pName, const CCPoint& roAnchor, float fHalfOfW
     , m_fProjectileBirthOffsetX(fProjectileBirthOffsetX)
     , m_fProjectileBirthOffsetY(fProjectileBirthOffsetY)
     , m_oBaseAttackValue(roBaseAttackValue)
+    , m_fExAttackRandomRange(fExAttackRandomRange)
     , m_eArmorType(eArmorType)
     , m_fBaseArmorValue(fBaseArmorValue)
     , m_iForceIndex(iForceIndex)
@@ -2913,6 +2940,7 @@ const uint16_t CUnitInfoPatch::CONST_FILE_DATA_SIZE
     + sizeof(m_fProjectileMoveSpeed)
     + sizeof(m_fProjectileScale)
     + sizeof(m_oBaseAttackValue.m_afAttack)
+    + sizeof(m_fExAttackRandomRange)
     + sizeof(m_eArmorType)
     + sizeof(m_fBaseArmorValue)
     + sizeof(m_fMaxHp)
@@ -2929,6 +2957,7 @@ CUnitInfoPatch::CUnitInfoPatch()
     , m_fHostilityRange(0)
     , m_fProjectileMoveSpeed(0)
     , m_fProjectileScale(0)
+    , m_fExAttackRandomRange(0)
     , m_eArmorType(CArmorValue::ARMOR_TYPE(0))
     , m_fBaseArmorValue(0)
     , m_fMaxHp(0)
@@ -2963,6 +2992,7 @@ bool CUnitInfoPatch::initWithFileStream( CGameFile* pFile )
             || pFile->read(&m_fProjectileMoveSpeed) != 1
             || pFile->read(&m_fProjectileScale) != 1
             || pFile->read(&m_oBaseAttackValue.m_afAttack) != 1
+            || pFile->read(&m_fExAttackRandomRange) != 1
             || pFile->read(&m_eArmorType) != 1
             || pFile->read(&m_fBaseArmorValue) != 1
             || pFile->read(&m_fMaxHp) != 1
@@ -3019,6 +3049,7 @@ bool CUnitInfoPatch::initWithUnitInfo( int iUnitInfoIndex )
     m_fProjectileMoveSpeed = pUi->m_fProjectileMoveSpeed;
     m_fProjectileScale = pUi->m_fProjectileScale;
     m_oBaseAttackValue = pUi->m_oBaseAttackValue;
+    m_fExAttackRandomRange = pUi->m_fExAttackRandomRange;
     m_eArmorType = pUi->m_eArmorType;
     m_fBaseArmorValue = pUi->m_fBaseArmorValue;
     m_fMaxHp = pUi->m_fMaxHp;
@@ -3042,6 +3073,7 @@ void CUnitInfoPatch::writeToFileStream( FILE* pFile )
     fwrite(&m_fProjectileMoveSpeed, sizeof(m_fProjectileMoveSpeed), 1, pFile);
     fwrite(&m_fProjectileScale, sizeof(m_fProjectileScale), 1, pFile);
     fwrite(&m_oBaseAttackValue.m_afAttack, sizeof(m_oBaseAttackValue.m_afAttack), 1, pFile);
+    fwrite(&m_fExAttackRandomRange, sizeof(m_fExAttackRandomRange), 1, pFile);
     fwrite(&m_eArmorType, sizeof(m_eArmorType), 1, pFile);
     fwrite(&m_fBaseArmorValue, sizeof(m_fBaseArmorValue), 1, pFile);
     fwrite(&m_fMaxHp, sizeof(m_fMaxHp), 1, pFile);

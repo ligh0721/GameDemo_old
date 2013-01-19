@@ -103,6 +103,8 @@ public:
 
     float getAttack(ATTACK_TYPE eAttackType) const;
     void setAttack(ATTACK_TYPE eAttackType, float fAttack);
+    float getAttack(int iAttackType) const;
+    void setAttack(int iAttackType, float fAttack);
     void setAttack(const CAttackValue& roAv);
     void setZero();
 
@@ -559,10 +561,11 @@ public: // Attack
     virtual void stopAttack();
     virtual void setBaseAttackValue(const CAttackValue& roAttackValue);
     virtual float getBaseAttackValue(CAttackValue::ATTACK_TYPE eAttackType) const;
-    virtual float getRealAttackValue(CAttackValue::ATTACK_TYPE eAttackType) const;
+    virtual float getRealAttackValue(CAttackValue::ATTACK_TYPE eAttackType, bool bUseRandomRange = true) const;
     virtual void setExAttackValue(CAttackValue::ATTACK_TYPE eAttackType, const CExtraCoeff& roExAttackValue);
     virtual CExtraCoeff getExAttackValue(CAttackValue::ATTACK_TYPE eAttackType) const;
     virtual int getLastAttackTarget() const;
+    M_SYNTHESIZE(float, m_fExAttackRandomRange, ExAttackRandomRange);
     M_SYNTHESIZE(float, m_fAttackEffectDelay, AttackEffectDelay);
     M_SYNTHESIZE(WEAPON_TYPE, m_eWeaponType, WeaponType);
     M_SYNTHESIZE(float, m_fHalfOfWidth, HalfOfWidth);
@@ -902,6 +905,7 @@ public:
         float fProjectileBirthOffsetX,
         float fProjectileBirthOffsetY,
         const CAttackValue& roBaseAttackValue,
+        float fExAttackRandomRange,
         CArmorValue::ARMOR_TYPE eArmorType,
         float fBaseArmorValue,
         int iForceIndex,
@@ -943,6 +947,7 @@ public:
     float m_fProjectileBirthOffsetX;
     float m_fProjectileBirthOffsetY;
     CAttackValue m_oBaseAttackValue;
+    float m_fExAttackRandomRange;
     CArmorValue::ARMOR_TYPE m_eArmorType;
     float m_fBaseArmorValue;
     int m_iForceIndex;
@@ -977,6 +982,7 @@ public:
     float m_fProjectileMoveSpeed;
     float m_fProjectileScale;
     CAttackValue m_oBaseAttackValue;
+    float m_fExAttackRandomRange;
     CArmorValue::ARMOR_TYPE m_eArmorType;
     float m_fBaseArmorValue;
     float m_fMaxHp;

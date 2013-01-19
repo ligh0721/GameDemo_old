@@ -406,7 +406,6 @@ bool CBuffSkill::canBePlural() const
 
 void CBuffSkill::delBuffFromOwner(bool bAfterTriggerLoop)
 {
-    CCLOG("0x%p", m_pOwner);
     m_pOwner->delBuff(this, bAfterTriggerLoop);
 }
 

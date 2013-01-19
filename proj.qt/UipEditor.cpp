@@ -60,8 +60,9 @@ void CUipEditor::setUnitPatchInfo(CUnitInfoPatch *pUip)
     QList<CAttackValue::ATTACK_TYPE> l;
     getAttackValueCount(&l);
     setAttackValueCount(l);
-    ui->comboBoxAttackType->setCurrentIndex(l.count() ? l.first() : 0);
-
+    //ui->comboBoxAttackType->setCurrentIndex(l.count() ? l.first() : 0);
+    ui->comboBoxAttackType->currentIndexChanged(l.count() ? l.first() : 0);
+    ui->txtExAttackRand->setText(QString::number(pUip->m_fExAttackRandomRange));
     ui->comboBoxArmorType->setCurrentIndex(pUip->m_eArmorType);
     ui->txtBaseArmor->setText(QString::number(pUip->m_fBaseArmorValue));
     ui->txtMaxHp->setText(QString::number(pUip->m_fMaxHp));
@@ -88,6 +89,7 @@ CUnitInfoPatch* CUipEditor::getUnitPatchInfo()
     oUip.m_fProjectileMoveSpeed = ui->txtProjMoveSpeed->text().toFloat();
     oUip.m_fProjectileScale = ui->txtProjScale->text().toFloat();
     oUip.m_oBaseAttackValue = m_oEditAv;
+    oUip.m_fExAttackRandomRange = ui->txtExAttackRand->text().toFloat();
     oUip.m_eArmorType = (CArmorValue::ARMOR_TYPE)ui->comboBoxArmorType->currentIndex();
     oUip.m_fBaseArmorValue = ui->txtBaseArmor->text().toFloat();
     oUip.m_fMaxHp = ui->txtMaxHp->text().toFloat();
@@ -359,4 +361,12 @@ void CUipEditor::on_btnSkillClear_clicked()
 void CUipEditor::on_lstUnits_itemDoubleClicked(QListWidgetItem *item)
 {
     //on_btnDel_clicked();
+}
+
+void CUipEditor::on_lstUnits_clicked(const QModelIndex &index)
+{
+    if (ui->lstUnits->count() == 1)
+    {
+        on_lstUnits_currentRowChanged(ui->lstUnits->currentRow());
+    }
 }

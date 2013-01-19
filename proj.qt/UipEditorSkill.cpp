@@ -134,3 +134,19 @@ void CUipEditorSkill::on_btnClear_clicked()
     ui->lstUnitSkill->clear();
     m_vecSkills.clear();
 }
+
+void CUipEditorSkill::on_lstOrgSkill_clicked(const QModelIndex &index)
+{
+    if (ui->lstOrgSkill->count() == 1)
+    {
+        on_lstOrgSkill_currentRowChanged(ui->lstOrgSkill->currentRow());
+    }
+}
+
+void CUipEditorSkill::on_lstUnitSkill_clicked(const QModelIndex &index)
+{
+    if (ui->lstUnitSkill->count() == 1)
+    {
+        on_lstUnitSkill_currentRowChanged(ui->lstUnitSkill->currentRow());
+    }
+}

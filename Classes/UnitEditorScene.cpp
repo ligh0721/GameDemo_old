@@ -56,7 +56,14 @@ bool CCUnitEditorSceneLayer::init()
     reorderChild(pSprite, -10);
     setBufferEffectParam(0.9, 0, 0.1);
 
-    m_oUipm.initWithFile("level00/Level.uip");
+    m_oLabel.initWithString("(x, y)", "", 12);
+    addChild(&m_oLabel, 20);
+    m_oLabel.setColor(CONST_ARR_COLOR[0]);
+    m_oLabel.setVisible(false);
+
+    g_oOrgUnitInfo.init();
+    g_oOrgSkillInfo.init();
+
     for (int i = 0; i < CONST_MAX_PATH; ++i)
     {
         char sz[256];
@@ -67,8 +74,7 @@ bool CCUnitEditorSceneLayer::init()
     glLineWidth(3);
     glPointSize(10);
 
-    g_oOrgUnitInfo.init();
-    g_oOrgSkillInfo.init();
+    m_oUipm.initWithFile("level00/Level.uip");
     M_DEF_UM(pUm);
     M_DEF_GM(pGm);
     for (m_iCurPathIndex = 0; m_iCurPathIndex < CONST_MAX_PATH; ++m_iCurPathIndex)
@@ -81,11 +87,6 @@ bool CCUnitEditorSceneLayer::init()
     }
 
     m_iCurPathIndex = 0;
-
-    m_oLabel.initWithString("(x, y)", "", 12);
-    addChild(&m_oLabel, 20);
-    m_oLabel.setColor(CONST_ARR_COLOR[m_iCurPathIndex]);
-    m_oLabel.setVisible(false);
 
     return true;
 }
