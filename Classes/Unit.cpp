@@ -1457,7 +1457,7 @@ void CGameUnit::updateMoveToAnimationSpeed(float fRealMoveSpeed)
     pAct->setSpeed(fDelta);
 }
 
-void CGameUnit::moveTo( const CCPoint& roPos, bool bWithHostility /*= false*/, bool bCancelAttack, bool bAutoFlipX )
+void CGameUnit::moveTo( const CCPoint& roPos, bool bWithHostility /*= false*/, bool bCancelAttack /*= true*/, bool bAutoFlipX )
 {
     if (isDead() || isFixed())
     {
@@ -1645,7 +1645,7 @@ void CGameUnit::updateAttackAnimationSpeed( float fRealAttackInterval )
     dynamic_cast<CCDelayTime*>(pActSeq->getActionOne())->setDuration(fDur);
 }
 
-void CGameUnit::attack( int iTargetKey )
+void CGameUnit::attack( int iTargetKey, bool bAuto /*= false*/)
 {
     M_DEF_GM(pGm);
     if (isDead() || iTargetKey == getKey())
@@ -1660,7 +1660,8 @@ void CGameUnit::attack( int iTargetKey )
         if (isDoingOr(kAttacking) && !m_oSprite.getActionByTag(kActAttack))
         {
             //stopAttack();
-            endDoing(kAttacking);
+            endDoing(kAttacking | kAutoAttack);
+            m_iLastAttackTarget = 0;
         }
         return;
     }
@@ -1687,6 +1688,7 @@ void CGameUnit::attack( int iTargetKey )
 
         if (getLastAttackTarget() == iTargetKey && m_oSprite.getActionByTag(kActAttack))
         {
+            // 新攻击目标就是正在攻击着的目标，直接返回
             return;
         }
 
@@ -1701,10 +1703,14 @@ void CGameUnit::attack( int iTargetKey )
         if (m_fAttackCD > 0)
         {
             startDoing(kAttacking);
+            endDoing(kAutoAttack);
             return;
         }
+
+        // 发动攻击动作
         m_fAttackCD = fRealAttackInterval;
         startDoing(kAttacking);
+        endDoing(kAutoAttack);
         float fDelta = getBaseAttackInterval() / fRealAttackInterval;
         setAnimation(m_vecAttackAniIndex[rand() % m_vecAttackAniIndex.size()], 0, fDelta, kActAttack, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEnd)));
         CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(getAttackEffectDelay() / fDelta), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEffect)));
@@ -1718,8 +1724,10 @@ void CGameUnit::attack( int iTargetKey )
     {
         // 如果是建筑，只需丢失攻击目标即可
         m_iLastAttackTarget = 0;
+        endDoing(kAttacking | kAutoAttack);
         return;
     }
+
     if (getLastAttackTarget() == iTargetKey)
     {
         if (isDoingAnd(kAttacking | kMoving))
@@ -1729,9 +1737,8 @@ void CGameUnit::attack( int iTargetKey )
             {
                 // 攻击目标未变，但修正位置已过期
                 //if (getWeaponType() == kWTDelayed) CCLOG("!!!!!!!!!");
-                moveToAttackPosition(pTarget);
+                moveToAttackPosition(pTarget, bAuto);
             }
-            m_iLastAttackTarget = iTargetKey;
             return;
         }
 
@@ -1742,7 +1749,7 @@ void CGameUnit::attack( int iTargetKey )
     }
     
     m_iLastAttackTarget = iTargetKey;
-    moveToAttackPosition(pTarget);
+    moveToAttackPosition(pTarget, bAuto);
 }
 
 void CGameUnit::stopAttack()
@@ -1750,7 +1757,7 @@ void CGameUnit::stopAttack()
     m_oSprite.stopActionByTag(kActAttack);
     m_oSprite.stopActionByTag(kActAttackEffect);
     m_iLastAttackTarget = 0;
-    endDoing(kAttacking);
+    endDoing(kAttacking | kAutoAttack);
     setDefaultFrame();
 }
 
@@ -1879,7 +1886,7 @@ bool CGameUnit::checkAttackDistance( const CCPoint& roPos, CGameUnit* pTarget )
     return true;
 }
 
-void CGameUnit::moveToAttackPosition( CGameUnit* pTarget )
+void CGameUnit::moveToAttackPosition( CGameUnit* pTarget, bool bAuto )
 {
     if (isFixed())
     {
@@ -1902,6 +1909,7 @@ void CGameUnit::moveToAttackPosition( CGameUnit* pTarget )
         moveTo(ccpAdd(roPos2, ccp(cos(fA) * fDis, sin(-fA) * fDis)), false, false);
     }
     startDoing(kAttacking);
+    startDoing(bAuto ? kAutoAttack : 0);
 }
 
 void CGameUnit::setTemplateProjectile( CProjectile* pProjectile )
@@ -1958,14 +1966,14 @@ void CGameUnit::onTick( float fDt )
     M_DEF_GM(pGm);
     if (isDoingOr(kAttacking))
     {
-        attack(getLastAttackTarget());
+        attack(getLastAttackTarget(), true);
     }
     else if (isDoingNothing() || (isDoingAnd(kMoving | kWithHostility) && !isDoingOr(kAttacking)))
     {
         CGameUnit* pUnit = pGm->getUnits()->getNearestUnitInRange(getPosition(), getHostilityRange(), CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(this));
         if (pUnit)
         {
-            attack(pUnit->getKey());
+            attack(pUnit->getKey(), true);
         }
     }
 }
@@ -2011,9 +2019,9 @@ void CGameUnit::onDie()
 
 void CGameUnit::onDamaged( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
-    if (isDoingNothing() || (isDoingAnd(kMoving | kWithHostility) && !isDoingOr(kAttacking)) && pSource)
+    if (pSource && (isDoingNothing() || isDoingOr(kAutoAttack))) // (isDoingAnd(kMoving | kWithHostility) && !isDoingOr(kAttacking))
     {
-        attack(pSource->getKey());
+        attack(pSource->getKey(), true);
     }
 }
 
