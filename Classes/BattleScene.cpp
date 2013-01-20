@@ -295,7 +295,7 @@ void CCBattleSceneLayer::showTower( CCObject* pObject )
 void CCBattleSceneLayer::buildTower( CCNode* pNode)
 {
 	m_oTowerShowMenu.setVisible(false);
-	CTowerBuilder::sharedTowerBuilder()->buildTower(COrgUnitInfo::kArcane, m_oCurTowerPos, this, NULL, NULL);
+	CTowerBuilder::sharedTowerBuilder()->buildTower(rand()%2, m_oCurTowerPos, this, NULL, NULL);
 	/*
 	m_oTowerShowMenu.setVisible(false);
 	M_DEF_UM(pUm);
