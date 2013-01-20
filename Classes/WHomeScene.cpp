@@ -39,8 +39,8 @@ CCWHomeSceneLayer::CCWHomeSceneLayer()
 bool CCWHomeSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
-    g_oOrgUnitInfo.init();
-    g_oOrgSkillInfo.init();
+    M_DEF_GM(pGm);
+    M_DEF_OS(pOs);
 
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
     M_DEF_FC(pFc);
@@ -71,8 +71,8 @@ bool CCWHomeSceneLayer::init()
     midTower->setForceByIndex(2);
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
-    midTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChange2));
-    midTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSlowDown1));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
     midTower->setForceResource(pFr);
 
     midTower= pUm->unitByInfo(COrgUnitInfo::kTesla);
@@ -81,8 +81,8 @@ bool CCWHomeSceneLayer::init()
     midTower->setForceByIndex(2);
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
-    midTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChange2));
-    midTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kImmo1));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kImmo1));
     midTower->setForceResource(pFr);
 
 
@@ -131,8 +131,7 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oSkillPanel);
     m_oSkillPanel.setPosition(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50);
 
-    g_oOrgSkillInfo.init();
-    CSkill* pSkill = g_oOrgSkillInfo.skill(COrgSkillInfo::kThunderClap1);
+    CSkill* pSkill = pOs->skill(COrgSkillInfo::kThunderClap1);
     heroUnit->addSkill(pSkill);
 
     CCSkillButtonAdvance* pBtn;
@@ -418,6 +417,7 @@ void CCWHomeSceneLayer::addTowerEnd( CCObject* pObject )
         return;
     }
     M_DEF_UM(pUm);
+    M_DEF_OS(pOs);
     pTower->setForceByIndex(2);
     pTower->setAlly(1<<2);
     pTower->addSkill(CStatusShowPas::create());
@@ -426,16 +426,16 @@ void CCWHomeSceneLayer::addTowerEnd( CCObject* pObject )
     switch (r)
     {
     case 0:
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChangeAura1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kHpChangeAura1));
         break;
     case 1:
     case 2:
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kDoubleAttack1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kDoubleAttack1));
         break;
     case 3:
     case 4:
     case 5:
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSplash1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kSplash1));
         break;
     case 6:
     case 7:
@@ -446,15 +446,15 @@ void CCWHomeSceneLayer::addTowerEnd( CCObject* pObject )
 
     if (r < 2)
     {
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSlowDown1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
     }
     else if (r < 5)
     {
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kCritical1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kCritical1));
     }
     else if (r < 7)
     {
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kCritical2));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kCritical2));
     }
     else if (r < 8)
     {

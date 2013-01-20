@@ -10,6 +10,7 @@
 #include "MissionInfo.h"
 #include "GameCtrl.h"
 #include "GameFile.h"
+#include "UnitInfo.h"
 #include "SkillInfo.h"
 
 
@@ -3219,6 +3220,7 @@ CHeroUnit* CUnitInfoPatchManager::heroByIndex( int iIndex )
 
 void CUnitInfoPatchManager::patch( CGameUnit* pUnit, CUnitInfoPatch* pPatch )
 {
+    M_DEF_OS(pOs);
     pUnit->setBaseMoveSpeed(pPatch->m_fBaseMoveSpeed);
     pUnit->setBaseAttackInterval(pPatch->m_fBaseAttackInterval);
     pUnit->setAttackMinRange(pPatch->m_fAttackMinRange);
@@ -3235,7 +3237,7 @@ void CUnitInfoPatchManager::patch( CGameUnit* pUnit, CUnitInfoPatch* pPatch )
     pUnit->setRewardExp(pPatch->m_iRewardExp);
     for (CUnitInfoPatch::VEC_SKILL_INDEX::iterator it = pPatch->m_vecSkills.begin(); it != pPatch->m_vecSkills.end(); ++it)
     {
-        pUnit->addSkill(g_oOrgSkillInfo.skill(*it));
+        pUnit->addSkill(pOs->skill(*it));
     }
 }
 
@@ -3285,6 +3287,7 @@ void CUnitManager::addUnitInfo( int iUnitInfoIndex, const CUnitInfo& roUnitInfo 
 
 CGameUnit* CUnitManager::unitByInfo( int iUnitInfoIndex )
 {
+    M_DEF_OU(pOu);
     UNIT_MAP::iterator it = m_mapUnitInfo.find(iUnitInfoIndex);
     if (it == m_mapUnitInfo.end())
     {
@@ -3296,6 +3299,7 @@ CGameUnit* CUnitManager::unitByInfo( int iUnitInfoIndex )
 
 CPathGameUnit* CUnitManager::pathUnitByInfo( int iUnitInfoIndex )
 {
+    M_DEF_OU(pOu);
     UNIT_MAP::iterator it = m_mapUnitInfo.find(iUnitInfoIndex);
     if (it == m_mapUnitInfo.end())
     {
@@ -3307,6 +3311,7 @@ CPathGameUnit* CUnitManager::pathUnitByInfo( int iUnitInfoIndex )
 
 CHeroUnit* CUnitManager::heroByInfo( int iUnitInfoIndex )
 {
+    M_DEF_OU(pOu);
     UNIT_MAP::iterator it = m_mapUnitInfo.find(iUnitInfoIndex);
     if (it == m_mapUnitInfo.end())
     {
@@ -3318,6 +3323,7 @@ CHeroUnit* CUnitManager::heroByInfo( int iUnitInfoIndex )
 
 CUnitInfo* CUnitManager::unitInfoByIndex( int iUnitIndex )
 {
+    M_DEF_OU(pOu);
     UNIT_MAP::iterator it = m_mapUnitInfo.find(iUnitIndex);
     if (it != m_mapUnitInfo.end())
     {

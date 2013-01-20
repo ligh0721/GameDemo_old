@@ -243,6 +243,13 @@ CGameMission::CGameMission()
     m_oArrPaths.init();
 }
 
+bool CGameMission::init()
+{
+    m_vecRounds.clear();
+    m_oArrPaths.init();
+    return true;
+}
+
 int CGameMission::curRound() const
 {
     if (m_iRoundPos < (int)m_vecRounds.size())
@@ -305,9 +312,9 @@ CUnitPath* CGameMission::pathOfRush( int iRushIndex )
     return NULL;
 }
 
-bool CGameMission::initWithUnitInfoPatch( const char* pUipName )
+void CGameMission::setUnitInfoPatch( const char* pUipName )
 {
-    return m_oUipm.initWithFile(pUipName);
+    m_oUipm.initWithFile(pUipName);
 }
 
 int CGameMission::addPath( CUnitPath* pPath )
@@ -329,7 +336,6 @@ void CGameMission::addRush( int iRound, const CUnitRush& roRush )
         m_vecRounds[iRound].push_back(roRush);
     }
 }
-
 
 bool CDemoMission::init()
 {
@@ -361,7 +367,8 @@ CGameMission* CDemoMission::mission01()
     CUnitRush oRush;
     int iRound;
 
-    oMission.initWithUnitInfoPatch("levels/level01/Level.uip");
+    oMission.init();
+    oMission.setUnitInfoPatch("levels/level01/Level.uip");
 
     // add paths
     for (int i = 0; i < CONST_MAX_PATH; ++i)

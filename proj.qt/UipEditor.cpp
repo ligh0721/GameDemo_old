@@ -2,6 +2,7 @@
 #include "UipEditor.h"
 #include "ui_UipEditor.h"
 #include "UipEditorSkill.h"
+#include "UnitInfo.h"
 #include "SkillInfo.h"
 
 
@@ -12,6 +13,7 @@ CUipEditor::CUipEditor(QWidget *parent) :
     ui->setupUi(this);
     // init org unit combo
     M_DEF_UM(pUm);
+    M_DEF_OU(pOu);
     QString s;
     int n = pUm->m_mapUnitInfo.size();
     for (int i = 0; i < n; ++i)
@@ -139,6 +141,7 @@ void CUipEditor::setAttackValueCount(const QList<CAttackValue::ATTACK_TYPE> &roL
 
 void CUipEditor::setSkills()
 {
+    M_DEF_OS(pOs);
     ui->comboBoxSkills->clear();
     if (m_vecSkills.empty())
     {
@@ -147,7 +150,7 @@ void CUipEditor::setSkills()
     int n = m_vecSkills.size();
     for (CUnitInfoPatch::VEC_SKILL_INDEX::iterator it = m_vecSkills.begin(); it != m_vecSkills.end(); ++it)
     {
-        ui->comboBoxSkills->addItem(A2U(g_oOrgSkillInfo.m_mapSkills[*it].sName.c_str()));
+        ui->comboBoxSkills->addItem(A2U(pOs->m_mapSkills[*it].sName.c_str()));
     }
 }
 

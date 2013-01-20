@@ -118,9 +118,20 @@ bool COrgSkillInfo::init()
     return true;
 }
 
+COrgSkillInfo* COrgSkillInfo::sharedOrgSkillInfo()
+{
+    static COrgSkillInfo* pInst = NULL;
+    if (pInst)
+    {
+        return pInst;
+    }
+    pInst = COrgSkillInfo::create();
+    CC_SAFE_RETAIN(pInst);
+    return pInst;
+}
+
 CSkill* COrgSkillInfo::skill( int iSkillIndex )
 {
     M_DEF_SM(pSm);
     return pSm->copySkill(m_mapSkills[iSkillIndex].iIndex);
 }
-

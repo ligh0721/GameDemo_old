@@ -36,6 +36,7 @@ bool CCUnitEditorSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+    M_DEF_GM(pGm);
 
     M_DEF_FC(pFc);
     pFc->addSpriteFramesWithFile("UI.plist");
@@ -61,9 +62,6 @@ bool CCUnitEditorSceneLayer::init()
     m_oLabel.setColor(CONST_ARR_COLOR[0]);
     m_oLabel.setVisible(false);
 
-    g_oOrgUnitInfo.init();
-    g_oOrgSkillInfo.init();
-
     for (int i = 0; i < CONST_MAX_PATH; ++i)
     {
         char sz[256];
@@ -76,7 +74,6 @@ bool CCUnitEditorSceneLayer::init()
 
     m_oUipm.initWithFile("level00/Level.uip");
     M_DEF_UM(pUm);
-    M_DEF_GM(pGm);
     for (m_iCurPathIndex = 0; m_iCurPathIndex < CONST_MAX_PATH; ++m_iCurPathIndex)
     {
         m_aiWalker[m_iCurPathIndex] = 0;

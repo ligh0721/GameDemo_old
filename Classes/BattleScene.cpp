@@ -39,13 +39,9 @@ CCBattleSceneLayer::CCBattleSceneLayer()
 
 bool CCBattleSceneLayer::init()
 {
-	
-
 	CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
-	g_oOrgUnitInfo.init();
-	g_oOrgSkillInfo.init();
-	setUnitTickInterval(0.1);
 	CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+    M_DEF_GM(pGm);
 	M_DEF_FC(pFc);
 	pFc->addSpriteFramesWithFile("background.plist");
 	pFc->addSpriteFramesWithFile("tank.plist");
@@ -311,7 +307,7 @@ void CCBattleSceneLayer::buildTower( CCNode* pNode)
 	tower->setAlly(1<<2);
 	tower->addSkill(CStatusShowPas::create());
 	tower->prepareAttackAnimation(1,CGameUnit::kAnimationAct1,"act1",0.1);
-	tower->addSkill(g_oOrgSkillInfo.copySkill(COrgSkillInfo::kHpChangeAura1));
+	tower->addSkill(pOs->copySkill(COrgSkillInfo::kHpChangeAura1));
 	*/
 }
 
@@ -348,6 +344,7 @@ void CCBattleSceneLayer::onBtnUpgradeClick( CCObject* pObject )
 {
 	CCLOG("upgrade");
 	M_DEF_UM(pUm);
+    M_DEF_OS(pOs);
 	CGameUnit* tower= pUm->unitByInfo(COrgUnitInfo::kArcane);
 	addUnit(tower);
 	tower->setPosition(ccp(200, 200));
@@ -355,5 +352,5 @@ void CCBattleSceneLayer::onBtnUpgradeClick( CCObject* pObject )
 	tower->setAlly(1<<2);
 	tower->addSkill(CStatusShowPas::create());
 	tower->prepareAttackAnimation(1,CGameUnit::kAnimationAct1,"act1",0.1);
-	tower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChangeAura1));
+	tower->addSkill(pOs->skill(COrgSkillInfo::kHpChangeAura1));
 }

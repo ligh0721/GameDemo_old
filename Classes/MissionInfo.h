@@ -102,6 +102,7 @@ public:
         float fDelay;
     };
     typedef vector<RUSH_UNITS> VEC_RUSH_UNITS;
+    typedef vector<int> VEC_RUSH_PATHS;
 
 public:
     CUnitRush();
@@ -137,13 +138,15 @@ public:
 public:
     CGameMission();
 
+    virtual bool init();
+
     int curRound() const;
     void nextRound();
     int rushCount() const;
     int rush(int iRushIndex, float fDt);
     CUnitPath* pathOfRush(int iRushIndex);
 
-    bool initWithUnitInfoPatch(const char* pUipName);
+    void setUnitInfoPatch(const char* pUipName);
     int addPath(CUnitPath* pPath); // return path index
     int addNewRound(); // return round index
     void addRush(int iRound, const CUnitRush& roRush);
@@ -171,3 +174,4 @@ public:
 };
 
 extern CDemoMission g_oDemoMission;
+

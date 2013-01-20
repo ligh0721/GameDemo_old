@@ -1,7 +1,8 @@
 #include "CommInc.h"
 
 #include "GameCtrl.h"
-
+#include "UnitInfo.h"
+#include "SkillInfo.h"
 
 
 CGameManager::CGameManager()
@@ -23,6 +24,7 @@ bool CGameManager::init()
     m_oProjectileDustbin.init();
     //m_pAudio = SimpleAudioEngine::sharedEngine();
     m_bTurnOnVoice = true;
+
     return true;
 }
 

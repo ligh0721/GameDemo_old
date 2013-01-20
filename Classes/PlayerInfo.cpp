@@ -13,6 +13,7 @@ void CHeroUpdate::updateMaxExp( CLevelExp* pLevel )
 
 void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
 {
+    M_DEF_OS(pOs);
     CGameUnit* pU = dynamic_cast<CGameUnit*>(pLevel);
     if (!pU)
     {
@@ -38,22 +39,22 @@ void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
     switch (pLevel->getLevel())
     {
     case 1:
-        pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSlowDown1));
+        pU->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
         break;
     case 2:
-        pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kCritical1));
+        pU->addSkill(pOs->skill(COrgSkillInfo::kCritical1));
         break;
     case 3:
-        pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kVamprie1));
+        pU->addSkill(pOs->skill(COrgSkillInfo::kVamprie1));
         break;
     case 4:
-        pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kDoubleAttack1));
+        pU->addSkill(pOs->skill(COrgSkillInfo::kDoubleAttack1));
         break;
     case 5:
-        pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSplash1));
+        pU->addSkill(pOs->skill(COrgSkillInfo::kSplash1));
         break;
     case 6:
-        pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kCritical2));
+        pU->addSkill(pOs->skill(COrgSkillInfo::kCritical2));
         break;
     }
     pU->setMaxHp(50 + pLevel->getLevel() * 50);
@@ -77,6 +78,7 @@ void CHeroUnit::updateMaxExp()
 CHeroUnit* CHeroInfo::createHero()
 {
     M_DEF_UM(pUm);
+    M_DEF_OS(pOs);
     CHeroUnit* pHero = pUm->heroByInfo(m_iHeroIndex); // will be insteaded by patch
     //M_DEF_UPM(pUpm);
     //CGameUnit* pHero = pUpm->unitByIndex(m_iIndex);
@@ -86,7 +88,7 @@ CHeroUnit* CHeroInfo::createHero()
     pHero->m_dwMaxExp = m_dwMaxExp;
     for (VEC_SKILLS::iterator it = m_vecSkills.begin(); it != m_vecSkills.end(); ++it)
     {
-        pHero->addSkill(g_oOrgSkillInfo.skill(*it));
+        pHero->addSkill(pOs->skill(*it));
     }
     
     return pHero;

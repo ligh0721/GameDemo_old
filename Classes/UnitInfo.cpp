@@ -20,7 +20,6 @@ bool COrgUnitInfo::init()
     M_DEF_FC(pFc);
     M_DEF_GM(pGm);
     CProjectile* pProj;
-    CAttackValue oAv;
     enum
     {
         kAct1 = CGameUnit::kAnimationAct1,
@@ -31,6 +30,7 @@ bool COrgUnitInfo::init()
         kAct6 = CGameUnit::kAnimationAct6,
     };
 
+    // 下面加载资源部分，将改造为根据关卡，部分加载
     // 加载图集
     pFc->addSpriteFramesWithFile("unit.plist");
 
@@ -267,4 +267,16 @@ bool COrgUnitInfo::init()
     pUm->addUnitInfo(COrgUnitInfo::kVeznan, oVeznan);
 
     return true;
+}
+
+COrgUnitInfo* COrgUnitInfo::sharedOrgUnitInfo()
+{
+    static COrgUnitInfo* pInst = NULL;
+    if (pInst)
+    {
+        return pInst;
+    }
+    pInst = COrgUnitInfo::create();
+    CC_SAFE_RETAIN(pInst);
+    return pInst;
 }

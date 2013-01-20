@@ -1,7 +1,7 @@
 #pragma once
 
 
-class COrgSkillInfo
+class COrgSkillInfo : CCObject
 {
 public:
     enum SKILL_INDEX
@@ -32,14 +32,14 @@ public:
 
 public:
     COrgSkillInfo();
-
     virtual bool init();
-    //CC_DEPRECATED_ATTRIBUTE virtual CSkill* copySkill(int iSkillIndex);
+    CREATE_FUNC_PARAM(COrgSkillInfo, ());
+    static COrgSkillInfo* sharedOrgSkillInfo();
+    
     virtual CSkill* skill(int iSkillIndex);
 
 public:
     MAP_SKILL_INFO m_mapSkills;
 };
 
-extern COrgSkillInfo g_oOrgSkillInfo;
 
