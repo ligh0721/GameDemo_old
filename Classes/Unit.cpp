@@ -612,7 +612,7 @@ void CUnit::damagedMid(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerM
     float fDamage = 0;
     for (int i = 0; i < CAttackValue::CONST_MAX_ATTACK_TYPE; i++)
     {
-        fDamage += pAttack->getAttack((CAttackValue::ATTACK_TYPE)i) * g_afAttackArmorTable[m_eArmorType][i];
+        fDamage += calcDamage((CAttackValue::ATTACK_TYPE)i, pAttack->getAttack((CAttackValue::ATTACK_TYPE)i), m_eArmorType, m_fBaseArmorValue);
     }
     //CCLOG("%.2f", fDamage);
 
@@ -1087,6 +1087,22 @@ bool CUnit::isTriggerFree() const
 int CUnit::getKey() const
 {
     return m_iKey;
+}
+
+float CUnit::calcDamage( CAttackValue::ATTACK_TYPE eAttackType, float fAttackValue, CArmorValue::ARMOR_TYPE eArmorType, float fArmorValue )
+{
+    float fRet;
+    if (fArmorValue > 0)
+    {
+        fRet = fArmorValue * 0.06;
+        fRet = 1 - fRet / (fRet + 1);
+    }
+    else
+    {
+        fRet = 2 - pow(0.94f, -fArmorValue);
+    }
+    fRet *= fAttackValue * g_afAttackArmorTable[eArmorType][eAttackType];
+    return fRet;
 }
 
 CCGameUnitSprite::CCGameUnitSprite()

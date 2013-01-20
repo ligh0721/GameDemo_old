@@ -18,7 +18,8 @@ public:
         kVamprie2,
         kDoubleAttack1,
         kSplash1,
-        kThunderClap1
+        kThunderClap1,
+        kHpChange3
     };
 
     struct SKILL_INFO

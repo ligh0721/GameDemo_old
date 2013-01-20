@@ -61,6 +61,10 @@ bool CCWHomeSceneLayer::init()
     m_oMenu.addChild(&m_oCfg);
     m_oCfg.setPosition(ccp(oSz.width * 0.9, oSz.height * 0.6));
 
+    m_oStart.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnStartClick));
+    m_oMenu.addChild(&m_oStart);
+    m_oStart.setPosition(ccp(oSz.width * 0.8, oSz.height * 0.6));
+
     M_DEF_UPM(pUpm);
     pUpm->addPatches("heroes.uip");
     // demo code
@@ -171,8 +175,8 @@ bool CCWHomeSceneLayer::init()
 
 void CCWHomeSceneLayer::onBtnStartClick(CCObject* pObject)
 {
-    M_DEF_GM(pGm);
-    pGm->pushScene(CCMainScene::create());
+    M_DEF_DR(pDr);
+    pDr->replaceScene(CCMainScene::create());
 }
 
 void CCWHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
@@ -191,6 +195,7 @@ void CCWHomeSceneLayer::onTick( float fDt )
         kVeznan
     };
     M_DEF_GM(pGm);
+    pGm->cmdRecv(0);
     M_DEF_UM(pUm);
     static float fS = 0;
     fS += fDt;
