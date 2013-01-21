@@ -501,6 +501,7 @@ void CTalentInfo::TalentDemo()
     TALENT_NODE node12;
     node12.sInfo="GoodBye";
     TALENT_NODE node21;
+    node11.sInfo="英雄在战场上势不可挡，向一个方向冲刺，对冲撞到的敌人造成伤害";
     node21.sInfo="Hello,abcdefghijklmnopqrstuvwxyz";
     node21.iCost=2;
     TALENT_NODE node31;
@@ -531,7 +532,7 @@ CTalentInfo::TALENT_NODE::TALENT_NODE()
     iEffectIndex=0;
     iCost=1;
     iStatus=0;
-    sInfo="We live to DIE ,\nBUT we die for LIFE";
+    sInfo="We live to DIE ,BUT we die for LIFE";
     pNodeImage = NULL;
     //node11.pNodeImage->setNormalSpriteFrame(pFc->spriteFrameByName(M_SKILL_PATH("cancel")));
    // pNodeImage->initWithNormalImage(pFc->spriteFrameByName(M_SKILL_PATH("cancel")), pFc->spriteFrameByName(M_SKILL_PATH("cancel")), pFc->spriteFrameByName(M_SKILL_PATH("cancel")),CTalentInfo::singleTalentInfo(),menu_selector(CTalentInfo::onTalentNodeClick));

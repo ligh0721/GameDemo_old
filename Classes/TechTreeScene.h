@@ -125,7 +125,7 @@ public:
         int iCost;
         int iStatus;
         char* sInfo;
-        CCMenuItemImage* pNodeImage;
+        char* pNodeImage;
         TALENT_NODE();
     };
     typedef vector<TALENT_NODE> TALENT_TREE;
