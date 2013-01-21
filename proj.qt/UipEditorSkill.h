@@ -32,6 +32,10 @@ private slots:
 
     void on_btnClear_clicked();
 
+    void on_lstOrgSkill_clicked(const QModelIndex &index);
+
+    void on_lstUnitSkill_clicked(const QModelIndex &index);
+
 private:
     Ui::CUipEditorSkill *ui;
     CUnitInfoPatch::VEC_SKILL_INDEX m_vecSkills;

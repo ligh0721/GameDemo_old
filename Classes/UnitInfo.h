@@ -1,7 +1,7 @@
 #pragma once
 
 
-class COrgUnitInfo
+class COrgUnitInfo : public CCObject
 {
 public:
     enum UNITINFO_INDEX
@@ -18,9 +18,9 @@ public:
 
 public:
     COrgUnitInfo();
-
     virtual bool init();
+    CREATE_FUNC_PARAM(COrgUnitInfo, ());
+    static COrgUnitInfo* sharedOrgUnitInfo();
 };
 
-extern COrgUnitInfo g_oOrgUnitInfo;
 

@@ -51,6 +51,8 @@ private slots:
 
     void on_lstUnits_itemDoubleClicked(QListWidgetItem *item);
 
+    void on_lstUnits_clicked(const QModelIndex &index);
+
 private:
     Ui::CUipEditor *ui;
     CUnitInfoPatchManager m_oUipm;

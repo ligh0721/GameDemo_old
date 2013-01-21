@@ -9,6 +9,7 @@
 #include "UnitInfo.h"
 #include "SkillInfo.h"
 #include "GameCtrl.h"
+#include "MainScene.h"
 
 
 bool CCUnitEditorScene::init()
@@ -36,6 +37,7 @@ bool CCUnitEditorSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+    M_DEF_GM(pGm);
 
     M_DEF_FC(pFc);
     pFc->addSpriteFramesWithFile("UI.plist");
@@ -56,7 +58,11 @@ bool CCUnitEditorSceneLayer::init()
     reorderChild(pSprite, -10);
     setBufferEffectParam(0.9, 0, 0.1);
 
-    m_oUipm.initWithFile("level00/Level.uip");
+    m_oLabel.initWithString("(x, y)", "", 12);
+    addChild(&m_oLabel, 20);
+    m_oLabel.setColor(CONST_ARR_COLOR[0]);
+    m_oLabel.setVisible(false);
+
     for (int i = 0; i < CONST_MAX_PATH; ++i)
     {
         char sz[256];
@@ -67,10 +73,8 @@ bool CCUnitEditorSceneLayer::init()
     glLineWidth(3);
     glPointSize(10);
 
-    g_oOrgUnitInfo.init();
-    g_oOrgSkillInfo.init();
+    m_oUipm.initWithFile("level00/Level.uip");
     M_DEF_UM(pUm);
-    M_DEF_GM(pGm);
     for (m_iCurPathIndex = 0; m_iCurPathIndex < CONST_MAX_PATH; ++m_iCurPathIndex)
     {
         m_aiWalker[m_iCurPathIndex] = 0;
@@ -81,11 +85,6 @@ bool CCUnitEditorSceneLayer::init()
     }
 
     m_iCurPathIndex = 0;
-
-    m_oLabel.initWithString("(x, y)", "", 12);
-    addChild(&m_oLabel, 20);
-    m_oLabel.setColor(CONST_ARR_COLOR[m_iCurPathIndex]);
-    m_oLabel.setVisible(false);
 
     return true;
 }
@@ -326,14 +325,17 @@ bool CCUnitEditorSceneCtrlLayer::init(CCUnitEditorSceneLayer* pMainLayer)
     m_oBtnReload.initWithString("Reload", m_pMainLayer, menu_selector(CCUnitEditorSceneLayer::onBtnReloadClick));
     m_oBtnReload.setColor(ccBLACK);
     m_oMenu.addChild(&m_oBtnReload);
-    m_oBtnReload.setPosition(ccp(oSz.width * 0.85, oSz.height * 0.95));
+    m_oBtnReload.setPosition(ccp(oSz.width * 0.80, oSz.height * 0.95));
     
     m_oBtnSavePath.initWithString("SavePaths", m_pMainLayer, menu_selector(CCUnitEditorSceneLayer::onBtnSavePathClick));
     m_oBtnSavePath.setColor(ccBLACK);
     m_oMenu.addChild(&m_oBtnSavePath);
-    m_oBtnSavePath.setPosition(ccp(oSz.width * 0.85, oSz.height * 0.85));
+    m_oBtnSavePath.setPosition(ccp(oSz.width * 0.80, oSz.height * 0.85));
 
-    schedule(schedule_selector(CCUnitEditorSceneCtrlLayer::onCheckExit));
+    m_oBtnRun.initWithString("Run", this, menu_selector(CCUnitEditorSceneCtrlLayer::onBtnRunClick));
+    m_oBtnRun.setColor(ccBLACK);
+    m_oMenu.addChild(&m_oBtnRun);
+    m_oBtnRun.setPosition(ccp(oSz.width * 0.95, oSz.height * 0.95));
 
     return true;
 }
@@ -363,6 +365,12 @@ void CCUnitEditorSceneCtrlLayer::onBtnHostilityClick( CCObject* pObject )
     m_pMainLayer->m_bHostility = !m_pMainLayer->m_bHostility;
     m_oBtnHostility.setString(m_pMainLayer->m_bHostility ? "Hostile" : "Peaceful");
     m_pMainLayer->onBtnResetAllWalkerClick(NULL);
+}
+
+void CCUnitEditorSceneCtrlLayer::onBtnRunClick(CCObject *pObject)
+{
+    M_DEF_DR(pDr);
+    pDr->replaceScene(CCMainScene::create());
 }
 
 void CCUnitEditorSceneCtrlLayer::updateColor()

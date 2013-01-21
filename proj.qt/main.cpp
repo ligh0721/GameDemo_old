@@ -2,6 +2,9 @@
 #include "mainwindow.h"
 #include "Cocos2dxThread.h"
 #include "ui_mainwindow.h"
+#include "UipEditor.h"
+#include "AppDelegate.h"
+
 
 int main(int argc, char *argv[])
 {

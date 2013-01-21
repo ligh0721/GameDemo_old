@@ -44,6 +44,7 @@ bool CCHomeSceneLayer::init()
     M_DEF_UM(pUm);
     M_DEF_SM(pSm); // 定义技能管理器
     M_DEF_GM(pGm); // 定义游戏管理器
+    M_DEF_OS(pOs);
     pFc->addSpriteFramesWithFile("background.plist");
     pFc->addSpriteFramesWithFile("tank.plist");
     pFc->addSpriteFramesWithFile("UI.plist");
@@ -67,9 +68,6 @@ bool CCHomeSceneLayer::init()
 
     // demo code
 
-    g_oOrgUnitInfo.init();
-    g_oOrgSkillInfo.init();
-
     CGameUnit* u;
     
     u = pUm->unitByInfo(COrgUnitInfo::kMalik);
@@ -85,13 +83,13 @@ bool CCHomeSceneLayer::init()
     pSm->addSkill(pSkill); // 将模板技能添加到技能管理器中
 
     u->addSkill(CStatusShowPas::create()); // 血条被动
-    u->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChange1)); // 每0.1秒恢复0.2%HP
+    u->addSkill(pOs->skill(COrgSkillInfo::kHpChange1)); // 每0.1秒恢复0.2%HP
     u->addSkill(CVampirePas::create(0.3)); // 攻击30%吸血
     u->addSkill(CThumpPas::create(20, CExtraCoeff(2, 0), 0)); // 20%造成2倍致命一击
     u->addSkill(CThumpPas::create(20, CExtraCoeff(5, 0), 0)); // 20%造成5倍致命一击
-    u->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSlowDown1)); // 100%降低10%目标攻击/移动速度，可叠加
+    u->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1)); // 100%降低10%目标攻击/移动速度，可叠加
     u->addSkill(CDoubleAttackPas::create(20)); // 50%发动连续攻击
-    u->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kImmo1));
+    u->addSkill(pOs->skill(COrgSkillInfo::kImmo1));
     u->setLevelUpdate(&g_oDemoUpdate);
     u->setMaxLevel(60);
     u->addExp(0);
@@ -124,8 +122,8 @@ bool CCHomeSceneLayer::init()
     u->setPosition(ccpAdd(getAnchorPointInPoints(), ccp(50, 0))); // 设置位置
 
     u->addSkill(CStatusShowPas::create()); // 血条被动
-    u->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChange1)); // 每0.1秒恢复0.2%HP
-    u->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChangeAura1));
+    u->addSkill(pOs->skill(COrgSkillInfo::kHpChange1)); // 每0.1秒恢复0.2%HP
+    u->addSkill(pOs->skill(COrgSkillInfo::kHpChangeAura1));
 
     u = pUm->unitByInfo(COrgUnitInfo::kArcane);
     addUnit(u); // 加到UnitLayer中
@@ -134,8 +132,8 @@ bool CCHomeSceneLayer::init()
     u->setPosition(ccpAdd(getAnchorPointInPoints(), ccp(-50, 0))); // 设置位置
     
     u->addSkill(CStatusShowPas::create()); // 血条被动
-    u->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChange1)); // 每0.1秒恢复0.2%HP
-    u->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSpeedAura1));
+    u->addSkill(pOs->skill(COrgSkillInfo::kHpChange1)); // 每0.1秒恢复0.2%HP
+    u->addSkill(pOs->skill(COrgSkillInfo::kSpeedAura1));
     
 
     //CCLOG("%d", sizeof(CGameUnit));

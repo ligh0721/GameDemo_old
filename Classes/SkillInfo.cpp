@@ -114,8 +114,26 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThunderClap1].iIndex = iKey;
     m_mapSkills[kThunderClap1].sName = "震撼大地";
     m_mapSkills[kThunderClap1].sDesc = "对地面发出强有力的一击，对周围150半径的敌方单位同样造成20~80的物理伤害，并且5秒内降低目标50%移动速度和50%攻击速度";
+
+    pSkill = CHpChangePas::create(0.1, 0.05, true, -1);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kHpChange3].iIndex = iKey;
+    m_mapSkills[kHpChange3].sName = "英雄资质";
+    m_mapSkills[kHpChange3].sDesc = "每秒恢复自身最大生命的0.5%";
     
     return true;
+}
+
+COrgSkillInfo* COrgSkillInfo::sharedOrgSkillInfo()
+{
+    static COrgSkillInfo* pInst = NULL;
+    if (pInst)
+    {
+        return pInst;
+    }
+    pInst = COrgSkillInfo::create();
+    CC_SAFE_RETAIN(pInst);
+    return pInst;
 }
 
 CSkill* COrgSkillInfo::skill( int iSkillIndex )
@@ -123,4 +141,3 @@ CSkill* COrgSkillInfo::skill( int iSkillIndex )
     M_DEF_SM(pSm);
     return pSm->copySkill(m_mapSkills[iSkillIndex].iIndex);
 }
-

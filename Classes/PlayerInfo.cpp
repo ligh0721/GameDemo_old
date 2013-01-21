@@ -8,41 +8,59 @@
 
 void CHeroUpdate::updateMaxExp( CLevelExp* pLevel )
 {
-    pLevel->m_dwMaxExp = 40 * pLevel->getLevel();
+    pLevel->m_dwMaxExp = 100 * pLevel->getLevel();
 }
 
 void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
 {
+    M_DEF_OS(pOs);
     CGameUnit* pU = dynamic_cast<CGameUnit*>(pLevel);
-    if (pU)
+    if (!pU)
     {
-        CAttackValue oAv;
-        switch (pLevel->getLevel())
-        {
-        case 1:
-            pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSlowDown1));
-            break;
-        case 2:
-            pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kCritical1));
-            break;
-        case 3:
-            pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kVamprie1));
-            break;
-        case 4:
-            pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kDoubleAttack1));
-            break;
-        case 5:
-            pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSplash1));
-            break;
-        case 6:
-            pU->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kCritical2));
-            break;
-        }
-        pU->setMaxHp(50 + pLevel->getLevel() * 50);
-        pU->setExAttackValue(CAttackValue::kSiege, CExtraCoeff(1, 1 * pLevel->getLevel()));
-        pU->setExAttackValue(CAttackValue::kMagical, CExtraCoeff(1, MAX(0, (int)pLevel->getLevel() - 4)));
-        pU->setExAttackSpeed(CExtraCoeff(1 + 0.2 * pLevel->getLevel(), 0));
+        return;
     }
+
+    pU->setMaxHp(50 + pLevel->getLevel() * 50);
+
+    CAttackValue oAv;
+    for (int i = 0; i < CAttackValue::CONST_MAX_ATTACK_TYPE; ++i)
+    {
+        float f = pU->getBaseAttackValue((CAttackValue::ATTACK_TYPE)i);
+        if (f > FLT_EPSILON)
+        {
+            oAv.setAttack((CAttackValue::ATTACK_TYPE)i, f + 4);
+        }
+    }
+    pU->setBaseAttackValue(oAv);
+
+    return;
+
+    //CAttackValue oAv;
+    switch (pLevel->getLevel())
+    {
+    case 1:
+        pU->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
+        break;
+    case 2:
+        pU->addSkill(pOs->skill(COrgSkillInfo::kCritical1));
+        break;
+    case 3:
+        pU->addSkill(pOs->skill(COrgSkillInfo::kVamprie1));
+        break;
+    case 4:
+        pU->addSkill(pOs->skill(COrgSkillInfo::kDoubleAttack1));
+        break;
+    case 5:
+        pU->addSkill(pOs->skill(COrgSkillInfo::kSplash1));
+        break;
+    case 6:
+        pU->addSkill(pOs->skill(COrgSkillInfo::kCritical2));
+        break;
+    }
+    pU->setMaxHp(50 + pLevel->getLevel() * 50);
+    pU->setExAttackValue(CAttackValue::kSiege, CExtraCoeff(1, 1 * pLevel->getLevel()));
+    pU->setExAttackValue(CAttackValue::kMagical, CExtraCoeff(1, MAX(0, (int)pLevel->getLevel() - 4)));
+    pU->setExAttackSpeed(CExtraCoeff(1 + 0.2 * pLevel->getLevel(), 0));
 }
 
 CHeroUpdate g_oDemoUpdate;
@@ -60,6 +78,7 @@ void CHeroUnit::updateMaxExp()
 CHeroUnit* CHeroInfo::createHero()
 {
     M_DEF_UM(pUm);
+    M_DEF_OS(pOs);
     CHeroUnit* pHero = pUm->heroByInfo(m_iHeroIndex); // will be insteaded by patch
     //M_DEF_UPM(pUpm);
     //CGameUnit* pHero = pUpm->unitByIndex(m_iIndex);
@@ -69,7 +88,7 @@ CHeroUnit* CHeroInfo::createHero()
     pHero->m_dwMaxExp = m_dwMaxExp;
     for (VEC_SKILLS::iterator it = m_vecSkills.begin(); it != m_vecSkills.end(); ++it)
     {
-        pHero->addSkill(g_oOrgSkillInfo.skill(*it));
+        pHero->addSkill(pOs->skill(*it));
     }
     
     return pHero;

@@ -156,6 +156,8 @@ public: inline virtual void set##funName(const varType& var){ varName = var; }
 #define M_DEF_UM(var) CUnitManager* var = CUnitManager::sharedUnitManager()
 #define M_DEF_UPM(var) CUnitInfoPatchManager* var = CUnitInfoPatchManager::sharedUnitInfoPatchManager()
 #define M_DEF_TB(var) CTowerBuilder* var = CTowerBuilder::sharedTowerBuilder()
+#define M_DEF_OU(var) COrgUnitInfo* var = COrgUnitInfo::sharedOrgUnitInfo()
+#define M_DEF_OS(var) COrgSkillInfo* var = COrgSkillInfo::sharedOrgSkillInfo()
 
 #ifndef INFINITE
 #define INFINITE 0xFFFFFFFF

@@ -39,9 +39,9 @@ CCWHomeSceneLayer::CCWHomeSceneLayer()
 bool CCWHomeSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
-    g_oOrgUnitInfo.init();
-    g_oOrgSkillInfo.init();
-    setUnitTickInterval(0.1);
+    M_DEF_GM(pGm);
+    M_DEF_OS(pOs);
+
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
     M_DEF_FC(pFc);
     pFc->addSpriteFramesWithFile("background.plist");
@@ -55,16 +55,18 @@ bool CCWHomeSceneLayer::init()
 
     m_iTouchActionFlag=0;
 
-
-    //     m_oStart.initWithNormalImage("UI/start01.png", "UI/start01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnStartClick));
-    //     m_oMenu.addChild(&m_oStart);
-    //     m_oStart.setPosition(ccp(oSz.width * 0.5, oSz.height * 0.2));
-
     CForceResouce* pFr = CForceResouce::createWithChangeCallback(this, callfuncO_selector(CCWHomeSceneLayer::onGoldChange)); // 势力资源
 
     m_oCfg.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnCfgClick));
     m_oMenu.addChild(&m_oCfg);
     m_oCfg.setPosition(ccp(oSz.width * 0.9, oSz.height * 0.6));
+
+    m_oStart.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnStartClick));
+    m_oMenu.addChild(&m_oStart);
+    m_oStart.setPosition(ccp(oSz.width * 0.8, oSz.height * 0.6));
+
+    M_DEF_UPM(pUpm);
+    pUpm->addPatches("heroes.uip");
     // demo code
     M_DEF_UM(pUm);
     CGameUnit* midTower= pUm->unitByInfo(COrgUnitInfo::kArcane);
@@ -73,8 +75,8 @@ bool CCWHomeSceneLayer::init()
     midTower->setForceByIndex(2);
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
-    midTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChange2));
-    midTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSlowDown1));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
     midTower->setForceResource(pFr);
 
     midTower= pUm->unitByInfo(COrgUnitInfo::kTesla);
@@ -83,8 +85,8 @@ bool CCWHomeSceneLayer::init()
     midTower->setForceByIndex(2);
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
-    midTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChange2));
-    midTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kImmo1));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kImmo1));
     midTower->setForceResource(pFr);
 
 
@@ -95,14 +97,13 @@ bool CCWHomeSceneLayer::init()
     heroUnit->setForceByIndex(2);
     heroUnit->setAlly(1<<2);
     heroUnit->addSkill(CStatusShowPas::create());
-    //heroMove=true;
-    //touchMoveTimes = 0;
-    heroUnit->setBaseAttackInterval(3);
-    heroUnit->setMaxHp(200);
+    
+    //heroUnit->setBaseAttackInterval(3);
+    //heroUnit->setMaxHp(200);
     heroUnit->setLevelUpdate(&g_oDemoUpdate);
-    heroUnit->setMaxLevel(10);
-    heroUnit->setBaseMoveSpeed(80);
-    heroUnit->setArmorType(CArmorValue::kHero);
+    heroUnit->setMaxLevel(100);
+    //heroUnit->setBaseMoveSpeed(80);
+    //heroUnit->setArmorType(CArmorValue::kHero);
     //heroUnit->setAttackMinRange(0);
     heroUnit->setForceResource(pFr);
 
@@ -134,8 +135,7 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oSkillPanel);
     m_oSkillPanel.setPosition(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50);
 
-    g_oOrgSkillInfo.init();
-    CSkill* pSkill = g_oOrgSkillInfo.skill(COrgSkillInfo::kThunderClap1);
+    CSkill* pSkill = pOs->skill(COrgSkillInfo::kThunderClap1);
     heroUnit->addSkill(pSkill);
 
     CCSkillButtonAdvance* pBtn;
@@ -175,8 +175,8 @@ bool CCWHomeSceneLayer::init()
 
 void CCWHomeSceneLayer::onBtnStartClick(CCObject* pObject)
 {
-    M_DEF_GM(pGm);
-    pGm->pushScene(CCMainScene::create());
+    M_DEF_DR(pDr);
+    pDr->replaceScene(CCMainScene::create());
 }
 
 void CCWHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
@@ -195,6 +195,7 @@ void CCWHomeSceneLayer::onTick( float fDt )
         kVeznan
     };
     M_DEF_GM(pGm);
+    pGm->cmdRecv(0);
     M_DEF_UM(pUm);
     static float fS = 0;
     fS += fDt;
@@ -227,10 +228,10 @@ void CCWHomeSceneLayer::onTick( float fDt )
                     u->setArmorType(CArmorValue::kHoly);
                     u->setBaseAttackValue(CAttackValue(1, CAttackValue::kHoly, MAX(u->getBaseAttackValue(CAttackValue::kPhysical), u->getBaseAttackValue(CAttackValue::kMagical))));
                 }
-                u->setMaxHp(u->getMaxHp() + r * 10);
-                u->setExAttackValue(CAttackValue::kPhysical, CExtraCoeff(1 + r / 10.0, 0));
-                u->setExAttackValue(CAttackValue::kMagical, CExtraCoeff(1 + r / 10.0, 0));
-                u->setExAttackValue(CAttackValue::kHoly, CExtraCoeff(1 + r / 10.0, 0));
+                //u->setMaxHp(u->getMaxHp() + r * 10);
+                //u->setExAttackValue(CAttackValue::kPhysical, CExtraCoeff(1 + r / 10.0, 0));
+                //u->setExAttackValue(CAttackValue::kMagical, CExtraCoeff(1 + r / 10.0, 0));
+                //u->setExAttackValue(CAttackValue::kHoly, CExtraCoeff(1 + r / 10.0, 0));
             }
         }
         else if (iRes == CGameMission::kNoRound)
@@ -360,8 +361,8 @@ CGameUnit* CCWHomeSceneLayer::getHeroUnit()
     static CGameUnit *reHeroUnit;
     if (reHeroUnit==NULL)
     {
-        M_DEF_UM(pUm);
-        reHeroUnit=pUm->unitByInfo(COrgUnitInfo::kJt);
+        M_DEF_UPM(pUpm);
+        reHeroUnit=pUpm->unitByIndex(0);
     }
     return reHeroUnit;
 }
@@ -421,6 +422,7 @@ void CCWHomeSceneLayer::addTowerEnd( CCObject* pObject )
         return;
     }
     M_DEF_UM(pUm);
+    M_DEF_OS(pOs);
     pTower->setForceByIndex(2);
     pTower->setAlly(1<<2);
     pTower->addSkill(CStatusShowPas::create());
@@ -429,16 +431,16 @@ void CCWHomeSceneLayer::addTowerEnd( CCObject* pObject )
     switch (r)
     {
     case 0:
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kHpChangeAura1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kHpChangeAura1));
         break;
     case 1:
     case 2:
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kDoubleAttack1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kDoubleAttack1));
         break;
     case 3:
     case 4:
     case 5:
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSplash1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kSplash1));
         break;
     case 6:
     case 7:
@@ -449,15 +451,15 @@ void CCWHomeSceneLayer::addTowerEnd( CCObject* pObject )
 
     if (r < 2)
     {
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kSlowDown1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
     }
     else if (r < 5)
     {
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kCritical1));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kCritical1));
     }
     else if (r < 7)
     {
-        pTower->addSkill(g_oOrgSkillInfo.skill(COrgSkillInfo::kCritical2));
+        pTower->addSkill(pOs->skill(COrgSkillInfo::kCritical2));
     }
     else if (r < 8)
     {

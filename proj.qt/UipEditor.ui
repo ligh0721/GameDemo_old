@@ -29,17 +29,24 @@
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <layout class="QGridLayout" name="gridLayout">
+        <item row="17" column="1">
+         <widget class="QCheckBox" name="chkFixed">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
         <item row="5" column="1">
          <widget class="QLineEdit" name="txtMinAttackRange"/>
         </item>
-        <item row="15" column="0" alignment="Qt::AlignRight">
+        <item row="16" column="0" alignment="Qt::AlignRight">
          <widget class="QLabel" name="label_11">
           <property name="text">
            <string>最大HP:</string>
           </property>
          </widget>
         </item>
-        <item row="13" column="0" alignment="Qt::AlignRight">
+        <item row="14" column="0" alignment="Qt::AlignRight">
          <widget class="QLabel" name="label_9">
           <property name="text">
            <string>护甲类型:</string>
@@ -63,26 +70,19 @@
           </property>
          </widget>
         </item>
-        <item row="13" column="1">
+        <item row="14" column="1">
          <widget class="QComboBox" name="comboBoxArmorType"/>
-        </item>
-        <item row="16" column="1">
-         <widget class="QCheckBox" name="chkFixed">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
         </item>
         <item row="3" column="1">
          <widget class="QLineEdit" name="txtBaseMoveSpeed"/>
         </item>
-        <item row="15" column="1">
+        <item row="16" column="1">
          <widget class="QLineEdit" name="txtMaxHp"/>
         </item>
         <item row="9" column="1">
          <widget class="QLineEdit" name="txtProjScale"/>
         </item>
-        <item row="17" column="1">
+        <item row="18" column="1">
          <widget class="QLineEdit" name="txtRewardGold"/>
         </item>
         <item row="0" column="0" alignment="Qt::AlignRight">
@@ -115,7 +115,7 @@
         <item row="4" column="1">
          <widget class="QLineEdit" name="txtBaseAttackInterval"/>
         </item>
-        <item row="16" column="0" alignment="Qt::AlignRight">
+        <item row="17" column="0" alignment="Qt::AlignRight">
          <widget class="QLabel" name="label_12">
           <property name="text">
            <string>固定不动的:</string>
@@ -129,7 +129,7 @@
           </property>
          </widget>
         </item>
-        <item row="17" column="0" alignment="Qt::AlignRight">
+        <item row="18" column="0" alignment="Qt::AlignRight">
          <widget class="QLabel" name="label_13">
           <property name="text">
            <string>死亡金钱奖励:</string>
@@ -232,10 +232,10 @@
           </item>
          </layout>
         </item>
-        <item row="14" column="1">
+        <item row="15" column="1">
          <widget class="QLineEdit" name="txtBaseArmor"/>
         </item>
-        <item row="14" column="0" alignment="Qt::AlignRight">
+        <item row="15" column="0" alignment="Qt::AlignRight">
          <widget class="QLabel" name="label_10">
           <property name="text">
            <string>基础护甲值:</string>
@@ -245,24 +245,24 @@
         <item row="12" column="1">
          <widget class="QLineEdit" name="txtBaseAttack"/>
         </item>
-        <item row="18" column="0" alignment="Qt::AlignRight">
+        <item row="19" column="0" alignment="Qt::AlignRight">
          <widget class="QLabel" name="label_14">
           <property name="text">
            <string>死亡经验奖励:</string>
           </property>
          </widget>
         </item>
-        <item row="18" column="1">
+        <item row="19" column="1">
          <widget class="QLineEdit" name="txtRewardExp"/>
         </item>
-        <item row="19" column="0" alignment="Qt::AlignRight">
+        <item row="20" column="0" alignment="Qt::AlignRight">
          <widget class="QLabel" name="label_21">
           <property name="text">
            <string>技能:</string>
           </property>
          </widget>
         </item>
-        <item row="19" column="1">
+        <item row="20" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
            <widget class="QComboBox" name="comboBoxSkills"/>
@@ -282,6 +282,16 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="13" column="0" alignment="Qt::AlignRight">
+         <widget class="QLabel" name="label_22">
+          <property name="text">
+           <string>攻击浮动:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="13" column="1">
+         <widget class="QLineEdit" name="txtExAttackRand"/>
         </item>
        </layout>
       </item>
