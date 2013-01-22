@@ -6,6 +6,14 @@
 class CGameManager : public CCObject
 {
 public:
+    enum CMD_RECV
+    {
+        kCmdNoting,
+        kCmdRun,
+        kCmdEdit
+    };
+
+public:
     CGameManager();
     virtual bool init();
     M_CREATE_FUNC_PARAM(CGameManager, ());
@@ -16,6 +24,8 @@ public:
     const CCDirector* Dr() const;
     void pushScene(CCScene* pScene);
     void popScene();
+
+    void cmdRecv(float fDt);
 
     M_SYNTHESIZE(float, m_fScaleY, ScaleY);
     CCSpriteFrame* getUnitFrame(const char* pUnit, const char* pFrame);
@@ -49,6 +59,8 @@ public:
     int getTotalChapter(){ return m_iTotalChapter; }
     int getCompletedChapter() { return m_iCompletedChapter; }
 
+    void setCmd(CMD_RECV eCmd);
+
 protected:
     CCSpriteFrameCache* m_pFc;
     CCAnimationCache* m_pAc;
@@ -62,6 +74,7 @@ protected:
     bool m_bTurnOnVoice;
     int m_iTotalChapter;
     int m_iCompletedChapter;
+    CMD_RECV m_eCmdRecv;
 
 public:
     CPlayerInfo m_oPlayerInfo;

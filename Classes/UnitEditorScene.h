@@ -63,6 +63,7 @@ public:
     void onBtnPrevPathClick(CCObject* pObject);
     void onBtnNextPathClick(CCObject* pObject);
     void onBtnHostilityClick(CCObject* pObject);
+    void onBtnRunClick(CCObject* pObject);
     void updateColor();
 
 public:
@@ -77,6 +78,7 @@ public:
     CCMenuItemFont m_oBtnNextPath;
     CCMenuItemFont m_oBtnHostility;
     CCMenuItemFont m_oBtnReload;
+    CCMenuItemFont m_oBtnRun;
     static bool m_bExit;
     static bool m_bReady;
 };

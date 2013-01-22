@@ -9,6 +9,7 @@
 #include "UnitInfo.h"
 #include "SkillInfo.h"
 #include "GameCtrl.h"
+#include "MainScene.h"
 
 
 bool CCUnitEditorScene::init()
@@ -324,14 +325,17 @@ bool CCUnitEditorSceneCtrlLayer::init(CCUnitEditorSceneLayer* pMainLayer)
     m_oBtnReload.initWithString("Reload", m_pMainLayer, menu_selector(CCUnitEditorSceneLayer::onBtnReloadClick));
     m_oBtnReload.setColor(ccBLACK);
     m_oMenu.addChild(&m_oBtnReload);
-    m_oBtnReload.setPosition(ccp(oSz.width * 0.85, oSz.height * 0.95));
+    m_oBtnReload.setPosition(ccp(oSz.width * 0.80, oSz.height * 0.95));
     
     m_oBtnSavePath.initWithString("SavePaths", m_pMainLayer, menu_selector(CCUnitEditorSceneLayer::onBtnSavePathClick));
     m_oBtnSavePath.setColor(ccBLACK);
     m_oMenu.addChild(&m_oBtnSavePath);
-    m_oBtnSavePath.setPosition(ccp(oSz.width * 0.85, oSz.height * 0.85));
+    m_oBtnSavePath.setPosition(ccp(oSz.width * 0.80, oSz.height * 0.85));
 
-    schedule(schedule_selector(CCUnitEditorSceneCtrlLayer::onCheckExit));
+    m_oBtnRun.initWithString("Run", this, menu_selector(CCUnitEditorSceneCtrlLayer::onBtnRunClick));
+    m_oBtnRun.setColor(ccBLACK);
+    m_oMenu.addChild(&m_oBtnRun);
+    m_oBtnRun.setPosition(ccp(oSz.width * 0.95, oSz.height * 0.95));
 
     return true;
 }
@@ -361,6 +365,12 @@ void CCUnitEditorSceneCtrlLayer::onBtnHostilityClick( CCObject* pObject )
     m_pMainLayer->m_bHostility = !m_pMainLayer->m_bHostility;
     m_oBtnHostility.setString(m_pMainLayer->m_bHostility ? "Hostile" : "Peaceful");
     m_pMainLayer->onBtnResetAllWalkerClick(NULL);
+}
+
+void CCUnitEditorSceneCtrlLayer::onBtnRunClick(CCObject *pObject)
+{
+    M_DEF_DR(pDr);
+    pDr->replaceScene(CCMainScene::create());
 }
 
 void CCUnitEditorSceneCtrlLayer::updateColor()

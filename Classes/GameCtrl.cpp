@@ -3,6 +3,9 @@
 #include "GameCtrl.h"
 #include "UnitInfo.h"
 #include "SkillInfo.h"
+#include "WHomeScene.h"
+#include "UnitEditorScene.h"
+#include "DemoScene.h"
 
 
 CGameManager::CGameManager()
@@ -24,6 +27,10 @@ bool CGameManager::init()
     m_oProjectileDustbin.init();
     //m_pAudio = SimpleAudioEngine::sharedEngine();
     m_bTurnOnVoice = true;
+
+    m_eCmdRecv = kCmdNoting;
+    M_DEF_DR(pDr);
+    //pDr->getScheduler()->scheduleSelector(schedule_selector(CGameManager::cmdRecv), this, 0.1, false);
 
     return true;
 }
@@ -212,4 +219,34 @@ void CGameManager::playBackgroundSound( const char* pBackground, bool bLoop )
     {
         m_pAudio->playBackgroundMusic(pBackground, bLoop);
     }
+}
+
+void CGameManager::cmdRecv( float fDt )
+{
+    M_DEF_DR(pDr);
+
+    switch (m_eCmdRecv)
+    {
+    case kCmdNoting:
+        return;
+        break;
+
+    case kCmdRun:
+        pDr->replaceScene(CCWHomeScene::create());
+        break;
+
+    case kCmdEdit:
+        pDr->replaceScene(CCUnitEditorScene::create());
+        break;
+
+    default:
+        CCLOG("unknown cmd(%02X)", (uint8_t)m_eCmdRecv);
+    }
+
+    m_eCmdRecv = kCmdNoting;
+}
+
+void CGameManager::setCmd( CMD_RECV eCmd )
+{
+    m_eCmdRecv = eCmd;
 }

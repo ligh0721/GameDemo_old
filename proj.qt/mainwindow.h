@@ -24,6 +24,8 @@ protected:
 private slots:
      void on_btnUnitEditor_clicked();
 
+     void on_btnRunEdit_clicked();
+
 private:
     Ui::MainWindow *ui;
     CUipEditor* m_pUe;

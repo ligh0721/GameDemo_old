@@ -326,6 +326,8 @@ public:
     virtual void suspend() = 0;
     virtual void resume() = 0;
 
+    static float calcDamage(CAttackValue::ATTACK_TYPE eAttackType, float fAttackValue, CArmorValue::ARMOR_TYPE eArmorType, float fArmorValue);
+
     // @override
     virtual void onAttackTarget(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask);          // 攻击发出时，攻击者触发
     virtual CAttackData* onAttacked(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);      // 攻击抵达时，受害者触发

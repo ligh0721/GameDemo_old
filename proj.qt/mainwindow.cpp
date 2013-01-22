@@ -3,6 +3,7 @@
 #include "ui_mainwindow.h"
 #include "UipEditor.h"
 #include "UnitEditorScene.h"
+#include "GameCtrl.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -50,4 +51,19 @@ void MainWindow::on_btnUnitEditor_clicked()
     }
     m_pUe->show();
     //m_pUe->setFocus();
+}
+
+void MainWindow::on_btnRunEdit_clicked()
+{
+    M_DEF_GM(pGm);
+    if (ui->btnRunEdit->isChecked())
+    {
+        ui->btnRunEdit->setText(A2U("运行中"));
+        pGm->setCmd(CGameManager::kCmdRun);
+    }
+    else
+    {
+        ui->btnRunEdit->setText(A2U("运行"));
+        pGm->setCmd(CGameManager::kCmdEdit);
+    }
 }
