@@ -22,15 +22,11 @@ bool CGameManager::init()
     m_pDr = CCDirector::sharedDirector();
     setScaleY(1);
     m_oArrSceneStack.init();
-    m_oArrUnit.init();
-    m_oUnitDustbin.init();
-    m_oProjectileDustbin.init();
-    //m_pAudio = SimpleAudioEngine::sharedEngine();
     m_bTurnOnVoice = true;
 
     m_eCmdRecv = kCmdNoting;
     M_DEF_DR(pDr);
-    //pDr->getScheduler()->scheduleSelector(schedule_selector(CGameManager::cmdRecv), this, 0.1, false);
+    pDr->getScheduler()->scheduleSelector(schedule_selector(CGameManager::cmdRecv), this, 0.1, false);
 
     return true;
 }
@@ -133,56 +129,6 @@ int CGameManager::keygen()
 {
     static int iKeygen = rand() % 10000;
     return iKeygen++;
-}
-
-void CGameManager::addUnitToEventDriver( CGameUnit* pUnit )
-{
-    m_oArrUnit.addUnit(pUnit);
-}
-
-CUnitGroup* CGameManager::getUnits()
-{
-    return &m_oArrUnit;
-}
-
-CGameUnit* CGameManager::getUnitByKey( int iKey )
-{
-    return m_oArrUnit.getUnitByKey(iKey);
-}
-
-void CGameManager::addProjectileToEventDriver( CProjectile* pProjectile )
-{
-    m_oArrProjectile.addUnit(pProjectile);
-}
-
-CUnitGroup* CGameManager::getProjectiles()
-{
-    return &m_oArrProjectile;
-}
-
-CProjectile* CGameManager::getProjectileByKey( int iKey )
-{
-    return dynamic_cast<CProjectile*>(m_oArrProjectile.getUnitByKey(iKey));
-}
-
-void CGameManager::moveUnitToDustbin( CGameUnit* pToDel )
-{
-    m_oUnitDustbin.addObject(pToDel);
-}
-
-void CGameManager::moveProjectileToDustbin( CProjectile* pToDel )
-{
-    m_oProjectileDustbin.addObject(pToDel);
-}
-
-CCArray* CGameManager::getUnitDustbin()
-{
-    return &m_oUnitDustbin;
-}
-
-CCArray* CGameManager::getProjectileDustbin()
-{
-    return &m_oProjectileDustbin;
 }
 
 void CGameManager::setVoice( bool bTurnOn )

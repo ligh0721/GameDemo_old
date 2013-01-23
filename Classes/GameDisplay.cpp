@@ -741,10 +741,10 @@ CCSkillButtonAdvance::~CCSkillButtonAdvance()
 {
 }
 
-bool CCSkillButtonAdvance::init(const char* pNormalImage, const char* pSelectedImage, const char* pDisabledImage, const char* pBlinkImage, const char* pMaskImage, int iUnitKey, int iSkillKey )
+bool CCSkillButtonAdvance::init(const char* pNormalImage, const char* pSelectedImage, const char* pDisabledImage, const char* pBlinkImage, const char* pMaskImage, int iUnitKey, int iSkillKey, CCUnitLayer* pUnitLayer )
 {
-    M_DEF_GM(pGm);
-    CGameUnit* pUnit = pGm->getUnitByKey(iUnitKey);
+    setUnitLayer(pUnitLayer);
+    CGameUnit* pUnit = getUnitLayer()->getUnitByKey(iUnitKey);
     if (!pUnit)
     {
         return false;
@@ -764,8 +764,7 @@ bool CCSkillButtonAdvance::init(const char* pNormalImage, const char* pSelectedI
 
 void CCSkillButtonAdvance::setCoolDown( float fDuration )
 {
-    M_DEF_GM(pGm);
-    CGameUnit* pUnit = pGm->getUnitByKey(m_iUnitKey);
+    CGameUnit* pUnit = getUnitLayer()->getUnitByKey(m_iUnitKey);
     if (!pUnit)
     {
         return;
@@ -780,8 +779,7 @@ void CCSkillButtonAdvance::setCoolDown( float fDuration )
 
 float CCSkillButtonAdvance::getCoolDown() const
 {
-    M_DEF_GM(pGm);
-    CGameUnit* pUnit = pGm->getUnitByKey(m_iUnitKey);
+    CGameUnit* pUnit = getUnitLayer()->getUnitByKey(m_iUnitKey);
     if (!pUnit)
     {
         return -1;
@@ -796,8 +794,7 @@ float CCSkillButtonAdvance::getCoolDown() const
 
 void CCSkillButtonAdvance::onSkillClick( CCNode* pNode )
 {
-    M_DEF_GM(pGm);
-    CGameUnit* pUnit = pGm->getUnitByKey(m_iUnitKey);
+    CGameUnit* pUnit = getUnitLayer()->getUnitByKey(m_iUnitKey);
     if (!pUnit || pUnit->isDead() || pUnit->isDoingOr(CGameUnit::kSuspended))
     {
         M_SKILL_BUTTON_CANCEL(pNode);
@@ -824,8 +821,7 @@ void CCSkillButtonAdvance::onSkillClick( CCNode* pNode )
 
 void CCSkillButtonAdvance::onSkillFinished( CCNode* pNode )
 {
-    M_DEF_GM(pGm);
-    CGameUnit* pUnit = pGm->getUnitByKey(m_iUnitKey);
+    CGameUnit* pUnit = getUnitLayer()->getUnitByKey(m_iUnitKey);
     if (!pUnit)
     {
         return;

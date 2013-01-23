@@ -471,7 +471,8 @@ void CAuraPas::onUnitTick( float fDt )
     CBuffSkill* pBuff = NULL;
     CBuffSkill* pOldBuff = NULL;
     CGameUnit* pLoopTank = NULL;
-    CCArray* pArr = pGm->getUnits()->getUnitsArray();
+    CCUnitLayer* pLayer = dynamic_cast<CGameUnit*>(getOwner())->getUnitLayer();
+    CCArray* pArr = pLayer->getUnits()->getUnitsArray();
     CCObject* pObj;
     CCARRAY_FOREACH(pArr, pObj)
     {
@@ -1436,7 +1437,8 @@ void CSplashPas::onUnitDamageTarget( float fDamage, CUnit* pTarget )
     float fDis;
     CGameUnit* pUnit;
     CCObject* pObj;
-    CCARRAY_FOREACH(pGm->getUnits()->getUnitsArray(), pObj)
+    CCUnitLayer* pLayer = dynamic_cast<CGameUnit*>(getOwner())->getUnitLayer();
+    CCARRAY_FOREACH(pLayer->getUnits()->getUnitsArray(), pObj)
     {
         pUnit = dynamic_cast<CGameUnit*>(pObj);
         if (!pUnit)
@@ -1508,7 +1510,8 @@ void CSplashAct::onSkillCast()
     CBuffSkill* pTBuff = NULL;
     CBuffSkill* pBuff;
     uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
-    CCARRAY_FOREACH(pGm->getUnits()->getUnitsArray(), pObj)
+
+    CCARRAY_FOREACH(pO->getUnitLayer()->getUnits()->getUnitsArray(), pObj)
     {
         pUnit = dynamic_cast<CGameUnit*>(pObj);
         if (!pUnit)

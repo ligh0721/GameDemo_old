@@ -245,6 +245,7 @@ CGameMission::CGameMission()
 
 bool CGameMission::init()
 {
+    m_iRoundPos = 0;
     m_vecRounds.clear();
     m_oArrPaths.init();
     return true;

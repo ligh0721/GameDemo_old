@@ -1234,6 +1234,11 @@ bool CGameUnit::init()
     setRewardExp(0);
     setExAttackRandomRange(0.000);
     m_pRes = NULL;
+    m_pUnitLayer = NULL;
+    m_pMovePath = NULL;
+    setPathCurPos(0);
+    setPathIntended(false);
+    m_fPathBufArrive = FLT_EPSILON;
 
     return true;
 }
@@ -1265,6 +1270,11 @@ bool CGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor )
     setRewardExp(0);
     setExAttackRandomRange(0.000);
     m_pRes = NULL;
+    m_pUnitLayer = NULL;
+    m_pMovePath = NULL;
+    setPathCurPos(0);
+    setPathIntended(false);
+    m_fPathBufArrive = FLT_EPSILON;
 
     return true;
 }
@@ -1333,6 +1343,7 @@ bool CGameUnit::initWithInfo( const CUnitInfo& roUnitInfo )
     setFixed(roUnitInfo.m_bIsFixed);
     setRewardGold(roUnitInfo.m_iRewardGold);
     setRewardExp(roUnitInfo.m_iRewardExp);
+
     return true;
 }
 
@@ -1495,7 +1506,7 @@ void CGameUnit::updateMoveToAnimationSpeed(float fRealMoveSpeed)
     pAct->setSpeed(fDelta);
 }
 
-void CGameUnit::moveTo( const CCPoint& roPos, bool bWithHostility /*= false*/, bool bCancelAttack /*= true*/, bool bAutoFlipX )
+void CGameUnit::moveTo( const CCPoint& roPos, bool bIntended /*= true*/, bool bCancelAttack /*= true*/, bool bAutoFlipX )
 {
     if (isDead() || isFixed())
     {
@@ -1534,24 +1545,24 @@ void CGameUnit::moveTo( const CCPoint& roPos, bool bWithHostility /*= false*/, b
     m_oSprite.runAction(pActMoveTo);
     setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
     startDoing(kMoving);
-    if (bWithHostility)
+    if (bIntended)
     {
-        startDoing(kWithHostility);
+        startDoing(kIntended);
     }
     else
     {
-        endDoing(kWithHostility);
+        endDoing(kIntended);
     }
 }
 
-void CGameUnit::followTo( int iTargetKey, bool bWithHostility /*= false*/, bool bCancelAttack /*= true*/, bool bAutoFlipX /*= true*/, float fMaxOffsetY /*= 0.0*/ )
+void CGameUnit::followTo( int iTargetKey, bool bIntended /*= true*/, bool bCancelAttack /*= true*/, bool bAutoFlipX /*= true*/, float fMaxOffsetY /*= 0.0*/ )
 {
     if (isDead() || isFixed())
     {
         return;
     }
     M_DEF_GM(pGm);
-    CGameUnit* pTarget = pGm->getUnitByKey(iTargetKey);
+    CGameUnit* pTarget = getUnitLayer()->getUnitByKey(iTargetKey);
     if (!pTarget)
     {
         return;
@@ -1589,21 +1600,64 @@ void CGameUnit::followTo( int iTargetKey, bool bWithHostility /*= false*/, bool 
     m_oSprite.runAction(pActMoveTo);
     setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
     startDoing(kMoving);
-    if (bWithHostility)
+    if (bIntended)
     {
-        startDoing(kWithHostility);
+        startDoing(kIntended);
     }
     else
     {
-        endDoing(kWithHostility);
+        endDoing(kIntended);
     }
+}
+
+void CGameUnit::moveAlongPath( CUnitPath* pPath, bool bIntended /*= true*/, bool bRestart /*= false*/, float fBufArrive /*= 5.0*/ )
+{
+    if (pPath != m_pMovePath)
+    {
+        CC_SAFE_RELEASE(m_pMovePath);
+        CC_SAFE_RETAIN(pPath);
+        m_pMovePath = pPath;
+    }
+
+    if (!m_pMovePath)
+    {
+        return;
+    }
+
+    if (bRestart)
+    {
+        m_dwPathCurPos = 0;
+    }
+
+    if (m_fPathBufArrive != fBufArrive)
+    {
+        m_fPathBufArrive = MAX(FLT_EPSILON, fBufArrive);
+    }
+
+    setPathIntended(bIntended);
+
+    const CCPoint* pTarget = m_pMovePath->getCurTargetPoint(m_dwPathCurPos);
+    if (pTarget)
+    {
+        moveTo(*pTarget, m_bPathIntended);
+    }
+}
+
+void CGameUnit::setPathIntended( bool bPathIntended /*= true*/ )
+{
+    m_bPathIntended = bPathIntended;
+}
+
+bool CGameUnit::isPathIntended() const
+{
+    return m_bPathIntended;
 }
 
 void CGameUnit::stopMove()
 {
     m_oSprite.stopActionByTag(kActMoveTo);
     m_oSprite.stopActionByTag(kActMove);
-    endDoing(kMoving | kWithHostility);
+    endDoing(kMoving);
     setDefaultFrame();
 }
 
@@ -1614,6 +1668,7 @@ const CCPoint& CGameUnit::getLastMoveToTarget() const
 
 void CGameUnit::onActMoveEnd( CCNode* pNode )
 {
+    endDoing(kIntended);
     stopMove();
 }
 
@@ -1683,7 +1738,7 @@ void CGameUnit::updateAttackAnimationSpeed( float fRealAttackInterval )
     dynamic_cast<CCDelayTime*>(pActSeq->getActionOne())->setDuration(fDur);
 }
 
-void CGameUnit::attack( int iTargetKey, bool bAuto /*= false*/)
+void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
 {
     M_DEF_GM(pGm);
     if (isDead() || iTargetKey == getKey())
@@ -1692,13 +1747,14 @@ void CGameUnit::attack( int iTargetKey, bool bAuto /*= false*/)
     }
     float fRealAttackInterval = getRealAttackInterval();
     //M_DEF_GM(pGm);
-    CGameUnit* pTarget = pGm->getUnitByKey(iTargetKey);
+    CGameUnit* pTarget = getUnitLayer()->getUnitByKey(iTargetKey);
     if (!pTarget || pTarget->isDead())
     {
+        // 原目标已不存在
         if (isDoingOr(kAttacking) && !m_oSprite.getActionByTag(kActAttack))
         {
-            //stopAttack();
-            endDoing(kAttacking | kAutoAttack);
+            // 攻击中，且没有施展动作，可能是原地打，也可能是追击中
+            endDoing(kAttacking | kIntended);
             m_iLastAttackTarget = 0;
         }
         return;
@@ -1738,17 +1794,23 @@ void CGameUnit::attack( int iTargetKey, bool bAuto /*= false*/)
         m_iLastAttackTarget = iTargetKey;
         turnTo(pTarget);
 
+        // 设置攻击标志位(确定攻击意识)
+        startDoing(kAttacking);
+        if (bIntended)
+        {
+            startDoing(kIntended);
+        }
+        else
+        {
+            endDoing(kIntended);
+        }
         if (m_fAttackCD > 0)
         {
-            startDoing(kAttacking);
-            endDoing(kAutoAttack);
             return;
         }
 
         // 发动攻击动作
         m_fAttackCD = fRealAttackInterval;
-        startDoing(kAttacking);
-        endDoing(kAutoAttack);
         float fDelta = getBaseAttackInterval() / fRealAttackInterval;
         setAnimation(m_vecAttackAniIndex[rand() % m_vecAttackAniIndex.size()], 0, fDelta, kActAttack, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEnd)));
         CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(getAttackEffectDelay() / fDelta), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEffect)));
@@ -1762,9 +1824,11 @@ void CGameUnit::attack( int iTargetKey, bool bAuto /*= false*/)
     {
         // 如果是建筑，只需丢失攻击目标即可
         m_iLastAttackTarget = 0;
-        endDoing(kAttacking | kAutoAttack);
+        endDoing(kAttacking | kIntended);
         return;
     }
+
+    // 进行攻击校正
 
     if (getLastAttackTarget() == iTargetKey)
     {
@@ -1775,7 +1839,7 @@ void CGameUnit::attack( int iTargetKey, bool bAuto /*= false*/)
             {
                 // 攻击目标未变，但修正位置已过期
                 //if (getWeaponType() == kWTDelayed) CCLOG("!!!!!!!!!");
-                moveToAttackPosition(pTarget, bAuto);
+                moveToAttackPosition(pTarget, bIntended);
             }
             return;
         }
@@ -1787,7 +1851,7 @@ void CGameUnit::attack( int iTargetKey, bool bAuto /*= false*/)
     }
     
     m_iLastAttackTarget = iTargetKey;
-    moveToAttackPosition(pTarget, bAuto);
+    moveToAttackPosition(pTarget, bIntended);
 }
 
 void CGameUnit::stopAttack()
@@ -1795,7 +1859,7 @@ void CGameUnit::stopAttack()
     m_oSprite.stopActionByTag(kActAttack);
     m_oSprite.stopActionByTag(kActAttackEffect);
     m_iLastAttackTarget = 0;
-    endDoing(kAttacking | kAutoAttack);
+    endDoing(kAttacking);
     setDefaultFrame();
 }
 
@@ -1807,7 +1871,7 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
         pAtk->setAttack((CAttackValue::ATTACK_TYPE)i, getRealAttackValue((CAttackValue::ATTACK_TYPE)i));
     }
     M_DEF_GM(pGm);
-    CGameUnit* pTarget = pGm->getUnitByKey(getLastAttackTarget());
+    CGameUnit* pTarget = getUnitLayer()->getUnitByKey(getLastAttackTarget());
     if (!pTarget || pTarget->isDead())
     {
         return;
@@ -1846,8 +1910,8 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
 
     case kWTDelayed:
         pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
-        CCUnitLayer* pLayer = dynamic_cast<CCUnitLayer*>(m_oSprite.getParent());
-        pLayer->addProjectile(pProj);
+        //CCUnitLayer* pLayer = dynamic_cast<CCUnitLayer*>(m_oSprite.getParent());
+        getUnitLayer()->addProjectile(pProj);
         pProj->setAttackData(pAtk);
         pProj->setOwner(getKey());
         pProj->setTarget(getLastAttackTarget());
@@ -1929,7 +1993,7 @@ bool CGameUnit::checkAttackDistance( const CCPoint& roPos, CGameUnit* pTarget )
     return true;
 }
 
-void CGameUnit::moveToAttackPosition( CGameUnit* pTarget, bool bAuto )
+void CGameUnit::moveToAttackPosition( CGameUnit* pTarget, bool bIntended )
 {
     if (isFixed())
     {
@@ -1951,8 +2015,16 @@ void CGameUnit::moveToAttackPosition( CGameUnit* pTarget, bool bAuto )
         float fA = -ccpToAngle(ccpSub(roPos1, roPos2));
         moveTo(ccpAdd(roPos2, ccp(cos(fA) * fDis, sin(-fA) * fDis)), false, false);
     }
+
     startDoing(kAttacking);
-    startDoing(bAuto ? kAutoAttack : 0);
+    if (bIntended)
+    {
+        startDoing(kIntended);
+    }
+    else
+    {
+        endDoing(kIntended);
+    }
 }
 
 void CGameUnit::setTemplateProjectile( CProjectile* pProjectile )
@@ -2006,17 +2078,32 @@ void CGameUnit::onTick( float fDt )
     m_fAttackCD -= fDt;
     //CCLOG("%d %.2f/%.2f", m_iKey, m_fAttackPass, getRealAttackInterval());
     // 基础AI
-    M_DEF_GM(pGm);
+
+    // 路径逻辑
+    if (m_pMovePath)
+    {
+        const CCPoint* pTarget;
+        if ((pTarget = m_pMovePath->getCurTargetPoint(m_dwPathCurPos)) && ccpDistance(getPosition(), *pTarget) < m_fPathBufArrive)
+        {
+            m_pMovePath->arriveCurTargetPoint(m_dwPathCurPos);
+        }
+
+        if (!isDoingOr(kAttacking))
+        {
+            moveAlongPath(m_pMovePath, isPathIntended(), false, m_fPathBufArrive);
+        }
+    }
+
     if (isDoingOr(kAttacking))
     {
-        attack(getLastAttackTarget(), true);
+        attack(getLastAttackTarget(), isDoingOr(kIntended));
     }
-    else if (isDoingNothing() || (isDoingAnd(kMoving | kWithHostility) && !isDoingOr(kAttacking)))
+    else if (!isDoingOr(kIntended) && (isDoingNothing() || isDoingOr(kMoving)))
     {
-        CGameUnit* pUnit = pGm->getUnits()->getNearestUnitInRange(getPosition(), getHostilityRange(), CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(this));
+        CGameUnit* pUnit = getUnitLayer()->getUnits()->getNearestUnitInRange(getPosition(), getHostilityRange(), CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(this));
         if (pUnit)
         {
-            attack(pUnit->getKey(), true);
+            attack(pUnit->getKey(), false);
         }
     }
 }
@@ -2026,7 +2113,7 @@ void CGameUnit::onDie()
     CGameUnit* pUnit;
     CCObject* pObj;
     M_DEF_GM(pGm);
-    CCArray* pArr = pGm->getUnits()->getUnitsArray();
+    CCArray* pArr = getUnitLayer()->getUnits()->getUnitsArray();
     vector<CGameUnit*> vec;
     
     CCARRAY_FOREACH(pArr, pObj)
@@ -2062,9 +2149,16 @@ void CGameUnit::onDie()
 
 void CGameUnit::onDamaged( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
-    if (pSource && (isDoingNothing() || isDoingOr(kAutoAttack))) // (isDoingAnd(kMoving | kWithHostility) && !isDoingOr(kAttacking))
+    CGameUnit* pSrc = dynamic_cast<CGameUnit*>(pSource);
+    CCLOG("dis:%.2f %.2f", getDistance(pSrc), getHostilityRange());
+    CGameUnit* pLu;
+    if ( pSrc && !isDoingOr(kIntended) && (
+        ( isDoingOr(kAttacking) && ( pLu = getUnitLayer()->getUnitByKey(getLastAttackTarget()) ) && getDistance(pLu) > getHostilityRange() ) ||
+        isDoingNothing() ||
+        ( isDoingOr(kMoving) && !isDoingOr(kAttacking))
+        ))
     {
-        attack(pSource->getKey(), true);
+        attack(pSrc->getKey(), false);
     }
 }
 
@@ -2115,8 +2209,7 @@ void CGameUnit::turnTo( bool bLeft )
 void CGameUnit::onActDieEnd( CCNode* pNode )
 {
     //m_oSprite.removeFromParentAndCleanup(true);
-    M_DEF_GM(pGm);
-    pGm->moveUnitToDustbin(this);
+    getUnitLayer()->moveUnitToDustbin(this);
 }
 
 CCNode* CGameUnit::getShadowNode()
@@ -2212,8 +2305,8 @@ void CProjectile::onDie()
     M_DEF_GM(pGm);
     CCAnimation* pAni;
     CCAction* pAct;
-    CGameUnit* pTarget = pGm->getUnitByKey(getTarget());
-    CGameUnit* pOwner = pGm->getUnitByKey(getOwner());
+    CGameUnit* pTarget = getUnitLayer()->getUnitByKey(getTarget());
+    CGameUnit* pOwner = getUnitLayer()->getUnitByKey(getOwner());
 
     if (pTarget && pOwner)
     {
@@ -2244,7 +2337,7 @@ void CProjectile::onActDieEnd( CCNode* pNode )
 {
     //m_oSprite.removeFromParentAndCleanup(true);
     M_DEF_GM(pGm);
-    pGm->moveProjectileToDustbin(this);
+    getUnitLayer()->moveProjectileToDustbin(this);
 }
 
 CCObject* CProjectile::copyWithZone( CCZone* pZone )
@@ -2261,8 +2354,7 @@ CCObject* CProjectile::copyWithZone( CCZone* pZone )
 
 void CProjectile::setTarget( int iTarget )
 {
-    M_DEF_GM(pGm);
-    setTarget(pGm->getUnitByKey(iTarget));
+    setTarget(getUnitLayer()->getUnitByKey(iTarget));
 }
 
 void CProjectile::setTarget( CGameUnit* pTarget )
@@ -2276,18 +2368,355 @@ int CProjectile::getTarget() const
     return m_iTarget;
 }
 
+CUnitGroup::CUnitGroup()
+{
+}
+
+bool CUnitGroup::init()
+{
+    m_oArrUnits.init();
+    return true;
+}
+
+bool CUnitGroup::initWithUnitsInRange( CUnitGroup* pSource, const CCPoint& roPos, float fRadius, int iMaxCount /*= INFINITE*/, CONDITIONFUNC pBoolFunc /*= NULL*/, void* pParam /*= NULL*/ )
+{
+    m_oArrUnits.init();
+    int i = 0;
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(pSource->getUnitsArray(), pObj)
+    {
+        if (i == iMaxCount)
+        {
+            return true;
+        }
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (pUnit->getDistance(roPos) < fRadius && pBoolFunc && pBoolFunc(pUnit, pParam))
+        {
+            m_oArrUnits.addObject(pObj);
+            ++i;
+        }
+
+    }
+    return true;
+}
+
+bool CUnitGroup::initWithCondition( CUnitGroup* pSource, int iMaxCount /*= INFINITE*/, CONDITIONFUNC pBoolFunc /*= NULL*/, void* pParam /*= NULL*/ )
+{
+    m_oArrUnits.init();
+    int i = 0;
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(pSource->getUnitsArray(), pObj)
+    {
+        if (i == iMaxCount)
+        {
+            return true;
+        }
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (pBoolFunc && pBoolFunc(pUnit, pParam))
+        {
+            m_oArrUnits.addObject(pObj);
+            ++i;
+        }
+
+    }
+    return true;
+}
+
+CGameUnit* CUnitGroup::getUnitByIndex( int iIndex )
+{
+    return dynamic_cast<CGameUnit*>(m_oArrUnits.objectAtIndex(iIndex));
+}
+
+CGameUnit* CUnitGroup::getUnitByKey( int iKey )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (pUnit->getKey() == iKey)
+        {
+            return pUnit;
+        }
+    }
+    return NULL;
+}
+
+CGameUnit* CUnitGroup::getRandomUnit()
+{
+    return dynamic_cast<CGameUnit*>(m_oArrUnits.randomObject());
+}
+
+CGameUnit* CUnitGroup::getNearestUnitInRange( const CCPoint& roPos, float fRadius, CONDITIONFUNC pBoolFunc /*= NULL*/, void* pParam /*= NULL*/ )
+{
+    CGameUnit* pTarget = NULL;
+    float fMinDis = FLT_MAX;
+    float fDis;
+
+    CCArray* pUnits = getUnitsArray();
+    CGameUnit* pUnit = NULL;
+    CCObject* pObj;
+    CCARRAY_FOREACH(pUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if ((fDis = ccpDistance(pUnit->getPosition(), roPos)) < fRadius && fMinDis > fDis && pBoolFunc && pBoolFunc(pUnit, pParam))
+        {
+            pTarget = pUnit;
+            fMinDis = fDis;
+        }
+    }
+    return pTarget;
+}
+
+void CUnitGroup::addUnit( CGameUnit* pUnit )
+{
+    m_oArrUnits.addObject(pUnit);
+}
+
+void CUnitGroup::delUnit( CGameUnit* pUnit )
+{
+    m_oArrUnits.removeObject(pUnit);
+}
+
+CCArray* CUnitGroup::getUnitsArray()
+{
+    return &m_oArrUnits;
+}
+
+CUnitGroup* CUnitGroup::getUnitsInRange( const CCPoint& roPos, float fRadius, int iMaxCount /*= INFINITE*/, CONDITIONFUNC pBoolFunc /*= NULL*/, void* pParam /*= NULL*/ )
+{
+    return CUnitGroup::createWithUnitsInRange(this, roPos, fRadius, iMaxCount, pBoolFunc, pParam);
+}
+
+CUnitGroup* CUnitGroup::getUnits( int iMaxCount /*= INFINITE*/, CONDITIONFUNC pBoolFunc, void* pParam /*= NULL*/ )
+{
+    return CUnitGroup::createWithCondition(this, iMaxCount, pBoolFunc, pParam);
+}
+
+void CUnitGroup::cleanUnits()
+{
+    m_oArrUnits.removeAllObjects();
+}
+
+void CUnitGroup::addUnits( CUnitGroup* pUnits )
+{
+    m_oArrUnits.addObjectsFromArray(pUnits->getUnitsArray());
+}
+
+void CUnitGroup::addUnits( CCArray* pUnits )
+{
+    m_oArrUnits.addObjectsFromArray(pUnits);
+}
+
+void CUnitGroup::delUnits( CUnitGroup* pUnits )
+{
+    m_oArrUnits.removeObjectsInArray(pUnits->getUnitsArray());
+}
+
+void CUnitGroup::delUnits( CCArray* pUnits )
+{
+    m_oArrUnits.removeObjectsInArray(pUnits);
+}
+
+int CUnitGroup::getUnitsCount()
+{
+    return m_oArrUnits.count();
+}
+
+void CUnitGroup::setRangePosition( const CCPoint& roPos, float fRadius )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->setPosition(ccp(roPos.x - fRadius + rand() % (int)fRadius, roPos.y - fRadius + rand() % (int)fRadius));
+    }
+}
+
+void CUnitGroup::turnTo( bool bLeft )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->turnTo(bLeft);
+    }
+}
+
+void CUnitGroup::moveTo( const CCPoint& roPos, bool bIntended /*= true*/, bool bCancelAttack /*= true*/, bool bAutoFlipX /*= true*/ )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->moveTo(roPos, bIntended, bCancelAttack, bAutoFlipX);
+    }
+}
+
+void CUnitGroup::followTo( int iTargetKey, bool bIntended /*= true*/, bool bCancelAttack /*= true*/, bool bAutoFlipX /*= true*/, float fMaxOffsetY /*= 0.0*/ )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->followTo(iTargetKey, bIntended, bCancelAttack, bAutoFlipX, fMaxOffsetY);
+    }
+}
+
+void CUnitGroup::stopMove()
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->stopMove();
+    }
+}
+
+void CUnitGroup::attack( int iTargetKey, bool bIntended /*= true*/ )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->attack(iTargetKey, bIntended);
+    }
+}
+
+void CUnitGroup::stopAttack()
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->stopAttack();
+    }
+}
+
+void CUnitGroup::moveAlongPath( CUnitPath* pPath, bool bIntended /*= true*/, bool bRestart /*= false*/, float fBufArrive /*= 5.0*/ )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (pUnit)
+        {
+            pUnit->moveAlongPath(pPath, bIntended, bRestart, fBufArrive);
+        }
+    }
+}
+
+void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->damagedAdv(pAttack, pSource);
+    }
+}
+
+void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->damagedMid(pAttack, pSource);
+    }
+}
+
+void CUnitGroup::damagedBot( float fDamage, CUnit* pSource )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->damagedBot(fDamage, pSource);
+    }
+}
+
+void CUnitGroup::addSkill( CSkill* pSkill )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->addSkill(dynamic_cast<CSkill*>(pSkill->copy()));
+    }
+}
+
+void CUnitGroup::addPackage( CUnitPackage* pPackage )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->addPackage(pPackage);
+    }
+}
+
+void CUnitGroup::addBuff( CBuffSkill* pBuff, bool bForce /*= false*/ )
+{
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->addBuff(dynamic_cast<CBuffSkill*>(pBuff->copy()), bForce);
+    }
+}
+
+CGameUnit* CUnitGroup::copyUnit( int iKey )
+{
+    return dynamic_cast<CGameUnit*>(getUnitByKey(iKey)->copy());
+}
+
+bool CUnitGroup::isLivingAllyOf( CGameUnit* pUnit, CUnitForce* pParam)
+{
+    return !pUnit->isDead() && pUnit->isAllyOf(pParam);
+}
+
+bool CUnitGroup::isLivingEnemyOf( CGameUnit* pUnit, CUnitForce* pParam)
+{
+    return !pUnit->isDead() && pUnit->isEnemyOf(pParam);
+}
+
 CCUnitLayer::CCUnitLayer()
 {
 }
 
 bool CCUnitLayer::init()
 {
+    m_oArrUnit.init();
+    m_oArrProjectile.init();
+    m_oUnitDustbin.init();
+    m_oProjectileDustbin.init();
     m_fUnitTickInterval = 0;
     return CCLayerColor::init();
 }
 
 bool CCUnitLayer::initWithColor( const ccColor4B& color )
 {
+    m_oArrUnit.init();
+    m_oArrProjectile.init();
+    m_oUnitDustbin.init();
+    m_oProjectileDustbin.init();
     m_fUnitTickInterval = 0;
     return CCLayerColor::initWithColor(color);
 }
@@ -2301,61 +2730,79 @@ void CCUnitLayer::onEnter()
 void CCUnitLayer::onExit()
 {
     unschedule(schedule_selector(CCUnitLayer::onTickEvent));
+    CCArray* pArrUnit = getUnits()->getUnitsArray();
+    CGameUnit* pU;
+    CCObject* pObj;
+    CCARRAY_FOREACH(pArrUnit, pObj)
+    {
+        pU = dynamic_cast<CGameUnit*>(pObj);
+        moveUnitToDustbin(pU);
+    }
+    clearUnitDustbin();
+
+    CCArray* pArrProj = getProjectiles()->getUnitsArray();
+    CProjectile* pP;
+    CCARRAY_FOREACH(pArrProj, pObj)
+    {
+        pP = dynamic_cast<CProjectile*>(pObj);
+        moveProjectileToDustbin(pP);
+    }
+    clearProjectileDustbin();
     CCLayerColor::onExit();
 }
 
 void CCUnitLayer::onTickEvent( float fDt )
 {
-    M_DEF_GM(pGm);
-    CCArray* pUnitDustbin = pGm->getUnitDustbin();
-    CCArray* pProjectileDustbin = pGm->getProjectileDustbin();
-    CCArray* pUnits = pGm->getUnits()->getUnitsArray();
-    CCArray* pProjectiles = pGm->getProjectiles()->getUnitsArray();
+    CCArray* pArrUnit = getUnits()->getUnitsArray();
+    CCArray* pArrProj = getProjectiles()->getUnitsArray();
 
     CGameUnit* pUnit;
     CCObject* pObj = NULL;
-    CCARRAY_FOREACH(pUnits, pObj)
+    CCARRAY_FOREACH(pArrUnit, pObj)
     {
         pUnit = dynamic_cast<CGameUnit*>(pObj);
         pUnit->onTick(fDt);
     }
-    CCARRAY_FOREACH(pUnitDustbin, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->removeAllSpriteFromTheirParents();
-        pUnits->removeObject(pUnit);
-    }
-    pUnitDustbin->removeAllObjects();
+    clearUnitDustbin();
 
     CProjectile* pProjectile;
-    CCARRAY_FOREACH(pProjectiles, pObj)
+    CCARRAY_FOREACH(pArrProj, pObj)
     {
         pProjectile = dynamic_cast<CProjectile*>(pObj);
         pProjectile->onTick(fDt);
     }
-    CCARRAY_FOREACH(pProjectileDustbin, pObj)
-    {
-        pProjectile = dynamic_cast<CProjectile*>(pObj);
-        pProjectile->removeAllSpriteFromTheirParents();
-        pProjectiles->removeObject(pProjectile);
-    }
-    pProjectileDustbin->removeAllObjects();
+    clearProjectileDustbin();
 }
 
 void CCUnitLayer::addUnit( CGameUnit* pUnit )
 {
-    M_DEF_GM(pGm);
-    pGm->addUnitToEventDriver(pUnit);
+    m_oArrUnit.addUnit(pUnit);
+    pUnit->setUnitLayer(this);
     addChild(pUnit->getSprite());
     addChild(pUnit->getShadowNode(), 10);
 }
 
 void CCUnitLayer::addProjectile( CProjectile* pProjectile )
 {
-    M_DEF_GM(pGm);
-    pGm->addProjectileToEventDriver(pProjectile);
+    m_oArrProjectile.addUnit(pProjectile);
+    pProjectile->setUnitLayer(this);
     addChild(pProjectile->getSprite());
 }
+/*
+
+void CCUnitLayer::delUnit( CGameUnit* pUnit )
+{
+    M_DEF_GM(pGm);
+    CProjectile* pProj = dynamic_cast<CProjectile*>(pUnit);
+    if (pProj)
+    {
+        pGm->moveProjectileToDustbin(pProj);
+    }
+    else
+    {
+        pGm->moveUnitToDustbin(pUnit);
+    }
+}*/
 
 void CCUnitLayer::setUnitTickInterval( float fInterval )
 {
@@ -2367,6 +2814,77 @@ float CCUnitLayer::getUnitTickInterval() const
 {
     return m_fUnitTickInterval;
 }
+
+CUnitGroup* CCUnitLayer::getUnits()
+{
+    return &m_oArrUnit;
+}
+
+CGameUnit* CCUnitLayer::getUnitByKey( int iKey )
+{
+    return m_oArrUnit.getUnitByKey(iKey);
+}
+
+CUnitGroup* CCUnitLayer::getProjectiles()
+{
+    return &m_oArrProjectile;
+}
+
+CProjectile* CCUnitLayer::getProjectileByKey( int iKey )
+{
+    return dynamic_cast<CProjectile*>(m_oArrProjectile.getUnitByKey(iKey));
+}
+
+void CCUnitLayer::moveUnitToDustbin( CGameUnit* pToDel )
+{
+    m_oUnitDustbin.addObject(pToDel);
+}
+
+void CCUnitLayer::moveProjectileToDustbin( CProjectile* pToDel )
+{
+    m_oProjectileDustbin.addObject(pToDel);
+}
+
+CCArray* CCUnitLayer::getUnitDustbin()
+{
+    return &m_oUnitDustbin;
+}
+
+CCArray* CCUnitLayer::getProjectileDustbin()
+{
+    return &m_oProjectileDustbin;
+}
+
+void CCUnitLayer::clearUnitDustbin()
+{
+    CCObject* pObj;
+    CGameUnit* pUnit;
+    CCArray* pArrUnit = m_oArrUnit.getUnitsArray();
+    CCARRAY_FOREACH(&m_oUnitDustbin, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        pUnit->removeAllSpriteFromTheirParents();
+        pArrUnit->removeObject(pUnit);
+    }
+    m_oUnitDustbin.removeAllObjects();
+}
+
+void CCUnitLayer::clearProjectileDustbin()
+{
+    CCObject* pObj;
+    CProjectile* pProj;
+    CCArray* pArrProj = m_oArrProjectile.getUnitsArray();
+    CCARRAY_FOREACH(&m_oProjectileDustbin, pObj)
+    {
+        pProj = dynamic_cast<CProjectile*>(pObj);
+        pProj->removeAllSpriteFromTheirParents();
+        pArrProj->removeObject(pProj);
+    }
+    m_oProjectileDustbin.removeAllObjects();
+}
+
+const float CCWinUnitLayer::CONST_MIN_MOVE_DELTA = 10.0;
+const float CCWinUnitLayer::CONST_MAX_CAN_MOVE_DURATION = 0.15;
 
 CCWinUnitLayer::CCWinUnitLayer()
 {
@@ -2562,338 +3080,6 @@ void CCWinUnitLayer::adjustWinPos( CCPoint& roPos )
     roPos.y = MAX(roPos.y, (oSzWin.height - oSz.height) * getScaleY());
     roPos.x = MIN(roPos.x, 0);
     roPos.y = MIN(roPos.y, 0);
-}
-
-const float CCWinUnitLayer::CONST_MIN_MOVE_DELTA = 10.0;
-const float CCWinUnitLayer::CONST_MAX_CAN_MOVE_DURATION = 0.15;
-
-CUnitGroup::CUnitGroup()
-{
-}
-
-bool CUnitGroup::init()
-{
-    m_oArrUnits.init();
-    return true;
-}
-
-bool CUnitGroup::initWithUnitsInRange( CUnitGroup* pSource, const CCPoint& roPos, float fRadius, int iMaxCount /*= INFINITE*/, CONDITIONFUNC pBoolFunc /*= NULL*/, void* pParam /*= NULL*/ )
-{
-    m_oArrUnits.init();
-    int i = 0;
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(pSource->getUnitsArray(), pObj)
-    {
-        if (i == iMaxCount)
-        {
-            return true;
-        }
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        if (pUnit->getDistance(roPos) < fRadius && pBoolFunc && pBoolFunc(pUnit, pParam))
-        {
-            m_oArrUnits.addObject(pObj);
-            ++i;
-        }
-        
-    }
-    return true;
-}
-
-bool CUnitGroup::initWithCondition( CUnitGroup* pSource, int iMaxCount /*= INFINITE*/, CONDITIONFUNC pBoolFunc /*= NULL*/, void* pParam /*= NULL*/ )
-{
-    m_oArrUnits.init();
-    int i = 0;
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(pSource->getUnitsArray(), pObj)
-    {
-        if (i == iMaxCount)
-        {
-            return true;
-        }
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        if (pBoolFunc && pBoolFunc(pUnit, pParam))
-        {
-            m_oArrUnits.addObject(pObj);
-            ++i;
-        }
-
-    }
-    return true;
-}
-
-CGameUnit* CUnitGroup::getUnitByIndex( int iIndex )
-{
-    return dynamic_cast<CGameUnit*>(m_oArrUnits.objectAtIndex(iIndex));
-}
-
-CGameUnit* CUnitGroup::getUnitByKey( int iKey )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        if (pUnit->getKey() == iKey)
-        {
-            return pUnit;
-        }
-    }
-    return NULL;
-}
-
-CGameUnit* CUnitGroup::getRandomUnit()
-{
-    return dynamic_cast<CGameUnit*>(m_oArrUnits.randomObject());
-}
-
-CGameUnit* CUnitGroup::getNearestUnitInRange( const CCPoint& roPos, float fRadius, CONDITIONFUNC pBoolFunc /*= NULL*/, void* pParam /*= NULL*/ )
-{
-    CGameUnit* pTarget = NULL;
-    float fMinDis = FLT_MAX;
-    float fDis;
-
-    CCArray* pUnits = getUnitsArray();
-    CGameUnit* pUnit = NULL;
-    CCObject* pObj;
-    CCARRAY_FOREACH(pUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        if ((fDis = ccpDistance(pUnit->getPosition(), roPos)) < fRadius && fMinDis > fDis && pBoolFunc && pBoolFunc(pUnit, pParam))
-        {
-            pTarget = pUnit;
-            fMinDis = fDis;
-        }
-    }
-    return pTarget;
-}
-
-void CUnitGroup::addUnit( CGameUnit* pUnit )
-{
-    m_oArrUnits.addObject(pUnit);
-}
-
-void CUnitGroup::delUnit( CGameUnit* pUnit )
-{
-    m_oArrUnits.removeObject(pUnit);
-}
-
-CCArray* CUnitGroup::getUnitsArray()
-{
-    return &m_oArrUnits;
-}
-
-CUnitGroup* CUnitGroup::getUnitsInRange( const CCPoint& roPos, float fRadius, int iMaxCount /*= INFINITE*/, CONDITIONFUNC pBoolFunc /*= NULL*/, void* pParam /*= NULL*/ )
-{
-    return CUnitGroup::createWithUnitsInRange(this, roPos, fRadius, iMaxCount, pBoolFunc, pParam);
-}
-
-CUnitGroup* CUnitGroup::getUnits( int iMaxCount /*= INFINITE*/, CONDITIONFUNC pBoolFunc, void* pParam /*= NULL*/ )
-{
-    return CUnitGroup::createWithCondition(this, iMaxCount, pBoolFunc, pParam);
-}
-
-void CUnitGroup::cleanUnits()
-{
-    m_oArrUnits.removeAllObjects();
-}
-
-void CUnitGroup::addUnits( CUnitGroup* pUnits )
-{
-    m_oArrUnits.addObjectsFromArray(pUnits->getUnitsArray());
-}
-
-void CUnitGroup::addUnits( CCArray* pUnits )
-{
-    m_oArrUnits.addObjectsFromArray(pUnits);
-}
-
-void CUnitGroup::delUnits( CUnitGroup* pUnits )
-{
-    m_oArrUnits.removeObjectsInArray(pUnits->getUnitsArray());
-}
-
-void CUnitGroup::delUnits( CCArray* pUnits )
-{
-    m_oArrUnits.removeObjectsInArray(pUnits);
-}
-
-int CUnitGroup::getUnitsCount()
-{
-    return m_oArrUnits.count();
-}
-
-void CUnitGroup::setRangePosition( const CCPoint& roPos, float fRadius )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->setPosition(ccp(roPos.x - fRadius + rand() % (int)fRadius, roPos.y - fRadius + rand() % (int)fRadius));
-    }
-}
-
-void CUnitGroup::turnTo( bool bLeft )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->turnTo(bLeft);
-    }
-}
-
-void CUnitGroup::moveTo( const CCPoint& roPos, bool bWithHostility /*= false*/, bool bCancelAttack /*= true*/, bool bAutoFlipX /*= true*/ )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->moveTo(roPos, bWithHostility, bCancelAttack, bAutoFlipX);
-    }
-}
-
-void CUnitGroup::followTo( int iTargetKey, bool bWithHostility /*= false*/, bool bCancelAttack /*= true*/, bool bAutoFlipX /*= true*/, float fMaxOffsetY /*= 0.0*/ )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->followTo(iTargetKey, bWithHostility, bCancelAttack, bAutoFlipX, fMaxOffsetY);
-    }
-}
-
-void CUnitGroup::stopMove()
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->stopMove();
-    }
-}
-
-void CUnitGroup::attack( int iTargetKey )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->attack(iTargetKey);
-    }
-}
-
-void CUnitGroup::stopAttack()
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->stopAttack();
-    }
-}
-
-void CUnitGroup::moveAlongPath( CUnitPath* pPath, bool bRestart /*= false*/, bool bWithHostility /*= true*/, float fBuffArrive /*= FLT_EPSILON*/ )
-{
-    CPathGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CPathGameUnit*>(pObj);
-        if (pUnit)
-        {
-            pUnit->moveAlongPath(pPath, bRestart, bWithHostility, fBuffArrive);
-        }
-    }
-}
-
-void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->damagedAdv(pAttack, pSource);
-    }
-}
-
-void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->damagedMid(pAttack, pSource);
-    }
-}
-
-void CUnitGroup::damagedBot( float fDamage, CUnit* pSource )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->damagedBot(fDamage, pSource);
-    }
-}
-
-void CUnitGroup::addSkill( CSkill* pSkill )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->addSkill(dynamic_cast<CSkill*>(pSkill->copy()));
-    }
-}
-
-void CUnitGroup::addPackage( CUnitPackage* pPackage )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->addPackage(pPackage);
-    }
-}
-
-void CUnitGroup::addBuff( CBuffSkill* pBuff, bool bForce /*= false*/ )
-{
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    CCARRAY_FOREACH(&m_oArrUnits, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->addBuff(dynamic_cast<CBuffSkill*>(pBuff->copy()), bForce);
-    }
-}
-
-CGameUnit* CUnitGroup::copyUnit( int iKey )
-{
-    return dynamic_cast<CGameUnit*>(getUnitByKey(iKey)->copy());
-}
-
-bool CUnitGroup::isLivingAllyOf( CGameUnit* pUnit, CUnitForce* pParam)
-{
-    return !pUnit->isDead() && pUnit->isAllyOf(pParam);
-}
-
-bool CUnitGroup::isLivingEnemyOf( CGameUnit* pUnit, CUnitForce* pParam)
-{
-    return !pUnit->isDead() && pUnit->isEnemyOf(pParam);
 }
 
 CUnitInfo::CUnitInfo( const char* pName, const CCPoint& roAnchor, float fHalfOfWidth, float fHalfOfHeight, float fScale, float fActMoveDelay, float fActDieDelay, float fAct1Delay, float fAct2Delay, float fAct3Delay, float fAct4Delay, float fAct5Delay, float fAct6Delay, const ARR_ATTACK_ANI& roArrAttackAnis, float fBaseMoveSpeed, float fBaseAttackInterval, float fAttackEffectDelay, float fAttackMinRange, float fAttackRange, float fHostilityRange, CGameUnit::WEAPON_TYPE eWeaponType, int iProjectileKey, float fProjectileMoveSpeed, float fProjectileScale, float fProjectileMaxOffsetY, float fProjectileBirthOffsetX, float fProjectileBirthOffsetY, const CAttackValue& roBaseAttackValue, float fExAttackRandomRange, CArmorValue::ARMOR_TYPE eArmorType, float fBaseArmorValue, int iForceIndex, uint32_t dwForceAlly, float fMaxHp, bool bIsFixed, int iRewardGold, int iRewardExp )
@@ -3200,23 +3386,6 @@ CGameUnit* CUnitInfoPatchManager::unitByIndex( int iIndex )
     return pU;
 }
 
-CPathGameUnit* CUnitInfoPatchManager::pathUnitByIndex( int iIndex )
-{
-    M_DEF_UM(pUm);
-    CUnitInfoPatch* pPatch = patchByIndex(iIndex);
-    if (!pPatch)
-    {
-        return NULL;
-    }
-    CPathGameUnit* pU = pUm->pathUnitByInfo(pPatch->m_iOrgUnitIndex);
-    if (!pU)
-    {
-        return NULL;
-    }
-    patch(pU, pPatch);
-    return pU;
-}
-
 CHeroUnit* CUnitInfoPatchManager::heroByIndex( int iIndex )
 {
     M_DEF_UM(pUm);
@@ -3312,6 +3481,7 @@ CGameUnit* CUnitManager::unitByInfo( int iUnitInfoIndex )
     CGameUnit* pUnit = CGameUnit::createWithInfo(it->second);
     return pUnit;
 }
+/*
 
 CPathGameUnit* CUnitManager::pathUnitByInfo( int iUnitInfoIndex )
 {
@@ -3324,6 +3494,7 @@ CPathGameUnit* CUnitManager::pathUnitByInfo( int iUnitInfoIndex )
     CPathGameUnit* pUnit = CPathGameUnit::createWithInfo(it->second);
     return pUnit;
 }
+*/
 
 CHeroUnit* CUnitManager::heroByInfo( int iUnitInfoIndex )
 {
@@ -3392,11 +3563,6 @@ CProjectile* CProjectileManager::getProjectile( int iKey )
 CProjectile* CProjectileManager::copyProjectile( int iKey )
 {
     return dynamic_cast<CProjectile*>(m_oArrProjectile.getUnitByKey(iKey)->copy());
-}
-
-CPathGameUnit::~CPathGameUnit()
-{
-    CC_SAFE_RELEASE(m_pCurPath);
 }
 
 bool CUnitPath::init()
@@ -3476,82 +3642,4 @@ bool CUnitPath::initWithFile( const char* pFileName )
     CUnitPath::init();
     addPoints(pFileName);
     return true;
-}
-
-bool CPathGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor /*= ccp(0.5f, 0.5f)*/ )
-{
-    m_pCurPath = NULL;
-    m_dwCurPos = 0;
-    m_bWithHostility = false;
-    m_fBuffArrive = FLT_EPSILON;
-    return CGameUnit::initWithName(pUnit, roAnchor);
-}
-
-bool CPathGameUnit::initWithInfo( const CUnitInfo& roUnitInfo )
-{
-    m_pCurPath = NULL;
-    m_dwCurPos = 0;
-    m_bWithHostility = false;
-    m_fBuffArrive = FLT_EPSILON;
-    return CGameUnit::initWithInfo(roUnitInfo);
-}
-
-void CPathGameUnit::onTick( float fDt )
-{
-    const CCPoint* pTarget;
-    if (m_pCurPath && (pTarget = m_pCurPath->getCurTargetPoint(m_dwCurPos)) && ccpDistance(getPosition(), *pTarget) < m_fBuffArrive)
-    {
-        m_pCurPath->arriveCurTargetPoint(m_dwCurPos);
-    }
-    
-    if (!isDoingOr(kAttacking) && m_pCurPath)
-    {
-        moveAlongPath(m_pCurPath, false, m_bWithHostility, m_fBuffArrive);
-    }
-
-    CGameUnit::onTick(fDt);
-}
-
-void CPathGameUnit::moveAlongPath( CUnitPath* pPath, bool bRestart /*= false*/, bool bWithHostility /*= true*/, float fBuffArrive /*= FLT_EPSILON*/ )
-{
-    if (pPath != m_pCurPath)
-    {
-        CC_SAFE_RELEASE(m_pCurPath);
-        CC_SAFE_RETAIN(pPath);
-        m_pCurPath = pPath;
-    }
-    
-    if (!m_pCurPath)
-    {
-        return;
-    }
-
-    if (bRestart)
-    {
-        m_dwCurPos = 0;
-    }
-    if (m_bWithHostility != bWithHostility)
-    {
-        m_bWithHostility = bWithHostility;
-    }
-    if (m_fBuffArrive != fBuffArrive)
-    {
-        m_fBuffArrive = MAX(FLT_EPSILON, fBuffArrive);
-    }
-    
-    const CCPoint* pTarget = m_pCurPath->getCurTargetPoint(m_dwCurPos);
-    if (pTarget)
-    {
-        moveTo(*pTarget, m_bWithHostility);
-    }
-}
-
-void CPathGameUnit::setMovingWithHostility( bool bWithHostility /*= true*/ )
-{
-    m_bWithHostility = bWithHostility;
-}
-
-bool CPathGameUnit::isMovingWithHostility() const
-{
-    return m_bWithHostility;
 }

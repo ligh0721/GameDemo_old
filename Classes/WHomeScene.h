@@ -37,7 +37,7 @@ public:
     virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
 	virtual void onEnter();
 	virtual void onExit();
-    static CGameUnit *getHeroUnit();
+    CGameUnit* getHeroUnit();
     void onBtnGoClick(CCObject* pObject);
     void onBtnHeroClick(CCObject* pObject);
     void onBtnBuildClick(CCNode* pObject);
@@ -68,6 +68,7 @@ public:
     CCSkillButtonNormal m_oBuildBtn;
     bool m_bCanBuild;
     CCLabelTTF m_oGold;
+    int m_iHero;
 };
 
 

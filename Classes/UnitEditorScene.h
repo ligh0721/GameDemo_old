@@ -40,7 +40,7 @@ public:
     void onBtnClearAllPathClick(CCObject* pObject);
     void onBtnSavePathClick(CCObject* pObject);
     void onBtnReloadClick(CCObject* pObject);
-    CPathGameUnit* curWalker(bool bReset = true);
+    CGameUnit* curWalker(bool bReset = false);
 
 public:
     CCMenu m_oMenu;

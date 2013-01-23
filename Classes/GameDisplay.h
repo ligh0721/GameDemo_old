@@ -317,13 +317,14 @@ public:
     CCSkillButtonAdvance();
     virtual ~CCSkillButtonAdvance();
 
-    virtual bool init(const char* pNormalImage, const char* pSelectedImage, const char* pDisabledImage, const char* pBlinkImage, const char* pMaskImage, int iUnitKey, int iSkillKey);
-    CREATE_FUNC_PARAM(CCSkillButtonAdvance, (const char* pNormalImage, const char* pSelectedImage, const char* pDisabledImage, const char* pBlinkImage, const char* pMaskImage, int iUnitKey, int iSkillKey), pNormalImage, pSelectedImage, pDisabledImage, pBlinkImage, pMaskImage, iUnitKey, iSkillKey);
+    virtual bool init(const char* pNormalImage, const char* pSelectedImage, const char* pDisabledImage, const char* pBlinkImage, const char* pMaskImage, int iUnitKey, int iSkillKey, CCUnitLayer* pUnitLayer);
+    CREATE_FUNC_PARAM(CCSkillButtonAdvance, (const char* pNormalImage, const char* pSelectedImage, const char* pDisabledImage, const char* pBlinkImage, const char* pMaskImage, int iUnitKey, int iSkillKey, CCUnitLayer* pUnitLayer), pNormalImage, pSelectedImage, pDisabledImage, pBlinkImage, pMaskImage, iUnitKey, iSkillKey, pUnitLayer);
     virtual void setCoolDown(float fDuration);
     virtual float getCoolDown() const;
 
     virtual void onSkillClick(CCNode* pNode);
     virtual void onSkillFinished(CCNode* pNode);
+    M_SYNTHESIZE(CCUnitLayer*, m_pUnitLayer, UnitLayer);
 
 public:
     int m_iUnitKey;

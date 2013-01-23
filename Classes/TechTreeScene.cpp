@@ -275,11 +275,12 @@ CTechTreeLayer* CTechTreeLayer::singleTechTree()
 
 void CTechTreeLayer::onBtnBackClick( CCObject *pObject )
 {
-    CGameUnit *heroUnit=CCWHomeSceneLayer::getHeroUnit();
+    /*
+    CGameUnit* heroUnit = getHeroUnit();
     if (m_nodeLine[1]==2)
     {
         heroUnit->addSkill(CVampirePas::create(10.0));
-    }
+    }*/
     CCDirector::sharedDirector()->popScene();
 }
 
