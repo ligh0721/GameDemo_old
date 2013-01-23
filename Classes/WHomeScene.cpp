@@ -67,7 +67,8 @@ bool CCWHomeSceneLayer::init()
     m_oStart.setPosition(ccp(oSz.width * 0.8, oSz.height * 0.6));
 
     M_DEF_UPM(pUpm);
-    pUpm->addPatches("heroes.uip");
+    //pUpm->addPatches("heroes.uip");
+    m_oUipm.initWithFile("heroes.uip");
     // demo code
     M_DEF_UM(pUm);
     CGameUnit* midTower= pUm->unitByInfo(COrgUnitInfo::kArcane);
@@ -91,7 +92,7 @@ bool CCWHomeSceneLayer::init()
     midTower->setForceResource(pFr);
 
 
-    CGameUnit* heroUnit=CCWHomeSceneLayer::getHeroUnit();
+    CGameUnit* heroUnit=getHeroUnit();
 
     addUnit(heroUnit);
     heroUnit->setPosition(ccp(804,793));
@@ -136,7 +137,7 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oSkillPanel);
     m_oSkillPanel.setPosition(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50);
 
-    CSkill* pSkill = pOs->skill(COrgSkillInfo::kThunderClap1);
+    CSkill* pSkill = pOs->skill(COrgSkillInfo::kSpeedUp1);
     heroUnit->addSkill(pSkill);
 
     CCSkillButtonAdvance* pBtn;
@@ -362,7 +363,8 @@ CGameUnit* CCWHomeSceneLayer::getHeroUnit()
     if (!pU)
     {
         M_DEF_UPM(pUpm);
-        pU = pUpm->unitByIndex(0);
+        //pU = pUpm->unitByIndex(0);
+        pU = m_oUipm.unitByIndex(0);
         m_iHero = pU->getKey();
     }
     return pU;

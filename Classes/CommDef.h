@@ -96,7 +96,7 @@ public: inline virtual void set##funName(const varType& var){ varName = var; }
 #define CREATE_FUNC_PARAM(__TYPE__, __PARAM__, ...) \
     static __TYPE__* create __PARAM__ \
     { \
-        __TYPE__ *pRet = new __TYPE__(); \
+        __TYPE__* pRet = new __TYPE__(); \
         if (pRet && pRet->init(__VA_ARGS__)) \
         { \
             pRet->autorelease(); \
@@ -113,7 +113,7 @@ public: inline virtual void set##funName(const varType& var){ varName = var; }
 #define CREATEWITH_FUNC_PARAM(__WITH__, __TYPE__, __PARAM__, ...) \
     static __TYPE__* createWith##__WITH__ __PARAM__ \
     { \
-        __TYPE__ *pRet = new __TYPE__(); \
+        __TYPE__* pRet = new __TYPE__(); \
         if (pRet && pRet->initWith##__WITH__(__VA_ARGS__)) \
         { \
            pRet->autorelease(); \
@@ -124,6 +124,23 @@ public: inline virtual void set##funName(const varType& var){ varName = var; }
            delete pRet; \
            pRet = NULL; \
            return NULL; \
+        } \
+    }
+
+#define CREATE_INITWITH_FUNC_PARAM(__WITH__, __TYPE__, __PARAM__, ...) \
+    static __TYPE__* create __PARAM__ \
+    { \
+        __TYPE__* pRet = new __TYPE__(); \
+        if (pRet && pRet->initWith##__WITH__(__VA_ARGS__)) \
+        { \
+            pRet->autorelease(); \
+            return pRet; \
+        } \
+        else \
+        { \
+            delete pRet; \
+            pRet = NULL; \
+            return NULL; \
         } \
     }
 

@@ -343,11 +343,12 @@ CBuffSkill::~CBuffSkill()
 
 }
 
-bool CBuffSkill::init(float fDuration, bool bCanBePlural)
+bool CBuffSkill::init( float fDuration, bool bCanBePlural /*= false*/, int iSrcKey /*= 0*/ )
 {
     m_fDuration = fDuration;
     m_fPass = 0;
     m_bCanBePlural = bCanBePlural;
+    m_iSrcKey = iSrcKey;
     return true;
 }
 
@@ -572,6 +573,7 @@ void CAttackBuffMakerPas::onUnitAttackTarget( CAttackData* pAttack, CUnit* pTarg
         CBuffSkill* pBuff = dynamic_cast<CBuffSkill*>(pSm->copySkill(m_iBuffTemplateKey));
         if (pBuff && pBuff->getDuration())
         {
+            pBuff->setSrcKey(getOwner()->getKey());
             pBuff->setLevel(m_iBuffLevel);
             pAttack->addBuff(pBuff, m_iProbability);
         }
@@ -1173,7 +1175,7 @@ void CStatusShowPas::onSkillAdd()
     CCShadowNode* pSn = pUnit->getShadowNode();
 #else
     CCGameUnitSprite* pUnit = dynamic_cast<CGameUnit*>(getOwner())->getSprite();
-    CCNode* pSn = pUnit;//->getControler()->getShadowNode();
+    CCNode* pSn = pUnit->getShadowNode();//->getControler()->getShadowNode();
 #endif
     CCSize oSz(pUnit->getControler()->getHalfOfWidth() * 3, pUnit->getControler()->getHalfOfHeight() * 3);
     m_oProgressBar.init(CCSizeMake(oSz.width * pUnit->getScale(), 6), CCSprite::createWithSpriteFrameName("healthbar_fill.png"), CCSprite::createWithSpriteFrameName("healthbar_border.png"), 1, 1, true);
@@ -1543,4 +1545,106 @@ void CSplashAct::onSkillCast()
         }
 
     }
+}
+
+CThrowBuff::CThrowBuff()
+    : m_iActRotateKey(CGameManager::sharedGameManager()->keygen())
+    , m_iActThrowKey(CGameManager::sharedGameManager()->keygen())
+{
+
+}
+
+bool CThrowBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fThrowRange, float fThrowDuration, float fMaxHeight, const CAttackValue& roDamage, float fDamageRange, int iBuffTemplateKey, int iBuffLevel )
+{
+    setThrowRange(fThrowRange);
+    setThrowDuration(fThrowDuration);
+    setMaxHeight(fMaxHeight);
+    m_oDamage = roDamage;
+    m_iBuffTemplateKey = iBuffTemplateKey;
+    m_iBuffLevel = iBuffLevel;
+    m_fDamageRange = fDamageRange;
+    return CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+}
+
+CCObject* CThrowBuff::copyWithZone( CCZone* pZone )
+{
+    return CThrowBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fThrowRange, m_fThrowDuration, m_fMaxHeight, m_oDamage, m_fDamageRange, m_iBuffTemplateKey, m_iBuffLevel);
+}
+
+void CThrowBuff::onBuffAdd()
+{
+    CBuffSkill::onBuffAdd();
+
+    CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
+    if (u->isFixed() || u->getSprite()->getActionByTag(m_iActThrowKey))
+    {
+        return;
+    }
+    CGameUnit* pS = u->getUnitLayer()->getUnitByKey(m_iSrcKey);
+    pS->attack(pS->isDoingOr(CGameUnit::kIntended) ? pS->getLastAttackTarget() : 0, pS->isDoingOr(CGameUnit::kIntended));
+    if (!u || u->isDead())
+    {
+        return;
+    }
+
+    u->suspend();
+    CCPoint oEndPos;
+    if (m_oEndPos.equals(CCPointZero))
+    {
+        float fA = rand();
+        float fR = rand() % (int)m_fThrowRange;
+        oEndPos = ccpAdd(u->getPosition(), ccp(cos(fA) * fR, sin(-fA) * fR));
+    }
+    else
+    {
+        oEndPos = m_oEndPos;
+    }
+    
+    CCAction* pAct = CCSequence::createWithTwoActions(
+        CCJumpTo::create(m_fThrowDuration, oEndPos, m_fMaxHeight, 1),
+        //CCMoveToEx::create(m_fThrowDuration, oEndPos, m_fMaxHeight, false),
+        CCCallFuncN::create(this, callfuncN_selector(CThrowBuff::onThrowEnd))
+        );
+    pAct->setTag(m_iActThrowKey);
+    u->getSprite()->runAction(pAct);
+
+    pAct = CCRepeatForever::create(CCRotateBy::create(1, rand() % 3600 - 1800));
+    pAct->setTag(m_iActRotateKey);
+    u->getSprite()->runAction(pAct);
+}
+
+void CThrowBuff::onBuffDel()
+{
+    CBuffSkill::onBuffDel();
+}
+
+void CThrowBuff::onThrowEnd( CCNode* pNode )
+{
+    M_DEF_SM(pSm);
+    CBuffSkill* pBuff = dynamic_cast<CBuffSkill*>(pSm->copySkill(m_iBuffTemplateKey));
+    pBuff->setLevel(m_iBuffLevel);
+
+    CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
+    if (!u)
+    {
+        return;
+    }
+
+    u->getSprite()->stopActionByTag(m_iActRotateKey);
+    u->getSprite()->setRotation(0);
+
+    u->setAnimation(CGameUnit::kAnimationDie, 1, 1, CGameUnit::kActDie);
+
+    if (u->isDead())
+    {
+        return;
+    }
+    
+    CGameUnit* pS = u->getUnitLayer()->getUnitByKey(m_iSrcKey);
+    CAttackData* pAd = CAttackData::create();
+    pAd->setAttack(m_oDamage);
+    pAd->addBuff(pBuff, 50);
+    u->damagedAdv(pAd, pS);
+    u->getUnitLayer()->getUnits()->getUnitsInRange(u->getPosition(), m_fDamageRange, -1, CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(pS))->damagedAdv(pAd, pS);
+    u->getUnitLayer()->runAction(CCShakeAct::create(0.3, 0.02, 5));
 }

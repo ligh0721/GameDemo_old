@@ -69,6 +69,8 @@ public:
     bool m_bCanBuild;
     CCLabelTTF m_oGold;
     int m_iHero;
+
+    CUnitInfoPatchManager m_oUipm;
 };
 
 

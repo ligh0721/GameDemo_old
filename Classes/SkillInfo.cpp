@@ -120,6 +120,34 @@ bool COrgSkillInfo::init()
     m_mapSkills[kHpChange3].iIndex = iKey;
     m_mapSkills[kHpChange3].sName = "英雄资质";
     m_mapSkills[kHpChange3].sDesc = "每秒恢复自身最大生命的0.5%";
+
+    pSkill = CThumpPas::create(20, CExtraCoeff(1, 10), 2);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kThump1].iIndex = iKey;
+    m_mapSkills[kThump1].sName = "重击";
+    m_mapSkills[kThump1].sDesc = "攻击时有20%的概率击晕目标，并额外造成10点伤害";
+
+    pSkill = CStunBuff::create(2, false);
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
+    iKey = pSm->addSkill(pSkill);
+    
+    pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
+    iKey = pSm->addSkill(pSkill);
+
+    m_mapSkills[kThrowHit1].iIndex = iKey;
+    m_mapSkills[kThrowHit1].sName = "击飞";
+    m_mapSkills[kThrowHit1].sDesc = "75%的概率将目标击飞至150范围内的一点，落地后对周围50半径范围内单位造成50点伤害并眩晕2秒，被坠落单位还将受到50点额外伤害";
+
+    pSkill = CSpeedBuff::create(7, true, CExtraCoeff(1.0, 0), CExtraCoeff(1.0, 0));
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kSpeedUp1].iIndex = iKey;
+    m_mapSkills[kSpeedUp1].sName = "加速";
+    m_mapSkills[kSpeedUp1].sDesc = "提高自身100%的移动速度和100%的攻击速度";
     
     return true;
 }

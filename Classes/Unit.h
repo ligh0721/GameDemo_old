@@ -169,6 +169,8 @@ public:
     virtual bool init(CBuffSkill* pBuff, int iProbability);
     M_CREATE_FUNC_PARAM(CAttackBuff, (CBuffSkill* pBuff, int iProbability), pBuff, iProbability);
 
+    virtual CCObject* copyWithZone(CCZone* pZone);
+
 public:
     CBuffSkill* m_pBuff;
     int m_iProbability;
@@ -182,6 +184,8 @@ public:
     virtual ~CAttackData();
     CREATE_FUNC(CAttackData);
     virtual bool init();
+
+    virtual CCObject* copyWithZone(CCZone* pZone);
 
     void addBuff(CBuffSkill* pBuff, int iProbability);
 

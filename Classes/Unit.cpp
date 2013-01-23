@@ -420,6 +420,11 @@ bool CAttackBuff::init(CBuffSkill* pBuff, int iProbability)
     return true;
 }
 
+CCObject* CAttackBuff::copyWithZone( CCZone* pZone )
+{
+    return CAttackBuff::create(dynamic_cast<CBuffSkill*>(m_pBuff->copy()), m_iProbability);
+}
+
 CAttackData::CAttackData()
     : m_fAngle(0)
 {
@@ -434,6 +439,15 @@ bool CAttackData::init()
 {
     m_oArrBuff.init();
     return true;
+}
+
+CCObject* CAttackData::copyWithZone( CCZone* pZone )
+{
+    CAttackData* pAd = CAttackData::create();
+    pAd->setAngle(getAngle());
+    pAd->setAttack(*this);
+    pAd->m_oArrBuff.addObjectsFromArray(dynamic_cast<CCArray*>(m_oArrBuff.copy()));
+    return pAd;
 }
 
 void CAttackData::addBuff( CBuffSkill* pBuff, int iProbability )
@@ -1362,7 +1376,11 @@ const char* CGameUnit::getName() const
 
 void CGameUnit::setFrame( const char* pFrame )
 {
-    m_oSprite.setDisplayFrame(CGameManager::sharedGameManager()->getUnitFrame(m_sUnit.c_str(), pFrame));
+    CCSpriteFrame* pF = CGameManager::sharedGameManager()->getUnitFrame(m_sUnit.c_str(), pFrame);
+    if (pF)
+    {
+        m_oSprite.setDisplayFrame(pF);
+    }
 }
 
 void CGameUnit::setDefaultFrame()
@@ -1755,8 +1773,9 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
         {
             // 攻击中，且没有施展动作，可能是原地打，也可能是追击中
             endDoing(kAttacking | kIntended);
-            m_iLastAttackTarget = 0;
+            //m_iLastAttackTarget = 0;
         }
+        m_iLastAttackTarget = 0;
         return;
     }
 
@@ -2039,12 +2058,14 @@ CProjectile* CGameUnit::getTemplateProjectile()
 
 void CGameUnit::suspend()
 {
-
+    startDoing(kSuspended);
+    stopMove();
+    stopAttack();
 }
 
 void CGameUnit::resume()
 {
-
+    endDoing(kSuspended);
 }
 
 void CGameUnit::startDoing( uint32_t dwMask)
@@ -2110,6 +2131,7 @@ void CGameUnit::onTick( float fDt )
 
 void CGameUnit::onDie()
 {
+    getSprite()->stopAllActions();
     CGameUnit* pUnit;
     CCObject* pObj;
     M_DEF_GM(pGm);
@@ -2622,6 +2644,7 @@ void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource )
     CCObject* pObj;
     CCARRAY_FOREACH(&m_oArrUnits, pObj)
     {
+        pAttack = dynamic_cast<CAttackData*>(pAttack->copy());
         pUnit = dynamic_cast<CGameUnit*>(pObj);
         pUnit->damagedAdv(pAttack, pSource);
     }
@@ -2633,6 +2656,7 @@ void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource )
     CCObject* pObj;
     CCARRAY_FOREACH(&m_oArrUnits, pObj)
     {
+        pAttack = dynamic_cast<CAttackData*>(pAttack->copy());
         pUnit = dynamic_cast<CGameUnit*>(pObj);
         pUnit->damagedMid(pAttack, pSource);
     }
