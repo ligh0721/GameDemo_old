@@ -416,7 +416,7 @@ void CCWHomeSceneLayer::onTickEvent( float fDt )
 bool CCWHomeSceneLayer::addTower( const CCPoint& roPos )
 {
     M_DEF_TB(pTb);
-    pTb->buildTower((rand() % 2) ? COrgUnitInfo::kTesla : COrgUnitInfo::kArcane, roPos, this, this, callfuncO_selector(CCWHomeSceneLayer::addTowerEnd));
+    pTb->buildTower(rand() % 2, roPos, this, this, callfuncO_selector(CCWHomeSceneLayer::addTowerEnd));
     onBtnBuildClick(&m_oBuildBtn);
     return true;
 }

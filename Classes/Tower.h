@@ -1,7 +1,10 @@
-#ifndef __TOWER_H_
-#define __TOWER_H_
+#pragma once
+
+#include "Unit.h"
+
 
 class CGameUnit;
+
 class CAbstractTowerBuilder : public CCObject
 {
 public:
@@ -24,7 +27,7 @@ public:
 	CREATE_FUNC(CTowerBuilder);
 
 	static CTowerBuilder* sharedTowerBuilder();
-
+    CUnitInfoPatchManager m_oUipm;
 	
 protected:
 	bool buildBefore(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun);
@@ -32,6 +35,7 @@ protected:
 	int buildAfter(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun);
 private:
 };
+
 class CTowerBuilderSlaver : public CCObject
 {
 public:
@@ -69,6 +73,7 @@ public:
 	int m_iLowExperience;
 
 };
+
 class CTowerManager : public CCObject
 {
 public:
@@ -87,4 +92,3 @@ public:
 private:
 	map<int, vector<CTowerInfo*>* > m_oUpgradeChain;
 };
-#endif
