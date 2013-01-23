@@ -13,6 +13,7 @@
 #include "BattleScene.h"
 #include "GameLevel.h"
 #include "GameCtrl.h"
+#include "UnitInfo.h"
 #include "GameResControl.h"
 
 
@@ -41,6 +42,7 @@ CCGameChapterSceneLayer::CCGameChapterSceneLayer()
 
 bool CCGameChapterSceneLayer::init()
 {
+	M_DEF_OU(pOu);
 	CGameLevelManager* pLevelManage = CGameLevelManager::sharedGameLevelManager();
 
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("game_chapter.plist");
