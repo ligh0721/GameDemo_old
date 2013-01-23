@@ -13,6 +13,7 @@
 #include "BattleScene.h"
 #include "GameLevel.h"
 #include "GameCtrl.h"
+#include "GameResControl.h"
 
 
 bool CCGameChapterScene::init()
@@ -133,6 +134,7 @@ void CCGameChapterSceneLayer:: onChapterItemClick(CCNode* pNode)
 {
 	CCGameChapterButton* pButton = dynamic_cast<CCGameChapterButton*>(pNode);
 	CGameLevelManager::sharedGameLevelManager()->setCurLevel(pButton->m_iLevel);
+	CGameResController::sharedGameResController()->initCurLevelRes();
 	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5, CCBattleScene::create()));
 }
 void CCGameChapterSceneLayer::onShiftRightClick( CCObject* pObject )
