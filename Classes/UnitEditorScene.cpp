@@ -9,7 +9,7 @@
 #include "UnitInfo.h"
 #include "SkillInfo.h"
 #include "GameCtrl.h"
-#include "MainScene.h"
+#include "WHomeScene.h"
 
 
 bool CCUnitEditorScene::init()
@@ -80,7 +80,7 @@ bool CCUnitEditorSceneLayer::init()
         m_aiWalker[m_iCurPathIndex] = 0;
         if (!m_aoPath[m_iCurPathIndex].m_vecPoints.empty())
         {
-            CPathGameUnit* pWalker = curWalker();
+            CGameUnit* pWalker = curWalker(true);
         }
     }
 
@@ -144,7 +144,7 @@ void CCUnitEditorSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
             }
         }
 
-        CPathGameUnit* pWalker = curWalker();
+        CGameUnit* pWalker = curWalker();
         if (n == vec.size())
         {
             m_aoPath[m_iCurPathIndex].addPoint(oPos);
@@ -152,25 +152,24 @@ void CCUnitEditorSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
             {
                 pWalker->setPosition(oPos);
                 pWalker->getSprite()->setVisible(true);
-                pWalker->moveAlongPath(&m_aoPath[m_iCurPathIndex], true, m_bHostility, 5);
+                pWalker->moveAlongPath(&m_aoPath[m_iCurPathIndex], !m_bHostility, true, 5);
             }
             else
             {
-                pWalker->moveAlongPath(&m_aoPath[m_iCurPathIndex], false, m_bHostility, 5);
+                pWalker->moveAlongPath(&m_aoPath[m_iCurPathIndex], !m_bHostility, false, 5);
             }
         }
         else
         {
-            if (pWalker->getCurPos() > vec.size())
+            if (pWalker->getPathCurPos() > vec.size())
             {
-                pWalker->setCurPos(vec.size());
+                pWalker->setPathCurPos(vec.size());
             }
 
-            if (!vec.size())
+            if (vec.empty())
             {
                 pWalker->getSprite()->setVisible(false);
                 pWalker->setHp(0);
-                //pWalker->moveAlongPath(NULL);
             }
         }
     }
@@ -180,22 +179,21 @@ void CCUnitEditorSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
 void CCUnitEditorSceneLayer::onBtnResetWalkerClick( CCObject* pObject )
 {
     M_DEF_GM(pGm);
-    CPathGameUnit* pWalker = curWalker();
+    CGameUnit* pWalker = curWalker();
     if (!m_aoPath[m_iCurPathIndex].m_vecPoints.empty())
     {
         pWalker->setPosition(*m_aoPath[m_iCurPathIndex].m_vecPoints.begin());
     }
-    pWalker->moveAlongPath(&m_aoPath[m_iCurPathIndex], true, m_bHostility, 5);
+    pWalker->moveAlongPath(&m_aoPath[m_iCurPathIndex], !m_bHostility, true, 5);
 }
 
 void CCUnitEditorSceneLayer::onBtnClearPathClick( CCObject* pObject )
 {
     M_DEF_GM(pGm);
-    CPathGameUnit* pWalker = curWalker();
+    CGameUnit* pWalker = curWalker();
     m_aoPath[m_iCurPathIndex].m_vecPoints.clear();
     pWalker->getSprite()->setVisible(false);
     pWalker->setHp(0);
-    //pWalker->moveAlongPath(NULL);
 }
 
 void CCUnitEditorSceneLayer::onBtnSavePathClick( CCObject* pObject )
@@ -209,11 +207,11 @@ void CCUnitEditorSceneLayer::onBtnSavePathClick( CCObject* pObject )
     }
 }
 
-CPathGameUnit* CCUnitEditorSceneLayer::curWalker(bool bReset)
+CGameUnit* CCUnitEditorSceneLayer::curWalker( bool bReset /*= false*/ )
 {
     M_DEF_GM(pGm);
-    CPathGameUnit* pWalker = dynamic_cast<CPathGameUnit*>(pGm->getUnitByKey(m_aiWalker[m_iCurPathIndex]));
-    if (pWalker && !pWalker->isDead())
+    CGameUnit* pWalker = dynamic_cast<CGameUnit*>(getUnitByKey(m_aiWalker[m_iCurPathIndex]));
+    if (pWalker && !pWalker->isDead() && bReset)
     {
         pWalker->setHp(0);
         pWalker->getSprite()->setVisible(false);
@@ -221,7 +219,7 @@ CPathGameUnit* CCUnitEditorSceneLayer::curWalker(bool bReset)
     }
     if (!pWalker || pWalker->isDead())
     {
-        pWalker = m_oUipm.pathUnitByIndex(m_iCurPathIndex);
+        pWalker = m_oUipm.unitByIndex(m_iCurPathIndex);
         m_aiWalker[m_iCurPathIndex] = pWalker->getKey();
         addUnit(pWalker);
         pWalker->addSkill(CStatusShowPas::create());
@@ -229,8 +227,11 @@ CPathGameUnit* CCUnitEditorSceneLayer::curWalker(bool bReset)
         pWalker->setAlly(pWalker->getForce());
         if (!m_aoPath[m_iCurPathIndex].m_vecPoints.empty())
         {
-            pWalker->setPosition(*m_aoPath[m_iCurPathIndex].m_vecPoints.begin());
-            pWalker->moveAlongPath(&m_aoPath[m_iCurPathIndex], true, m_bHostility, 5);
+            if (bReset)
+            {
+                pWalker->setPosition(*m_aoPath[m_iCurPathIndex].m_vecPoints.begin());
+            }
+            pWalker->moveAlongPath(&m_aoPath[m_iCurPathIndex], !m_bHostility, true, 5);
         }
         else
         {
@@ -370,7 +371,7 @@ void CCUnitEditorSceneCtrlLayer::onBtnHostilityClick( CCObject* pObject )
 void CCUnitEditorSceneCtrlLayer::onBtnRunClick(CCObject *pObject)
 {
     M_DEF_DR(pDr);
-    pDr->replaceScene(CCMainScene::create());
+    pDr->replaceScene(CCWHomeScene::create());
 }
 
 void CCUnitEditorSceneCtrlLayer::updateColor()

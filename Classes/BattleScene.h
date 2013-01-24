@@ -95,8 +95,6 @@ protected:
 
 	bool loadTowerPos();
 
-	CPathGameUnit* randomPathSoldiers(int iForce);
-
 	CGameUnit* randomSoldiers(int iForce);
 
 public:

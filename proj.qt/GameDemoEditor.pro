@@ -30,6 +30,7 @@ SOURCES += main.cpp\
         ../Classes/GameFile.cpp \
         ../Classes/GameLevel.cpp \
         ../Classes/GameLogic.cpp \
+        ../Classes/GameResControl.cpp \
         ../Classes/GLES-Render.cpp \
         ../Classes/HomeScene.cpp \
         ../Classes/MainScene.cpp \
@@ -76,6 +77,7 @@ HEADERS += mainwindow.h \
         ../Classes/GameFile.h \
         ../Classes/GameLevel.h \
         ../Classes/GameLogic.h \
+        ../Classes/GameResControl.h \
         ../Classes/GLES-Render.h \
         ../Classes/HomeScene.h \
         ../Classes/MainScene.h \

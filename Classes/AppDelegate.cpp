@@ -9,10 +9,9 @@
 #include "BattleScene.h"
 #include "GameChapterScene.h"
 
-//#define QTPROJ
 
-AppDelegate::AppDelegate() {
-
+AppDelegate::AppDelegate()
+{
 }
 
 AppDelegate::~AppDelegate() 

@@ -62,8 +62,7 @@ void CUipEditor::setUnitPatchInfo(CUnitInfoPatch *pUip)
     QList<CAttackValue::ATTACK_TYPE> l;
     getAttackValueCount(&l);
     setAttackValueCount(l);
-    //ui->comboBoxAttackType->setCurrentIndex(l.count() ? l.first() : 0);
-    ui->comboBoxAttackType->currentIndexChanged(l.count() ? l.first() : 0);
+    ui->comboBoxAttackType->setCurrentIndex(l.isEmpty() ? 0 : l.first());
     ui->txtExAttackRand->setText(QString::number(pUip->m_fExAttackRandomRange));
     ui->comboBoxArmorType->setCurrentIndex(pUip->m_eArmorType);
     ui->txtBaseArmor->setText(QString::number(pUip->m_fBaseArmorValue));
@@ -261,6 +260,7 @@ void CUipEditor::on_btnUpdate_clicked()
     CUnitInfoPatch* pUip = getUnitPatchInfo();
     m_oUipm.setPatch(iIndex, *pUip);
     ui->lstUnits->item(iIndex)->setText(pUip->m_szName);
+    CUnitInfoPatch* p = m_oUipm.patchByIndex(iIndex);
     setChanged();
 }
 
@@ -317,6 +317,7 @@ void CUipEditor::on_lstUnits_currentRowChanged(int currentRow)
     CUnitInfoPatch* pUip = m_oUipm.patchByIndex(iIndex);
     setUnitPatchInfo(pUip);
     ui->txtIndex->setText(QString::number(iIndex));
+    setUnitPatchInfo(pUip);
 }
 
 void CUipEditor::on_action_N_triggered()

@@ -96,7 +96,7 @@ public: inline virtual void set##funName(const varType& var){ varName = var; }
 #define CREATE_FUNC_PARAM(__TYPE__, __PARAM__, ...) \
     static __TYPE__* create __PARAM__ \
     { \
-        __TYPE__ *pRet = new __TYPE__(); \
+        __TYPE__* pRet = new __TYPE__(); \
         if (pRet && pRet->init(__VA_ARGS__)) \
         { \
             pRet->autorelease(); \
@@ -113,7 +113,7 @@ public: inline virtual void set##funName(const varType& var){ varName = var; }
 #define CREATEWITH_FUNC_PARAM(__WITH__, __TYPE__, __PARAM__, ...) \
     static __TYPE__* createWith##__WITH__ __PARAM__ \
     { \
-        __TYPE__ *pRet = new __TYPE__(); \
+        __TYPE__* pRet = new __TYPE__(); \
         if (pRet && pRet->initWith##__WITH__(__VA_ARGS__)) \
         { \
            pRet->autorelease(); \
@@ -127,13 +127,30 @@ public: inline virtual void set##funName(const varType& var){ varName = var; }
         } \
     }
 
+#define CREATE_INITWITH_FUNC_PARAM(__WITH__, __TYPE__, __PARAM__, ...) \
+    static __TYPE__* create __PARAM__ \
+    { \
+        __TYPE__* pRet = new __TYPE__(); \
+        if (pRet && pRet->initWith##__WITH__(__VA_ARGS__)) \
+        { \
+            pRet->autorelease(); \
+            return pRet; \
+        } \
+        else \
+        { \
+            delete pRet; \
+            pRet = NULL; \
+            return NULL; \
+        } \
+    }
+
 #define PTM_RATIO 32
 
 #define M_SKILL_PATH(name)                                      name"/BTN"name".png"
 #define M_SKILL_DOWN_PATH(name)                                 name"/BTN"name"DOWN.png"
 #define M_SKILL_DIS_PATH(name)                                  name"/DISBTN"name".png"
 #define M_SKILL_ON_PATH(name)                                   name"/BTN"name"ON.png"
-#define M_CREATE_SKILL(name, unit, skill)                       CCSkillButtonAdvance::create(M_SKILL_PATH(name), M_SKILL_DOWN_PATH(name), M_SKILL_DIS_PATH(name), M_SKILL_PATH("white"), "mask/mask.png", (unit), (skill))
+#define M_CREATE_SKILL(name, unit, skill, layer)                       CCSkillButtonAdvance::create(M_SKILL_PATH(name), M_SKILL_DOWN_PATH(name), M_SKILL_DIS_PATH(name), M_SKILL_PATH("white"), "mask/mask.png", (unit), (skill), (layer))
 
 #define M_RAND_HIT(probability) (rand() % 100 < (probability))
 

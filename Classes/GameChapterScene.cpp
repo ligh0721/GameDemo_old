@@ -13,6 +13,8 @@
 #include "BattleScene.h"
 #include "GameLevel.h"
 #include "GameCtrl.h"
+#include "UnitInfo.h"
+#include "GameResControl.h"
 
 
 bool CCGameChapterScene::init()
@@ -40,6 +42,7 @@ CCGameChapterSceneLayer::CCGameChapterSceneLayer()
 
 bool CCGameChapterSceneLayer::init()
 {
+	M_DEF_OU(pOu);
 	CGameLevelManager* pLevelManage = CGameLevelManager::sharedGameLevelManager();
 
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("game_chapter.plist");
@@ -133,6 +136,7 @@ void CCGameChapterSceneLayer:: onChapterItemClick(CCNode* pNode)
 {
 	CCGameChapterButton* pButton = dynamic_cast<CCGameChapterButton*>(pNode);
 	CGameLevelManager::sharedGameLevelManager()->setCurLevel(pButton->m_iLevel);
+	CGameResController::sharedGameResController()->initCurLevelRes();
 	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5, CCBattleScene::create()));
 }
 void CCGameChapterSceneLayer::onShiftRightClick( CCObject* pObject )

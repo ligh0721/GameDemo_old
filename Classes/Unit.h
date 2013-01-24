@@ -169,6 +169,8 @@ public:
     virtual bool init(CBuffSkill* pBuff, int iProbability);
     M_CREATE_FUNC_PARAM(CAttackBuff, (CBuffSkill* pBuff, int iProbability), pBuff, iProbability);
 
+    virtual CCObject* copyWithZone(CCZone* pZone);
+
 public:
     CBuffSkill* m_pBuff;
     int m_iProbability;
@@ -182,6 +184,8 @@ public:
     virtual ~CAttackData();
     CREATE_FUNC(CAttackData);
     virtual bool init();
+
+    virtual CCObject* copyWithZone(CCZone* pZone);
 
     void addBuff(CBuffSkill* pBuff, int iProbability);
 
@@ -455,6 +459,8 @@ protected:
 
 class CProjectile;
 class CUnitInfo;
+class CCUnitLayer;
+class CUnitPath;
 
 class CGameUnit : public CUnit, public CUnitForce, public CLevelExp
 {
@@ -463,11 +469,11 @@ public:
     {
         kSuspended = 1 << 0,
         kMoving = 1 << 1,
-        //kWithHostility = 1 << 2,
+        kIntended = 1 << 2,
         kAttacking = 1 << 3,
-        kAutoAttack = 1 << 4
+        //kAutoAttack = 1 << 4
     };
-    static const int kWithHostility = kAutoAttack;
+    //static const int kWithHostility = kAutoAttack;
 
     enum ACTION_TAG
     {
@@ -535,10 +541,14 @@ public: // Move
     virtual void setExMoveSpeed(const CExtraCoeff& roExMoveSpeed);
     virtual CExtraCoeff getExMoveSpeed() const;
     virtual void updateMoveToAnimationSpeed(float fRealMoveSpeed);
-    virtual void moveTo(const CCPoint& roPos, bool bWithHostility = false, bool bCancelAttack = true, bool bAutoFlipX = true);
-    virtual void followTo(int iTargetKey, bool bWithHostility = false, bool bCancelAttack = true, bool bAutoFlipX = true, float fMaxOffsetY = 0.0);
+    virtual void moveTo(const CCPoint& roPos, bool bIntended = true, bool bCancelAttack = true, bool bAutoFlipX = true);
+    virtual void followTo(int iTargetKey, bool bIntended = true, bool bCancelAttack = true, bool bAutoFlipX = true, float fMaxOffsetY = 0.0);
+    virtual void moveAlongPath(CUnitPath* pPath, bool bIntended = true, bool bRestart = false, float fBufArrive = 5.0);
     virtual void stopMove();
     virtual const CCPoint& getLastMoveToTarget() const;
+    M_SYNTHESIZE(uint32_t, m_dwPathCurPos, PathCurPos);
+    virtual void setPathIntended(bool bPathIntended = true);
+    virtual bool isPathIntended() const;
 
 protected:
     virtual void onActMoveEnd(CCNode* pNode);
@@ -559,7 +569,7 @@ public: // Attack
     virtual void setExAttackSpeed(const CExtraCoeff& roExAttackSpeed);
     virtual CExtraCoeff getExAttackSpeed() const;
     virtual void updateAttackAnimationSpeed(float fRealAttackInterval);
-    virtual void attack(int iTargetKey, bool bAuto = false);
+    virtual void attack(int iTargetKey, bool bIntended = true);
     virtual void stopAttack();
     virtual void setBaseAttackValue(const CAttackValue& roAttackValue);
     virtual float getBaseAttackValue(CAttackValue::ATTACK_TYPE eAttackType) const;
@@ -586,7 +596,7 @@ protected:
     virtual void onActAttackEffect(CCNode* pNode);
     virtual void onActAttackEnd(CCNode* pNode);
     bool checkAttackDistance(const CCPoint& roPos, CGameUnit* pTarget);
-    void moveToAttackPosition(CGameUnit* pTarget, bool bAuto);
+    void moveToAttackPosition(CGameUnit* pTarget, bool bIntended);
     
 public:
     static const float CONST_MAX_REWARD_RANGE;
@@ -630,6 +640,7 @@ public:
     M_SYNTHESIZE(int, m_iRewardExp, RewardExp);
     virtual void setForceResource(CForceResouce* pRes);
     virtual CForceResouce* getForceResource();
+    M_SYNTHESIZE(CCUnitLayer*, m_pUnitLayer, UnitLayer);
 
 protected:
     virtual void turnTo(CGameUnit* pTarget);
@@ -655,6 +666,10 @@ protected:
     CProjectile* m_pTemplateProjectile;
     bool m_bIsFixed;
     CForceResouce* m_pRes;
+
+    CUnitPath* m_pMovePath;
+    bool m_bPathIntended;
+    float m_fPathBufArrive;
 };
 
 class CProjectile : public CGameUnit
@@ -699,6 +714,65 @@ protected:
     
 };
 
+class CUnitPath;
+
+class CUnitGroup : public CCObject
+{
+public:
+    typedef bool (*CONDITIONFUNC)(CGameUnit* pUnit, void* pParam);
+
+public:
+    CUnitGroup();
+
+    virtual bool init();
+    CREATE_FUNC_PARAM(CUnitGroup, ());
+    virtual bool initWithUnitsInRange(CUnitGroup* pSource, const CCPoint& roPos, float fRadius, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
+    CREATEWITH_FUNC_PARAM(UnitsInRange, CUnitGroup, (CUnitGroup* pSource, const CCPoint& roPos, float fRadius, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL), pSource, roPos, fRadius, iMaxCount, pBoolFunc, pParam);
+    virtual bool initWithCondition(CUnitGroup* pSource, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
+    CREATEWITH_FUNC_PARAM(Condition, CUnitGroup, (CUnitGroup* pSource, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL), pSource, iMaxCount, pBoolFunc, pParam);
+
+    CGameUnit* getUnitByIndex(int iIndex);
+    CGameUnit* getUnitByKey(int iKey);
+    CGameUnit* getRandomUnit();
+    CGameUnit* getNearestUnitInRange(const CCPoint& roPos, float fRadius, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
+    void addUnit(CGameUnit* pUnit);
+    void delUnit(CGameUnit* pUnit);
+    CGameUnit* copyUnit(int iKey);
+
+    CCArray* getUnitsArray();
+    CUnitGroup* getUnitsInRange(const CCPoint& roPos, float fRadius, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
+    CUnitGroup* getUnits(int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
+    void cleanUnits();
+    void addUnits(CUnitGroup* pUnits);
+    void addUnits(CCArray* pUnits);
+    void delUnits(CUnitGroup* pUnits);
+    void delUnits(CCArray* pUnits);
+    int getUnitsCount();
+
+    virtual void setRangePosition(const CCPoint& roPos, float fRadius);
+    virtual void turnTo(bool bLeft);
+    virtual void moveTo(const CCPoint& roPos, bool bWithHostility = false, bool bCancelAttack = true, bool bAutoFlipX = true);
+    virtual void followTo(int iTargetKey, bool bWithHostility = false, bool bCancelAttack = true, bool bAutoFlipX = true, float fMaxOffsetY = 0.0);
+    virtual void stopMove();
+    virtual void attack(int iTargetKey, bool bIntended = true);
+    virtual void stopAttack();
+    virtual void moveAlongPath(CUnitPath* pPath, bool bIntended = true, bool bRestart = false, float fBufArrive = 5.0);
+
+    void damagedAdv(CAttackData* pAttack, CUnit* pSource);
+    void damagedMid(CAttackData* pAttack, CUnit* pSource);
+    void damagedBot(float fDamage, CUnit* pSource);
+    void addSkill(CSkill* pSkill);
+    void addPackage(CUnitPackage* pPackage);
+    void addBuff(CBuffSkill* pBuff, bool bForce = false);
+
+    static bool isLivingAllyOf(CGameUnit* pUnit, CUnitForce* pParam);
+    static bool isLivingEnemyOf(CGameUnit* pUnit, CUnitForce* pParam);
+
+
+protected:
+    CCArray m_oArrUnits;
+};
+
 class CCUnitLayer : public CCLayerColor
 {
 public:
@@ -717,7 +791,25 @@ public:
     virtual void addUnit(CGameUnit* pUnit);
     virtual void addProjectile(CProjectile* pProjectile);
 
+    CUnitGroup* getUnits();
+    CGameUnit* getUnitByKey(int iKey);
+
+    CUnitGroup* getProjectiles();
+    CProjectile* getProjectileByKey(int iKey);
+
+    void moveUnitToDustbin(CGameUnit* pToDel);
+    void moveProjectileToDustbin(CProjectile* pToDel);
+    CCArray* getUnitDustbin();
+    CCArray* getProjectileDustbin();
+    void clearUnitDustbin();
+    void clearProjectileDustbin();
+
 protected:
+    CUnitGroup m_oArrUnit;
+    CUnitGroup m_oArrProjectile;
+    CCArray m_oUnitDustbin;
+    CCArray m_oProjectileDustbin;
+
     float m_fUnitTickInterval;
 };
 
@@ -768,65 +860,6 @@ protected:
     bool m_bCanMove;
 };
 
-class CUnitPath;
-
-class CUnitGroup : public CCObject
-{
-public:
-    typedef bool (*CONDITIONFUNC)(CGameUnit* pUnit, void* pParam);
-
-public:
-    CUnitGroup();
-
-    virtual bool init();
-    CREATE_FUNC_PARAM(CUnitGroup, ());
-    virtual bool initWithUnitsInRange(CUnitGroup* pSource, const CCPoint& roPos, float fRadius, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
-    CREATEWITH_FUNC_PARAM(UnitsInRange, CUnitGroup, (CUnitGroup* pSource, const CCPoint& roPos, float fRadius, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL), pSource, roPos, fRadius, iMaxCount, pBoolFunc, pParam);
-    virtual bool initWithCondition(CUnitGroup* pSource, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
-    CREATEWITH_FUNC_PARAM(Condition, CUnitGroup, (CUnitGroup* pSource, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL), pSource, iMaxCount, pBoolFunc, pParam);
-
-    CGameUnit* getUnitByIndex(int iIndex);
-    CGameUnit* getUnitByKey(int iKey);
-    CGameUnit* getRandomUnit();
-    CGameUnit* getNearestUnitInRange(const CCPoint& roPos, float fRadius, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
-    void addUnit(CGameUnit* pUnit);
-    void delUnit(CGameUnit* pUnit);
-    CGameUnit* copyUnit(int iKey);
-
-    CCArray* getUnitsArray();
-    CUnitGroup* getUnitsInRange(const CCPoint& roPos, float fRadius, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
-    CUnitGroup* getUnits(int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
-    void cleanUnits();
-    void addUnits(CUnitGroup* pUnits);
-    void addUnits(CCArray* pUnits);
-    void delUnits(CUnitGroup* pUnits);
-    void delUnits(CCArray* pUnits);
-    int getUnitsCount();
-
-    virtual void setRangePosition(const CCPoint& roPos, float fRadius);
-    virtual void turnTo(bool bLeft);
-    virtual void moveTo(const CCPoint& roPos, bool bWithHostility = false, bool bCancelAttack = true, bool bAutoFlipX = true);
-    virtual void followTo(int iTargetKey, bool bWithHostility = false, bool bCancelAttack = true, bool bAutoFlipX = true, float fMaxOffsetY = 0.0);
-    virtual void stopMove();
-    virtual void attack(int iTargetKey);
-    virtual void stopAttack();
-    virtual void moveAlongPath(CUnitPath* pPath, bool bRestart = false, bool bWithHostility = true, float fBuffArrive = FLT_EPSILON);
-
-    void damagedAdv(CAttackData* pAttack, CUnit* pSource);
-    void damagedMid(CAttackData* pAttack, CUnit* pSource);
-    void damagedBot(float fDamage, CUnit* pSource);
-    void addSkill(CSkill* pSkill);
-    void addPackage(CUnitPackage* pPackage);
-    void addBuff(CBuffSkill* pBuff, bool bForce = false);
-
-    static bool isLivingAllyOf(CGameUnit* pUnit, CUnitForce* pParam);
-    static bool isLivingEnemyOf(CGameUnit* pUnit, CUnitForce* pParam);
-
-
-protected:
-    CCArray m_oArrUnits;
-};
-
 class CUnitPath : public CCObject
 {
 public:
@@ -848,28 +881,6 @@ public:
 
 public:
     VEC_POINTS m_vecPoints;
-};
-
-class CPathGameUnit : public CGameUnit
-{
-public:
-    virtual ~CPathGameUnit();
-    virtual bool initWithName(const char* pUnit, const CCPoint& roAnchor = ccp(0.5f, 0.5f));
-    CREATEWITH_FUNC_PARAM(Name, CPathGameUnit, (const char* pUnit, const CCPoint& roAnchor = ccp(0.5f, 0.5f)), pUnit, roAnchor);
-    virtual bool initWithInfo(const CUnitInfo& roUnitInfo);
-    CREATEWITH_FUNC_PARAM(Info, CPathGameUnit, (const CUnitInfo& roUnitInfo), roUnitInfo);
-
-    M_SYNTHESIZE(uint32_t, m_dwCurPos, CurPos);
-    virtual void setMovingWithHostility(bool bWithHostility = true);
-    virtual bool isMovingWithHostility() const;
-
-    virtual void onTick(float fDt);
-    virtual void moveAlongPath(CUnitPath* pPath, bool bRestart = false, bool bWithHostility = true, float fBuffArrive = 5.0);
-
-protected:
-    CUnitPath* m_pCurPath;
-    bool m_bWithHostility;
-    float m_fBuffArrive;
 };
 
 class CUnitInfo
@@ -1021,7 +1032,7 @@ public:
     CUnitInfoPatch* patchByIndex(int iIndex);
 
     CGameUnit* unitByIndex(int iIndex);
-    CPathGameUnit* pathUnitByIndex(int iIndex);
+    //CPathGameUnit* pathUnitByIndex(int iIndex);
     CHeroUnit* heroByIndex(int iIndex);
 
 protected:
@@ -1048,7 +1059,7 @@ public:
     void addUnitInfo(int iUnitInfoIndex, const CUnitInfo& roUnitInfo);
 
     CGameUnit* unitByInfo(int iUnitInfoIndex);
-    CPathGameUnit* pathUnitByInfo(int iUnitInfoIndex);
+    //CPathGameUnit* pathUnitByInfo(int iUnitInfoIndex);
     CHeroUnit* heroByInfo(int iUnitInfoIndex);
 
     CUnitInfo* unitInfoByIndex(int iUnitIndex);

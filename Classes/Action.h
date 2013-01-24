@@ -126,3 +126,19 @@ public:
     virtual CCFiniteTimeAction* getActionOne();
     virtual CCFiniteTimeAction* getActionTwo();
 };
+
+class CCMoveToEx : public CCMoveTo
+{
+public:
+    virtual bool initWithDuration(float fDuration, const CCPoint& roPos, float fMaxOffsetY = 0.0, bool bFixRotation = true, float fScaleY = 1.0, float fYOffsetOfAnchor = 0.0);
+    CREATE_INITWITH_FUNC_PARAM(Duration, CCMoveToEx, (float fDuration, const CCPoint& roPos, float fMaxOffsetY = 0.0, bool bFixRotation = true, float fScaleY = 1.0, float fYOffsetOfAnchor = 0.0), fDuration, roPos, fMaxOffsetY, bFixRotation, fScaleY, fYOffsetOfAnchor);
+
+    virtual void update(float time);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+
+protected:
+    float m_fYOffsetOfAnchor;
+    float m_fScaleY;
+    float m_fMaxOffsetY;
+    bool m_bFixRotation;
+};

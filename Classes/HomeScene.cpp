@@ -159,25 +159,25 @@ void CCHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
     M_DEF_UM(pUm);
     schedule(schedule_selector(CCHomeSceneLayer::onTick), 0.8);
     
-    CPathGameUnit* u = NULL;
+    CGameUnit* u = NULL;
     int iIndex = rand() % 3;
     int iForce = rand() % 2 + 3;
     CAttackValue oAv;
     switch (iIndex)
     {
     case 0:
-        u = pUm->pathUnitByInfo(COrgUnitInfo::kJt);
+        u = pUm->unitByInfo(COrgUnitInfo::kJt);
 
         break;
 
     case 1:
-        u = pUm->pathUnitByInfo(COrgUnitInfo::kPaladin);
+        u = pUm->unitByInfo(COrgUnitInfo::kPaladin);
 
         u->addSkill(CThumpPas::create(20, CExtraCoeff(2, 0), 0));
         break;
 
     case 2:
-        u = pUm->pathUnitByInfo(COrgUnitInfo::kVeznan);
+        u = pUm->unitByInfo(COrgUnitInfo::kVeznan);
 
         u->addSkill(CAttackBuffMakerPas::create(100, g_iSlowDownKey, 1, CExtraCoeff(1, 0))); // 100%降低10%目标攻击/移动速度，可叠加
         break;
@@ -191,21 +191,20 @@ void CCHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
 
     u->addSkill(CStatusShowPas::create());
 
-    u->moveAlongPath(&g_oPath, true, true, 0);
+    u->moveAlongPath(&g_oPath, false, true, 0);
 
 }
 
 void CCHomeSceneLayer::onTick( float fDt )
 {
-    M_DEF_GM(pGm);
     static float fS = 0;
     fS += fDt;
 
-    if (!pGm->getUnits()->getUnitsCount())
+    if (!getUnits()->getUnitsCount())
     {
         return;
     }
-    CGameUnit* pU = dynamic_cast<CGameUnit*>(pGm->getUnits()->getUnitsArray()->lastObject());
+    CGameUnit* pU = dynamic_cast<CGameUnit*>(getUnits()->getUnitsArray()->lastObject());
 
     if (fS > 5 && fS < 6)
     {

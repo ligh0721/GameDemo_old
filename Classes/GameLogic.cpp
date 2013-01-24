@@ -717,21 +717,21 @@ void CTankDemoByTS::onInit( CGameInfo* pGameInfo )
         
         CScatterFireAct* pSfAct = CScatterFireAct::create(10, 10, 5, 15, 600, 500, 0.5, 0.3);
         addSkill(pSfAct);
-        pSkillBtn = M_CREATE_SKILL("skill3", pGm->m_iPlayerKey, pSfAct->getKey());
+        pSkillBtn = M_CREATE_SKILL("skill3", pGm->m_iPlayerKey, pSfAct->getKey(), NULL);
         pGm->m_pCtrlLayer->m_pSkillPanel->addButton(pSkillBtn, 0, 1);
 
         pBuff = CHarmShieldBuff::create(5, false, CExtraCoeff(0, 0), true);
         pSm->addSkill(pBuff);
         pSkill = CSelfBuffMakerAct::create(30, pBuff->getKey(), 1);
         addSkill(pSkill);
-        pSkillBtn = M_CREATE_SKILL("skill1", pGm->m_iPlayerKey, pSkill->getKey());
+        pSkillBtn = M_CREATE_SKILL("skill1", pGm->m_iPlayerKey, pSkill->getKey(), NULL);
         pGm->m_pCtrlLayer->m_pSkillPanel->addButton(pSkillBtn, 0, 3);
 
         pBuff = CHpChangeBuff::create(10, true, 0.1, -1.7, false, 1);
         pSm->addSkill(pBuff);
         pSkill = CHomingMissileAct::create(20, 20, 1, pBuff->getKey(), 1);
         addSkill(pSkill);
-        pSkillBtn = M_CREATE_SKILL("skill4", pGm->m_iPlayerKey, pSkill->getKey());
+        pSkillBtn = M_CREATE_SKILL("skill4", pGm->m_iPlayerKey, pSkill->getKey(), NULL);
         pGm->m_pCtrlLayer->m_pSkillPanel->addButton(pSkillBtn, 0, 2);
 
         pBuff = CHarmShieldBuff::create(5, false, CExtraCoeff(0, 0), true);

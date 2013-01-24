@@ -17,6 +17,7 @@
 #include "BattleScene.h"
 #include "Unit.h"
 #include "GameCtrl.h"
+#include "GameResControl.h"
 #include "Tower.h"
 
 CTowerInfo::CTowerInfo( int iUnitInfoIndex, int iMoneyCost, int iLowGameLevel, int iLowExperience )
@@ -141,15 +142,19 @@ CTowerBuilder::~CTowerBuilder()
 
 bool CTowerBuilder::init()
 {
-	return true;
+    return m_oUipm.initWithFile("towers.uip");
 }
 
 void CTowerBuilderSlaver::execBuildTower( CCNode* pNode )
 {
 	CCWinUnitLayer* pLayer = (CCWinUnitLayer*)m_pContext;
 	pNode->getParent()->setVisible(false);
-	M_DEF_UM(pUm);
-	CGameUnit* tower= pUm->unitByInfo(m_iUnitInfoIndex);
+
+	//M_DEF_UM(pUm);
+	//CGameUnit* tower= pUm->unitByInfo(m_iUnitInfoIndex);
+	//CUnitInfoPatchManager * pPatchManager = CGameResController::sharedGameResController()->getCurLevelTowerPatchManager();
+    M_DEF_TB(pTb);
+	CGameUnit* tower = pTb->m_oUipm.unitByIndex(m_iUnitInfoIndex);
 	pLayer->addUnit(tower);
 	tower->setPosition(m_oPos);
 	if(m_pTarget != NULL && m_pCallFun != NULL)

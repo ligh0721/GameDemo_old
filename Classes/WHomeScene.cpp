@@ -53,7 +53,8 @@ bool CCWHomeSceneLayer::init()
     addChild(&m_oMenu);
     m_oMenu.setPosition(CCPointZero);
 
-    m_iTouchActionFlag=0;
+    m_iTouchActionFlag = 0;
+    m_iHero = 0;
 
     CForceResouce* pFr = CForceResouce::createWithChangeCallback(this, callfuncO_selector(CCWHomeSceneLayer::onGoldChange)); // 势力资源
 
@@ -66,7 +67,8 @@ bool CCWHomeSceneLayer::init()
     m_oStart.setPosition(ccp(oSz.width * 0.8, oSz.height * 0.6));
 
     M_DEF_UPM(pUpm);
-    pUpm->addPatches("heroes.uip");
+    //pUpm->addPatches("heroes.uip");
+    m_oUipm.initWithFile("heroes.uip");
     // demo code
     M_DEF_UM(pUm);
     CGameUnit* midTower= pUm->unitByInfo(COrgUnitInfo::kArcane);
@@ -90,10 +92,10 @@ bool CCWHomeSceneLayer::init()
     midTower->setForceResource(pFr);
 
 
-    CGameUnit* heroUnit=CCWHomeSceneLayer::getHeroUnit();
+    CGameUnit* heroUnit=getHeroUnit();
 
     addUnit(heroUnit);
-    heroUnit->setPosition(ccp(1804,793));
+    heroUnit->setPosition(ccp(804,793));
     heroUnit->setForceByIndex(2);
     heroUnit->setAlly(1<<2);
     heroUnit->addSkill(CStatusShowPas::create());
@@ -135,21 +137,21 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oSkillPanel);
     m_oSkillPanel.setPosition(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50);
 
-    CSkill* pSkill = pOs->skill(COrgSkillInfo::kThunderClap1);
+    CSkill* pSkill = pOs->skill(COrgSkillInfo::kSpeedUp1);
     heroUnit->addSkill(pSkill);
 
     CCSkillButtonAdvance* pBtn;
-    pBtn = M_CREATE_SKILL("skill1", heroUnit->getKey(), pSkill->getKey());
+    pBtn = M_CREATE_SKILL("skill1", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 4);
 
-    pBtn = M_CREATE_SKILL("skill2", heroUnit->getKey(), pSkill->getKey());
+    pBtn = M_CREATE_SKILL("skill2", heroUnit->getKey(), pSkill->getKey(), this);
     pBtn->setEnabled(false);
     m_oSkillPanel.addButton(pBtn, 0, 3);
-    pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey());
+    pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey(), this);
     pBtn->setEnabled(false);
     m_oSkillPanel.addButton(pBtn, 0, 2);
 
-    pBtn = M_CREATE_SKILL("skill4", heroUnit->getKey(), pSkill->getKey());
+    pBtn = M_CREATE_SKILL("skill4", heroUnit->getKey(), pSkill->getKey(), this);
     pBtn->setEnabled(false);
     m_oSkillPanel.addButton(pBtn, 0, 1);
 
@@ -163,7 +165,7 @@ bool CCWHomeSceneLayer::init()
     m_oGold.initWithString("      ", "fonts/Comic Book.ttf", 24, CCSizeMake(100, 48), kCCTextAlignmentLeft);
     //m_oGold.initWithString("55", "fonts/Abberancy.ttf", 24);
     m_oGameCtrlLayer.addChild(&m_oGold);
-    m_oGold.setPosition(ccp(oSz.width - 50, oSz.height - 20));
+    m_oGold.setPosition(ccp(oSz.width - 50, oSz.height - 30));
     m_oGold.setColor(ccYELLOW);
     pFr->onGoldChange(0);
     //m_oGold.setString(UTEXT("我们"));
@@ -176,7 +178,8 @@ bool CCWHomeSceneLayer::init()
 void CCWHomeSceneLayer::onBtnStartClick(CCObject* pObject)
 {
     M_DEF_DR(pDr);
-    pDr->replaceScene(CCMainScene::create());
+    unschedule(schedule_selector(CCWHomeSceneLayer::onTick));
+    pDr->replaceScene(CCTransitionFade::create(0.5, CCWHomeScene::create()));
 }
 
 void CCWHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
@@ -197,8 +200,6 @@ void CCWHomeSceneLayer::onTick( float fDt )
     M_DEF_GM(pGm);
     pGm->cmdRecv(0);
     M_DEF_UM(pUm);
-    static float fS = 0;
-    fS += fDt;
 
     //DemoMission
     int r = m_pCurMission->curRound();
@@ -216,12 +217,12 @@ void CCWHomeSceneLayer::onTick( float fDt )
             const CCPoint* pPos = p->getCurTargetPoint(0);
             if (pPos)
             {
-                CPathGameUnit* u = m_pCurMission->m_oUipm.pathUnitByIndex(iRes);
+                CGameUnit* u = m_pCurMission->m_oUipm.unitByIndex(iRes);
                 addUnit(u);
                 u->setForceByIndex(3);
                 u->setAlly(1<<3);
                 u->setPosition(*pPos);
-                u->moveAlongPath(p);
+                u->moveAlongPath(p, false);
                 u->addSkill(CStatusShowPas::create());
                 if (iRes == kPaladin)
                 {
@@ -312,7 +313,7 @@ void CCWHomeSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
     }
     else
     {
-        CGameUnit* pUnit = pGm->getUnits()->getNearestUnitInRange(destinationPoint, 50, CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(heroUnit));
+        CGameUnit* pUnit = getUnits()->getNearestUnitInRange(destinationPoint, 50, CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(heroUnit));
         if (pUnit)
         {
             heroUnit->attack(pUnit->getKey());
@@ -358,13 +359,15 @@ void CCWHomeSceneLayer::onBtnHeroClick( CCObject* pObject )
 
 CGameUnit* CCWHomeSceneLayer::getHeroUnit()
 {
-    static CGameUnit *reHeroUnit;
-    if (reHeroUnit==NULL)
+    CGameUnit* pU = getUnitByKey(m_iHero);
+    if (!pU)
     {
         M_DEF_UPM(pUpm);
-        reHeroUnit=pUpm->unitByIndex(0);
+        //pU = pUpm->unitByIndex(0);
+        pU = m_oUipm.unitByIndex(0);
+        m_iHero = pU->getKey();
     }
-    return reHeroUnit;
+    return pU;
 }
 
 void CCWHomeSceneLayer::onBtnBuildClick( CCNode* pObject )
@@ -385,9 +388,10 @@ void CCWHomeSceneLayer::onTickEvent( float fDt )
     {
         return;
     }
+    static CGameUnit* pMemHero = NULL;
 
     static uint32_t dwOldExp = 0;
-    if (heroUnit->getExp() != dwOldExp)
+    if (pMemHero != heroUnit || heroUnit->getExp() != dwOldExp)
     {
         dwOldExp = heroUnit->getExp();
         float fPer = heroUnit->getExp() * 100 / heroUnit->getMaxExp();
@@ -396,7 +400,7 @@ void CCWHomeSceneLayer::onTickEvent( float fDt )
     }
 
     static uint32_t dwOldHp = 0;
-    if (heroUnit->getHp() != dwOldHp)
+    if (pMemHero != heroUnit || heroUnit->getHp() != dwOldHp)
     {
         dwOldHp = heroUnit->getHp();
         float fPer = heroUnit->getHp() * 100 / heroUnit->getMaxHp();
@@ -404,12 +408,17 @@ void CCWHomeSceneLayer::onTickEvent( float fDt )
         m_oHpBar.setFillColor(ccc3(MIN(255, (100.0 - fPer) * 2.56 / 0.5), MIN(255, 2.56 / 0.5  * fPer), 0));
     }
 
+    if (pMemHero != heroUnit)
+    {
+        pMemHero = heroUnit;
+    }
+
 }
 
 bool CCWHomeSceneLayer::addTower( const CCPoint& roPos )
 {
     M_DEF_TB(pTb);
-    pTb->buildTower((rand() % 2) ? COrgUnitInfo::kTesla : COrgUnitInfo::kArcane, roPos, this, this, callfuncO_selector(CCWHomeSceneLayer::addTowerEnd));
+    pTb->buildTower(rand() % 2, roPos, this, this, callfuncO_selector(CCWHomeSceneLayer::addTowerEnd));
     onBtnBuildClick(&m_oBuildBtn);
     return true;
 }

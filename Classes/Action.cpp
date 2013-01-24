@@ -256,12 +256,13 @@ void CCMoveToNode::update( float time )
         m_oEndPos.y += m_fYOffsetOfAnchor;
         m_oDeltaPos=ccpSub(m_oEndPos,m_oStartPos);
         setDuration(sqrt(m_oDeltaPos.x*m_oDeltaPos.x+m_oDeltaPos.y*m_oDeltaPos.y)/m_fMinSpeed);
-        m_fA = ccpDistance(m_oStartPos, m_oEndPos);
+
+        float fA = ccpDistance(m_oStartPos, m_oEndPos);
         
-        float fX = time * m_fA - m_fA / 2;
-        m_fA = -4 * m_fMaxOffsetY / (m_fA * m_fA);
-        float fOffsetY = m_fA * fX * fX + m_fMaxOffsetY;
-        float fOffsetR = atan(m_fA * fX);
+        float fX = time * fA - fA / 2;
+        fA = -4 * m_fMaxOffsetY / (fA * fA);
+        float fOffsetY = fA * fX * fX + m_fMaxOffsetY;
+        float fOffsetR = atan(fA * fX);
         m_pTarget->setPosition(ccp(m_oStartPos.x + m_oDeltaPos.x * time, m_oStartPos.y + m_oDeltaPos.y * time + fOffsetY));
         m_pTarget->setRotation(CC_RADIANS_TO_DEGREES((m_oStartPos.x > m_oEndPos.x ? fOffsetR : -fOffsetR) - ccpToAngle(ccpSub(m_oEndPos, m_oStartPos))));
         //m_pTarget->setRotation(CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(m_oEndPos, m_oStartPos))) + (m_oStartPos.x > m_oEndPos.x ? CC_RADIANS_TO_DEGREES(fOffsetR) : -CC_RADIANS_TO_DEGREES(fOffsetR)));
@@ -368,4 +369,54 @@ CCFiniteTimeAction* CCSequenceEx::getActionOne()
 CCFiniteTimeAction* CCSequenceEx::getActionTwo()
 {
     return m_pActions[1];
+}
+
+bool CCMoveToEx::initWithDuration( float fDuration, const CCPoint& roPos, float fMaxOffsetY /*= 0.0*/, bool bFixRotation /*= true*/, float fScaleY /*= 1.0*/, float fYOffsetOfAnchor /*= 0.0*/ )
+{
+    m_fMaxOffsetY = fMaxOffsetY;
+    m_fScaleY = fScaleY;
+    m_fYOffsetOfAnchor = fYOffsetOfAnchor;
+    m_bFixRotation = bFixRotation;
+    return CCMoveTo::initWithDuration(fDuration, roPos);
+}
+
+void CCMoveToEx::update( float time )
+{
+    if (m_pTarget)
+    {
+        float fA = ccpDistance(m_startPosition, m_endPosition);
+
+        float fX = time * fA - fA / 2;
+        fA = -4 * m_fMaxOffsetY / (fA * fA);
+        float fOffsetY = fA * fX * fX + m_fMaxOffsetY;
+        float fOffsetR = atan(fA * fX);
+        m_pTarget->setPosition(ccp(m_startPosition.x + m_delta.x * time, m_startPosition.y + m_delta.y * time + fOffsetY));
+        if (!m_bFixRotation)
+        {
+            m_pTarget->setRotation(CC_RADIANS_TO_DEGREES((m_startPosition.x > m_endPosition.x ? fOffsetR : -fOffsetR) - ccpToAngle(ccpSub(m_endPosition, m_startPosition))));
+        }
+    }
+}
+
+CCObject* CCMoveToEx::copyWithZone( CCZone* pZone )
+{
+    CCZone* pNewZone = NULL;
+    CCMoveToEx* pCopy = NULL;
+    if(pZone && pZone->m_pCopyObject) 
+    {
+        //in case of being called at sub class
+        pCopy = (CCMoveToEx*)(pZone->m_pCopyObject);
+    }
+    else
+    {
+        pCopy = new CCMoveToEx();
+        pZone = pNewZone = new CCZone(pCopy);
+    }
+
+    CCMoveTo::copyWithZone(pZone);
+
+    pCopy->initWithDuration(m_fDuration, m_endPosition, m_fMaxOffsetY, m_bFixRotation, m_fScaleY, m_fYOffsetOfAnchor);
+
+    CC_SAFE_DELETE(pNewZone);
+    return pCopy;
 }

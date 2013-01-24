@@ -19,7 +19,10 @@ public:
         kDoubleAttack1,
         kSplash1,
         kThunderClap1,
-        kHpChange3
+        kHpChange3,
+        kThump1,
+        kThrowHit1,
+        kSpeedUp1,
     };
 
     struct SKILL_INFO

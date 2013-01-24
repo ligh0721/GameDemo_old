@@ -6,7 +6,6 @@
 #include "TankSprite.h"
 #include "Skill.h"
 #include "BattleGroundScene.h"
-#include "Action.h"
 #include "MainScene.h"
 #include "MissionInfo.h"
 #include "ChildOfGameUnit.h"
@@ -193,7 +192,7 @@ void CCBattleSceneLayer::onTick( float fDt )
 	M_DEF_FC(pFc);
 
 	
-	CCArray* pArrUnit = pGm->getUnits()->getUnitsArray();
+	CCArray* pArrUnit = getUnits()->getUnitsArray();
 	//CCAssert(m_vecUnitRoute.size() > 0, "unit route amount must great 0");
 	//vector<CCPoint> * pVecPoint =  m_vecUnitRoute[0];
 
@@ -230,11 +229,11 @@ void CCBattleSceneLayer::onTick( float fDt )
 	if((fTotal += fDt) > 2 && m_vecCoalition.size() < 6)
 	{
 		fTotal = 0;
-		CPathGameUnit* u = randomPathSoldiers(1);
+		CGameUnit* u = randomSoldiers(1);
 		m_vecCoalition.push_back(u);
 		//CCAssert(pVecPoint->size() > 1, "unit route point amount must great 1");
 		u->setPosition(ccp(830, 340));
-		u->moveAlongPath(&m_oUnitPath, true);
+		u->moveAlongPath(&m_oUnitPath, false, true);
 		//u->setPosition(m_oUnitPath.m_oVecPoints[0]);
 		//u->setBaseMoveSpeed(40);
 	}
@@ -295,7 +294,7 @@ void CCBattleSceneLayer::showTower( CCObject* pObject )
 void CCBattleSceneLayer::buildTower( CCNode* pNode)
 {
 	m_oTowerShowMenu.setVisible(false);
-	CTowerBuilder::sharedTowerBuilder()->buildTower(COrgUnitInfo::kArcane, m_oCurTowerPos, this, NULL, NULL);
+	CTowerBuilder::sharedTowerBuilder()->buildTower(rand()%2, m_oCurTowerPos, this, NULL, NULL);
 	/*
 	m_oTowerShowMenu.setVisible(false);
 	M_DEF_UM(pUm);
@@ -320,24 +319,6 @@ bool CCBattleSceneLayer::ccTouchBegan( CCTouch* touch, CCEvent* event )
 		m_oTowerShowMenu.setVisible(false);
 	}
 	return true;
-}
-
-CPathGameUnit* CCBattleSceneLayer::randomPathSoldiers( int iForce )
-{
-	M_DEF_UM(pUm);
-	CPathGameUnit* u=pUm->pathUnitByInfo(COrgUnitInfo::kJt);
-	addUnit(u);
-	u->setPosition(ccp(1000,600));
-	//heroKey=u->getKey();
-	u->setForceByIndex(2);
-	u->setAlly(1<<2);
-	u->addSkill(CStatusShowPas::create());
-	u->prepareAttackAnimation(1,CGameUnit::kAnimationAct1,"act1",0.1);
-	u->setBaseAttackInterval(0.4);
-	u->setMaxHp(100);
-	u->setAttackMinRange(0);
-	u->moveAlongPath(&m_oUnitPath);
-	return u;
 }
 
 void CCBattleSceneLayer::onBtnUpgradeClick( CCObject* pObject )

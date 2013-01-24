@@ -49,7 +49,8 @@ void MainWindow::on_btnUnitEditor_clicked()
     {
         m_pUe = new CUipEditor();
     }
-    m_pUe->show();
+    m_pUe->showNormal();
+    SetWindowPos((HWND)m_pUe->winId(), HWND_TOP, 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOMOVE | SWP_NOSIZE);
     //m_pUe->setFocus();
 }
 

@@ -245,6 +245,7 @@ CGameMission::CGameMission()
 
 bool CGameMission::init()
 {
+    m_iRoundPos = 0;
     m_vecRounds.clear();
     m_oArrPaths.init();
     return true;
@@ -386,12 +387,22 @@ CGameMission* CDemoMission::mission01()
     oMission.addRush(iRound, oRush);
 
     // add a rush
-    for (int i = 1; i < 3; ++i)
+    for (int i = 1; i < 30; ++i)
     {
         iRound = oMission.addNewRound();
         oRush.init(aiPath[rand() % CONST_MAX_PATH]);
         oRush.addUnit(kMalik, 1, 10);
-        oRush.addUnit(kMalik, 2, 3);
+        oRush.addUnit(kMalik, 10, 2);
+        oMission.addRush(iRound, oRush);
+
+        oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+        oRush.addUnit(kPaladin, 1, 10);
+        oRush.addUnit(kPaladin, 5, 2);
+        oMission.addRush(iRound, oRush);
+
+        oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+        oRush.addUnit(kMagnus, 1, 10);
+        oRush.addUnit(kMagnus, 5, 2);
         oMission.addRush(iRound, oRush);
     }
 

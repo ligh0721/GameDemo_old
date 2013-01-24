@@ -1148,7 +1148,7 @@
                 <key>sourceSize</key>
                 <string>{80,60}</string>
             </dict>
-            <key>kr/Barracks/act1/Image1.png</key>
+            <key>kr/Barracks/act1/act1_00.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{121,639},{64,50}}</string>
@@ -1161,7 +1161,7 @@
                 <key>sourceSize</key>
                 <string>{80,60}</string>
             </dict>
-            <key>kr/Barracks/act1/Image2.png</key>
+            <key>kr/Barracks/act1/act1_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{121,573},{64,50}}</string>
@@ -1174,7 +1174,7 @@
                 <key>sourceSize</key>
                 <string>{80,60}</string>
             </dict>
-            <key>kr/Barracks/act1/Image3.png</key>
+            <key>kr/Barracks/act1/act1_02.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{121,507},{64,50}}</string>
@@ -1187,7 +1187,7 @@
                 <key>sourceSize</key>
                 <string>{80,60}</string>
             </dict>
-            <key>kr/Barracks/act1/Image4.png</key>
+            <key>kr/Barracks/act1/act1_04.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{121,441},{64,50}}</string>
@@ -3839,6 +3839,19 @@
                 <key>sourceSize</key>
                 <string>{48,60}</string>
             </dict>
+            <key>kr/Magnus/die.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{832,561},{22,16}}</string>
+                <key>offset</key>
+                <string>{-11,-19}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{2,41},{22,16}}</string>
+                <key>sourceSize</key>
+                <string>{48,60}</string>
+            </dict>
             <key>kr/Magnus/die/die_00.png</key>
             <dict>
                 <key>frame</key>
@@ -4814,6 +4827,19 @@
                 <key>sourceSize</key>
                 <string>{76,80}</string>
             </dict>
+            <key>kr/Malik/die.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{153,176},{28,18}}</string>
+                <key>offset</key>
+                <string>{-11,-30}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{13,61},{28,18}}</string>
+                <key>sourceSize</key>
+                <string>{76,80}</string>
+            </dict>
             <key>kr/Malik/die/die_00.png</key>
             <dict>
                 <key>frame</key>
@@ -5721,6 +5747,19 @@
                 <true/>
                 <key>sourceColorRect</key>
                 <string>{{20,0},{19,34}}</string>
+                <key>sourceSize</key>
+                <string>{55,40}</string>
+            </dict>
+            <key>kr/Paladin/die.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{598,331},{23,12}}</string>
+                <key>offset</key>
+                <string>{-8,-8}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{8,22},{23,12}}</string>
                 <key>sourceSize</key>
                 <string>{55,40}</string>
             </dict>
@@ -8178,7 +8217,7 @@
             <key>size</key>
             <string>{1024,2048}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:05e93c3092cbf324361556d82c79cb8d$</string>
+            <string>$TexturePacker:SmartUpdate:80cdf753ba891cf115552462faac5f57$</string>
             <key>textureFileName</key>
             <string>unit.png</string>
         </dict>
