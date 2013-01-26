@@ -1648,3 +1648,65 @@ void CThrowBuff::onThrowEnd( CCNode* pNode )
     u->getUnitLayer()->getUnits()->getUnitsInRange(u->getPosition(), m_fDamageRange, -1, CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(pS))->damagedAdv(pAd, pS);
     u->getUnitLayer()->runAction(CCShakeAct::create(0.3, 0.02, 5));
 }
+
+CTransmitBuff::CTransmitBuff()
+{
+
+}
+
+bool CTransmitBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, const CCPoint& oDestPos, float fMissDuration, unsigned int uBeginBlinks, unsigned int uEndBlinks, int iBuffTemplateKey, int iBuffLevel )
+{
+	setDestPos(oDestPos);
+	setMissDuration(fMissDuration);
+	setBeginBlinks(uBeginBlinks);
+	setEndBlinks(uEndBlinks);
+	m_iBuffTemplateKey = iBuffTemplateKey;
+	m_iBuffLevel = iBuffLevel;
+
+	return CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+
+}
+
+CCObject* CTransmitBuff::copyWithZone( CCZone* pZone )
+{
+	return CTransmitBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_oDestPos, m_fMissDuration, m_uBeginBlinks, m_uEndBlinks, m_iBuffTemplateKey, m_iBuffLevel);
+}
+
+void CTransmitBuff::onBuffAdd()
+{
+	CBuffSkill::onBuffAdd();
+}
+
+void CTransmitBuff::onBuffDel()
+{
+	CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
+	if (!u || u->isDead())
+	{
+		return;
+	}
+	u->suspend();
+	CCAction* pAct = CCSequence::createWithTwoActions(
+		CCBlink::create(m_fMissDuration, m_uBeginBlinks),
+		CCCallFuncN::create(this, callfuncN_selector(CTransmitBuff::onTransmitBegin))
+		);
+	u->getSprite()->runAction(pAct);
+}
+
+void CTransmitBuff::onTransmitBegin( CCNode* pNode )
+{
+	CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
+	u->getSprite()->setPosition(m_oDestPos);
+	CCAction* pAct = CCSequence::createWithTwoActions(
+		CCBlink::create(m_fMissDuration, m_uEndBlinks),
+		CCCallFuncN::create(this, callfuncN_selector(CTransmitBuff::onTransmitEnd))
+		);
+	u->getSprite()->runAction(pAct);
+}
+
+void CTransmitBuff::onTransmitEnd( CCNode* pNode )
+{
+
+}
+
+
+

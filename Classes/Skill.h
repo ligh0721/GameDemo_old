@@ -636,3 +636,27 @@ public:
     float m_fDamageRange;
 };
 
+class CTransmitBuff : public CBuffSkill
+{
+public:
+	CTransmitBuff();
+
+	virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, const CCPoint& oDestPos, float fMissDuration, unsigned int uBeginBlinks, unsigned int uEndBlinks, int iBuffTemplateKey, int iBuffLevel);
+	M_CREATE_FUNC_PARAM(CTransmitBuff, (float fDuration, bool bCanBePlural, int iSrcKey, const CCPoint& oDestPos, float fMissDuration, unsigned int uBeginBlinks, unsigned int uEndBlinks, int iBuffTemplateKey, int iBuffLevel), fDuration, bCanBePlural, iSrcKey, oDestPos, fMissDuration, uBeginBlinks, uEndBlinks, iBuffTemplateKey, iBuffLevel);
+	virtual CCObject* copyWithZone(CCZone* pZone);
+
+	M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oDestPos, DestPos);
+	M_SYNTHESIZE(float, m_fMissDuration, MissDuration);
+	M_SYNTHESIZE(unsigned int, m_uBeginBlinks, BeginBlinks);
+	M_SYNTHESIZE(unsigned int, m_uEndBlinks, EndBlinks);
+	virtual void onBuffAdd();
+	virtual void onBuffDel();
+
+	virtual void onTransmitBegin(CCNode* pNode);
+	virtual void onTransmitEnd(CCNode* pNode);
+
+public:
+	int m_iBuffTemplateKey;
+	int m_iBuffLevel;
+};
+

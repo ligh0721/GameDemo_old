@@ -133,7 +133,8 @@ bool COrgSkillInfo::init()
     pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     
-    pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
+	//pSill = CTransmitBuff::create(5, false, 151, ccp(100, 100), 1, 7, 7, )
+    //pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
 
     m_mapSkills[kThrowHit1].iIndex = iKey;
@@ -149,6 +150,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSpeedUp1].sName = "加速";
     m_mapSkills[kSpeedUp1].sDesc = "提高自身100%的移动速度和100%的攻击速度";
     
+
     return true;
 }
 
