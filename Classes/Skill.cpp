@@ -273,23 +273,95 @@ bool CActiveSkill::init(float fCoolDown)
 {
     m_fCoolDown = fCoolDown;
     m_fCDLeft = 0;
+    m_iTargetUnit = 0;
+    setTargetUnitHalfOfWidth(0.0);
+    setCastTargetType(kNoTarget);
+    setCastRange(0);
+    setWeaponType(kWTDelayed);
+    setCastAniInfo(CGameUnit::kAnimationAct1, 0.0);
+
     return true;
 }
 
-bool CActiveSkill::cast()
+void CActiveSkill::cast()
+{
+    CCAssert(canCast(), "call canCast() before this");
+
+    CCSkillButtonAdvance* pBtn = dynamic_cast<CCSkillButtonAdvance*>(getDisplayBody());
+    if (pBtn)
+    {
+        pBtn->coolDown();
+    }
+    m_fCDLeft = m_fCoolDown;
+    onSkillCast();
+}
+
+bool CActiveSkill::canCast() const
 {
     if (isCoolingDown())
     {
         return false;
     }
-
-    m_fCDLeft = m_fCoolDown;
-    onSkillCast();
-
     return true;
 }
 
+void CActiveSkill::setTargetUnit(int var)
+{
+    CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
+    CCAssert(u, "owner is null");
+    CGameUnit* t = u->getUnitLayer()->getUnitByKey(var);
+    if (!t)
+    {
+        m_iTargetUnit = 0;
+        setTargetUnitHalfOfWidth(0.0);
+        return;
+    }
+    m_iTargetUnit = var;
+    setTargetUnitHalfOfWidth(t->getHalfOfWidth());
+}
 
+int CActiveSkill::getTargetUnit()
+{
+    return m_iTargetUnit;
+}
+
+const CCPoint& CActiveSkill::updateTargetUnitPoint()
+{
+    if (getCastTargetType() != kUnitTarget)
+    {
+        return getTargetPoint();
+    }
+    CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
+    CCAssert(u, "owner is null");
+    CGameUnit* t = u->getUnitLayer()->getUnitByKey(getTargetUnit());
+    if (t)
+    {
+        setTargetPoint(t->getPosition());
+    }
+    
+    return getTargetPoint();
+}
+
+CCSkillButtonAdvance* CActiveSkill::getSkillButton()
+{
+    return dynamic_cast<CCSkillButtonAdvance*>(getDisplayBody());
+}
+
+void CActiveSkill::setCastAniInfo( CGameUnit::ANIMATION_INDEX eAniIndex, float fCastEffectDelay )
+{
+    m_eAniIndex = eAniIndex;
+    m_fCastEffectDelay = fCastEffectDelay;
+}
+
+CGameUnit::ANIMATION_INDEX CActiveSkill::getCastAniIndex() const
+{
+    return m_eAniIndex;
+}
+
+float CActiveSkill::getCastEffectDelay() const
+{
+    return m_fCastEffectDelay;
+}
 
 // CLevelLimitSkill
 CLevelLimitSkill::CLevelLimitSkill()
@@ -721,7 +793,8 @@ CCObject* CStunBuff::copyWithZone( CCZone* pZone )
 
 void CStunBuff::onBuffAdd()
 {
-    CCGameManager::sharedGameManager()->playEffectSound("sound/cannon2.wav");
+    M_DEF_GM(pGm);
+    pGm->playEffectSound("sound/cannon2.wav");
     ((CTank*)m_pOwner)->suspend();
 }
 
@@ -1543,8 +1616,9 @@ void CSplashAct::onSkillCast()
                 pUnit->damagedAdv(pAd, pO, dwTriggerMask);
             }
         }
-
     }
+
+    pO->getUnitLayer()->runAction(CCShakeAct::create(0.2, 0.02, 5));
 }
 
 CThrowBuff::CThrowBuff()
@@ -1633,7 +1707,7 @@ void CThrowBuff::onThrowEnd( CCNode* pNode )
     u->getSprite()->stopActionByTag(m_iActRotateKey);
     u->getSprite()->setRotation(0);
 
-    u->setAnimation(CGameUnit::kAnimationDie, 1, 1, CGameUnit::kActDie);
+    //u->setAnimation(CGameUnit::kAnimationDie, 1, 1, CGameUnit::kActDie);
 
     if (u->isDead())
     {
@@ -1647,4 +1721,108 @@ void CThrowBuff::onThrowEnd( CCNode* pNode )
     u->damagedAdv(pAd, pS);
     u->getUnitLayer()->getUnits()->getUnitsInRange(u->getPosition(), m_fDamageRange, -1, CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(pS))->damagedAdv(pAd, pS);
     u->getUnitLayer()->runAction(CCShakeAct::create(0.3, 0.02, 5));
+}
+
+bool CProjectileAct::init( float fCoolDown, float fCastRange, const CAttackValue& roDamage, CProjectile* pProj, int iBuffTemplateKey, int iBuffLevel )
+{
+    CActiveSkill::init(fCoolDown);
+    setCastTargetType(kUnitTarget);
+    setCastRange(fCastRange);
+    m_oDamage = roDamage;
+    m_pTemplateProjectile = pProj;
+    m_iBuffTemplateKey = iBuffTemplateKey;
+    m_iBuffLevel = iBuffLevel;
+    setTemplateProjectile(pProj);
+    setProjectileMoveSpeed(pProj->getBaseMoveSpeed());
+    setProjectileScale(pProj->getSprite()->getScale());
+    setProjectileMaxOffsetY(0.0);
+    setProjectileBirthOffsetX(0.0);
+    setProjectileBirthOffsetY(0.0);
+    return true;
+}
+
+CCObject* CProjectileAct::copyWithZone( CCZone* pZone )
+{
+    CProjectileAct* pSkill = CProjectileAct::create(m_fCoolDown, m_fCastRange, m_oDamage, m_pTemplateProjectile, m_iBuffTemplateKey, m_iBuffLevel);
+    pSkill->setCastTargetType(getCastTargetType());
+    pSkill->setCastRange(getCastRange());
+    pSkill->setWeaponType(getWeaponType());
+    pSkill->setProjectileMoveSpeed(getProjectileMoveSpeed());
+    pSkill->setProjectileScale(getProjectileScale());
+    return pSkill;
+}
+
+void CProjectileAct::onSkillAdd()
+{
+    CActiveSkill::onSkillAdd();
+}
+
+void CProjectileAct::onSkillDel()
+{
+    CActiveSkill::onSkillDel();
+}
+
+void CProjectileAct::onSkillCast()
+{
+    CAttackData* pAtk = CAttackData::create();
+    pAtk->setAttack(m_oDamage);
+    
+    CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
+    const CCPoint& roPos2 = updateTargetUnitPoint();    
+
+    CGameUnit* t = dynamic_cast<CGameUnit*>(u->getUnitLayer()->getUnitByKey(getTargetUnit()));
+    CProjectile* pProj;
+    switch (getWeaponType())
+    {
+    case kWTClosely:
+    case kWTInstant:
+        if (!getTemplateProjectile())
+        {
+            t->damagedAdv(pAtk, u);
+        }
+        else
+        {
+            pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
+            u->getUnitLayer()->addProjectile(pProj);
+            pProj->setProjectileBirthOffsetX(getProjectileBirthOffsetX());
+            pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
+            pProj->setAttackData(pAtk);
+            pProj->setOwner(u->getKey());
+            pProj->setTarget(getTargetUnit());
+            pProj->getSprite()->setScale(getProjectileScale());
+            pProj->setPosition(t->getPosition());
+            pProj->onDie();
+        }
+        break;
+
+    case kWTDelayed:
+        pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
+        u->getUnitLayer()->addProjectile(pProj);
+        pProj->setAttackData(pAtk);
+        pProj->setOwner(u->getKey());
+        pProj->setTarget(getTargetUnit());
+        pProj->setBaseMoveSpeed(getProjectileMoveSpeed());
+        const CCPoint& roPos1 = pProj->getPosition();
+        const CCPoint& roPos2 = t->getPosition();
+        float fA = CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(roPos2, roPos1)));
+        pProj->getSprite()->setScale(getProjectileScale());
+        pProj->getSprite()->setRotation(fA);
+        pProj->setProjectileBirthOffsetX(getProjectileBirthOffsetX());
+        pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
+        pProj->setPosition(ccpAdd(u->getPosition(), ccp(u->getSprite()->isFlipX() ? -pProj->getProjectileBirthOffsetX() : pProj->getProjectileBirthOffsetX(), pProj->getProjectileBirthOffsetY())));
+        pProj->followTo(t->getKey(), false, true, false, u->getProjectileMaxOffsetY());
+
+        break;
+
+    }
+}
+
+void CProjectileAct::setTemplateProjectile( CProjectile* pProjectile )
+{
+    m_pTemplateProjectile = pProjectile;
+}
+
+CProjectile* CProjectileAct::getTemplateProjectile()
+{
+    return m_pTemplateProjectile;
 }

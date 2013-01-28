@@ -4,6 +4,15 @@
 class COrgUnitInfo : public CCObject
 {
 public:
+    enum PROJ_INDEX
+    {
+        kBall1,
+        kBall2,
+        kBall3,
+        kLightning1,
+        kLightning2
+    };
+
     enum UNITINFO_INDEX
     {
         kMalik,

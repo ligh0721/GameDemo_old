@@ -32,6 +32,7 @@ void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
         }
     }
     pU->setBaseAttackValue(oAv);
+    pU->setExAttackSpeed(CExtraCoeff(1 + 0.2 * pLevel->getLevel(), 0));
 
     return;
 

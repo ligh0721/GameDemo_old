@@ -254,10 +254,6 @@ public:
 
     virtual void coolDown();
 
-	const char* wNormalImage;
-	const char* wSelectImage;
-	const char* wDisableImage;
-
 private:
     void onClick(CCObject* pObject);
     void onCoolDownDone(CCNode* pNode);
@@ -272,7 +268,10 @@ protected:
     CCSprite* m_pBlink;
     CCSprite* m_pMask;
     //CCLabelTTF* m_pLabel;
-
+public:
+    const char* m_pNormalImageFrameName;
+    const char* m_pSelectImageFrameName;
+    const char* m_pDisableImageFrameName;
 	
 };
 
@@ -325,10 +324,13 @@ public:
     virtual void onSkillClick(CCNode* pNode);
     virtual void onSkillFinished(CCNode* pNode);
     M_SYNTHESIZE(CCUnitLayer*, m_pUnitLayer, UnitLayer);
+    virtual void setPressed(CCSpriteFrame* pFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(M_SKILL_PATH("cancel")));
+    virtual bool isPressed() const;
 
 public:
     int m_iUnitKey;
     int m_iSkillKey;
+    bool m_bPressed;
 };
 
 class CCButtonPanel : public CCNode
