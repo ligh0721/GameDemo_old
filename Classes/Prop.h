@@ -8,7 +8,7 @@
 class CLevelExp;
 class CSkill; 
 
-class  CProp : public CLevelExp,public CCObject
+class CProp : public CLevelExp, public CCObject
 {
 	friend class CUnit;
 	friend class CUnitPackage;
@@ -29,7 +29,7 @@ public:
 	void delSkill(CSkill* skill);
 
 public:
-	const int getKey(){ return m_iKey; }
+	const int getKey() { return m_iKey; }
 
 protected:
 	virtual void setOwner(CUnit* pOwner);

@@ -8,12 +8,12 @@ class CGameUnit;
 class CAbstractTowerBuilder : public CCObject
 {
 public:
-	virtual int buildTower(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTarget=NULL, SEL_CallFuncO pCallFun=NULL);
+	virtual int buildTower(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTarget=NULL, SEL_CallFuncO pCallFun=NULL);
 
 protected:
-	virtual bool buildBefore(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun)=0;
-	virtual bool building(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun)=0;
-	virtual int buildAfter(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun)=0;
+	virtual bool buildBefore(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTargent, SEL_CallFuncO pCallFun)=0;
+	virtual bool building(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTargent, SEL_CallFuncO pCallFun)=0;
+	virtual int buildAfter(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTargent, SEL_CallFuncO pCallFun)=0;
 protected:
 };
 
@@ -30,9 +30,9 @@ public:
     CUnitInfoPatchManager m_oUipm;
 	
 protected:
-	bool buildBefore(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun);
-	bool building(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun);
-	int buildAfter(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun);
+	bool buildBefore(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTargent, SEL_CallFuncO pCallFun);
+	bool building(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTargent, SEL_CallFuncO pCallFun);
+	int buildAfter(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTargent, SEL_CallFuncO pCallFun);
 private:
 };
 
@@ -42,12 +42,12 @@ public:
 	CTowerBuilderSlaver();
 	virtual ~CTowerBuilderSlaver();
 
-	bool init(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun);
+	bool init(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTargent, SEL_CallFuncO pCallFun);
 	CREATE_FUNC_PARAM(CTowerBuilderSlaver,
-		(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTargent, SEL_CallFuncO pCallFun),
+		(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTargent, SEL_CallFuncO pCallFun),
 		iUnitInfoIndex, 
 		roPos, 
-		pContext,
+		pUnitLayer,
 		pTargent, 
 		pCallFun)
 
@@ -56,7 +56,7 @@ public:
 public:
 	int m_iUnitInfoIndex;
 	CCPoint m_oPos;
-	void* m_pContext;
+	CCUnitLayer* m_pUnitLayer;
 	CCObject* m_pTarget;
 	SEL_CallFuncO m_pCallFun;
 };

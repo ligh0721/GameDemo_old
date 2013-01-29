@@ -79,40 +79,40 @@ CTowerInfo* CTowerManager::getUpgradeTower(int kind, int iUnitInfoIndex )
 	return NULL;
 }
 
-int CAbstractTowerBuilder::buildTower(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTarget, SEL_CallFuncO pCallFun)
+int CAbstractTowerBuilder::buildTower(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTarget, SEL_CallFuncO pCallFun)
 {		
 
-	if(buildBefore(iUnitInfoIndex, roPos, pContext, pTarget, pCallFun) 
-		&& building(iUnitInfoIndex, roPos, pContext, pTarget, pCallFun))
+	if(buildBefore(iUnitInfoIndex, roPos, pUnitLayer, pTarget, pCallFun) 
+		&& building(iUnitInfoIndex, roPos, pUnitLayer, pTarget, pCallFun))
 	{
-		return buildAfter(iUnitInfoIndex, roPos, pContext, pTarget, pCallFun);
+		return buildAfter(iUnitInfoIndex, roPos, pUnitLayer, pTarget, pCallFun);
 	}
 	return -1;
 
 }
 
-bool CTowerBuilder::buildBefore(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTarget, SEL_CallFuncO pCallFun)
+bool CTowerBuilder::buildBefore(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTarget, SEL_CallFuncO pCallFun)
 {
 	return true;
 }
 
 
 
-int CTowerBuilder::buildAfter(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTarget, SEL_CallFuncO pCallFun)
+int CTowerBuilder::buildAfter(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTarget, SEL_CallFuncO pCallFun)
 {
-	CTowerBuilderSlaver* pSlaver = CTowerBuilderSlaver::create(iUnitInfoIndex, roPos, pContext, pTarget, pCallFun);
+	CTowerBuilderSlaver* pSlaver = CTowerBuilderSlaver::create(iUnitInfoIndex, roPos, pUnitLayer, pTarget, pCallFun);
 
 	CCProgressBar* pBuildBar = CCProgressBar::create(CCSizeMake(60, 6), CCSprite::createWithSpriteFrameName("bar_white.png")
 		, CCSprite::createWithSpriteFrameName("healthbar_border.png"), 1, 1, true);
 	pBuildBar->setPosition(roPos);
-	CCWinUnitLayer* pLayer = (CCWinUnitLayer*)pContext;
+	CCWinUnitLayer* pLayer = (CCWinUnitLayer*)pUnitLayer;
 	pLayer->addChild(pBuildBar);
 	pBuildBar->setPercentage(100, 0.8, CCCallFuncN::create(pSlaver, callfuncN_selector(CTowerBuilderSlaver::execBuildTower)));
 	return iUnitInfoIndex;
 }
 
 
-bool CTowerBuilder::building(int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTarget, SEL_CallFuncO pCallFun)
+bool CTowerBuilder::building(int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTarget, SEL_CallFuncO pCallFun)
 {
 	return true;
 }
@@ -147,7 +147,7 @@ bool CTowerBuilder::init()
 
 void CTowerBuilderSlaver::execBuildTower( CCNode* pNode )
 {
-	CCWinUnitLayer* pLayer = (CCWinUnitLayer*)m_pContext;
+	CCWinUnitLayer* pLayer = (CCWinUnitLayer*)m_pUnitLayer;
 	pNode->getParent()->setVisible(false);
 
 	//M_DEF_UM(pUm);
@@ -173,11 +173,11 @@ CTowerBuilderSlaver::~CTowerBuilderSlaver()
 
 }
 
-bool CTowerBuilderSlaver::init( int iUnitInfoIndex, const CCPoint& roPos, void* pContext, CCObject* pTarget, SEL_CallFuncO pCallFun )
+bool CTowerBuilderSlaver::init( int iUnitInfoIndex, const CCPoint& roPos, CCUnitLayer* pUnitLayer, CCObject* pTarget, SEL_CallFuncO pCallFun )
 {
 	m_iUnitInfoIndex = iUnitInfoIndex;
 	m_oPos = roPos;
-	m_pContext = pContext;
+	m_pUnitLayer = pUnitLayer;
 	m_pTarget = pTarget;
 	m_pCallFun = pCallFun;
 	return true;

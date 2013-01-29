@@ -136,7 +136,10 @@ bool COrgSkillInfo::init()
     pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     
-    pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
+	//pSkill = CTransmitBuff::create(5, false, 151, ccp(100, 100), 1, 7, 7, iKey, 1);
+    //iKey = pSm->addSkill(pSkill);
+
+	pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
 
     m_mapSkills[kThrowHit1].iIndex = iKey;
@@ -159,6 +162,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThunderAttack1].sName = "雷霆一击";
     m_mapSkills[kThunderAttack1].sDesc = "猛烈锤击地面，向目标射出一道电光，将造成50点魔法伤害";
     
+
     return true;
 }
 
