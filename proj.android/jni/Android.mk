@@ -14,6 +14,7 @@ LOCAL_SRC_FILES := gamedemo/main.cpp \
 ../../Classes/Box2DEx.cpp \
 ../../Classes/BulletSprite.cpp \
 ../../Classes/ChildOfGameUnit.cpp \
+../../Classes/CommDef.cpp \
 ../../Classes/ComplexUnit.cpp \
 ../../Classes/DemoScene.cpp \
 ../../Classes/DotaScene.cpp \
@@ -23,6 +24,7 @@ LOCAL_SRC_FILES := gamedemo/main.cpp \
 ../../Classes/GameFile.cpp \
 ../../Classes/GameLevel.cpp \
 ../../Classes/GameLogic.cpp \
+../../Classes/GameResControl.cpp \
 ../../Classes/GLES-Render.cpp \
 ../../Classes/HomeScene.cpp \
 ../../Classes/MainScene.cpp \
@@ -40,6 +42,7 @@ LOCAL_SRC_FILES := gamedemo/main.cpp \
 ../../Classes/TestScene.cpp \
 ../../Classes/Tower.cpp \
 ../../Classes/Unit.cpp \
+../../Classes/UnitEditorScene.cpp \
 ../../Classes/UnitInfo.cpp \
 ../../Classes/UnitShowScene.cpp \
 ../../Classes/WHomeScene.cpp
