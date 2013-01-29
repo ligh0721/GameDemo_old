@@ -100,13 +100,8 @@ bool CCWHomeSceneLayer::init()
     heroUnit->setAlly(1<<2);
     heroUnit->addSkill(CStatusShowPas::create());
     
-    //heroUnit->setBaseAttackInterval(3);
-    //heroUnit->setMaxHp(200);
     heroUnit->setLevelUpdate(&g_oDemoUpdate);
     heroUnit->setMaxLevel(100);
-    //heroUnit->setBaseMoveSpeed(80);
-    //heroUnit->setArmorType(CArmorValue::kHero);
-    //heroUnit->setAttackMinRange(0);
     heroUnit->setForceResource(pFr);
 
     m_oGameCtrlLayer.initWithColor(ccc4(0,0,0,0));
@@ -137,22 +132,27 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oSkillPanel);
     m_oSkillPanel.setPosition(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50);
 
-    CSkill* pSkill = pOs->skill(COrgSkillInfo::kSpeedUp1);
+    CActiveSkill* pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSpeedUp1));
+    pSkill->setCastAniInfo(CGameUnit::kAnimationAct5, 0.4);
     heroUnit->addSkill(pSkill);
-
     CCSkillButtonAdvance* pBtn;
-    pBtn = M_CREATE_SKILL("skill1", heroUnit->getKey(), pSkill->getKey(), this);
+    pBtn = M_CREATE_SKILL("skill2", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 4);
 
-    pBtn = M_CREATE_SKILL("skill2", heroUnit->getKey(), pSkill->getKey(), this);
-    pBtn->setEnabled(false);
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kThunderClap1));
+    pSkill->setCastAniInfo(CGameUnit::kAnimationAct3, 0.8);
+    heroUnit->addSkill(pSkill);
+    pBtn = M_CREATE_SKILL("skill1", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 3);
-    pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey(), this);
-    pBtn->setEnabled(false);
-    m_oSkillPanel.addButton(pBtn, 0, 2);
+    //pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey(), this);
+    //pBtn->setEnabled(false);
+    //m_oSkillPanel.addButton(pBtn, 0, 2);
 
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kThunderAttack1));
+    pSkill->setCastAniInfo(CGameUnit::kAnimationAct4, 0.7);
+    dynamic_cast<CProjectileAct*>(pSkill)->setProjectileBirthOffsetX(20);
+    heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill4", heroUnit->getKey(), pSkill->getKey(), this);
-    pBtn->setEnabled(false);
     m_oSkillPanel.addButton(pBtn, 0, 1);
 
     m_oBuildBtn.init(M_SKILL_PATH("build"), M_SKILL_DOWN_PATH("build"), M_SKILL_DIS_PATH("build"), M_SKILL_PATH("white"), "mask/mask.png", 15, this, callfuncN_selector(CCWHomeSceneLayer::onBtnBuildClick), NULL);
@@ -171,6 +171,8 @@ bool CCWHomeSceneLayer::init()
     //m_oGold.setString(UTEXT("ฮารว"));
 
     onBtnCfgClick(&m_oCfg);
+
+    pGm->setVoice(false);
 
     return true;
 }
@@ -303,23 +305,56 @@ void CCWHomeSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
         return;
     }
 
-    CCPoint destinationPoint = ccpSub(pTouch->getLocation(), getPosition());
+    CCPoint oPos = ccpSub(pTouch->getLocation(), getPosition());
+
+    if (touchActionIndex() == kUnitCastTarget)
+    {
+        CGameUnit* t = NULL;
+        CActiveSkill* pSkill = heroUnit->getToCastSkill();
+        switch (pSkill->getCastTargetType())
+        {
+        case CActiveSkill::kPointTarget:
+            pSkill->setTargetPoint(oPos);
+            heroUnit->cast();
+            endOrderUnitToCast();
+            return;
+
+        case CActiveSkill::kUnitTarget:
+            t = getUnits()->getNearestUnitInRange(oPos, 50, CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(heroUnit));
+            if (t)
+            {
+                pSkill->setTargetUnit(t->getKey());
+                heroUnit->cast();
+                endOrderUnitToCast();
+            }
+            return;
+
+        default:
+            CCAssert(false, "err skill cast target type");
+            return;
+        }
+
+        
+        
+        return;
+    }
+
     if (m_bCanBuild)
     {
-        if (addTower(destinationPoint))
+        if (addTower(oPos))
         {
             m_oBuildBtn.coolDown();
         }
     }
     else
     {
-        CGameUnit* pUnit = getUnits()->getNearestUnitInRange(destinationPoint, 50, CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(heroUnit));
+        CGameUnit* pUnit = getUnits()->getNearestUnitInRange(oPos, 50, CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(heroUnit));
         if (pUnit)
         {
             heroUnit->attack(pUnit->getKey());
             return;
         }
-        heroUnit->moveTo(destinationPoint);
+        heroUnit->moveTo(oPos);
     }
 
 }

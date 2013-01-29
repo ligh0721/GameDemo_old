@@ -106,7 +106,7 @@ bool CCDotaSceneLayer::init()
     u->setAttackEffectDelay(0.7);
     u->setAttackMinRange(1);
     u->setAttackRange(20);
-    u->setWeaponType(CGameUnit::kWTClose);
+    u->setWeaponType(CGameUnit::kWTClosely);
     CAttackValue oAv;
     oAv.setZero();
     oAv.setAttack(CAttackValue::kPhysical, 33);
@@ -217,7 +217,7 @@ void CCDotaSceneLayer::setSoldierDataByIndex( CSimpleGameUnit* u,int index )
         u->setAttackEffectDelay(0.2);
         u->setAttackMinRange(0);
         u->setAttackRange(13);
-        u->setWeaponType(CGameUnit::kWTClose);
+        u->setWeaponType(CGameUnit::kWTClosely);
         u->setMaxHp(100);
         CAttackValue oAv(1, CAttackValue::kMagical, 5);
         u->setBaseAttackValue(oAv);
@@ -247,7 +247,7 @@ void CCDotaSceneLayer::setSoldierDataByIndex( CSimpleGameUnit* u,int index )
         //u->setExAttackSpeed(CExtraCoeff(2, 0)); // 攻击多项式系数 ax+b
         u->setAttackMinRange(0); // 攻击最短距离，小于该距离不可立即攻击，参考投石车
         u->setAttackRange(15); // 攻击距离，大于该距离不可立即攻击
-        u->setWeaponType(CGameUnit::kWTClose); // 武器类型为近战
+        u->setWeaponType(CGameUnit::kWTClosely); // 武器类型为近战
     }
     else if (index==2)
     {

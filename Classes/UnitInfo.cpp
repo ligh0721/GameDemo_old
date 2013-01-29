@@ -95,6 +95,7 @@ bool COrgUnitInfo::init()
     pProj->setProjectileType(CProjectile::kFollow); // 设置投射物
     pProj->prepareMoveAnimation("move", 0.1); // 加载投射物移动动画
     pProj->prepareDieAnimation("die", 0.1); // 加载投射物死亡动画
+    pProj->setBaseMoveSpeed(300.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjBall1 = pProj;
 
@@ -102,6 +103,7 @@ bool COrgUnitInfo::init()
     pProj->setProjectileType(CProjectile::kFollow); // 设置投射物
     pProj->prepareMoveAnimation("move", 0.1); // 加载投射物移动动画
     pProj->prepareDieAnimation("die", 0.1); // 加载投射物死亡动画
+    pProj->setBaseMoveSpeed(300.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjBall2 = pProj;
 
@@ -109,14 +111,23 @@ bool COrgUnitInfo::init()
     pProj->setProjectileType(CProjectile::kFollow); // 设置投射物
     pProj->prepareMoveAnimation("move", 0.1); // 加载投射物移动动画
     pProj->prepareDieAnimation("die", 0.1); // 加载投射物死亡动画
+    pProj->setBaseMoveSpeed(300.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjBall3 = pProj;
 
     pProj = CProjectile::createWithName("Lightning1");
     pProj->setProjectileType(CProjectile::kLightning); // 设置投射物
     pProj->prepareDieAnimation("die", 0.1); // 加载投射物死亡动画
+    pProj->setBaseMoveSpeed(0.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjLightning1 = pProj;
+
+    pProj = CProjectile::createWithName("Lightning1");
+    pProj->setProjectileType(CProjectile::kLightning); // 设置投射物
+    pProj->prepareDieAnimation("die", 0.05); // 加载投射物死亡动画
+    pProj->setBaseMoveSpeed(0.0);
+    pPm->addProjectile(pProj); // 将投射物添加到PM中
+    CProjectile* pProjLightning2 = pProj;
 
 
     CUnitInfo oMalik(
@@ -124,10 +135,10 @@ bool COrgUnitInfo::init()
         ccp(0.5, 0.1125),
         7, 10,
         1,
-        0.05, 0.1, 0.08, 0.08, 0.0, 0.0, 0.0, 0.0,
+        0.05, 0.1, 0.08, 0.08, 0.08, 0.08, 0.08, 0.0,
         CUnitInfo::ARR_ATTACK_ANI(2, kAct1, kAct2),
         40,
-        2, 0.4, 0, 15, 150, CGameUnit::kWTClose,
+        2, 0.4, 0, 15, 150, CGameUnit::kWTClosely,
         0, 0, 0, 0, 0, 0,
         CAttackValue(1, CAttackValue::kPhysical, 10.0),
         0.150,
@@ -169,7 +180,7 @@ bool COrgUnitInfo::init()
         0.05, 0.1, 0.1, 0.1, 0.05, 0.0, 0.0, 0.0,
         CUnitInfo::ARR_ATTACK_ANI(3, kAct1, kAct2, kAct3),
         40,
-        1.5, 0.2, 0, 13, 150, CGameUnit::kWTClose,
+        1.5, 0.2, 0, 13, 150, CGameUnit::kWTClosely,
         0, 0, 0, 0, 0, 0,
         CAttackValue(1, CAttackValue::kPhysical, 8.0),
         0.150,
@@ -190,7 +201,7 @@ bool COrgUnitInfo::init()
         0.1, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.0,
         CUnitInfo::ARR_ATTACK_ANI(1, kAct1),
         40,
-        6, 0.8, 1, 20, 150, CGameUnit::kWTClose,
+        6, 0.8, 1, 20, 150, CGameUnit::kWTClosely,
         0, 0, 0, 0, 0, 0,
         CAttackValue(1, CAttackValue::kSiege, 30.0),
         0.150,
