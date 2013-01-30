@@ -2342,23 +2342,27 @@ bool CGameUnit::cast()
             return false;
         }
 
-        // 进行施法校正
-        if (isDoingAnd(kCasting | kMoving))
+        if (getToCastSkill() == getCastingSkill())
         {
-            // 位置校正中
-            if (!checkCastDistance(getLastMoveToTarget()))
+            // 进行施法校正
+            if (isDoingAnd(kCasting | kMoving))
             {
-                // 但修正位置已过期
-                moveToCastPosition();
+                // 位置校正中
+                if (!checkCastDistance(getLastMoveToTarget()))
+                {
+                    // 但修正位置已过期
+                    moveToCastPosition();
+                }
+                return false;
             }
-            return false;
-        }
 
-        if (m_oSprite.getActionByTag(kActCast) || m_oSprite.getActionByTag(kActCastEffect))
-        {
-            stopCast();
-            return false;
+            if (m_oSprite.getActionByTag(kActCast) || m_oSprite.getActionByTag(kActCastEffect))
+            {
+                //stopCast();
+                return false;
+            }
         }
+        
 
         moveToCastPosition();
         return false;
