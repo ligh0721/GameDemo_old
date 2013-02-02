@@ -1654,59 +1654,91 @@ CTransmitBuff::CTransmitBuff()
 
 }
 
-bool CTransmitBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, const CCPoint& oDestPos, float fMissDuration, unsigned int uBeginBlinks, unsigned int uEndBlinks, int iBuffTemplateKey, int iBuffLevel )
+bool CTransmitBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, vector<CCPoint>& vecRandomPoint, float fFadeInDuration,  float fFadeOutDuration, int iBuffTemplateKey, int iBuffLevel)
 {
-	setDestPos(oDestPos);
-	setMissDuration(fMissDuration);
-	setBeginBlinks(uBeginBlinks);
-	setEndBlinks(uEndBlinks);
+	setFadeInDuration(fFadeInDuration);
+	setFadeOutDuration(fFadeOutDuration);
 	m_iBuffTemplateKey = iBuffTemplateKey;
 	m_iBuffLevel = iBuffLevel;
-
+	m_vecRandomPoint = vecRandomPoint;
 	return CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
 
 }
 
 CCObject* CTransmitBuff::copyWithZone( CCZone* pZone )
 {
-	return CTransmitBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_oDestPos, m_fMissDuration, m_uBeginBlinks, m_uEndBlinks, m_iBuffTemplateKey, m_iBuffLevel);
+	return CTransmitBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_vecRandomPoint, m_fFadeInDuration, m_fFadeOutDuration, m_iBuffTemplateKey, m_iBuffLevel);
 }
 
 void CTransmitBuff::onBuffAdd()
 {
 	CBuffSkill::onBuffAdd();
-}
-
-void CTransmitBuff::onBuffDel()
-{
 	CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
 	if (!u || u->isDead())
 	{
 		return;
 	}
 	u->suspend();
+	u->setStatus(CGameUnit::kNoAttacked);
 	CCAction* pAct = CCSequence::createWithTwoActions(
-		CCBlink::create(m_fMissDuration, m_uBeginBlinks),
+		CCFadeOut::create(m_fFadeOutDuration),
 		CCCallFuncN::create(this, callfuncN_selector(CTransmitBuff::onTransmitBegin))
 		);
 	u->getSprite()->runAction(pAct);
 }
 
+void CTransmitBuff::onBuffDel()
+{
+	CBuffSkill::onBuffDel();
+}
+
 void CTransmitBuff::onTransmitBegin( CCNode* pNode )
 {
-	CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
-	u->getSprite()->setPosition(m_oDestPos);
+	CCPoint oPoint;
+	CCGameUnitSprite* pSprint = dynamic_cast<CCGameUnitSprite*>(pNode);
+	CGameUnit* pUnit = pSprint->getControler();
+	CCPoint oDestPoint;
+
+	if (m_vecRandomPoint.size() > 0)
+	{
+		oDestPoint = m_vecRandomPoint[rand()%(m_vecRandomPoint.size() - 1)];
+
+	}
+	else
+	{
+		CUnitPath* pPath = pUnit->getMovePath();
+		const CCPoint& lastPoint = pUnit->getLastMoveToTarget();
+		unsigned int i = 0;
+		for (; i < pPath->m_vecPoints.size(); i++)
+		{
+			if (pPath->m_vecPoints[i].equals(lastPoint))
+				break;
+		}
+		int iDestIndex = rand()%i;
+		oDestPoint = pPath->m_vecPoints[iDestIndex];
+		pUnit->setPathCurPos(iDestIndex + 1);
+
+	}
+
+	oPoint.setPoint(oDestPoint.x, oDestPoint.y);
+	if (oDestPoint.equals(CCPointZero))
+	{
+		oPoint.setPoint(rand()%800, rand()%480);
+
+	}
+	pNode->setPosition(oPoint);
 	CCAction* pAct = CCSequence::createWithTwoActions(
-		CCBlink::create(m_fMissDuration, m_uEndBlinks),
+		CCFadeIn::create(m_fFadeInDuration),
 		CCCallFuncN::create(this, callfuncN_selector(CTransmitBuff::onTransmitEnd))
 		);
-	u->getSprite()->runAction(pAct);
+	pNode->runAction(pAct);
 }
 
 void CTransmitBuff::onTransmitEnd( CCNode* pNode )
 {
-
+	CCGameUnitSprite* pSprite = dynamic_cast<CCGameUnitSprite*>(pNode);
+	pSprite->getControler()->resume();
+	pSprite->getControler()->setStatus(CGameUnit::kNormal);
 }
-
 
 

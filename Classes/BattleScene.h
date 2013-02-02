@@ -83,6 +83,8 @@ public:
 
 	void afterBuildTower(CCObject* pObject);
 
+	virtual void initTower(CCObject* pObject);
+
 protected:
 
 	bool loadNPCNodeData();

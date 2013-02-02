@@ -336,7 +336,7 @@ public:
     virtual void onAttackTarget(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask);          // 攻击发出时，攻击者触发
     virtual CAttackData* onAttacked(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);      // 攻击抵达时，受害者触发
     virtual void onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);               // 攻击命中时，受害者触发
-    virtual void onDamageTarget(float fDamage, CUnit* pTarget, uint32_t dwTriggerMask);                 // 攻击命中时，攻击者触发
+    virtual void onDamageTarget(float fDamage, CUnit* pTarget, uint32_t dw0TriggerMask);                 // 攻击命中时，攻击者触发
     virtual void onRevive();
     virtual void onDie();
     virtual void onHpChange(float fChanged);
@@ -474,7 +474,11 @@ public:
         //kAutoAttack = 1 << 4
     };
     //static const int kWithHostility = kAutoAttack;
-
+	enum STATUS
+	{
+		kNormal,
+		kNoAttacked
+	};
     enum ACTION_TAG
     {
         kActMoveTo,
@@ -641,6 +645,9 @@ public:
     virtual void setForceResource(CForceResouce* pRes);
     virtual CForceResouce* getForceResource();
     M_SYNTHESIZE(CCUnitLayer*, m_pUnitLayer, UnitLayer);
+	M_SYNTHESIZE(uint32_t, m_dwStatus, Status);
+	CUnitPath* getMovePath();
+	const CCPoint& getLastMoveToTarget();
 
 protected:
     virtual void turnTo(CGameUnit* pTarget);
@@ -654,7 +661,7 @@ protected:
 
     float m_fBaseMoveSpeed;
     CExtraCoeff m_oExMoveSpeed;
-    CCPoint m_oLastMoveToTarget;
+   CCPoint m_oLastMoveToTarget;
 
     float m_fBaseAttackInterval;
     CExtraCoeff m_oExAttackSpeed;
@@ -667,7 +674,7 @@ protected:
     bool m_bIsFixed;
     CForceResouce* m_pRes;
 
-    CUnitPath* m_pMovePath;
+	CUnitPath* m_pMovePath;
     bool m_bPathIntended;
     float m_fPathBufArrive;
 };

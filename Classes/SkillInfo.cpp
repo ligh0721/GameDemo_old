@@ -132,9 +132,6 @@ bool COrgSkillInfo::init()
 
     pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
     iKey = pSm->addSkill(pSkill);
-    
-	pSkill = CTransmitBuff::create(5, false, 151, ccp(100, 100), 1, 7, 7, iKey, 1);
-    iKey = pSm->addSkill(pSkill);
 
 	pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
@@ -142,6 +139,17 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThrowHit1].iIndex = iKey;
     m_mapSkills[kThrowHit1].sName = "击飞";
     m_mapSkills[kThrowHit1].sDesc = "75%的概率将目标击飞至150范围内的一点，落地后对周围50半径范围内单位造成50点伤害并眩晕2秒，被坠落单位还将受到50点额外伤害";
+
+	
+	vector<CCPoint> vecPoints;
+	pSkill = CTransmitBuff::create(5, false, 151, vecPoints, 1.5, 1.5, iKey, 1);
+	iKey = pSm->addSkill(pSkill);
+	pSkill = CAttackBuffMakerPas::create(100, iKey, 1, CExtraCoeff(1, 0));
+	iKey = pSm->addSkill(pSkill);
+
+	m_mapSkills[kTransmit1].iIndex = iKey;
+	m_mapSkills[kTransmit1].sName = "传送";
+	m_mapSkills[kTransmit1].sDesc = "100%概率传送敌兵另一个敌方";
 
     pSkill = CSpeedBuff::create(7, true, CExtraCoeff(1.0, 0), CExtraCoeff(1.0, 0));
     iKey = pSm->addSkill(pSkill);

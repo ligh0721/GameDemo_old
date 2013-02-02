@@ -1247,6 +1247,7 @@ bool CGameUnit::init()
     setRewardGold(0);
     setRewardExp(0);
     setExAttackRandomRange(0.000);
+	setStatus(kNormal);
     m_pRes = NULL;
     m_pUnitLayer = NULL;
     m_pMovePath = NULL;
@@ -1684,6 +1685,11 @@ const CCPoint& CGameUnit::getLastMoveToTarget() const
     return m_oLastMoveToTarget;
 }
 
+const CCPoint& CGameUnit::getLastMoveToTarget()
+{
+	return m_oLastMoveToTarget;
+}
+
 void CGameUnit::onActMoveEnd( CCNode* pNode )
 {
     endDoing(kIntended);
@@ -1766,7 +1772,7 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
     float fRealAttackInterval = getRealAttackInterval();
     //M_DEF_GM(pGm);
     CGameUnit* pTarget = getUnitLayer()->getUnitByKey(iTargetKey);
-    if (!pTarget || pTarget->isDead())
+    if (!pTarget || pTarget->isDead() || pTarget->getStatus() == kNoAttacked)
     {
         // 原目标已不存在
         if (isDoingOr(kAttacking) && !m_oSprite.getActionByTag(kActAttack))
@@ -2267,6 +2273,11 @@ CForceResouce* CGameUnit::getForceResource()
     return m_pRes;
 }
 
+CUnitPath* CGameUnit::getMovePath()
+{
+	return m_pMovePath;
+}
+
 CProjectile::CProjectile()
 {
 }
@@ -2718,7 +2729,7 @@ bool CUnitGroup::isLivingAllyOf( CGameUnit* pUnit, CUnitForce* pParam)
 
 bool CUnitGroup::isLivingEnemyOf( CGameUnit* pUnit, CUnitForce* pParam)
 {
-    return !pUnit->isDead() && pUnit->isEnemyOf(pParam);
+    return !pUnit->isDead() && pUnit->isEnemyOf(pParam) && pUnit->getStatus() != CGameUnit::kNoAttacked;
 }
 
 CCUnitLayer::CCUnitLayer()

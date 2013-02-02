@@ -641,14 +641,12 @@ class CTransmitBuff : public CBuffSkill
 public:
 	CTransmitBuff();
 
-	virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, const CCPoint& oDestPos, float fMissDuration, unsigned int uBeginBlinks, unsigned int uEndBlinks, int iBuffTemplateKey, int iBuffLevel);
-	M_CREATE_FUNC_PARAM(CTransmitBuff, (float fDuration, bool bCanBePlural, int iSrcKey, const CCPoint& oDestPos, float fMissDuration, unsigned int uBeginBlinks, unsigned int uEndBlinks, int iBuffTemplateKey, int iBuffLevel), fDuration, bCanBePlural, iSrcKey, oDestPos, fMissDuration, uBeginBlinks, uEndBlinks, iBuffTemplateKey, iBuffLevel);
+	virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, vector<CCPoint>& vecRandomPoint, float fFadeInDuration,  float fFadeOutDuration, int iBuffTemplateKey, int iBuffLevel);
+	M_CREATE_FUNC_PARAM(CTransmitBuff, (float fDuration, bool bCanBePlural, int iSrcKey, vector<CCPoint>& vecRandomPoint, float fFadeInDuration,  float fFadeOutDuration, int iBuffTemplateKey, int iBuffLevel), fDuration, bCanBePlural, iSrcKey, vecRandomPoint, fFadeInDuration, fFadeOutDuration, iBuffTemplateKey, iBuffLevel);
 	virtual CCObject* copyWithZone(CCZone* pZone);
 
-	M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oDestPos, DestPos);
-	M_SYNTHESIZE(float, m_fMissDuration, MissDuration);
-	M_SYNTHESIZE(unsigned int, m_uBeginBlinks, BeginBlinks);
-	M_SYNTHESIZE(unsigned int, m_uEndBlinks, EndBlinks);
+	M_SYNTHESIZE(float, m_fFadeInDuration, FadeInDuration);
+	M_SYNTHESIZE(float, m_fFadeOutDuration, FadeOutDuration);
 	virtual void onBuffAdd();
 	virtual void onBuffDel();
 
@@ -656,7 +654,8 @@ public:
 	virtual void onTransmitEnd(CCNode* pNode);
 
 public:
+	vector<CCPoint> m_vecRandomPoint;
+	int m_iLastAttackedUnit;
 	int m_iBuffTemplateKey;
 	int m_iBuffLevel;
 };
-
