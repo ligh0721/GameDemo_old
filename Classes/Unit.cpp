@@ -3285,7 +3285,7 @@ void CCWinUnitLayer::onEnter()
 {
     CCUnitLayer::onEnter();
     CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
-    schedule(schedule_selector(CCWinUnitLayer::bufferWindowEffect), 1.0 / 60);
+    schedule(schedule_selector(CCWinUnitLayer::bufferWindowEffect), 1.0 / 200);
 }
 
 void CCWinUnitLayer::onExit()
@@ -3497,6 +3497,7 @@ CUnitInfo::~CUnitInfo(void)
 {
 }
 
+#if 0
 const uint16_t CUnitInfoPatch::CONST_FILE_DATA_SIZE
     = sizeof(m_iOrgUnitIndex)
     + sizeof(m_szName)
@@ -3515,6 +3516,26 @@ const uint16_t CUnitInfoPatch::CONST_FILE_DATA_SIZE
     + sizeof(m_bIsFixed)
     + sizeof(m_iRewardGold)
     + sizeof(m_iRewardExp);
+#else
+const uint16_t CUnitInfoPatch::CONST_FILE_DATA_SIZE
+= sizeof(int)
++ sizeof(char[32])
++ sizeof(float)
++ sizeof(float)
++ sizeof(float)
++ sizeof(float)
++ sizeof(float)
++ sizeof(float)
++ sizeof(float)
++ sizeof(CAttackValue::ARR_ATTACK_VALUES)
++ sizeof(float)
++ sizeof(CArmorValue::ARMOR_TYPE)
++ sizeof(float)
++ sizeof(float)
++ sizeof(bool)
++ sizeof(int)
++ sizeof(int);
+#endif
 
 CUnitInfoPatch::CUnitInfoPatch()
     : m_iOrgUnitIndex(0)

@@ -409,7 +409,6 @@ protected:
     virtual void onSkillDel();
 
     virtual void onUnitAttackTarget(CAttackData* pAttack, CUnit* pTarget);
-    virtual void onUnitDamageTarget(float fDamage, CUnit* pTarget);
 
 public:
     int m_iProbability;

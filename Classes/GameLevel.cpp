@@ -234,11 +234,19 @@ CGameLeveMarkInfo::CGameLeveMarkInfo()
 
 }
 
+#if 0
 const int CGameLeveMarkInfo::CONST_FILE_DATA_SIZE 
 	= sizeof(m_iLevel)
 	+ sizeof(m_iStars)
 	+ sizeof(m_cPassed)
 	+ sizeof(m_cUnlock);
+#else
+const int CGameLeveMarkInfo::CONST_FILE_DATA_SIZE
+    = sizeof(int)
+    + sizeof(int)
+    + sizeof(uint8_t)
+    + sizeof(uint8_t);
+#endif
 
 bool CGameLeveMarkInfo::initWithFileStream( CGameFile* pFile )
 {

@@ -110,27 +110,27 @@ bool CCWHomeSceneLayer::init()
     m_oMenuCtrl.setPosition(CCPointZero);
     m_oGoToTechTree.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png"
         , NULL, this, menu_selector(CCWHomeSceneLayer::onBtnGoClick));
-    m_oGoToTechTree.setPosition(oSz.width - m_oGoToTechTree.getContentSize().width * 0.5 - 10, m_oGoToTechTree.getContentSize().height * 0.5 + 10);
+    m_oGoToTechTree.setPosition(ccp(oSz.width - m_oGoToTechTree.getContentSize().width * 0.5 - 10, m_oGoToTechTree.getContentSize().height * 0.5 + 10));
     m_oMenuCtrl.addChild(&m_oGoToTechTree);
 
     m_oHeroHead.initWithNormalSprite(CCSprite::createWithSpriteFrameName(M_SKILL_PATH("jt")), CCSprite::createWithSpriteFrameName(M_SKILL_DOWN_PATH("jt"))
         , CCSprite::createWithSpriteFrameName(M_SKILL_DIS_PATH("jt")), this, menu_selector(CCWHomeSceneLayer::onBtnHeroClick));
-    m_oHeroHead.setPosition(m_oHeroHead.getContentSize().width * 0.5 + 10, m_oGameCtrlLayer.getContentSize().height - m_oHeroHead.getContentSize().height * 0.5 - 10);
+    m_oHeroHead.setPosition(ccp(m_oHeroHead.getContentSize().width * 0.5 + 10, m_oGameCtrlLayer.getContentSize().height - m_oHeroHead.getContentSize().height * 0.5 - 10));
     m_oMenuCtrl.addChild(&m_oHeroHead);
 
     m_oHpBar.init(CCSizeMake(m_oHeroHead.getContentSize().width, 6), CCSprite::createWithSpriteFrameName("bar_white.png")
         , CCSprite::createWithSpriteFrameName("healthbar_border.png"), 1, 1, true);
-    m_oHpBar.setPosition(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oHeroHead.getContentSize().height * 0.5 - m_oHpBar.getContentSize().height * 0.5);
+    m_oHpBar.setPosition(ccp(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oHeroHead.getContentSize().height * 0.5 - m_oHpBar.getContentSize().height * 0.5));
     m_oGameCtrlLayer.addChild(&m_oHpBar);
 
     m_oExpBar.init(CCSizeMake(m_oHpBar.getContentSize().width, 6), CCSprite::createWithSpriteFrameName("bar_white.png")
         , CCSprite::createWithSpriteFrameName("healthbar_border.png"), 1, 1, true);
-    m_oExpBar.setPosition(m_oHpBar.getPositionX(), m_oHpBar.getPositionY() - m_oHpBar.getContentSize().height * 0.5 - m_oExpBar.getContentSize().height * 0.5);
+    m_oExpBar.setPosition(ccp(m_oHpBar.getPositionX(), m_oHpBar.getPositionY() - m_oHpBar.getContentSize().height * 0.5 - m_oExpBar.getContentSize().height * 0.5));
     m_oGameCtrlLayer.addChild(&m_oExpBar);
 
     m_oSkillPanel.init(5, 1, 64, 7, 5, "Skill5_78x352_7_5_black.png");
     m_oGameCtrlLayer.addChild(&m_oSkillPanel);
-    m_oSkillPanel.setPosition(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50);
+    m_oSkillPanel.setPosition(ccp(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50));
 
     CActiveSkill* pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSpeedUp1));
     pSkill->setCastAniInfo(CGameUnit::kAnimationAct5, 0.4);

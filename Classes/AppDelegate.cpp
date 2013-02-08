@@ -64,7 +64,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
 
     // turn on display FPS
-    pDirector->setDisplayStats(false);
+    pDirector->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
@@ -73,7 +73,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #if defined QTPROJ
     CCScene *pScene = CCUnitEditorScene::create();
 #else
-    CCScene *pScene = CCWHomeScene::create();
+    CCScene *pScene = CCHomeScene::create();
     //CCScene *pScene = CCUnitEditorScene::create();
 	//CCScene *pScene = CCBattleScene::create();
 	//CCScene* pScene = CCGameChapterScene::create();

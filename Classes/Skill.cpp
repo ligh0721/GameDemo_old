@@ -795,12 +795,14 @@ void CStunBuff::onBuffAdd()
 {
     M_DEF_GM(pGm);
     pGm->playEffectSound("sound/cannon2.wav");
-    ((CTank*)m_pOwner)->suspend();
+    CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+    o->suspend();
 }
 
 void CStunBuff::onBuffDel()
 {
-    ((CTank*)m_pOwner)->resume();
+    CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+    o->resume();
 }
 
 bool CDoubleAttackPas::init( int iProbability )
@@ -816,26 +818,14 @@ CCObject* CDoubleAttackPas::copyWithZone( CCZone* pZone )
 
 void CDoubleAttackPas::onSkillAdd()
 {
-    //registerOnDamageTargetTrigger();
     registerOnAttackTargetTrigger();
     CPassiveSkill::onSkillAdd();
 }
 
 void CDoubleAttackPas::onSkillDel()
 {
-    //unregisterOnDamageTargetTrigger();
     unregisterOnAttackTargetTrigger();
     CPassiveSkill::onSkillDel();
-}
-
-void CDoubleAttackPas::onUnitDamageTarget( float fDamage, CUnit* pTarget )
-{
-    CTank* pTank = NULL;
-    if (M_RAND_HIT(m_iProbability))
-    {
-        pTank = dynamic_cast<CTank*>(getOwner());
-        pTank->fire(dynamic_cast<CCTankSprite*>(pTank->getDisplayBody())->getFirePower() * 0.75);
-    }
 }
 
 void CDoubleAttackPas::onUnitAttackTarget( CAttackData* pAttack, CUnit* pTarget )
