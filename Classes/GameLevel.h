@@ -50,8 +50,8 @@ public:
 	virtual void writeToFileStream(FILE* pFile);
 public:
 	int m_iLevel; //关卡等级 
-	byte m_cPassed; //是否过此等级
-	byte m_cUnlock; //是否解锁
+	uint8_t m_cPassed; //是否过此等级
+	uint8_t m_cUnlock; //是否解锁
 	int m_iStars; //评星
 };
 

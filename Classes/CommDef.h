@@ -20,7 +20,7 @@ public: inline void set##funName(const char* var){ varName = var; }
 
 #define M_SYNTHESIZE_PASS_BY_REF(varType, varName, funName)\
 protected: varType varName;\
-public: inline virtual varType get##funName(void) const { return varName; }\
+public: inline virtual const varType& get##funName(void) const { return varName; }\
 public: inline virtual void set##funName(const varType& var){ varName = var; }
 
 

@@ -23,7 +23,11 @@ public:
         kThump1,
         kThrowHit1,
         kSpeedUp1,
+<<<<<<< HEAD
 		kTransmit1,
+=======
+        kThunderAttack1
+>>>>>>> 5580446e55790bac34206abcba538a9841db1d5d
     };
 
     struct SKILL_INFO

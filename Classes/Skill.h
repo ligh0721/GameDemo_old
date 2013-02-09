@@ -156,13 +156,29 @@ public:
 class CActiveSkill : public CLevelLimitSkill
 {
 public:
+    enum CAST_TARGET_TYPE
+    {
+        kNoTarget,
+        kPointTarget,
+        kUnitTarget
+    };
+
+    enum WEAPON_TYPE
+    {
+        kWTClosely = 0,
+        kWTInstant = 1,
+        kWTDelayed = 2
+    };
+
+public:
     CActiveSkill();
     virtual ~CActiveSkill();
 
     virtual bool init(float fCoolDown);
     //M_CREATE_FUNC_PARAM(CActiveSkill, (float fCoolDown), fCoolDown);
 
-    virtual bool cast();
+    virtual void cast();
+    virtual bool canCast() const;
     virtual bool isCoolingDown() const;
     virtual void resetCD();
 
@@ -170,7 +186,21 @@ public:
     // @override
     virtual void onSkillCast();
 
+    M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oTargetPoint, TargetPoint);
+    CC_PROPERTY(int, m_iTargetUnit, TargetUnit);
+    M_SYNTHESIZE(float, m_fCastRange, CastRange);
+    M_SYNTHESIZE(CAST_TARGET_TYPE, m_eCastTargetType, CastTargetType);
+    M_SYNTHESIZE(float, m_fTargetUnitHalfOfWidth, TargetUnitHalfOfWidth); // cache property
+    M_SYNTHESIZE(WEAPON_TYPE, m_eWeaponType, WeaponType);
+    const CCPoint& updateTargetUnitPoint();
+    virtual CCSkillButtonAdvance* getSkillButton();
+    virtual void setCastAniInfo(CGameUnit::ANIMATION_INDEX eAniIndex, float fCastEffectDelay);
+    virtual CGameUnit::ANIMATION_INDEX getCastAniIndex() const;
+    virtual float getCastEffectDelay() const;
+
 public:
+    CGameUnit::ANIMATION_INDEX m_eAniIndex;
+    float m_fCastEffectDelay;
 };
 
 // 被动技能，触发时机由被动技能所注册的触发器所决定
@@ -379,7 +409,6 @@ protected:
     virtual void onSkillDel();
 
     virtual void onUnitAttackTarget(CAttackData* pAttack, CUnit* pTarget);
-    virtual void onUnitDamageTarget(float fDamage, CUnit* pTarget);
 
 public:
     int m_iProbability;
@@ -659,3 +688,32 @@ public:
 	int m_iBuffTemplateKey;
 	int m_iBuffLevel;
 };
+<<<<<<< HEAD
+=======
+
+class CProjectileAct : public CActiveSkill
+{
+public:
+    virtual bool init(float fCoolDown, float fCastRange, const CAttackValue& roDamage, CProjectile* pProj, int iBuffTemplateKey, int iBuffLevel);
+    M_CREATE_FUNC_PARAM(CProjectileAct, (float fCoolDown, float fCastRange, const CAttackValue& roDamage, CProjectile* pProj, int iBuffTemplateKey, int iBuffLevel), fCoolDown, fCastRange, roDamage, pProj, iBuffTemplateKey, iBuffLevel);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+
+    virtual void onSkillAdd();
+    virtual void onSkillDel();
+
+    virtual void onSkillCast();
+
+    CC_PROPERTY(CProjectile*, m_pTemplateProjectile, TemplateProjectile);
+    M_SYNTHESIZE(float, m_fProjectileMoveSpeed, ProjectileMoveSpeed);
+    M_SYNTHESIZE(float, m_fProjectileScale, ProjectileScale);
+    M_SYNTHESIZE(float, m_fProjectileMaxOffsetY, ProjectileMaxOffsetY);
+    M_SYNTHESIZE(float, m_fProjectileBirthOffsetX, ProjectileBirthOffsetX);
+    M_SYNTHESIZE(float, m_fProjectileBirthOffsetY, ProjectileBirthOffsetY);
+
+public:
+    CAttackValue m_oDamage;
+    int m_iBuffTemplateKey;
+    int m_iBuffLevel;
+
+};
+>>>>>>> 5580446e55790bac34206abcba538a9841db1d5d

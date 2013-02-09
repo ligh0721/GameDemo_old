@@ -5,6 +5,7 @@
 #include "Skill.h"
 #include "SkillInfo.h"
 #include "GameCtrl.h"
+#include "UnitInfo.h"
 
 
 COrgSkillInfo g_oOrgSkillInfo;
@@ -17,6 +18,8 @@ bool COrgSkillInfo::init()
 {
     M_DEF_GM(pGm);
     M_DEF_SM(pSm);
+    M_DEF_PM(pPm);
+    M_DEF_OU(pOu);
 
     CSkill* pSkill;
     int iKey;
@@ -109,7 +112,7 @@ bool COrgSkillInfo::init()
     pSkill = CSpeedBuff::create(5, false, CExtraCoeff(-0.5, 0), CExtraCoeff(-0.5, 0));
     iKey = pSm->addSkill(pSkill);
     
-    pSkill = CSplashAct::create(6, 20, CAttackValue(1, CAttackValue::kPhysical, 80.0), 50, CAttackValue(1, CAttackValue::kPhysical, 40.0), 150, CAttackValue(1, CAttackValue::kPhysical, 20.0), iKey, 1);
+    pSkill = CSplashAct::create(8, 20, CAttackValue(1, CAttackValue::kPhysical, 80.0), 50, CAttackValue(1, CAttackValue::kPhysical, 40.0), 150, CAttackValue(1, CAttackValue::kPhysical, 20.0), iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderClap1].iIndex = iKey;
     m_mapSkills[kThunderClap1].sName = "震撼大地";
@@ -132,6 +135,12 @@ bool COrgSkillInfo::init()
 
     pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
     iKey = pSm->addSkill(pSkill);
+<<<<<<< HEAD
+=======
+    
+	//pSkill = CTransmitBuff::create(5, false, 151, ccp(100, 100), 1, 7, 7, iKey, 1);
+    //iKey = pSm->addSkill(pSkill);
+>>>>>>> 5580446e55790bac34206abcba538a9841db1d5d
 
 	pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
@@ -159,6 +168,13 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSpeedUp1].iIndex = iKey;
     m_mapSkills[kSpeedUp1].sName = "加速";
     m_mapSkills[kSpeedUp1].sDesc = "提高自身100%的移动速度和100%的攻击速度";
+
+    pSkill = CProjectileAct::create(5.0, 150, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning2), 0, 1);
+    dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CActiveSkill::kWTInstant);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kThunderAttack1].iIndex = iKey;
+    m_mapSkills[kThunderAttack1].sName = "雷霆一击";
+    m_mapSkills[kThunderAttack1].sDesc = "猛烈锤击地面，向目标射出一道电光，将造成50点魔法伤害";
     
 
     return true;

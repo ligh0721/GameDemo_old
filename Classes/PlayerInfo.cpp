@@ -32,6 +32,7 @@ void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
         }
     }
     pU->setBaseAttackValue(oAv);
+    pU->setExAttackSpeed(CExtraCoeff(1 + 0.2 * pLevel->getLevel(), 0));
 
     return;
 
@@ -60,7 +61,7 @@ void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
     pU->setMaxHp(50 + pLevel->getLevel() * 50);
     pU->setExAttackValue(CAttackValue::kSiege, CExtraCoeff(1, 1 * pLevel->getLevel()));
     pU->setExAttackValue(CAttackValue::kMagical, CExtraCoeff(1, MAX(0, (int)pLevel->getLevel() - 4)));
-    pU->setExAttackSpeed(CExtraCoeff(1 + 0.2 * pLevel->getLevel(), 0));
+    pU->setExAttackSpeed(CExtraCoeff(pU->getExAttackSpeed().getMulriple() + 0.2, 0));
 }
 
 CHeroUpdate g_oDemoUpdate;
@@ -94,12 +95,21 @@ CHeroUnit* CHeroInfo::createHero()
     return pHero;
 }
 
+#if 0
 uint16_t CHeroInfo::CONST_FILE_DATA_SIZE
     = sizeof(m_iHeroIndex)
     + sizeof(m_dwExp)
     + sizeof(m_dwMaxExp)
     + sizeof(m_dwLevel)
     + sizeof(m_dwMaxLevel);
+#else
+uint16_t CHeroInfo::CONST_FILE_DATA_SIZE
+= sizeof(int)
++ sizeof(uint32_t)
++ sizeof(uint32_t)
++ sizeof(uint32_t)
++ sizeof(uint32_t);
+#endif
 
 bool CHeroInfo::initWithFileStream( CGameFile* pFile )
 {

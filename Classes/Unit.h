@@ -461,6 +461,7 @@ class CProjectile;
 class CUnitInfo;
 class CCUnitLayer;
 class CUnitPath;
+class CActiveSkill;
 
 class CGameUnit : public CUnit, public CUnitForce, public CLevelExp
 {
@@ -471,14 +472,18 @@ public:
         kMoving = 1 << 1,
         kIntended = 1 << 2,
         kAttacking = 1 << 3,
-        //kAutoAttack = 1 << 4
+        kCasting = 1 << 4
     };
+<<<<<<< HEAD
     //static const int kWithHostility = kAutoAttack;
 	enum STATUS
 	{
 		kNormal,
 		kNoAttacked
 	};
+=======
+
+>>>>>>> 5580446e55790bac34206abcba538a9841db1d5d
     enum ACTION_TAG
     {
         kActMoveTo,
@@ -486,12 +491,8 @@ public:
         kActAttack,
         kActAttackEffect,
         kActDie,
-        kAct1,
-        kAct2,
-        kAct3,
-        kAct4,
-        kAct5,
-        kAct6
+        kActCast,
+        kActCastEffect
     };
 
     static const int CONST_MAX_ANIMATION = 8;
@@ -519,7 +520,7 @@ public:
 
     enum WEAPON_TYPE
     {
-        kWTClose = 0,
+        kWTClosely = 0,
         kWTInstant = 1,
         kWTDelayed = 2
     };
@@ -587,12 +588,11 @@ public: // Attack
     M_SYNTHESIZE(float, m_fHalfOfWidth, HalfOfWidth);
     M_SYNTHESIZE(float, m_fHalfOfHeight, HalfOfHeight);
     M_SYNTHESIZE(float, m_fAttackCD, AttackCD);
-    virtual void setTemplateProjectile(CProjectile* pProjectile);
-    virtual CProjectile* getTemplateProjectile();
+    M_SYNTHESIZE(float, m_fHostilityRange, HostilityRange);
+    CC_PROPERTY(CProjectile*, m_pTemplateProjectile, TemplateProjectile);
     M_SYNTHESIZE(float, m_fProjectileMoveSpeed, ProjectileMoveSpeed);
     M_SYNTHESIZE(float, m_fProjectileScale, ProjectileScale);
     M_SYNTHESIZE(float, m_fProjectileMaxOffsetY, ProjectileMaxOffsetY);
-    M_SYNTHESIZE(float, m_fHostilityRange, HostilityRange);
     M_SYNTHESIZE(float, m_fProjectileBirthOffsetX, ProjectileBirthOffsetX);
     M_SYNTHESIZE(float, m_fProjectileBirthOffsetY, ProjectileBirthOffsetY);
 
@@ -637,6 +637,7 @@ public:
     virtual float getDistance(const CCPoint& roPos);
     virtual float getDistance(CGameUnit* pTarget); // may be unsafe
     virtual void turnTo(bool bLeft);
+    virtual void turnTo(const CCPoint& roPos);
     M_SYNTHESIZE(int, m_iOffsetZ, OffsetZ);
     virtual void setFixed(bool bFixed);
     virtual bool isFixed() const;
@@ -652,6 +653,18 @@ public:
 protected:
     virtual void turnTo(CGameUnit* pTarget);
     virtual void onActDieEnd(CCNode* pNode);
+
+public: // cast
+    virtual bool cast();
+    virtual void stopCast();
+    M_SYNTHESIZE(CActiveSkill*, m_pToCastSkill, ToCastSkill);
+    M_SYNTHESIZE(CActiveSkill*, m_pCastingSkill, CastingSkill);
+
+protected:
+    virtual void onActCastEffect(CCNode* pNode);
+    virtual void onActCastEnd(CCNode* pNode);
+    bool checkCastDistance(const CCPoint& roPos);
+    void moveToCastPosition();
 
 protected:
     CCGameUnitSprite m_oSprite;
@@ -670,7 +683,6 @@ protected:
     CAttackValue m_oBaseAttackValue;
     CExtraCoeff m_aoExAttackValue[CAttackValue::CONST_MAX_ATTACK_TYPE];
     int m_iLastAttackTarget;
-    CProjectile* m_pTemplateProjectile;
     bool m_bIsFixed;
     CForceResouce* m_pRes;
 
@@ -780,8 +792,17 @@ protected:
     CCArray m_oArrUnits;
 };
 
+class CActiveSkill;
+
 class CCUnitLayer : public CCLayerColor
 {
+public:
+    enum TOUCH_ACTION_INDEX
+    {
+        kNormalTouch = 0, // move, attack, select
+        kUnitCastTarget = 1
+    };
+
 public:
     CCUnitLayer();
     virtual bool init();
@@ -811,6 +832,12 @@ public:
     void clearUnitDustbin();
     void clearProjectileDustbin();
 
+    virtual int touchActionIndex() const;
+    void preOrderUnitToCast(int iUnit, int iSkill);
+    void endOrderUnitToCast();
+    void orderUnitToCast(const CCPoint& roTargetPos);
+    void orderUnitToCast(CGameUnit* pTargetUnit); // 以确定存在，且立即执行，无后续逻辑，可以使用指针
+
 protected:
     CUnitGroup m_oArrUnit;
     CUnitGroup m_oArrProjectile;
@@ -818,10 +845,22 @@ protected:
     CCArray m_oProjectileDustbin;
 
     float m_fUnitTickInterval;
+
+    int m_iPendingSkillOwner;
+
 };
 
 class CCWinUnitLayer : public CCUnitLayer
 {
+public:
+    enum TOUCH_ACTION_INDEX
+    {
+        kNormalTouch = 0, // move, attack, select
+        kUnitCastTarget = 1,
+        kClickPoint = 2,
+        kSlideWindow = 3
+    };
+
 public:
     static const float CONST_MIN_MOVE_DELTA;
     static const float CONST_MAX_CAN_MOVE_DURATION;
@@ -842,6 +881,7 @@ public:
     virtual float getTouchMovedRadian() const;
     virtual bool isSlideAction() const;
     virtual bool isClickAction() const;
+    virtual int touchActionIndex() const;
 
     virtual void onEnter();
     virtual void onExit();
@@ -1090,6 +1130,7 @@ public:
 
     void addProjectile(CProjectile* pProjectile);
     CProjectile* getProjectile(int iKey);
+    CProjectile* getProjectileByIndex(int iIndex);
     CProjectile* copyProjectile(int iKey);
 
 public:

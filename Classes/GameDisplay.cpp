@@ -600,9 +600,9 @@ bool CCSkillButtonBase::init(const char* pNormalImage, const char* pSelectedImag
 	CCSprite* pNormalSprite = NULL;
 	CCSprite* pSelectedSprite = NULL;
 	CCSprite* pDisabledSprite = NULL;
-	this->wDisableImage=pDisabledImage;
-	this->wNormalImage=pNormalImage;
-	this->wSelectImage=pSelectedImage;
+	m_pDisableImageFrameName = pDisabledImage;
+	m_pNormalImageFrameName = pNormalImage;
+	m_pSelectImageFrameName = pSelectedImage;
 	
 	pNormalImage && (pNormalSprite = CCSprite::createWithSpriteFrameName(pNormalImage));
 	pSelectedImage && (pSelectedSprite = CCSprite::createWithSpriteFrameName(pSelectedImage));
@@ -672,7 +672,6 @@ void CCSkillButtonBase::onClick(CCObject* pObject)
         return;
     }
 
-    coolDown();
 }
 
 void CCSkillButtonBase::onCoolDownDone(CCNode* pNode)
@@ -743,6 +742,7 @@ CCSkillButtonAdvance::~CCSkillButtonAdvance()
 
 bool CCSkillButtonAdvance::init(const char* pNormalImage, const char* pSelectedImage, const char* pDisabledImage, const char* pBlinkImage, const char* pMaskImage, int iUnitKey, int iSkillKey, CCUnitLayer* pUnitLayer )
 {
+    m_bPressed = false;
     setUnitLayer(pUnitLayer);
     CGameUnit* pUnit = getUnitLayer()->getUnitByKey(iUnitKey);
     if (!pUnit)
@@ -812,11 +812,33 @@ void CCSkillButtonAdvance::onSkillClick( CCNode* pNode )
         M_SKILL_BUTTON_CANCEL(pNode);
         return;
     }
-    if (!pAct->cast())
+    M_DEF_FC(pFc);
+    switch (pAct->getCastTargetType())
     {
-        M_SKILL_BUTTON_CANCEL(pNode);
+    case CActiveSkill::kPointTarget:
+    case CActiveSkill::kUnitTarget:
+        if (isPressed())
+        {
+            // 此次为取消操作
+            pUnit->getUnitLayer()->endOrderUnitToCast();
+        }
+        else
+        {
+            pUnit->getUnitLayer()->preOrderUnitToCast(m_iUnitKey, m_iSkillKey);
+            setPressed();
+        }
+        
         return;
     }
+
+    pUnit->getUnitLayer()->preOrderUnitToCast(m_iUnitKey, m_iSkillKey);
+    if (!pUnit->cast())
+    {
+        M_SKILL_BUTTON_CANCEL(pNode);
+        getUnitLayer()->endOrderUnitToCast();
+        return;
+    }
+    getUnitLayer()->endOrderUnitToCast();
 }
 
 void CCSkillButtonAdvance::onSkillFinished( CCNode* pNode )
@@ -836,6 +858,25 @@ void CCSkillButtonAdvance::onSkillFinished( CCNode* pNode )
         pSkill->setCoolDownLeft(0);
         pSkill->onSkillReady();
     }
+}
+
+void CCSkillButtonAdvance::setPressed( CCSpriteFrame* pFrame )
+{
+    if (pFrame)
+    {
+        setNormalSpriteFrame(pFrame);
+    }
+    else
+    {
+        M_DEF_FC(pFc);
+        setNormalSpriteFrame(pFc->spriteFrameByName(m_pNormalImageFrameName));
+    }
+    m_bPressed = (pFrame != NULL);
+}
+
+bool CCSkillButtonAdvance::isPressed() const
+{
+    return m_bPressed;
 }
 
 bool CCButtonPanel::init( int iRow, int iLine, float fButtonWidth, float fBorderWidth, float fInnerBorderWidth, const char* pBackgroundFrameName )
@@ -1029,7 +1070,7 @@ float CCPropItemImg::getCoolDown() const
 
 CCSkillButtonNormal* CCSkillButtonNormal::copyImg(CCObject* target, SEL_CallFuncN callOnClick, SEL_CallFuncN callOnFinished )
 {
-	CCSkillButtonNormal* pButtonRet = CCSkillButtonNormal::create(this->wNormalImage,this->wSelectImage,this->wDisableImage,NULL,NULL,this->getCoolDown(),target,callOnClick,callOnFinished);
+	CCSkillButtonNormal* pButtonRet = CCSkillButtonNormal::create(this->m_pNormalImageFrameName,this->m_pSelectImageFrameName,this->m_pDisableImageFrameName,NULL,NULL,this->getCoolDown(),target,callOnClick,callOnFinished);
 // 	pButtonRet->setNormalImage(this->getNormalImage());
 // 	pButtonRet->setSelectedImage(this->getSelectedImage());
 // 	pButtonRet->setDisabledImage(this->getDisabledImage());
