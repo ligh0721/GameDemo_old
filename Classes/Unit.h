@@ -474,16 +474,12 @@ public:
         kAttacking = 1 << 3,
         kCasting = 1 << 4
     };
-<<<<<<< HEAD
     //static const int kWithHostility = kAutoAttack;
 	enum STATUS
 	{
 		kNormal,
 		kNoAttacked
 	};
-=======
-
->>>>>>> 5580446e55790bac34206abcba538a9841db1d5d
     enum ACTION_TAG
     {
         kActMoveTo,

@@ -2302,11 +2302,10 @@ CForceResouce* CGameUnit::getForceResource()
     return m_pRes;
 }
 
-<<<<<<< HEAD
 CUnitPath* CGameUnit::getMovePath()
 {
 	return m_pMovePath;
-=======
+}
 bool CGameUnit::cast()
 {
     // test
@@ -2518,7 +2517,6 @@ void CGameUnit::moveToCastPosition()
     }
 
     startDoing(kCasting | kIntended);
->>>>>>> 5580446e55790bac34206abcba538a9841db1d5d
 }
 
 CProjectile::CProjectile()

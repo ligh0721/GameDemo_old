@@ -688,8 +688,6 @@ public:
 	int m_iBuffTemplateKey;
 	int m_iBuffLevel;
 };
-<<<<<<< HEAD
-=======
 
 class CProjectileAct : public CActiveSkill
 {
@@ -716,4 +714,3 @@ public:
     int m_iBuffLevel;
 
 };
->>>>>>> 5580446e55790bac34206abcba538a9841db1d5d

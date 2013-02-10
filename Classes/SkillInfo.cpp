@@ -135,12 +135,7 @@ bool COrgSkillInfo::init()
 
     pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
     iKey = pSm->addSkill(pSkill);
-<<<<<<< HEAD
-=======
-    
-	//pSkill = CTransmitBuff::create(5, false, 151, ccp(100, 100), 1, 7, 7, iKey, 1);
-    //iKey = pSm->addSkill(pSkill);
->>>>>>> 5580446e55790bac34206abcba538a9841db1d5d
+
 
 	pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);

@@ -1800,11 +1800,9 @@ void CTransmitBuff::onTransmitBegin( CCNode* pNode )
 
 void CTransmitBuff::onTransmitEnd( CCNode* pNode )
 {
-<<<<<<< HEAD
 	CCGameUnitSprite* pSprite = dynamic_cast<CCGameUnitSprite*>(pNode);
 	pSprite->getControler()->resume();
 	pSprite->getControler()->setStatus(CGameUnit::kNormal);
-=======
 }
 
 bool CProjectileAct::init( float fCoolDown, float fCastRange, const CAttackValue& roDamage, CProjectile* pProj, int iBuffTemplateKey, int iBuffLevel )
@@ -1823,7 +1821,6 @@ bool CProjectileAct::init( float fCoolDown, float fCastRange, const CAttackValue
     setProjectileBirthOffsetX(0.0);
     setProjectileBirthOffsetY(0.0);
     return true;
->>>>>>> 5580446e55790bac34206abcba538a9841db1d5d
 }
 
 CCObject* CProjectileAct::copyWithZone( CCZone* pZone )
@@ -1837,8 +1834,6 @@ CCObject* CProjectileAct::copyWithZone( CCZone* pZone )
     return pSkill;
 }
 
-<<<<<<< HEAD
-=======
 void CProjectileAct::onSkillAdd()
 {
     CActiveSkill::onSkillAdd();
@@ -1913,4 +1908,3 @@ CProjectile* CProjectileAct::getTemplateProjectile()
 {
     return m_pTemplateProjectile;
 }
->>>>>>> 5580446e55790bac34206abcba538a9841db1d5d
