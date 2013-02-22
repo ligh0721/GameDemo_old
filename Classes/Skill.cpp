@@ -1884,3 +1884,78 @@ CProjectile* CProjectileAct::getTemplateProjectile()
 {
     return m_pTemplateProjectile;
 }
+
+
+bool CThunderBoltBuff::init( float fDuration,bool bCanBePlural,float fInterval,float fDamage,int iRadius )
+{
+    CBuffSkill::init(fDuration, bCanBePlural);
+    m_fInterval = fInterval;
+    m_fIntervalPass = 0;
+    m_fDamage=fDamage;
+    m_iRadius=iRadius;
+
+    return true;
+}
+
+void CThunderBoltBuff::onUnitTick( float fDt )
+{
+    timeStep(fDt);
+
+    if (m_fPass > m_fDuration)
+    {
+        m_fIntervalPass += fDt - m_fPass + m_fDuration;
+    }
+    else
+    {
+        m_fIntervalPass += fDt;
+    }
+
+    while (m_fIntervalPass >= m_fInterval)
+    {
+        onThunderBolt();
+        m_fIntervalPass -= m_fInterval;
+    }
+
+    delBuffIfTimeout();
+}
+
+void CThunderBoltBuff::afterThunderBoltCallback( CCNode* pSender )
+{
+    pSender->removeFromParentAndCleanup(true);
+}
+
+void CThunderBoltBuff::onThunderBolt()
+{
+    CGameUnit* pO=dynamic_cast<CGameUnit*>(getOwner());
+    CCNode* nodePos=dynamic_cast<CGameUnit*>(getOwner())->getShadowNode();
+    float xPos=m_iRadius-rand()%(2*m_iRadius);
+    float yPos=m_iRadius-rand()%(2*m_iRadius);
+    CCSprite *thunderBolt=CCSprite::create("vortex3.png");
+    nodePos->getParent()->addChild(thunderBolt);
+    CCPoint damagePos=ccp(nodePos->getPositionX()+xPos,nodePos->getPositionY()+yPos);
+    thunderBolt->setPosition(damagePos);
+    CCFiniteTimeAction* pAction=CCRotateBy::create(5.0,1080);
+    CCFiniteTimeAction* pActionSeq=CCSequence::create(pAction
+        ,CCCallFuncN::create(this,callfuncN_selector(CThunderBoltBuff::afterThunderBoltCallback)),NULL);
+    thunderBolt->runAction(pActionSeq);
+    CCObject* pObj;
+    CGameUnit* pUnit;
+    CCPoint unitPos;
+    CCARRAY_FOREACH(pO->getUnitLayer()->getUnits()->getUnitsArray(),pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        unitPos = pUnit->getPosition();
+        CCPoint subPoint=ccpSub(damagePos,unitPos);
+        float dis=sqrtf(subPoint.x*subPoint.x+subPoint.y*subPoint.y);
+        if (dis<200&&pUnit->getKey()!=pO->getKey())
+        {
+            pUnit->setHp(pUnit->getHp()-100);
+        }
+    }
+}
+
+CCObject* CThunderBoltBuff::copyWithZone( CCZone* pZone )
+{
+    return CThunderBoltBuff::create(m_fDuration,m_bCanBePlural,m_fInterval,m_fDamage,m_iRadius);
+}
+

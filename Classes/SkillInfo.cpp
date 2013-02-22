@@ -148,9 +148,17 @@ bool COrgSkillInfo::init()
 
     pSkill = CSpeedBuff::create(7, true, CExtraCoeff(1.0, 0), CExtraCoeff(1.0, 0));
     iKey = pSm->addSkill(pSkill);
+    //落雷
+    pSkill = CThunderBoltBuff::create(600,false,6,100,300);
+    iKey = pSm->addSkill(pSkill);
+
+    //盾
+    pSkill = CHarmShieldBuff::create(5,false,CExtraCoeff(1,1),true);
+    iKey = pSm->addSkill(pSkill);
 
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
     iKey = pSm->addSkill(pSkill);
+    
     m_mapSkills[kSpeedUp1].iIndex = iKey;
     m_mapSkills[kSpeedUp1].sName = "加速";
     m_mapSkills[kSpeedUp1].sDesc = "提高自身100%的移动速度和100%的攻击速度";

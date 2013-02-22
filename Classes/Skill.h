@@ -259,6 +259,8 @@ public:
     bool m_bCanBePlural;
 };
 
+
+
 class CAuraPas : public CPassiveSkill
 {
 public:
@@ -346,6 +348,9 @@ protected:
     virtual void onUnitInterval();
 
 };
+
+
+
 
 class CVampirePas : public CPassiveSkill
 {
@@ -713,5 +718,27 @@ public:
     CAttackValue m_oDamage;
     int m_iBuffTemplateKey;
     int m_iBuffLevel;
+
+};
+
+
+class CThunderBoltBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration,bool bCanBePlural,float fInterval,float fDamage,int iRadius);
+    M_CREATE_FUNC_PARAM(CThunderBoltBuff,(float fDuration,bool bCanBePlural,float fInterval,float fDamage,int iRadius)
+        ,fDuration,bCanBePlural,fInterval,fDamage,iRadius);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    M_GET_TYPE_KEY;
+
+    M_SYNTHESIZE(float,m_fInterval,Interval);
+    M_SYNTHESIZE(float,m_fIntervalPass,IntervalPass);
+    M_SYNTHESIZE(float,m_fDamage,Damage);
+    M_SYNTHESIZE(int,m_iRadius,Radius);
+
+protected:
+    virtual void onUnitTick(float fDt);
+    void afterThunderBoltCallback(CCNode* pSender);
+    virtual void onThunderBolt();
 
 };
