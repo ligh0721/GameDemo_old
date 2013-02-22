@@ -1,0 +1,68 @@
+﻿生成启动时间为 2013/2/22 20:54:01。
+     1>项目“D:\cocos2d-2.0-x-2.0.4\GameDemo\proj.win32\GameDemo.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug.win32\GameDemo.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         D:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I. /I..\Classes /I..\..\cocos2dx /I..\..\cocos2dx\include /I..\..\cocos2dx\kazmath\include /I..\..\cocos2dx\platform\win32 /I..\..\cocos2dx\platform\third_party\win32 /I..\..\cocos2dx\platform\third_party\win32\OGLES /I..\..\ /I..\..\CocosDenshion\Include /I..\..\external\chipmunk\include /I..\..\extensions /I..\..\cocos2dx\platform\third_party\win32\iconv /I..\..\cocos2dx\platform\third_party\win32\libxml2 /I..\..\external /Zi /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _WINDOWS /D STRICT /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS_DEBUG /D COCOS2D_DEBUG=1 /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug.win32\\" /Fd"Debug.win32\vc100.pdb" /Gd /TP /wd4305 /wd4267 /wd4251 /wd4244 /analyze- /errorReport:prompt ..\Classes\SkillInfo.cpp
+         SkillInfo.cpp
+       ResourceCompile:
+         所有输出均为最新。
+       ManifestResourceCompile:
+         所有输出均为最新。
+       Link:
+         D:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\cocos2d-2.0-x-2.0.4\Debug.win32\GameDemo.exe" /INCREMENTAL /NOLOGO /LIBPATH:"D:\cocos2d-2.0-x-2.0.4\Debug.win32\\" libcocos2d.lib opengl32.lib glew32.lib libBox2d.lib libCocosDenshion.lib libchipmunk.lib libExtensions.lib libxml2.lib libiconv.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug.win32\GameDemo.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\cocos2d-2.0-x-2.0.4\Debug.win32\GameDemo.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\cocos2d-2.0-x-2.0.4\Debug.win32\GameDemo.lib" /MACHINE:X86 Debug.win32\GameDemo.res
+         Debug.win32\GameDemo.exe.embed.manifest.res
+         Debug.win32\Action.obj
+         Debug.win32\AppDelegate.obj
+         Debug.win32\BattleGroundScene.obj
+         Debug.win32\BattleScene.obj
+         Debug.win32\Box2DEx.obj
+         Debug.win32\BulletSprite.obj
+         Debug.win32\ChildOfGameUnit.obj
+         Debug.win32\CommDef.obj
+         Debug.win32\ComplexUnit.obj
+         Debug.win32\DemoScene.obj
+         Debug.win32\DotaScene.obj
+         Debug.win32\GameChapterScene.obj
+         Debug.win32\GameCtrl.obj
+         Debug.win32\GameDisplay.obj
+         Debug.win32\GameFile.obj
+         Debug.win32\GameLevel.obj
+         Debug.win32\GameLogic.obj
+         Debug.win32\GameResControl.obj
+         "Debug.win32\GLES-Render.obj"
+         Debug.win32\HomeScene.obj
+         Debug.win32\MainScene.obj
+         Debug.win32\MissionInfo.obj
+         Debug.win32\Package.obj
+         Debug.win32\PlayerInfo.obj
+         Debug.win32\Prop.obj
+         Debug.win32\PropUI.obj
+         Debug.win32\Skill.obj
+         Debug.win32\SkillInfo.obj
+         Debug.win32\SkillUI.obj
+         Debug.win32\SomeScene.obj
+         Debug.win32\TankSprite.obj
+         Debug.win32\TechTreeScene.obj
+         Debug.win32\testScene.obj
+         Debug.win32\Tower.obj
+         Debug.win32\Unit.obj
+         Debug.win32\UnitEditorScene.obj
+         Debug.win32\UnitInfo.obj
+         Debug.win32\UnitShowScene.obj
+         Debug.win32\WHomeScene.obj
+         Debug.win32\main.obj
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug.win32\GameDemo.exe.embed.manifest" /manifest Debug.win32\GameDemo.exe.intermediate.manifest
+         所有输出均为最新。
+       LinkEmbedManifest:
+         所有输出均为最新。
+         GameDemo.vcxproj -> D:\cocos2d-2.0-x-2.0.4\Debug.win32\GameDemo.exe
+       FinalizeBuildStatus:
+         正在删除文件“Debug.win32\GameDemo.unsuccessfulbuild”。
+         正在对“Debug.win32\GameDemo.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“D:\cocos2d-2.0-x-2.0.4\GameDemo\proj.win32\GameDemo.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:03.32
