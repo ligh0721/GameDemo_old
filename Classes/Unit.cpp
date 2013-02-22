@@ -1703,7 +1703,18 @@ const CCPoint& CGameUnit::getLastMoveToTarget() const
 void CGameUnit::onActMoveEnd( CCNode* pNode )
 {
     endDoing(kIntended);
-    stopMove();
+    if (isDoingOr(kAttacking))
+    {
+        attack(getLastAttackTarget(), isDoingOr(kIntended));
+    }
+    else if (isDoingOr(kCasting))
+    {
+        cast();
+    }
+    else
+    {
+        stopMove();
+    }
 }
 
 void CGameUnit::setBaseAttackInterval( float fAttackInterval )
