@@ -75,6 +75,11 @@ bool COrgUnitInfo::init()
     pGm->loadUnitAnimation("Veznan", "act2");
     pGm->loadUnitAnimation("Veznan", "act3");
 
+    pGm->loadUnitAnimation("Matchstick", "move");
+    pGm->loadUnitAnimation("Matchstick", "die");
+    pGm->loadUnitAnimation("Matchstick", "act1");
+    pGm->loadUnitAnimation("Matchstick", "act2");
+
     pGm->loadUnitAnimation("Ball1", "move");
     pGm->loadUnitAnimation("Ball1", "die");
     pGm->loadUnitAnimation("Ball1", "act1");
@@ -276,6 +281,27 @@ bool COrgUnitInfo::init()
         15
         );
     pUm->addUnitInfo(COrgUnitInfo::kVeznan, oVeznan);
+
+    CUnitInfo oMatchstick(
+        "Matchstick",
+        ccp(59.0 / 128, 6.0 / 128),    // archor point
+        24, 27,    // 0.5w 0.5h
+        1,
+        0.1, 0.1, 0.08, 0.08, 0.00, 0.00, 0.00, 0.0,
+        CUnitInfo::ARR_ATTACK_ANI(2, kAct1, kAct2),
+        40,
+        2, 0.4, 0, 34, 150, CGameUnit::kWTClosely,
+        0, 0, 0, 0, 41, 29,
+        CAttackValue(1, CAttackValue::kPhysical, 10.0),
+        0.150,
+        CArmorValue::kNormal, 1,
+        0, 0,
+        100,
+        false,
+        10,
+        10
+        );
+    pUm->addUnitInfo(COrgUnitInfo::kMatchstick, oMatchstick);
 
     return true;
 }

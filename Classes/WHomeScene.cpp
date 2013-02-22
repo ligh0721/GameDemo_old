@@ -196,8 +196,7 @@ void CCWHomeSceneLayer::onTick( float fDt )
         kMalik,
         kPaladin,
         kMagnus,
-        kJt,
-        kVeznan
+        kMatchstick
     };
     M_DEF_GM(pGm);
     pGm->cmdRecv(0);

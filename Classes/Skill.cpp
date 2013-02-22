@@ -853,8 +853,8 @@ void CHarmShieldBuff::onBuffAdd()
 {
     registerOnDamagedInnerTrigger();
 
-    CCGameManager* pGm = CCGameManager::sharedGameManager();
-    pGm->playEffectSound("sound/DispelMagicTarget.wav");
+    //CCGameManager* pGm = CCGameManager::sharedGameManager();
+    //pGm->playEffectSound("sound/DispelMagicTarget.wav");
 
     CCCoverAct* pActCover = CCCoverAct::create(m_fDuration);
     dynamic_cast<CGameUnit*>(getOwner())->getShadowNode()->runAction(pActCover);
@@ -879,7 +879,7 @@ void CHarmShieldBuff::onUnitDamaged( CAttackData* pAttack, CUnit* pSource )
     CCSprite* pSprite = CCSprite::createWithSpriteFrameName("bubble2.png");
     CCNode* pSn = dynamic_cast<CGameUnit*>(getOwner())->getShadowNode();
     pSn->runAction(CCFlash::create(0.0, pSprite, pAttack->getAngle()));
-    CCGameManager::sharedGameManager()->playEffectSound("sound/Fire_Energizer.wav");
+    //CCGameManager::sharedGameManager()->playEffectSound("sound/Fire_Energizer.wav");
 
 }
 
@@ -1858,7 +1858,12 @@ void CProjectileAct::onSkillCast()
         pProj->setProjectileBirthOffsetX(getProjectileBirthOffsetX());
         pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
         pProj->setPosition(ccpAdd(u->getPosition(), ccp(u->getSprite()->isFlipX() ? -pProj->getProjectileBirthOffsetX() : pProj->getProjectileBirthOffsetX(), pProj->getProjectileBirthOffsetY())));
-        pProj->followTo(t->getKey(), false, true, false, u->getProjectileMaxOffsetY());
+
+        CGameUnit::UNIT_MOVE_PARAMS oMp;
+        oMp.bIntended = false;
+        oMp.bAutoFlipX = false;
+        oMp.fMaxOffsetY = u->getProjectileMaxOffsetY();
+        pProj->followTo(t->getKey(), oMp);
 
         break;
 
