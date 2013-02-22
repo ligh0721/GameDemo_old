@@ -39,6 +39,8 @@ CCWHomeSceneLayer::CCWHomeSceneLayer()
 bool CCWHomeSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
+
+    //setUnitTickInterval(1.0 / 60);
     M_DEF_GM(pGm);
     M_DEF_OS(pOs);
 

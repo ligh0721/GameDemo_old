@@ -2996,7 +2996,7 @@ bool CCUnitLayer::initWithColor( const ccColor4B& color )
     m_oArrProjectile.init();
     m_oUnitDustbin.init();
     m_oProjectileDustbin.init();
-    m_fUnitTickInterval = 0;
+    m_fUnitTickInterval = 0.1;
     m_iPendingSkillOwner = 0;
     return CCLayerColor::initWithColor(color);
 }
@@ -3004,7 +3004,7 @@ bool CCUnitLayer::initWithColor( const ccColor4B& color )
 void CCUnitLayer::onEnter()
 {
     CCLayerColor::onEnter();
-    setUnitTickInterval(0.1);
+    schedule(schedule_selector(CCUnitLayer::onTickEvent), m_fUnitTickInterval);
 }
 
 void CCUnitLayer::onExit()
