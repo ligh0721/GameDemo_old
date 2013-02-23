@@ -290,7 +290,7 @@ bool COrgUnitInfo::init()
         0.1, 0.1, 0.08, 0.08, 0.00, 0.00, 0.00, 0.0,
         CUnitInfo::ARR_ATTACK_ANI(2, kAct1, kAct2),
         40,
-        2, 0.4, 0, 34, 150, CGameUnit::kWTClosely,
+        2, 0.25, 0, 34, 150, CGameUnit::kWTClosely,
         0, 0, 0, 0, 41, 29,
         CAttackValue(1, CAttackValue::kPhysical, 10.0),
         0.150,
