@@ -22,7 +22,8 @@ public:
         kArcane,
         //kBertha,
         kTesla,
-        kVeznan
+        kVeznan,
+        kMatchstick
     };
 
 public:

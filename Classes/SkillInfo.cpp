@@ -136,12 +136,16 @@ bool COrgSkillInfo::init()
     pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     
+    // for test
 	//pSkill = CTransmitBuff::create(5, false, 151, ccp(100, 100), 1, 7, 7, iKey, 1);
+    //iKey = pSm->addSkill(pSkill);
+
+    // for test
+    //pSkill = CHarmShieldBuff::create(2, false, CExtraCoeff(0, 0), true);
     //iKey = pSm->addSkill(pSkill);
 
 	pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
-
     m_mapSkills[kThrowHit1].iIndex = iKey;
     m_mapSkills[kThrowHit1].sName = "击飞";
     m_mapSkills[kThrowHit1].sDesc = "75%的概率将目标击飞至150范围内的一点，落地后对周围50半径范围内单位造成50点伤害并眩晕2秒，被坠落单位还将受到50点额外伤害";
@@ -154,6 +158,10 @@ bool COrgSkillInfo::init()
 
     //盾
     pSkill = CHarmShieldBuff::create(5,false,CExtraCoeff(1,1),true);
+    iKey = pSm->addSkill(pSkill);
+
+    // for test
+    pSkill = CHarmShieldBuff::create(2, false, CExtraCoeff(0, 0), true);
     iKey = pSm->addSkill(pSkill);
 
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
@@ -169,6 +177,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThunderAttack1].iIndex = iKey;
     m_mapSkills[kThunderAttack1].sName = "雷霆一击";
     m_mapSkills[kThunderAttack1].sDesc = "猛烈锤击地面，向目标射出一道电光，将造成50点魔法伤害";
+    
     
 
     return true;

@@ -88,8 +88,6 @@ bool CCDotaSceneLayer::init()
     addUnit(tower);
     tower->setPosition(ccp(10,10));
 
-    setUnitTickInterval(0.1);
-
     pGm->loadUnitAnimation("Jt", "move");
     pGm->loadUnitAnimation("Jt", "die");
     pGm->loadUnitAnimation("Jt", "act1");

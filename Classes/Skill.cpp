@@ -795,12 +795,14 @@ void CStunBuff::onBuffAdd()
 {
     M_DEF_GM(pGm);
     pGm->playEffectSound("sound/cannon2.wav");
-    ((CTank*)m_pOwner)->suspend();
+    CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+    o->suspend();
 }
 
 void CStunBuff::onBuffDel()
 {
-    ((CTank*)m_pOwner)->resume();
+    CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+    o->resume();
 }
 
 bool CDoubleAttackPas::init( int iProbability )
@@ -816,26 +818,14 @@ CCObject* CDoubleAttackPas::copyWithZone( CCZone* pZone )
 
 void CDoubleAttackPas::onSkillAdd()
 {
-    //registerOnDamageTargetTrigger();
     registerOnAttackTargetTrigger();
     CPassiveSkill::onSkillAdd();
 }
 
 void CDoubleAttackPas::onSkillDel()
 {
-    //unregisterOnDamageTargetTrigger();
     unregisterOnAttackTargetTrigger();
     CPassiveSkill::onSkillDel();
-}
-
-void CDoubleAttackPas::onUnitDamageTarget( float fDamage, CUnit* pTarget )
-{
-    CTank* pTank = NULL;
-    if (M_RAND_HIT(m_iProbability))
-    {
-        pTank = dynamic_cast<CTank*>(getOwner());
-        pTank->fire(dynamic_cast<CCTankSprite*>(pTank->getDisplayBody())->getFirePower() * 0.75);
-    }
 }
 
 void CDoubleAttackPas::onUnitAttackTarget( CAttackData* pAttack, CUnit* pTarget )
@@ -863,8 +853,8 @@ void CHarmShieldBuff::onBuffAdd()
 {
     registerOnDamagedInnerTrigger();
 
-    CCGameManager* pGm = CCGameManager::sharedGameManager();
-    pGm->playEffectSound("sound/DispelMagicTarget.wav");
+    //CCGameManager* pGm = CCGameManager::sharedGameManager();
+    //pGm->playEffectSound("sound/DispelMagicTarget.wav");
 
     CCCoverAct* pActCover = CCCoverAct::create(m_fDuration);
     dynamic_cast<CGameUnit*>(getOwner())->getShadowNode()->runAction(pActCover);
@@ -889,7 +879,7 @@ void CHarmShieldBuff::onUnitDamaged( CAttackData* pAttack, CUnit* pSource )
     CCSprite* pSprite = CCSprite::createWithSpriteFrameName("bubble2.png");
     CCNode* pSn = dynamic_cast<CGameUnit*>(getOwner())->getShadowNode();
     pSn->runAction(CCFlash::create(0.0, pSprite, pAttack->getAngle()));
-    CCGameManager::sharedGameManager()->playEffectSound("sound/Fire_Energizer.wav");
+    //CCGameManager::sharedGameManager()->playEffectSound("sound/Fire_Energizer.wav");
 
 }
 
@@ -1868,7 +1858,12 @@ void CProjectileAct::onSkillCast()
         pProj->setProjectileBirthOffsetX(getProjectileBirthOffsetX());
         pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
         pProj->setPosition(ccpAdd(u->getPosition(), ccp(u->getSprite()->isFlipX() ? -pProj->getProjectileBirthOffsetX() : pProj->getProjectileBirthOffsetX(), pProj->getProjectileBirthOffsetY())));
-        pProj->followTo(t->getKey(), false, true, false, u->getProjectileMaxOffsetY());
+
+        CGameUnit::UNIT_MOVE_PARAMS oMp;
+        oMp.bIntended = false;
+        oMp.bAutoFlipX = false;
+        oMp.fMaxOffsetY = u->getProjectileMaxOffsetY();
+        pProj->followTo(t->getKey(), oMp);
 
         break;
 

@@ -516,6 +516,30 @@ public:
         kWTDelayed = 2
     };
 
+    struct UNIT_MOVE_PARAMS
+    {
+        UNIT_MOVE_PARAMS(
+            bool bIntended_ = true,
+            bool bCancelAttack_ = true,
+            bool bAutoFlipX_ = true,
+            float fMaxOffsetY_ = 0.0f,
+            bool bCancelCast_ = true
+            )
+            : bIntended(bIntended_)
+            , bCancelAttack(bCancelAttack_)
+            , bAutoFlipX(bAutoFlipX_)
+            , fMaxOffsetY(fMaxOffsetY_)
+            , bCancelCast(bCancelCast_)
+        {}
+        bool bIntended;
+        bool bCancelAttack;
+        bool bAutoFlipX;
+        float fMaxOffsetY;
+        bool bCancelCast;
+    };
+
+    static const UNIT_MOVE_PARAMS CONST_DEFAULT_MOVE_PARAMS;
+
 public:
     CGameUnit();
     virtual bool init();
@@ -537,8 +561,8 @@ public: // Move
     virtual void setExMoveSpeed(const CExtraCoeff& roExMoveSpeed);
     virtual CExtraCoeff getExMoveSpeed() const;
     virtual void updateMoveToAnimationSpeed(float fRealMoveSpeed);
-    virtual void moveTo(const CCPoint& roPos, bool bIntended = true, bool bCancelAttack = true, bool bAutoFlipX = true);
-    virtual void followTo(int iTargetKey, bool bIntended = true, bool bCancelAttack = true, bool bAutoFlipX = true, float fMaxOffsetY = 0.0);
+    virtual void moveTo(const CCPoint& roPos, const UNIT_MOVE_PARAMS& roMoveParams = CONST_DEFAULT_MOVE_PARAMS);
+    virtual void followTo(int iTargetKey, const UNIT_MOVE_PARAMS& roMoveParams = CONST_DEFAULT_MOVE_PARAMS);
     virtual void moveAlongPath(CUnitPath* pPath, bool bIntended = true, bool bRestart = false, float fBufArrive = 5.0);
     virtual void stopMove();
     virtual const CCPoint& getLastMoveToTarget() const;
@@ -758,8 +782,8 @@ public:
 
     virtual void setRangePosition(const CCPoint& roPos, float fRadius);
     virtual void turnTo(bool bLeft);
-    virtual void moveTo(const CCPoint& roPos, bool bWithHostility = false, bool bCancelAttack = true, bool bAutoFlipX = true);
-    virtual void followTo(int iTargetKey, bool bWithHostility = false, bool bCancelAttack = true, bool bAutoFlipX = true, float fMaxOffsetY = 0.0);
+    virtual void moveTo(const CCPoint& roPos, const CGameUnit::UNIT_MOVE_PARAMS& roMoveParams = CGameUnit::CONST_DEFAULT_MOVE_PARAMS);
+    virtual void followTo(int iTargetKey, const CGameUnit::UNIT_MOVE_PARAMS& roMoveParams = CGameUnit::CONST_DEFAULT_MOVE_PARAMS);
     virtual void stopMove();
     virtual void attack(int iTargetKey, bool bIntended = true);
     virtual void stopAttack();
