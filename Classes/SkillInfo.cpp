@@ -154,7 +154,7 @@ bool COrgSkillInfo::init()
     iKey = pSm->addSkill(pSkill);
 
     // for test
-    pSkill = CHarmShieldBuff::create(2, false, CExtraCoeff(0, 0), true);
+    pSkill = CHarmShieldBuff::create(5, false, CExtraCoeff(0, 0), true);
     iKey = pSm->addSkill(pSkill);
 
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
@@ -163,8 +163,11 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSpeedUp1].sName = "加速";
     m_mapSkills[kSpeedUp1].sDesc = "提高自身100%的移动速度和100%的攻击速度";
 
-    pSkill = CProjectileAct::create(5.0, 150, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning2), 0, 1);
-    dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CActiveSkill::kWTInstant);
+    pSkill = CChainBuff::create(0.5, false, 0, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning1));
+    iKey = pSm->addSkill(pSkill);
+    
+    pSkill = CProjectileAct::create(5.0, 150, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning1), iKey, 1);
+    dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderAttack1].iIndex = iKey;
     m_mapSkills[kThunderAttack1].sName = "雷霆一击";

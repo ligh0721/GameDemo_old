@@ -2214,8 +2214,10 @@ void CGameUnit::onDie()
 
 void CGameUnit::onDamaged( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
+    CUnit::onDamaged(pAttack, pSource, dwTriggerMask);
+
     CGameUnit* pSrc = dynamic_cast<CGameUnit*>(pSource);
-    CCLOG("dis:%.2f %.2f", getDistance(pSrc), getHostilityRange());
+    //CCLOG("dis:%.2f %.2f", getDistance(pSrc), getHostilityRange());
     CGameUnit* pLu;
     if ( pSrc && !isDoingOr(kIntended) && (
         ( isDoingOr(kAttacking) && ( pLu = getUnitLayer()->getUnitByKey(getLastAttackTarget()) ) && getDistance(pLu) > getHostilityRange() ) ||
@@ -2487,7 +2489,7 @@ bool CGameUnit::checkCastDistance( const CCPoint& roPos )
         return true;
     }
 
-    if (pSkill->getWeaponType() == CActiveSkill::kWTClosely && abs(roPos.y - roPos2.y) > CONST_MAX_CLOSE_ATTACK_Y_RANGE)
+    if (pSkill->getWeaponType() == CGameUnit::kWTClosely && abs(roPos.y - roPos2.y) > CONST_MAX_CLOSE_ATTACK_Y_RANGE)
     {
         return false;
     }
@@ -2520,7 +2522,7 @@ void CGameUnit::moveToCastPosition()
     UNIT_MOVE_PARAMS oMp;
     oMp.bIntended = false;
     oMp.bCancelCast = false;
-    if (pSkill->getWeaponType() == CActiveSkill::kWTClosely)
+    if (pSkill->getWeaponType() == CGameUnit::kWTClosely)
     {
         // 近战攻击位置修正
         moveTo(ccp(roPos2.x + ((roPos1.x > roPos2.x) ? fDis : -fDis), roPos2.y), oMp);
