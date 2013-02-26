@@ -42,6 +42,7 @@ bool CCBattleSceneLayer::init()
 	CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
     M_DEF_GM(pGm);
 	M_DEF_FC(pFc);
+    M_DEF_OS(pOs);
 	pFc->addSpriteFramesWithFile("background.plist");
 	pFc->addSpriteFramesWithFile("tank.plist");
 	pFc->addSpriteFramesWithFile("UI.plist");
@@ -49,7 +50,7 @@ bool CCBattleSceneLayer::init()
 	CCSprite* pSprite = CCSprite::createWithSpriteFrameName("kr/LevelDemo_480_800.png");
 	setBackGroundSprite(pSprite);
 	setBufferEffectParam(0.9, 10, 0.1);
-	pSprite->setScale(1.0);
+	pSprite->setScale(2.0);
 
 	m_oMenu.init();
 	addChild(&m_oMenu);
@@ -67,12 +68,30 @@ bool CCBattleSceneLayer::init()
 	m_oBtnHome.initWithString("home", this, menu_selector(CCBattleSceneLayer::onBtnHomeClick));
 	m_oMenu.addChild(&m_oBtnHome);
 	m_oBtnHome.setPosition(ccp(oSz.width * 0.6, oSz.height * 0.3));
+    
+    m_oBtnHome.initWithString("lighting", this, menu_selector(CCBattleSceneLayer::onBtnLightgingSkillClick));
+	m_oMenu.addChild(&m_oBtnLightingSkill);
+	m_oBtnLightingSkill.setPosition(ccp(oSz.width * 0.2, oSz.height * 0.5));
+    
 
 	loadUnitRoute();
 	loadTowerPos();
 	randomSoldiers(1);
 	m_oTowerShowMenu.init(2, 2, 46, 10, 5, NULL);
 	addChild(&m_oTowerShowMenu);
+    
+    
+    m_oSkillPanel.init(5, 1, 64, 7, 5, "Skill5_78x352_7_5_black.png");
+    this->addChild(&m_oSkillPanel);
+    m_oSkillPanel.setPosition(ccp(100, 400));
+    
+//    CActiveSkill* pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kChainLighting1));
+//    pSkill->setCastAniInfo(CGameUnit::kAnimationAct5, 0.4);
+//    CGameUnit* heroUnit = getUnitByKey(m_iHeroUnitKey);
+//    heroUnit->addSkill(pSkill);
+//    CCSkillButtonAdvance* pBtn;
+//    pBtn = M_CREATE_SKILL("skill2", heroUnit->getKey(), pSkill->getKey(), this);
+//    m_oSkillPanel.addButton(pBtn, 0, 4);
 
 	CCCommmButton*  pTowerIcon = CCCommmButton::create(
 		"Image 314.png", 
@@ -160,16 +179,29 @@ void CCBattleSceneLayer::onBtnHomeClick(CCObject* pObject)
 
 }
 
+void CCBattleSceneLayer::onBtnLightgingSkillClick(CCObject* pObject)
+{
+	
+	
+    
+}
+
 bool CCBattleSceneLayer::loadUnitRoute()
 {
 	m_oUnitPath.init();
 	CCPoint arrayRoute1[]={
 		ccp(830, 340), ccp(630, 376), ccp(448, 374), ccp(298, 340), ccp(315,275),
 		ccp(589, 182), ccp(561, 132), ccp(454, 124), ccp(215, 184), ccp(-40, 165)};
-	for (int i=0; i< sizeof(arrayRoute1)/sizeof(CCPoint); i++)
+	for (int i=0; i < sizeof(arrayRoute1)/sizeof(CCPoint); i++)
 	{
 		m_oUnitPath.addPoint(arrayRoute1[i]);
 	}
+    
+    for (int i = sizeof(arrayRoute1)/sizeof(CCPoint)-1; i >= 0; i--)
+	{
+		m_oReverseUnitPath.addPoint(arrayRoute1[i]);
+	}
+    
 	
 	/*
 	CCPoint arrayRoute2[]={
@@ -188,10 +220,15 @@ bool CCBattleSceneLayer::loadUnitRoute()
 
 void CCBattleSceneLayer::onTick( float fDt )
 {
-	static float fTotal= 0;
+	static int iTotal = 0;
 	M_DEF_GM(pGm);
 	M_DEF_FC(pFc);
-
+    
+    if (iTotal < 40 && iTotal % 8 == 0)
+    {
+        randomSoldiers(2);
+    }
+    iTotal++;
 	/*
 	CCArray* pArrUnit = getUnits()->getUnitsArray();
 
@@ -210,20 +247,36 @@ void CCBattleSceneLayer::onTick( float fDt )
 CGameUnit* CCBattleSceneLayer::randomSoldiers(int iForce)
 {
 	M_DEF_UM(pUm);
-	CGameUnit* u=pUm->unitByInfo(COrgUnitInfo::kJt);
+    M_DEF_OS(pOs);
+	CGameUnit* u = NULL;
+    if(iForce == 1)
+    {
+        u = pUm->unitByInfo(COrgUnitInfo::kMagnus);
+        m_iHeroUnitKey = u->getKey();
+        u->moveAlongPath(&m_oUnitPath, false);
+        u->addSkill(pOs->skill(COrgSkillInfo::kChainLighting1));
+        u->setPosition(ccp(1000,600));
+        u->setMaxHp(500);
+    }
+    else if(iForce == 2)
+    {
+        u = pUm->unitByInfo(COrgUnitInfo::kMagnus);
+        u->moveAlongPath(&m_oReverseUnitPath, false);
+        u->setPosition(ccp(-40, 165));
+    }
+    
 	addUnit(u);
-	u->setPosition(ccp(1000,600));
+	
 	//heroKey=u->getKey();
-	u->setForceByIndex(2);
-	u->setAlly(1<<2);
+	u->setForceByIndex(iForce);
+	u->setAlly(1<<iForce);
 	u->addSkill(CStatusShowPas::create());
 	u->prepareAttackAnimation(1,CGameUnit::kAnimationAct1,"act1",0.1);
-	u->setBaseAttackInterval(0.4);
+	u->setBaseAttackInterval(2.0);
 	u->setMaxHp(100);
-	u->setBaseMoveSpeed(100);
+	u->setBaseMoveSpeed(50);
 	u->setAttackMinRange(0);
-	u->moveAlongPath(&m_oUnitPath);
-
+  
 	return u;
 }
 
@@ -309,6 +362,6 @@ void CCBattleSceneLayer::initTower( CCObject* pObject )
 	CGameUnit* pTower = dynamic_cast<CGameUnit*>(pObject);
 	M_DEF_OS(pOs);
 	pTower->addSkill(pOs->skill(COrgSkillInfo::kTransmit1));
-	pTower->setForceByIndex(1);
-	pTower->setAlly(1<<1);
+	pTower->setForceByIndex(2);
+	pTower->setAlly(1<<2);
 }

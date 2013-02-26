@@ -715,7 +715,9 @@ public:
     M_SYNTHESIZE(int, m_iOwner, Owner);
     M_SYNTHESIZE(PROJECTILE_TYPE, m_eProjectileType, ProjectileType);
     
-
+    M_SYNTHESIZE(CCObject*, m_pTargetObj, TargetObj);
+    M_SYNTHESIZE(SEL_CallFuncO, m_pTargetFun, TargetFun);
+    
     virtual void onDie();
     virtual CCObject* copyWithZone(CCZone* pZone);
 
@@ -782,7 +784,6 @@ public:
 
     static bool isLivingAllyOf(CGameUnit* pUnit, CUnitForce* pParam);
     static bool isLivingEnemyOf(CGameUnit* pUnit, CUnitForce* pParam);
-
 
 protected:
     CCArray m_oArrUnits;

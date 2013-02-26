@@ -48,6 +48,10 @@ typedef struct
 class CCBattleScene : public CCScene
 {
 public:
+    enum UNIT_KEY
+    {
+        kHeroUnit = 0
+    };
     virtual bool init();
     CREATE_FUNC(CCBattleScene);
 
@@ -72,6 +76,9 @@ public:
 	void onBtnUpgradeClick(CCObject* pObject);
 
 	void onBtnHomeClick(CCObject* pObject);
+    
+    void onBtnLightgingSkillClick(CCObject* pObject);
+
 	
 	virtual void onTick(float fDt);
 
@@ -106,8 +113,13 @@ public:
     CCMenuItemFont m_oBtnBattle;  
 	CCMenuItemFont m_oBtnUpGrade;
 	CCMenuItemFont m_oBtnHome;
+    CCMenuItemFont m_oBtnLightingSkill;
+    CCProgressBar m_oHpBar;
+    CCButtonPanel m_oSkillPanel;
+    int m_iHeroUnitKey;
 	//vector<vector<CCPoint>* > m_vecUnitRoute;
 	CUnitPath m_oUnitPath;
+    CUnitPath m_oReverseUnitPath;
 	int m_iGameStatus;
 	vector<CCPoint> m_vecTowerPos;
 	CCMenu m_oTowerPosMenu;

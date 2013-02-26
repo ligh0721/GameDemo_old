@@ -9,7 +9,7 @@
 #include "BattleGroundScene.h"
 #include "Skill.h"
 #include "GameCtrl.h"
-
+#include "UnitInfo.h"
 
 CSkill::CSkill()
     : m_iKey(CCGameManager::sharedGameManager()->getLogicBody()->keygen())
@@ -1907,4 +1907,216 @@ void CProjectileAct::setTemplateProjectile( CProjectile* pProjectile )
 CProjectile* CProjectileAct::getTemplateProjectile()
 {
     return m_pTemplateProjectile;
+}
+
+bool CChainLightingAct::init(float fCoolDown, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &roDamage)
+{
+    CActiveSkill::init(fCoolDown);
+    m_fMaxCastRange = fMaxCastRange;
+    m_fMaxJumpDistance = fMaxJumpDistance;
+    m_iMaxJumpCount = fMaxJumpDistance;
+    m_oDamage = roDamage;
+    return true;
+
+}
+
+CCObject* CChainLightingAct::copyWithZone(CCZone *pZone)
+{
+    return create(m_fCoolDown, m_fMaxCastRange, m_fMaxJumpDistance, m_iMaxJumpCount, m_oDamage);
+}
+
+void CChainLightingAct::onSkillAdd()
+{
+    CActiveSkill::onSkillAdd();
+}
+
+void CChainLightingAct::onSkillDel()
+{
+    CActiveSkill::onSkillDel();
+}
+
+void CChainLightingAct::onSkillCast()
+{
+    M_DEF_GM(pGm);
+    M_DEF_SM(pSm);
+    M_DEF_PM(pPm);
+    CGameUnit* pO = dynamic_cast<CGameUnit*>(getOwner());
+    if (!pO)
+    {
+        return;
+    }
+    CAttackData* pAd;
+    float fDis;
+    CGameUnit* pUnit;
+    CGameUnit* pSource = pO;
+    CCObject* pObj;
+    uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
+    
+    CCARRAY_FOREACH(pO->getUnitLayer()->getUnits()->getUnitsArray(), pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (!pUnit)
+        {
+            continue;
+        }
+        fDis = MAX(0, pUnit->getDistance(pO) - pUnit->getHalfOfWidth());
+        if (fDis <= m_fMaxCastRange && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pO)))
+        {
+            pAd = CAttackData::create();
+            pAd->setAttack(m_oDamage);
+            pUnit->damagedAdv(pAd, pO, dwTriggerMask);
+            
+        }
+        CProjectile* pProj = pPm->getProjectileByIndex(COrgUnitInfo::kLightning1);
+        pO->getUnitLayer()->addProjectile(pProj);
+        pProj->setAttackData(pAd);
+        pProj->setOwner(getOwner()->getKey());
+        pProj->setTarget(pUnit);
+        pProj->setBaseMoveSpeed(40);
+        const CCPoint& roPos1 = pSource->getPosition();
+        const CCPoint& roPos2 = pUnit->getPosition();
+        float fA = CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(roPos2, roPos1)));
+        //pProj->getSprite()->setScale(getProjectileScale());
+        pProj->getSprite()->setRotation(fA);
+        //float fOffsetX = getHalfOfWidth();
+        pProj->setProjectileBirthOffsetX(0);
+        pProj->setProjectileBirthOffsetY(0);
+        pProj->setPosition(ccpAdd(pSource->getPosition(), ccp(pSource->getSprite()->isFlipX() ? -pProj->getProjectileBirthOffsetX() : pProj->getProjectileBirthOffsetX(), pProj->getProjectileBirthOffsetY())));
+        //pProj->setHalfOfWidth(11);
+        //pProj->setHalfOfHeight(13);
+        pProj->followTo(pUnit->getKey(), false, true, false, 10.0);
+        pSource = pUnit;
+    }
+
+}
+
+bool CChainLightingBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &roDamage, const vector<int>& vecEffectedUnitKey)
+{
+    CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+    m_fMaxCastRange = fMaxCastRange;
+    m_fMaxJumpDistance = fMaxJumpDistance;
+    m_iMaxJumpCount = fMaxJumpDistance;
+    m_oDamage = roDamage;
+    m_vecEffectedUnitKey = vecEffectedUnitKey;
+    return true;
+    
+}
+
+CCObject* CChainLightingBuff::copyWithZone(CCZone *pZone)
+{
+    return create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fMaxCastRange, m_fMaxJumpDistance, m_iMaxJumpCount, m_oDamage, m_vecEffectedUnitKey);
+}
+
+void CChainLightingBuff::onBuffAdd()
+{
+	CBuffSkill::onBuffAdd();
+    CGameUnit* pSource = dynamic_cast<CGameUnit*>(getOwner());
+	if (!pSource || pSource->isDead())
+	{
+		return;
+	}    
+    M_DEF_GM(pGm);
+    M_DEF_SM(pSm);
+    M_DEF_PM(pPm);
+    if (!pSource)
+    {
+        return;
+    }
+    CAttackData* pAd = NULL;
+    CGameUnit* pUnit = NULL;
+    CGameUnit* pTarget = NULL;
+    CCObject* pObj = NULL;
+    float fMinDis = 99999999;
+    float fDis = 0.0;
+    uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
+    
+    
+    CCARRAY_FOREACH(pSource->getUnitLayer()->getUnits()->getUnitsArray(), pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (!pUnit)
+        {
+            continue;
+        }
+        bool bflag = false;
+        for (vector<int>::size_type i = 0; i < m_vecEffectedUnitKey.size(); i++)
+        {
+            if(pUnit->getKey() == m_vecEffectedUnitKey[i])
+            {
+                bflag = true;
+                break;
+            }
+                
+        }
+        if (bflag
+            || pUnit->getKey() == pSource->getKey()) {
+            continue;
+        }
+        if ((fDis = ccpDistance(pUnit->getPosition(), pSource->getPosition())) < m_fMaxJumpDistance
+            && fMinDis > fDis
+            && CUnitGroup::isLivingAllyOf(pUnit, dynamic_cast<CUnitForce*>(pSource)))
+        {
+            pTarget = pUnit;
+            fMinDis = fDis;
+        }
+
+    }
+    
+    if (pTarget == NULL)
+    {
+        return;
+    }
+    pAd = CAttackData::create();
+    pAd->setAttack(m_oDamage);
+    pUnit->damagedAdv(pAd, pSource, dwTriggerMask);
+    
+    CProjectile* pProj = pPm->getProjectileByIndex(COrgUnitInfo::kLightning2);
+    pProj = dynamic_cast<CProjectile*>(pProj->copy());
+    pTarget->getUnitLayer()->addProjectile(pProj);
+    pProj->setProjectileBirthOffsetX(pSource->getProjectileBirthOffsetX());
+    pProj->setProjectileBirthOffsetY(pSource->getProjectileBirthOffsetY());
+    pProj->setAttackData(pAd);
+    pProj->setOwner(pSource->getKey());
+    pProj->setTarget(pTarget);
+    pProj->getSprite()->setScale(1);
+    pProj->setTargetObj(this);
+    pProj->setTargetFun(callfuncO_selector(CChainLightingBuff::turnNext));
+    //pProj->setPosition(pTarget->getPosition());
+    pProj->onDie();
+    
+    if(m_vecEffectedUnitKey.size() <= 0)
+    {
+        m_vecEffectedUnitKey.push_back(pTarget->getKey());
+        m_vecEffectedUnitKey.push_back(pSource->getKey());
+    }
+    else
+    {
+        m_vecEffectedUnitKey.push_back(pTarget->getKey());
+    }
+    m_pNextUnit = pTarget;
+
+}
+
+void CChainLightingBuff::onBuffDel()
+{
+	CBuffSkill::onBuffDel();    
+}
+
+void CChainLightingBuff::turnNext(CCObject* pObj)
+{
+    CChainLightingBuff* pSkillBuff = dynamic_cast<CChainLightingBuff*>(this->copy());
+    if (m_vecEffectedUnitKey.size() > m_iMaxJumpCount + 1)
+    {
+        return;
+        
+    }
+    CAttackData* pAd = CAttackData::create();
+    pAd->setAttack(m_oDamage);
+    pAd->addBuff(pSkillBuff, 100);
+    if(m_pNextUnit != NULL
+       && !m_pNextUnit->isDead())
+    {
+        m_pNextUnit->addBuff(pSkillBuff);
+    }
+
 }

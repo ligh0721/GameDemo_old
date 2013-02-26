@@ -1883,7 +1883,7 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
             }
             return;
         }
-
+        
         if (m_oSprite.getActionByTag(kActAttack) || m_oSprite.getActionByTag(kActAttackEffect))
         {
             return;
@@ -2546,6 +2546,8 @@ bool CProjectile::initWithName( const char* pProjectile, const CCPoint& roAnchor
     m_iTarget = 0;
     setOffsetZ(0);
     setGeneration(0);
+    setTargetObj(NULL);
+    setTargetFun(NULL);
     setProjectileType(kFollow);
     return CGameUnit::initWithName(pProjectile, roAnchor);
 }
@@ -2608,7 +2610,13 @@ void CProjectile::onActDieEnd( CCNode* pNode )
 {
     //m_oSprite.removeFromParentAndCleanup(true);
     M_DEF_GM(pGm);
+    if (m_pTargetObj != NULL
+        && m_pTargetFun != NULL) {
+        
+        (m_pTargetObj->*m_pTargetFun)(this);
+    }
     getUnitLayer()->moveProjectileToDustbin(this);
+
 }
 
 CCObject* CProjectile::copyWithZone( CCZone* pZone )
