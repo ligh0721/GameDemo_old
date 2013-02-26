@@ -1947,6 +1947,7 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
             pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
             pProj->setAttackData(pAtk);
             pProj->setOwner(getKey());
+            pProj->setStart(getKey());
             pProj->setTarget(getLastAttackTarget());
             pProj->getSprite()->setScale(getProjectileScale());
             pProj->setPosition(pTarget->getPosition());
@@ -1960,6 +1961,7 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
         getUnitLayer()->addProjectile(pProj);
         pProj->setAttackData(pAtk);
         pProj->setOwner(getKey());
+        pProj->setStart(getKey());
         pProj->setTarget(getLastAttackTarget());
         pProj->setBaseMoveSpeed(getProjectileMoveSpeed());
         const CCPoint& roPos1 = pProj->getPosition();
@@ -2550,6 +2552,7 @@ bool CProjectile::init()
 {
     m_pAttackData = NULL;
     setOwner(0);
+    setStart(0);
     m_iTarget = 0;
     setOffsetZ(0);
     setGeneration(0);
@@ -2561,6 +2564,7 @@ bool CProjectile::initWithName( const char* pProjectile, const CCPoint& roAnchor
 {
     m_pAttackData = NULL;
     setOwner(0);
+    setStart(0);
     m_iTarget = 0;
     setOffsetZ(0);
     setGeneration(0);
@@ -2595,6 +2599,7 @@ void CProjectile::onDie()
     CCAction* pAct;
     CGameUnit* pTarget = getUnitLayer()->getUnitByKey(getTarget());
     CGameUnit* pOwner = getUnitLayer()->getUnitByKey(getOwner());
+    CGameUnit* pStart = getUnitLayer()->getUnitByKey(getStart());
 
     if (pTarget && pOwner)
     {
@@ -2612,8 +2617,7 @@ void CProjectile::onDie()
 
         pAni = pGm->getUnitAnimation(getName(), m_astAniInfo[kAnimationDie].sAnimation.c_str());
         pAni->setDelayPerUnit(m_astAniInfo[kAnimationDie].fDelay);
-        //pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pOwner->getSprite(), pTarget->getSprite(), pOwner->getProjectileBirthOffsetX(), pOwner->getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
-        pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pOwner->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
+        pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pStart->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
         pAct->setTag(kActDie);
         m_oSprite.runAction(pAct);
         break;

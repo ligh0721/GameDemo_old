@@ -1845,6 +1845,7 @@ void CProjectileAct::onSkillCast()
             pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
             pProj->setAttackData(pAtk);
             pProj->setOwner(u->getKey());
+            pProj->setStart(u->getKey());
             pProj->setTarget(getTargetUnit());
             pProj->getSprite()->setScale(getProjectileScale());
             pProj->setPosition(t->getPosition());
@@ -1857,6 +1858,7 @@ void CProjectileAct::onSkillCast()
         u->getUnitLayer()->addProjectile(pProj);
         pProj->setAttackData(pAtk);
         pProj->setOwner(u->getKey());
+        pProj->setStart(u->getKey());
         pProj->setTarget(getTargetUnit());
         pProj->setBaseMoveSpeed(getProjectileMoveSpeed());
         const CCPoint& roPos1 = pProj->getPosition();
@@ -1907,12 +1909,15 @@ bool CChainBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fR
     setProjectileMaxOffsetY(0.0);
     setProjectileBirthOffsetX(0.0);
     setProjectileBirthOffsetY(0.0);
+    setWeaponType(CGameUnit::kWTDelayed);
     return true;
 }
 
 CCObject* CChainBuff::copyWithZone( CCZone* pZone )
 {
-    return dynamic_cast<CChainBuff*>(CChainBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fRange, m_iMaxTimes, m_oDamage, m_pTemplateProjectile));
+    CChainBuff* pSkill = CChainBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fRange, m_iMaxTimes, m_oDamage, m_pTemplateProjectile);
+    pSkill->setWeaponType(getWeaponType());
+    return pSkill;
 }
 
 void CChainBuff::onBuffAdd()
@@ -1968,7 +1973,7 @@ void CChainBuff::onBuffDel()
     //const CCPoint& roPos2 = t->getPosition();
 
     CProjectile* pProj;
-    switch (CGameUnit::kWTInstant/*getWeaponType()*/)
+    switch (getWeaponType())
     {
     case CGameUnit::kWTClosely:
     case CGameUnit::kWTInstant:
@@ -1983,7 +1988,8 @@ void CChainBuff::onBuffDel()
             pProj->setProjectileBirthOffsetX(0.0);
             pProj->setProjectileBirthOffsetY(o->getHalfOfHeight());
             pProj->setAttackData(pAtk);
-            pProj->setOwner(m_iStartUnit); // !!!
+            pProj->setOwner(m_iSrcKey);
+            pProj->setStart(m_iStartUnit);
             pProj->setTarget(m_iEndUnit);
             pProj->getSprite()->setScale(getProjectileScale());
             pProj->setPosition(t->getPosition());
@@ -1995,7 +2001,8 @@ void CChainBuff::onBuffDel()
         pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
         l->addProjectile(pProj);
         pProj->setAttackData(pAtk);
-        pProj->setOwner(m_iStartUnit); // !!!
+        pProj->setOwner(m_iSrcKey);
+        pProj->setStart(m_iStartUnit);
         pProj->setTarget(m_iEndUnit);
         pProj->setBaseMoveSpeed(getProjectileMoveSpeed());
         const CCPoint& roPos1 = pProj->getPosition();
