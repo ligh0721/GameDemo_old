@@ -236,7 +236,7 @@
 		781C33B11547F06B00633F88 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		781C33B31547F06B00633F88 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		781C33B51547F06B00633F88 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		8B09160016C55464004C5566 /* Action.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Action.cpp; sourceTree = "<group>"; };
+		8B09160016C55464004C5566 /* Action.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Action.cpp; sourceTree = "<group>"; usesTabs = 0; };
 		8B09160116C55464004C5566 /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Action.h; sourceTree = "<group>"; };
 		8B09160216C55464004C5566 /* BattleGroundScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleGroundScene.cpp; sourceTree = "<group>"; };
 		8B09160316C55464004C5566 /* BattleGroundScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleGroundScene.h; sourceTree = "<group>"; };
@@ -246,7 +246,7 @@
 		8B09160716C55464004C5566 /* Box2DEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2DEx.h; sourceTree = "<group>"; };
 		8B09160816C55464004C5566 /* BulletSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BulletSprite.cpp; sourceTree = "<group>"; };
 		8B09160916C55464004C5566 /* BulletSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BulletSprite.h; sourceTree = "<group>"; };
-		8B09160A16C55464004C5566 /* ChildOfGameUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChildOfGameUnit.cpp; sourceTree = "<group>"; };
+		8B09160A16C55464004C5566 /* ChildOfGameUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ChildOfGameUnit.cpp; sourceTree = "<group>"; };
 		8B09160B16C55464004C5566 /* ChildOfGameUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildOfGameUnit.h; sourceTree = "<group>"; };
 		8B09160C16C55464004C5566 /* CommDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommDef.cpp; sourceTree = "<group>"; };
 		8B09160D16C55464004C5566 /* CommDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommDef.h; sourceTree = "<group>"; };
@@ -1481,7 +1481,7 @@
 				PRODUCT_NAME = GameDemo;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv6 armv7 i386";
 			};
 			name = Debug;
@@ -1525,7 +1525,7 @@
 				PRODUCT_NAME = GameDemo;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv6 armv7 i386";
 			};
