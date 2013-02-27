@@ -386,7 +386,7 @@ CGameMission* CDemoMission::mission01()
     oMission.addRush(iRound, oRush);
     */
     // add a rush
-    for (int i = 1; i < 30; ++i)
+    for (int i = 1; i < 2; ++i)
     {
         iRound = oMission.addNewRound();
         oRush.init(aiPath[rand() % CONST_MAX_PATH]);

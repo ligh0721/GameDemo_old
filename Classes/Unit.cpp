@@ -2614,7 +2614,6 @@ void CProjectile::onDie()
         break;
 
     case kLightning:
-
         pAni = pGm->getUnitAnimation(getName(), m_astAniInfo[kAnimationDie].sAnimation.c_str());
         pAni->setDelayPerUnit(m_astAniInfo[kAnimationDie].fDelay);
         pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pStart->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));

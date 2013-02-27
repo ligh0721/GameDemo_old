@@ -80,6 +80,15 @@ bool COrgUnitInfo::init()
     pGm->loadUnitAnimation("Matchstick", "act1");
     pGm->loadUnitAnimation("Matchstick", "act2");
 
+    pGm->loadUnitAnimation("Kurokisi", "move");
+    pGm->loadUnitAnimation("Kurokisi", "die");
+    pGm->loadUnitAnimation("Kurokisi", "act1");
+    pGm->loadUnitAnimation("Kurokisi", "act2");
+    pGm->loadUnitAnimation("Kurokisi", "act3");
+    pGm->loadUnitAnimation("Kurokisi", "act4");
+    pGm->loadUnitAnimation("Kurokisi", "act5");
+    pGm->loadUnitAnimation("Kurokisi", "act6");
+
     pGm->loadUnitAnimation("Ball1", "move");
     pGm->loadUnitAnimation("Ball1", "die");
     pGm->loadUnitAnimation("Ball1", "act1");
@@ -91,6 +100,8 @@ bool COrgUnitInfo::init()
     pGm->loadUnitAnimation("Ball3", "die");
 
     pGm->loadUnitAnimation("Lightning1", "die");
+
+    pGm->loadUnitAnimation("Lightning2", "die");
 
     //pGm->preloadEffectSound("Lightning1.wav");
     //pGm->preloadEffectSound("Ball1.wav");
@@ -133,6 +144,13 @@ bool COrgUnitInfo::init()
     pProj->setBaseMoveSpeed(0.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjLightning2 = pProj;
+
+    pProj = CProjectile::createWithName("Lightning2");
+    pProj->setProjectileType(CProjectile::kLightning); // 设置投射物
+    pProj->prepareDieAnimation("die", 0.1); // 加载投射物死亡动画
+    pProj->setBaseMoveSpeed(0.0);
+    pPm->addProjectile(pProj); // 将投射物添加到PM中
+    CProjectile* pProjLightning3 = pProj;
 
 
     CUnitInfo oMalik(
@@ -201,7 +219,7 @@ bool COrgUnitInfo::init()
     CUnitInfo oJt(
         "Jt",
         ccp(0.5, 11.0 / 133),
-        46, 50,
+        25, 50,
         1,
         0.1, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.0,
         CUnitInfo::ARR_ATTACK_ANI(1, kAct1),
@@ -287,7 +305,7 @@ bool COrgUnitInfo::init()
         ccp(59.0 / 128, 6.0 / 128),    // archor point
         24, 27,    // 0.5w 0.5h
         1,
-        0.1, 0.1, 0.08, 0.08, 0.00, 0.00, 0.00, 0.0,
+        0.1, 0.1, 0.08, 0.08, 0.00, 0.00, 0.00, 0.00,
         CUnitInfo::ARR_ATTACK_ANI(2, kAct1, kAct2),
         40,
         2, 0.25, 0, 34, 150, CGameUnit::kWTClosely,
@@ -302,6 +320,27 @@ bool COrgUnitInfo::init()
         10
         );
     pUm->addUnitInfo(COrgUnitInfo::kMatchstick, oMatchstick);
+
+    CUnitInfo oKurokisi(
+        "Kurokisi",
+        ccp(0.5, 3.0 / 97),    // archor point
+        30, 56,    // 0.5w 0.5h
+        1,
+        0.1, 0.1, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10,
+        CUnitInfo::ARR_ATTACK_ANI(6, kAct1, kAct2, kAct3, kAct4, kAct5, kAct6),
+        40,
+        2, 0.25, 0, 30, 150, CGameUnit::kWTClosely,
+        0, 0, 0, 0, 41, 29,
+        CAttackValue(1, CAttackValue::kPhysical, 10.0),
+        0.150,
+        CArmorValue::kNormal, 1,
+        0, 0,
+        100,
+        false,
+        10,
+        10
+        );
+    pUm->addUnitInfo(COrgUnitInfo::kKurokisi, oKurokisi);
 
     return true;
 }

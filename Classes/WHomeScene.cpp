@@ -49,7 +49,8 @@ bool CCWHomeSceneLayer::init()
     pFc->addSpriteFramesWithFile("background.plist");
     pFc->addSpriteFramesWithFile("UI.plist");
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("skill.plist");
-    setBackGroundSprite(CCSprite::create("levels/level01/LevelHD.png"));
+    //setBackGroundSprite(CCSprite::create("levels/level01/LevelHD.png"));
+    setBackGroundSprite(CCSprite::create("LevelDemo2HD.png"));
     setBufferEffectParam(0.9, 10, 0.1);
     m_oMenu.init();
     addChild(&m_oMenu);
@@ -398,8 +399,6 @@ CGameUnit* CCWHomeSceneLayer::getHeroUnit()
     CGameUnit* pU = getUnitByKey(m_iHero);
     if (!pU)
     {
-        M_DEF_UPM(pUpm);
-        //pU = pUpm->unitByIndex(0);
         pU = m_oUipm.unitByIndex(0);
         m_iHero = pU->getKey();
     }

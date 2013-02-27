@@ -63,6 +63,7 @@ void CUipEditor::setUnitPatchInfo(CUnitInfoPatch *pUip)
     getAttackValueCount(&l);
     setAttackValueCount(l);
     ui->comboBoxAttackType->setCurrentIndex(l.isEmpty() ? 0 : l.first());
+    on_comboBoxAttackType_currentIndexChanged(ui->comboBoxAttackType->currentIndex());
     ui->txtExAttackRand->setText(QString::number(pUip->m_fExAttackRandomRange));
     ui->comboBoxArmorType->setCurrentIndex(pUip->m_eArmorType);
     ui->txtBaseArmor->setText(QString::number(pUip->m_fBaseArmorValue));
