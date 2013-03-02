@@ -729,6 +729,7 @@ public:
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
     
     virtual void onActEndPerAnim(CCObject* pObj);
+    
 private:
     int m_iProbability;
     float m_fDuration;
@@ -800,3 +801,34 @@ public:
     VEC_DAMAGED m_vecDamaged;
 };
 
+class CJumpChopSkill : public CPassiveSkill
+{
+public:
+	CJumpChopSkill();
+    
+	virtual bool init(int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName);
+	M_CREATE_FUNC_PARAM(CJumpChopSkill, (int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName), iProbability, fMaxJumpRange, iMaxJumpCount, roDamage, pActName);
+	virtual CCObject* copyWithZone(CCZone* pZone);
+    
+	virtual void onSkillAdd();
+	virtual void onSkillDel();
+    virtual void onUnitDamageTarget(float fDamage, CUnit* pTarget);
+    
+    virtual void onJumpChopEnd(CCObject* pObj);
+       
+    M_SYNTHESIZE(float, m_fDelayPerUnit, DelayPerUnit);
+    M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
+    M_SYNTHESIZE(int, m_fDurationPerJump, DurationPerJump);
+    M_SYNTHESIZE(int, m_fCountPerJump, CountPerJump);
+    
+
+private:
+    CGameUnit* m_pLastTargetUnit;
+    int m_iProbability;
+    float m_fMaxJumpRange;
+    int m_iMaxJumpCount;
+    CAttackValue m_oMaxDamage;
+    char* m_pActName;
+    vector<int> m_vecEffectedUnitKey;
+    CAttackData* m_pAttackData;
+};

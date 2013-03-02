@@ -1979,7 +1979,8 @@ void CChainLightingBuff::onBuffAdd()
                 
         }
         if (bflag
-            || pUnit->getKey() == pSource->getKey()) {
+            || pUnit->getKey() == pSource->getKey())
+        {
             continue;
         }
         if ((fDis = ccpDistance(pUnit->getPosition(), pSource->getPosition())) < m_fMaxJumpDistance
@@ -2290,4 +2291,126 @@ void CChainBuff::setTemplateProjectile( CProjectile* pProjectile )
 CProjectile* CChainBuff::getTemplateProjectile()
 {
     return m_pTemplateProjectile;
+}
+
+
+CJumpChopSkill::CJumpChopSkill()
+{
+    m_pLastTargetUnit = NULL;
+    setCountAnimLoop(1);
+    setDelayPerUnit(0.1);
+    setCountPerJump(1);
+    setDurationPerJump(0.5);
+}
+
+bool CJumpChopSkill::init(int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue &roDamage, char *pActName)
+{
+    CPassiveSkill::init();
+    m_iProbability = iProbability;
+    m_fMaxJumpRange = fMaxJumpRange;
+    m_iMaxJumpCount = iMaxJumpCount;
+    m_oMaxDamage = roDamage;
+    m_pActName = pActName;
+    return true;
+}
+CCObject* CJumpChopSkill::copyWithZone(cocos2d::CCZone *pZone)
+{
+    return create(m_iProbability, m_fMaxJumpRange, m_iMaxJumpCount, m_oMaxDamage, m_pActName);
+}
+void CJumpChopSkill::onSkillAdd()
+{
+    CPassiveSkill::onSkillAdd();
+}
+
+void CJumpChopSkill::onSkillDel()
+{
+    CPassiveSkill::onSkillDel();
+}
+
+void CJumpChopSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
+{
+    if(!M_RAND_HIT(m_iProbability))
+    {
+        return;
+    }
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
+    if (!pOwn || pOwn->isDead())
+    {
+        return;
+    }
+    m_pAttackData = CAttackData::create();
+    m_pAttackData->setAttack(m_oMaxDamage);
+    m_vecEffectedUnitKey.push_back(pOwn->getKey());
+    m_vecEffectedUnitKey.push_back(pTarget->getKey());
+ 
+}
+
+void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
+{
+    CGameUnit* pU = dynamic_cast<CGameUnit*>(pObj);
+    if (m_pLastTargetUnit == NULL || m_pLastTargetUnit->isDead())
+    {
+        uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
+        m_pLastTargetUnit->damagedAdv(m_pAttackData, pU, dwTriggerMask);
+        
+    }
+    if (m_iMaxJumpCount + 2 <= m_vecEffectedUnitKey.size())
+    {
+        return;
+    }
+    if (!pU || pU->isDead())
+    {
+        return;
+    }
+    
+    CGameUnit* pUnit = NULL;
+    CGameUnit* pTarget = NULL;
+    CCObject* pObjItem = NULL;
+    float fMinDis = 99999999;
+    float fDis = 0.0;    
+    
+    CCARRAY_FOREACH(pU->getUnitLayer()->getUnits()->getUnitsArray(), pObjItem)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObjItem);
+        if (!pUnit || pUnit->isDead())
+        {
+            continue;
+        }
+        bool bflag = false;
+        for (vector<int>::size_type i = 0; i < m_vecEffectedUnitKey.size(); i++)
+        {
+            if(pUnit->getKey() == m_vecEffectedUnitKey[i])
+            {
+                bflag = true;
+                break;
+            }
+            
+        }
+        if (bflag)
+        {
+            continue;
+        }
+        if ((fDis = ccpDistance(pUnit->getPosition(), pU->getPosition())) < m_fMaxJumpRange
+            && fMinDis > fDis
+            && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pU)))
+        {
+            pTarget = pUnit;
+            fMinDis = fDis;
+        }
+    }
+    
+    if (pTarget == NULL || pTarget->isDead())
+    {
+        return;
+    }
+
+    m_vecEffectedUnitKey.push_back(pTarget->getKey());
+    
+    M_DEF_GM(pGm);
+    CCAnimation* pAnim = pGm->getUnitAnimation(pU->getName(), m_pActName);
+    pAnim->setDelayPerUnit(getDelayPerUnit());
+    pAnim->setLoops(getCountAnimLoop());
+    CCAnimate* pActAni = CCAnimate::create(pAnim);
+    pU->getSprite()->runAction(CCSequence::create(CCJumpTo::create(getDurationPerJump(), ccpAdd(pTarget->getPosition(), ccp(10, 10)), 60, getCountPerJump()), pActAni, CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pU)));
+    
 }
