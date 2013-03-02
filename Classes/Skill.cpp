@@ -2018,10 +2018,7 @@ void CChainLightingBuff::onBuffAdd()
     M_DEF_GM(pGm);
     M_DEF_SM(pSm);
     M_DEF_PM(pPm);
-    if (!pSource)
-    {
-        return;
-    }
+   
     CAttackData* pAd = NULL;
     CGameUnit* pUnit = NULL;
     CGameUnit* pTarget = NULL;
@@ -2117,6 +2114,105 @@ void CChainLightingBuff::turnNext(CCObject* pObj)
        && !m_pNextUnit->isDead())
     {
         m_pNextUnit->addBuff(pSkillBuff);
+    }
+
+}
+
+CSwordStormSkill::CSwordStormSkill()
+{
+    setDurationPerAnim(1.0);
+}
+
+bool CSwordStormSkill::init(int iProbability, float fDuration, float fMaxDamageRange, const CAttackValue &roMaxDamage, const CExtraCoeff &roDamageCoef, char *pActName)
+{
+    CPassiveSkill::init();
+    m_iProbability = iProbability;
+    m_fDuration = fDuration;
+    m_fMaxDamageRange = fMaxDamageRange;
+    m_oMaxDamage = roMaxDamage;
+    m_oDamageCoef = roDamageCoef;
+    m_pActName  = pActName;
+    return true;
+}
+CCObject* CSwordStormSkill::copyWithZone(cocos2d::CCZone *pZone)
+{
+    return create(m_iProbability, m_fDuration, m_fMaxDamageRange, m_oMaxDamage, m_oDamageCoef, m_pActName);
+}
+void CSwordStormSkill::onSkillAdd()
+{
+    CPassiveSkill::onSkillAdd();
+    registerOnDamageTargetTrigger();
+    
+}
+
+void CSwordStormSkill::onSkillDel()
+{
+    CPassiveSkill::onSkillDel();
+}
+
+void CSwordStormSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
+{
+    if(!M_RAND_HIT(m_iProbability))
+    {
+        return;
+    }
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
+    if (!pOwn || pOwn->isDead())
+    {
+        return;
+    }
+    M_DEF_GM(pGm);
+    
+    CCObject* pObj = NULL;
+    CGameUnit* pUnit = NULL;
+    float fDis = 0.0;
+    
+    //可以考虑是否先掉血还是后掉血还是持续掉血
+    CCARRAY_FOREACH(pOwn->getUnitLayer()->getUnits()->getUnitsArray(), pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (!pUnit || pUnit->isDead())
+        {
+            continue;
+        }
+        if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
+            && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
+        {   
+            //给范围内的敌人受到持续掉血的buff。//
+            
+        }
+        
+    }
+    CCAnimate* pActAni = CCAnimate::create( pGm->getUnitAnimation(pOwn->getName(), m_pActName));
+    pActAni->setDuration(m_fDurationPerAnim);
+    
+    pOwn->getSprite()->runAction(CCRepeat::create(CCSequence::create(pActAni, CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pOwn)), m_fDuration/m_fDurationPerAnim));
+    
+}
+
+void CSwordStormSkill::onActEndPerAnim(CCObject* pObj)
+{
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(pObj);
+    CCObject* pObjItem = NULL;
+    CGameUnit* pUnit = NULL;
+    float fDis = 0.0;
+    
+    CCARRAY_FOREACH(pOwn->getUnitLayer()->getUnits()->getUnitsArray(), pObjItem)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObjItem);
+        if (!pUnit || pUnit->isDead())
+        {
+            continue;
+        }
+        if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
+            && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
+        {
+            //给范围内的敌人受到持续伤害
+            CAttackData* pAttack = CAttackData::create();
+            pAttack->setAttack(m_oMaxDamage);
+            pUnit->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
+        }
+        
     }
 
 }

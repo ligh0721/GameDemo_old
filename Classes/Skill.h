@@ -733,6 +733,31 @@ private:
     CChainLightingBuff* m_pBuffCP;
 };
 
+class CSwordStormSkill : public CPassiveSkill
+{
+public:
+	CSwordStormSkill();
+    
+	virtual bool init(int iProbability, float fDuration, float fMaxDamageRange, const CAttackValue& roMaxDamage, const CExtraCoeff& roDamageCoef,  char* pActName);
+	M_CREATE_FUNC_PARAM(CSwordStormSkill, (int iProbability, float fDuration, float fMaxDamageRange, const CAttackValue& roMaxDamage, const CExtraCoeff& roDamageCoef,  char* pActName), iProbability, fDuration, fMaxDamageRange, roMaxDamage, roDamageCoef, pActName);
+	virtual CCObject* copyWithZone(CCZone* pZone);
+    
+	virtual void onSkillAdd();
+	virtual void onSkillDel();
+    virtual void onUnitDamageTarget(float fDamage, CUnit* pTarget);
+    
+    M_SYNTHESIZE(float, m_fDurationPerAnim, DurationPerAnim);
+    
+    virtual void onActEndPerAnim(CCObject* pObj);
+private:
+    int m_iProbability;
+    float m_fDuration;
+    float m_fMaxDamageRange;
+    CAttackValue m_oMaxDamage;
+    CExtraCoeff m_oDamageCoef;
+    char* m_pActName;
+};
+
 class CProjectileAct : public CActiveSkill
 {
 public:
