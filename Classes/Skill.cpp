@@ -1949,9 +1949,7 @@ void CChainLightingBuff::onBuffAdd()
 	if (!pSource || pSource->isDead())
 	{
 		return;
-	}    
-    M_DEF_GM(pGm);
-    M_DEF_SM(pSm);
+	}
     M_DEF_PM(pPm);
    
     CAttackData* pAd = NULL;
@@ -2055,7 +2053,8 @@ void CChainLightingBuff::turnNext(CCObject* pObj)
 
 CSwordStormSkill::CSwordStormSkill()
 {
-    setDurationPerAnim(1.0);
+    setDelayPerUnit(0.02);
+    setCountAnimLoop(10);
 }
 
 bool CSwordStormSkill::init(int iProbability, float fDuration, float fMaxDamageRange, const CAttackValue &roMaxDamage, const CExtraCoeff &roDamageCoef, char *pActName)
@@ -2098,30 +2097,11 @@ void CSwordStormSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
     }
     M_DEF_GM(pGm);
     
-    CCObject* pObj = NULL;
-    CGameUnit* pUnit = NULL;
-    float fDis = 0.0;
-    
-    //可以考虑是否先掉血还是后掉血还是持续掉血
-    CCARRAY_FOREACH(pOwn->getUnitLayer()->getUnits()->getUnitsArray(), pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        if (!pUnit || pUnit->isDead())
-        {
-            continue;
-        }
-        if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
-            && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
-        {   
-            //给范围内的敌人受到持续掉血的buff。//
-            
-        }
-        
-    }
-    CCAnimate* pActAni = CCAnimate::create( pGm->getUnitAnimation(pOwn->getName(), m_pActName));
-    pActAni->setDuration(m_fDurationPerAnim);
-    
-    pOwn->getSprite()->runAction(CCRepeat::create(CCSequence::create(pActAni, CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pOwn)), m_fDuration/m_fDurationPerAnim));
+    CCAnimation* pAnim = pGm->getUnitAnimation(pOwn->getName(), m_pActName);
+    pAnim->setDelayPerUnit(getDelayPerUnit());
+    pAnim->setLoops(getCountAnimLoop());
+    CCAnimate* pActAni = CCAnimate::create(pAnim);    
+    pOwn->getSprite()->runAction(CCRepeat::create(CCSequence::create(pActAni, CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pOwn)), round(m_fDuration/(getDelayPerUnit()*getCountAnimLoop()))));
     
 }
 

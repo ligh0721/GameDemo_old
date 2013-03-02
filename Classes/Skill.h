@@ -725,7 +725,8 @@ public:
 	virtual void onSkillDel();
     virtual void onUnitDamageTarget(float fDamage, CUnit* pTarget);
     
-    M_SYNTHESIZE(float, m_fDurationPerAnim, DurationPerAnim);
+    M_SYNTHESIZE(float, m_fDelayPerUnit, DelayPerUnit);
+    M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
     
     virtual void onActEndPerAnim(CCObject* pObj);
 private:
