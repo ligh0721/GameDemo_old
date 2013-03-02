@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "CChainLightingBuff::onBuffDel():Skill.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "CUnit::damagedMid(CAttackData*, CUnit*, unsigned int):Unit.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "CChainLightingBuff::init(float, bool, int, float, float, int, CAttackValue const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;):Skill.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "CCBattleSceneLayer::randomSoldiers(int):BattleScene.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "cocos2d::CCCallFuncN::execute():CCActionInstant.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "m_pCallFuncN">
+            </PersistentString>
+            <PersistentString
+               value = "m_pTarget">
+            </PersistentString>
+            <PersistentString
+               value = "m_pSelectorTarget">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CAttackBuffMakerPas::onUnitAttackTarget(CAttackData*, CUnit*):Skill.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "cocos2d::CCLog(char const*, ...):CCCommon.mm">
+      </ContextState>
+      <ContextState
+         contextName = "CChainLightingBuff::onBuffAdd():Skill.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "pTarget-&gt;getKey()">
+            </PersistentString>
+            <PersistentString
+               value = "pSource-&gt;getPosition().y">
+            </PersistentString>
+            <PersistentString
+               value = "m_vecEffectedUnitKey.size()">
+            </PersistentString>
+            <PersistentString
+               value = "pSource-&gt;getKey()">
+            </PersistentString>
+            <PersistentString
+               value = "pSource-&gt;getPosition().x">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
