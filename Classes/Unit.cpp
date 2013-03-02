@@ -1215,6 +1215,8 @@ const float CGameUnit::CONST_MAX_CLOSE_ATTACK_Y_RANGE = 5.0;
 
 const float CGameUnit::CONST_MAX_REWARD_RANGE = 400;
 
+const CGameUnit::UNIT_MOVE_PARAMS CGameUnit::CONST_DEFAULT_MOVE_PARAMS;
+
 CGameUnit::CGameUnit()
 {
 }
@@ -1529,7 +1531,7 @@ void CGameUnit::updateMoveToAnimationSpeed(float fRealMoveSpeed)
     pAct->setSpeed(fDelta);
 }
 
-void CGameUnit::moveTo( const CCPoint& roPos, bool bIntended /*= true*/, bool bCancelAttack /*= true*/, bool bAutoFlipX )
+void CGameUnit::moveTo( const CCPoint& roPos, const UNIT_MOVE_PARAMS& roMoveParams /*= CONST_DEFAULT_MOVE_PARAMS*/ )
 {
     if (isDead() || isFixed())
     {
@@ -1542,7 +1544,7 @@ void CGameUnit::moveTo( const CCPoint& roPos, bool bIntended /*= true*/, bool bC
     }
     M_DEF_GM(pGm);
     CCPoint roOrg = getPosition();
-    if (bAutoFlipX)
+    if (roMoveParams.bAutoFlipX)
     {
         turnTo(roOrg.x > roPos.x);
     }
@@ -1561,18 +1563,18 @@ void CGameUnit::moveTo( const CCPoint& roPos, bool bIntended /*= true*/, bool bC
     {
         m_oSprite.stopActionByTag(kActMoveTo);
     }
-    if (isDoingOr(kAttacking) && bCancelAttack)
+    if (isDoingOr(kAttacking) && roMoveParams.bCancelAttack)
     {
         stopAttack();
     }
-    if (isDoingOr(kCasting))
+    if (isDoingOr(kCasting) && roMoveParams.bCancelCast)
     {
         stopCast();
     }
     m_oSprite.runAction(pActMoveTo);
     setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
     startDoing(kMoving);
-    if (bIntended)
+    if (roMoveParams.bIntended)
     {
         startDoing(kIntended);
     }
@@ -1582,7 +1584,7 @@ void CGameUnit::moveTo( const CCPoint& roPos, bool bIntended /*= true*/, bool bC
     }
 }
 
-void CGameUnit::followTo( int iTargetKey, bool bIntended /*= true*/, bool bCancelAttack /*= true*/, bool bAutoFlipX /*= true*/, float fMaxOffsetY /*= 0.0*/ )
+void CGameUnit::followTo( int iTargetKey, const UNIT_MOVE_PARAMS& roMoveParams /*= CONST_DEFAULT_MOVE_PARAMS*/ )
 {
     if (isDead() || isFixed())
     {
@@ -1601,7 +1603,7 @@ void CGameUnit::followTo( int iTargetKey, bool bIntended /*= true*/, bool bCance
         return;
     }
     CCPoint roOrg = getPosition();
-    if (bAutoFlipX)
+    if (roMoveParams.bAutoFlipX)
     {
         turnTo(roOrg.x > roPos.x);
     }
@@ -1609,7 +1611,7 @@ void CGameUnit::followTo( int iTargetKey, bool bIntended /*= true*/, bool bCance
     float fMoveSpeed = getBaseMoveSpeed();
     float fDur = pGm->getDistance(roOrg, roPos) / fMoveSpeed;
     CCActionInterval* pSeq = CCSequence::createWithTwoActions(
-        CCMoveToNode::create(fDur, pTarget->getSprite(), fMaxOffsetY, 1, pTarget->getHalfOfHeight()),
+        CCMoveToNode::create(fDur, pTarget->getSprite(), roMoveParams.fMaxOffsetY, 1, pTarget->getHalfOfHeight()),
         CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActMoveEnd))
         );
     float fDelta = getRealMoveSpeed() / fMoveSpeed;
@@ -1620,18 +1622,18 @@ void CGameUnit::followTo( int iTargetKey, bool bIntended /*= true*/, bool bCance
     {
         m_oSprite.stopActionByTag(kActMoveTo);
     }
-    if (isDoingOr(kAttacking) && bCancelAttack)
+    if (isDoingOr(kAttacking) && roMoveParams.bCancelAttack)
     {
         stopAttack();
     }
-    if (isDoingOr(kCasting))
+    if (isDoingOr(kCasting) && roMoveParams.bCancelCast)
     {
         stopCast();
     }
     m_oSprite.runAction(pActMoveTo);
     setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
     startDoing(kMoving);
-    if (bIntended)
+    if (roMoveParams.bIntended)
     {
         startDoing(kIntended);
     }
@@ -1670,7 +1672,9 @@ void CGameUnit::moveAlongPath( CUnitPath* pPath, bool bIntended /*= true*/, bool
     const CCPoint* pTarget = m_pMovePath->getCurTargetPoint(m_dwPathCurPos);
     if (pTarget)
     {
-        moveTo(*pTarget, m_bPathIntended);
+        UNIT_MOVE_PARAMS oMp;
+        oMp.bIntended = m_bPathIntended;
+        moveTo(*pTarget, oMp);
     }
 }
 
@@ -1705,7 +1709,18 @@ const CCPoint& CGameUnit::getLastMoveToTarget()
 void CGameUnit::onActMoveEnd( CCNode* pNode )
 {
     endDoing(kIntended);
-    stopMove();
+    if (isDoingOr(kAttacking))
+    {
+        attack(getLastAttackTarget(), isDoingOr(kIntended));
+    }
+    else if (isDoingOr(kCasting))
+    {
+        cast();
+    }
+    else
+    {
+        stopMove();
+    }
 }
 
 void CGameUnit::setBaseAttackInterval( float fAttackInterval )
@@ -1938,6 +1953,7 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
             pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
             pProj->setAttackData(pAtk);
             pProj->setOwner(getKey());
+            pProj->setStart(getKey());
             pProj->setTarget(getLastAttackTarget());
             pProj->getSprite()->setScale(getProjectileScale());
             pProj->setPosition(pTarget->getPosition());
@@ -1951,6 +1967,7 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
         getUnitLayer()->addProjectile(pProj);
         pProj->setAttackData(pAtk);
         pProj->setOwner(getKey());
+        pProj->setStart(getKey());
         pProj->setTarget(getLastAttackTarget());
         pProj->setBaseMoveSpeed(getProjectileMoveSpeed());
         const CCPoint& roPos1 = pProj->getPosition();
@@ -1964,7 +1981,11 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
         pProj->setPosition(ccpAdd(getPosition(), ccp(getSprite()->isFlipX() ? -pProj->getProjectileBirthOffsetX() : pProj->getProjectileBirthOffsetX(), pProj->getProjectileBirthOffsetY())));
         //pProj->setHalfOfWidth(11);
         //pProj->setHalfOfHeight(13);
-        pProj->followTo(getLastAttackTarget(), false, true, false, getProjectileMaxOffsetY());
+        UNIT_MOVE_PARAMS oMp;
+        oMp.bIntended = false;
+        oMp.bAutoFlipX = false;
+        oMp.fMaxOffsetY = getProjectileMaxOffsetY();
+        pProj->followTo(getLastAttackTarget(), oMp);
 
         break;
 
@@ -2043,16 +2064,20 @@ void CGameUnit::moveToAttackPosition( CGameUnit* pTarget, bool bIntended )
     float fDis = pTarget->getHalfOfWidth() + getHalfOfWidth() + (getAttackMinRange() + getAttackRange()) * 0.5;
     const CCPoint& roPos1 = getPosition();
     const CCPoint& roPos2 = pTarget->getPosition();
+
+    UNIT_MOVE_PARAMS oMp;
+    oMp.bIntended = false;
+    oMp.bCancelAttack = false;
     if (getWeaponType() == kWTClosely)
     {
         // 近战攻击位置修正
-        moveTo(ccp(roPos2.x + ((roPos1.x > roPos2.x) ? fDis : -fDis), roPos2.y), false, false);
+        moveTo(ccp(roPos2.x + ((roPos1.x > roPos2.x) ? fDis : -fDis), roPos2.y), oMp);
     }
     else
     {
         // 远程攻击位置修正
         float fA = -ccpToAngle(ccpSub(roPos1, roPos2));
-        moveTo(ccpAdd(roPos2, ccp(cos(fA) * fDis, sin(-fA) * fDis)), false, false);
+        moveTo(ccpAdd(roPos2, ccp(cos(fA) * fDis, sin(-fA) * fDis)), oMp);
     }
 
     startDoing(kAttacking);
@@ -2197,8 +2222,10 @@ void CGameUnit::onDie()
 
 void CGameUnit::onDamaged( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
+    CUnit::onDamaged(pAttack, pSource, dwTriggerMask);
+
     CGameUnit* pSrc = dynamic_cast<CGameUnit*>(pSource);
-    CCLOG("dis:%.2f %.2f", getDistance(pSrc), getHostilityRange());
+    //CCLOG("dis:%.2f %.2f", getDistance(pSrc), getHostilityRange());
     CGameUnit* pLu;
     if ( pSrc && !isDoingOr(kIntended) && (
         ( isDoingOr(kAttacking) && ( pLu = getUnitLayer()->getUnitByKey(getLastAttackTarget()) ) && getDistance(pLu) > getHostilityRange() ) ||
@@ -2474,7 +2501,7 @@ bool CGameUnit::checkCastDistance( const CCPoint& roPos )
         return true;
     }
 
-    if (pSkill->getWeaponType() == CActiveSkill::kWTClosely && abs(roPos.y - roPos2.y) > CONST_MAX_CLOSE_ATTACK_Y_RANGE)
+    if (pSkill->getWeaponType() == CGameUnit::kWTClosely && abs(roPos.y - roPos2.y) > CONST_MAX_CLOSE_ATTACK_Y_RANGE)
     {
         return false;
     }
@@ -2504,16 +2531,19 @@ void CGameUnit::moveToCastPosition()
     const CCPoint& roPos1 = getPosition();
     const CCPoint& roPos2 = pSkill->getTargetPoint();
 
-    if (pSkill->getWeaponType() == CActiveSkill::kWTClosely)
+    UNIT_MOVE_PARAMS oMp;
+    oMp.bIntended = false;
+    oMp.bCancelCast = false;
+    if (pSkill->getWeaponType() == CGameUnit::kWTClosely)
     {
         // 近战攻击位置修正
-        moveTo(ccp(roPos2.x + ((roPos1.x > roPos2.x) ? fDis : -fDis), roPos2.y));
+        moveTo(ccp(roPos2.x + ((roPos1.x > roPos2.x) ? fDis : -fDis), roPos2.y), oMp);
     }
     else
     {
         // 远程攻击位置修正
         float fA = -ccpToAngle(ccpSub(roPos1, roPos2));
-        moveTo(ccpAdd(roPos2, ccp(cos(fA) * fDis, sin(-fA) * fDis)));
+        moveTo(ccpAdd(roPos2, ccp(cos(fA) * fDis, sin(-fA) * fDis)), oMp);
     }
 
     startDoing(kCasting | kIntended);
@@ -2532,6 +2562,7 @@ bool CProjectile::init()
 {
     m_pAttackData = NULL;
     setOwner(0);
+    setStart(0);
     m_iTarget = 0;
     setOffsetZ(0);
     setGeneration(0);
@@ -2543,6 +2574,7 @@ bool CProjectile::initWithName( const char* pProjectile, const CCPoint& roAnchor
 {
     m_pAttackData = NULL;
     setOwner(0);
+    setStart(0);
     m_iTarget = 0;
     setOffsetZ(0);
     setGeneration(0);
@@ -2579,6 +2611,7 @@ void CProjectile::onDie()
     CCAction* pAct;
     CGameUnit* pTarget = getUnitLayer()->getUnitByKey(getTarget());
     CGameUnit* pOwner = getUnitLayer()->getUnitByKey(getOwner());
+    CGameUnit* pStart = getUnitLayer()->getUnitByKey(getStart());
 
     if (pTarget && pOwner)
     {
@@ -2593,11 +2626,9 @@ void CProjectile::onDie()
         break;
 
     case kLightning:
-
         pAni = pGm->getUnitAnimation(getName(), m_astAniInfo[kAnimationDie].sAnimation.c_str());
         pAni->setDelayPerUnit(m_astAniInfo[kAnimationDie].fDelay);
-        //pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pOwner->getSprite(), pTarget->getSprite(), pOwner->getProjectileBirthOffsetX(), pOwner->getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
-        pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pOwner->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
+        pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pStart->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
         pAct->setTag(kActDie);
         m_oSprite.runAction(pAct);
         break;
@@ -2826,25 +2857,25 @@ void CUnitGroup::turnTo( bool bLeft )
     }
 }
 
-void CUnitGroup::moveTo( const CCPoint& roPos, bool bIntended /*= true*/, bool bCancelAttack /*= true*/, bool bAutoFlipX /*= true*/ )
+void CUnitGroup::moveTo( const CCPoint& roPos, const CGameUnit::UNIT_MOVE_PARAMS& roMoveParams /*= CGameUnit::CONST_DEFAULT_MOVE_PARAMS*/)
 {
     CGameUnit* pUnit;
     CCObject* pObj;
     CCARRAY_FOREACH(&m_oArrUnits, pObj)
     {
         pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->moveTo(roPos, bIntended, bCancelAttack, bAutoFlipX);
+        pUnit->moveTo(roPos, roMoveParams);
     }
 }
 
-void CUnitGroup::followTo( int iTargetKey, bool bIntended /*= true*/, bool bCancelAttack /*= true*/, bool bAutoFlipX /*= true*/, float fMaxOffsetY /*= 0.0*/ )
+void CUnitGroup::followTo( int iTargetKey, const CGameUnit::UNIT_MOVE_PARAMS& roMoveParams /*= CGameUnit::CONST_DEFAULT_MOVE_PARAMS*/)
 {
     CGameUnit* pUnit;
     CCObject* pObj;
     CCARRAY_FOREACH(&m_oArrUnits, pObj)
     {
         pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->followTo(iTargetKey, bIntended, bCancelAttack, bAutoFlipX, fMaxOffsetY);
+        pUnit->followTo(iTargetKey, roMoveParams);
     }
 }
 
@@ -2999,7 +3030,7 @@ bool CCUnitLayer::initWithColor( const ccColor4B& color )
     m_oArrProjectile.init();
     m_oUnitDustbin.init();
     m_oProjectileDustbin.init();
-    m_fUnitTickInterval = 0;
+    m_fUnitTickInterval = 0.1;
     m_iPendingSkillOwner = 0;
     return CCLayerColor::initWithColor(color);
 }
@@ -3007,7 +3038,7 @@ bool CCUnitLayer::initWithColor( const ccColor4B& color )
 void CCUnitLayer::onEnter()
 {
     CCLayerColor::onEnter();
-    setUnitTickInterval(0.1);
+    schedule(schedule_selector(CCUnitLayer::onTickEvent), m_fUnitTickInterval);
 }
 
 void CCUnitLayer::onExit()

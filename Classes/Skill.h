@@ -163,12 +163,12 @@ public:
         kUnitTarget
     };
 
-    enum WEAPON_TYPE
-    {
-        kWTClosely = 0,
-        kWTInstant = 1,
-        kWTDelayed = 2
-    };
+//     enum WEAPON_TYPE
+//     {
+//         kWTClosely = 0,
+//         kWTInstant = 1,
+//         kWTDelayed = 2
+//     };
 
 public:
     CActiveSkill();
@@ -191,7 +191,7 @@ public:
     M_SYNTHESIZE(float, m_fCastRange, CastRange);
     M_SYNTHESIZE(CAST_TARGET_TYPE, m_eCastTargetType, CastTargetType);
     M_SYNTHESIZE(float, m_fTargetUnitHalfOfWidth, TargetUnitHalfOfWidth); // cache property
-    M_SYNTHESIZE(WEAPON_TYPE, m_eWeaponType, WeaponType);
+    M_SYNTHESIZE(CGameUnit::WEAPON_TYPE, m_eWeaponType, WeaponType);
     const CCPoint& updateTargetUnitPoint();
     virtual CCSkillButtonAdvance* getSkillButton();
     virtual void setCastAniInfo(CGameUnit::ANIMATION_INDEX eAniIndex, float fCastEffectDelay);
@@ -637,27 +637,6 @@ public:
     int m_iBuffLevel;
 };
 
-class CChainLightingAct : public CActiveSkill
-{
-public:
-    virtual bool init(float fCoolDown, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue& roDamage);
-    M_CREATE_FUNC_PARAM(CChainLightingAct, (float fCoolDown, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue& roDamage), fCoolDown, fMaxCastRange, fMaxJumpDistance, iMaxJumpCount, roDamage);
-    virtual CCObject* copyWithZone(CCZone* pZone);
-    
-    virtual void onSkillAdd();
-    virtual void onSkillDel();
-    
-    virtual void onSkillCast();
-
-public:
-    float m_fMaxCastRange;
-    float m_fMaxJumpDistance;
-    int m_iMaxJumpCount;
-    CAttackValue m_oDamage;
-    
-};
-
-
 class CThrowBuff : public CBuffSkill
 {
 public:
@@ -783,3 +762,40 @@ public:
     int m_iBuffLevel;
 
 };
+
+class CChainBuff : public CBuffSkill
+{
+public:
+    typedef vector<int> VEC_DAMAGED;
+
+public:
+    CChainBuff();
+
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fRange, int iMaxTimes, const CAttackValue& roDamage, CProjectile* pProj);
+    M_CREATE_FUNC_PARAM(CChainBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fRange, int iMaxTimes, const CAttackValue& roDamage, CProjectile* pProj), fDuration, bCanBePlural, iSrcKey, fRange, iMaxTimes, roDamage, pProj);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    M_GET_TYPE_KEY;
+
+    virtual void onBuffAdd();
+    virtual void onBuffDel();
+
+    M_SYNTHESIZE(int, m_iMaxTimes, MaxTimes)
+    M_SYNTHESIZE(int, m_iStartUnit, StartUnit);
+    M_SYNTHESIZE(int, m_iEndUnit, EndUnit);
+
+    CC_PROPERTY(CProjectile*, m_pTemplateProjectile, TemplateProjectile);
+    M_SYNTHESIZE(float, m_fProjectileMoveSpeed, ProjectileMoveSpeed);
+    M_SYNTHESIZE(float, m_fProjectileScale, ProjectileScale);
+    M_SYNTHESIZE(float, m_fProjectileMaxOffsetY, ProjectileMaxOffsetY);
+    M_SYNTHESIZE(float, m_fProjectileBirthOffsetX, ProjectileBirthOffsetX);
+    M_SYNTHESIZE(float, m_fProjectileBirthOffsetY, ProjectileBirthOffsetY);
+    M_SYNTHESIZE(CGameUnit::WEAPON_TYPE, m_eWeaponType, WeaponType);
+
+    static bool checkConditions(CGameUnit* pUnit, CChainBuff* pBuff);
+
+public:
+    float m_fRange;
+    CAttackValue m_oDamage;
+    VEC_DAMAGED m_vecDamaged;
+};
+

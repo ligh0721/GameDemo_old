@@ -320,6 +320,7 @@ bool CCLightning::init( CCAnimation* pAnimation, CCNode* pStartNode, CCNode* pEn
 void CCLightning::startWithTarget( CCNode *pTarget )
 {
     CCAnimate::startWithTarget(pTarget);
+    update(0.0);
 }
 
 void CCLightning::update( float t )

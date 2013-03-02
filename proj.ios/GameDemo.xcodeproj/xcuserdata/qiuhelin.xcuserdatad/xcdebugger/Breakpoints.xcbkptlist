@@ -8,25 +8,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/SkillInfo.cpp"
-         timestampString = "382892773.094248"
+         timestampString = "383888873.337763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "149"
-         endingLineNumber = "149"
+         startingLineNumber = "142"
+         endingLineNumber = "142"
          landmarkName = "COrgSkillInfo::init()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../Classes/Skill.cpp"
-         timestampString = "383054774.317991"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1987"
-         endingLineNumber = "1987"
-         landmarkName = "CChainLightingAct::onSkillCast()"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -77,19 +64,21 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "1912"
-         endingLineNumber = "1912">
+         endingLineNumber = "1912"
+         landmarkName = "CProjectileAct::onSkillCast()"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "383337519.75789"
+         timestampString = "383888873.337763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2013"
-         endingLineNumber = "2013"
-         landmarkName = "CChainLightingBuff::onBuffAdd()"
+         startingLineNumber = "1931"
+         endingLineNumber = "1931"
+         landmarkName = "CChainLightingBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &amp;roDamage, const vector&lt;int&gt;&amp; vecEffectedUnitKey)"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -162,11 +151,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "383763387.272247"
+         timestampString = "383888873.337763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2033"
-         endingLineNumber = "2033"
+         startingLineNumber = "1951"
+         endingLineNumber = "1951"
          landmarkName = "CChainLightingBuff::onBuffAdd()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -188,63 +177,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "383489412.723326"
+         timestampString = "383888873.337763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2014"
-         endingLineNumber = "2014"
-         landmarkName = "CChainLightingBuff::onBuffAdd()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../Classes/Skill.cpp"
-         timestampString = "383489424.794732"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2015"
-         endingLineNumber = "2015"
-         landmarkName = "CChainLightingBuff::onBuffAdd()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../Classes/Skill.cpp"
-         timestampString = "383763387.272247"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2034"
-         endingLineNumber = "2034"
-         landmarkName = "CChainLightingBuff::onBuffAdd()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../Classes/Skill.cpp"
-         timestampString = "383763387.272247"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2062"
-         endingLineNumber = "2062"
-         landmarkName = "CChainLightingBuff::onBuffAdd()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../Classes/Skill.cpp"
-         timestampString = "383490652.533757"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2000"
-         endingLineNumber = "2000"
+         startingLineNumber = "1932"
+         endingLineNumber = "1932"
          landmarkName = "CChainLightingBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &amp;roDamage, const vector&lt;int&gt;&amp; vecEffectedUnitKey)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -253,11 +190,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "383491214.596838"
+         timestampString = "383888873.337763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1999"
-         endingLineNumber = "1999"
+         startingLineNumber = "1933"
+         endingLineNumber = "1933"
          landmarkName = "CChainLightingBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &amp;roDamage, const vector&lt;int&gt;&amp; vecEffectedUnitKey)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -266,24 +203,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "383491219.11239"
+         timestampString = "383888873.337763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2001"
-         endingLineNumber = "2001"
-         landmarkName = "CChainLightingBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &amp;roDamage, const vector&lt;int&gt;&amp; vecEffectedUnitKey)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../Classes/Skill.cpp"
-         timestampString = "383763387.272247"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2043"
-         endingLineNumber = "2043"
+         startingLineNumber = "1952"
+         endingLineNumber = "1952"
          landmarkName = "CChainLightingBuff::onBuffAdd()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -292,11 +216,37 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "383763387.272247"
+         timestampString = "383888873.337763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2050"
-         endingLineNumber = "2050"
+         startingLineNumber = "1980"
+         endingLineNumber = "1980"
+         landmarkName = "CChainLightingBuff::onBuffAdd()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../Classes/Skill.cpp"
+         timestampString = "383888873.337763"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1961"
+         endingLineNumber = "1961"
+         landmarkName = "CChainLightingBuff::onBuffAdd()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../Classes/Skill.cpp"
+         timestampString = "383888873.337763"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1968"
+         endingLineNumber = "1968"
          landmarkName = "CChainLightingBuff::onBuffAdd()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -318,12 +268,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "383763387.272247"
+         timestampString = "383888873.337763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2104"
-         endingLineNumber = "2104"
-         landmarkName = "CChainLightingBuff::turnNext(CCObject* pObj)"
+         startingLineNumber = "2022"
+         endingLineNumber = "2022"
+         landmarkName = "CChainLightingBuff::onBuffAdd()"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -331,11 +281,13 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "383847315.191888"
+         timestampString = "383888873.337763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2126"
-         endingLineNumber = "2126">
+         startingLineNumber = "2044"
+         endingLineNumber = "2044"
+         landmarkName = "CChainLightingBuff::turnNext(CCObject* pObj)"
+         landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

@@ -10,7 +10,8 @@ public:
         kBall2,
         kBall3,
         kLightning1,
-        kLightning2
+        kLightning2,
+        kLightning3
     };
 
     enum UNITINFO_INDEX
@@ -22,7 +23,9 @@ public:
         kArcane,
         //kBertha,
         kTesla,
-        kVeznan
+        kVeznan,
+        kMatchstick,
+        kKurokisi
     };
 
 public:

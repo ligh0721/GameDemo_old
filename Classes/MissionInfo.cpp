@@ -359,8 +359,7 @@ CGameMission* CDemoMission::mission01()
         kMalik,
         kPaladin,
         kMagnus,
-        kJt,
-        kVeznan
+        kMatchstick
     };
 
     CUnitPath* pPath;
@@ -379,20 +378,20 @@ CGameMission* CDemoMission::mission01()
         pPath = CUnitPath::createWithFile(sz);
         aiPath[i] = oMission.addPath(pPath);
     }
-
+    /*
     iRound = oMission.addNewRound();
     oRush.init(aiPath[rand() % CONST_MAX_PATH]);
-    oRush.addUnit(kMalik, 1, 0);
-    oRush.addUnit(kMalik, 3, 5);
+    oRush.addUnit(kMatchstick, 1, 0);
+    oRush.addUnit(kMatchstick, 3, 5);
     oMission.addRush(iRound, oRush);
-
+    */
     // add a rush
     for (int i = 1; i < 30; ++i)
     {
         iRound = oMission.addNewRound();
         oRush.init(aiPath[rand() % CONST_MAX_PATH]);
-        oRush.addUnit(kMalik, 1, 10);
-        oRush.addUnit(kMalik, 10, 2);
+        oRush.addUnit(kMatchstick, 1, 0);
+        oRush.addUnit(kMatchstick, 10, 2);
         oMission.addRush(iRound, oRush);
 
         oRush.init(aiPath[rand() % CONST_MAX_PATH]);
@@ -408,8 +407,8 @@ CGameMission* CDemoMission::mission01()
 
     iRound = oMission.addNewRound();
     oRush.init(aiPath[rand() % CONST_MAX_PATH]);
-    oRush.addUnit(kMalik, 1, 10);
-    oRush.addUnit(kMalik, 2, 5);
+    oRush.addUnit(kMatchstick, 1, 10);
+    oRush.addUnit(kMatchstick, 2, 5);
     oMission.addRush(iRound, oRush);
     
     return &oMission;

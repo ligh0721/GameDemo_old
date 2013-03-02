@@ -97,7 +97,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kVamprie2].sName = "Œ¸—™";
     m_mapSkills[kVamprie2].sDesc = "∂‘ƒø±Í‘Ï≥……À∫¶µƒ50%”√¿¥ª÷∏¥◊‘…Ì";
 
-    pSkill = CDoubleAttackPas::create(30);
+    pSkill = CDoubleAttackPas::create(80);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kDoubleAttack1].iIndex = iKey;
     m_mapSkills[kDoubleAttack1].sName = "¡¨ª˜";
@@ -135,11 +135,14 @@ bool COrgSkillInfo::init()
 
     pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
     iKey = pSm->addSkill(pSkill);
-
+    
+    
+    // for test
+    //pSkill = CHarmShieldBuff::create(2, false, CExtraCoeff(0, 0), true);
+    //iKey = pSm->addSkill(pSkill);
 
 	pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
-
     m_mapSkills[kThrowHit1].iIndex = iKey;
     m_mapSkills[kThrowHit1].sName = "ª˜∑…";
     m_mapSkills[kThrowHit1].sDesc = "75%µƒ∏≈¬ Ω´ƒø±Íª˜∑…÷¡150∑∂Œßƒ⁄µƒ“ªµ„£¨¬‰µÿ∫Û∂‘÷‹Œß50∞Îæ∂∑∂Œßƒ⁄µ•Œª‘Ï≥…50µ„…À∫¶≤¢—£‘Œ2√Î£¨±ª◊π¬‰µ•ŒªªπΩ´ ‹µΩ50µ„∂ÓÕ‚…À∫¶";
@@ -158,25 +161,30 @@ bool COrgSkillInfo::init()
     pSkill = CSpeedBuff::create(7, true, CExtraCoeff(1.0, 0), CExtraCoeff(1.0, 0));
     iKey = pSm->addSkill(pSkill);
 
+    // for test
+    pSkill = CHarmShieldBuff::create(5, false, CExtraCoeff(0, 0), true);
+    iKey = pSm->addSkill(pSkill);
+
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSpeedUp1].iIndex = iKey;
     m_mapSkills[kSpeedUp1].sName = "º”ÀŸ";
     m_mapSkills[kSpeedUp1].sDesc = "Ã·∏ﬂ◊‘…Ì100%µƒ“∆∂ØÀŸ∂»∫Õ100%µƒπ•ª˜ÀŸ∂»";
 
-    pSkill = CProjectileAct::create(5.0, 150, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning2), 0, 1);
-    dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CActiveSkill::kWTInstant);
+    pSkill = CChainBuff::create(0.5, false, 0, 300, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3));
+    dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
+    //pSkill = CChainBuff::create(0.5, false, 0, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kBall2));
+    //dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
+    iKey = pSm->addSkill(pSkill);
+    
+    pSkill = CProjectileAct::create(1.0, 1500, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3), iKey, 1);
+    dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderAttack1].iIndex = iKey;
     m_mapSkills[kThunderAttack1].sName = "¿◊ˆ™“ªª˜";
     m_mapSkills[kThunderAttack1].sDesc = "√Õ¡“¥∏ª˜µÿ√Ê£¨œÚƒø±Í…‰≥ˆ“ªµ¿µÁπ‚£¨Ω´‘Ï≥…50µ„ƒß∑®…À∫¶";
     
-   // pSkill = CChainLightingAct::create(1, 600, 400, 8, CAttackValue(1, CAttackValue::kMagical, 80.0));
-    //dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CActiveSkill::kWTInstant);
-    //iKey = pSm->addSkill(pSkill);
-   // m_mapSkills[kChainLighting1].iIndex = iKey;
-   // m_mapSkills[kChainLighting1].sName = "¿◊ˆ™“ªª˜";
-    //m_mapSkills[kChainLighting1].sDesc = "√Õ¡“¥∏ª˜µÿ√Ê£¨œÚƒø±Í…‰≥ˆ“ªµ¿µÁπ‚£¨Ω´‘Ï≥…50µ„ƒß∑®…À∫¶";
+
     vector<int> vecUnitKey;
     pSkill = CChainLightingBuff::create(5, false, 152, 600, 400, 8, CAttackValue(1, CAttackValue::kMagical, 80.0), vecUnitKey);
     iKey = pSm->addSkill(pSkill);

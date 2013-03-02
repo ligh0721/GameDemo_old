@@ -39,6 +39,8 @@ CCWHomeSceneLayer::CCWHomeSceneLayer()
 bool CCWHomeSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
+
+    //setUnitTickInterval(1.0 / 60);
     M_DEF_GM(pGm);
     M_DEF_OS(pOs);
 
@@ -47,7 +49,8 @@ bool CCWHomeSceneLayer::init()
     pFc->addSpriteFramesWithFile("background.plist");
     pFc->addSpriteFramesWithFile("UI.plist");
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("skill.plist");
-    setBackGroundSprite(CCSprite::create("levels/level01/LevelHD.png"));
+    //setBackGroundSprite(CCSprite::create("levels/level01/LevelHD.png"));
+    setBackGroundSprite(CCSprite::create("LevelDemo2HD.png"));
     setBufferEffectParam(0.9, 10, 0.1);
     m_oMenu.init();
     addChild(&m_oMenu);
@@ -196,8 +199,7 @@ void CCWHomeSceneLayer::onTick( float fDt )
         kMalik,
         kPaladin,
         kMagnus,
-        kJt,
-        kVeznan
+        kMatchstick
     };
     M_DEF_GM(pGm);
     pGm->cmdRecv(0);
@@ -397,8 +399,6 @@ CGameUnit* CCWHomeSceneLayer::getHeroUnit()
     CGameUnit* pU = getUnitByKey(m_iHero);
     if (!pU)
     {
-        M_DEF_UPM(pUpm);
-        //pU = pUpm->unitByIndex(0);
         pU = m_oUipm.unitByIndex(0);
         m_iHero = pU->getKey();
     }
