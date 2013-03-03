@@ -1942,7 +1942,7 @@ void CThunderBoltBuff::onThunderBolt()
         unitPos = pUnit->getPosition();
         CCPoint subPoint=ccpSub(damagePos,unitPos);
         float dis=sqrtf(subPoint.x*subPoint.x+subPoint.y*subPoint.y);
-        if (dis<200&&pUnit->getKey()!=pO->getKey())
+        if (dis<200&&pUnit->getKey()!=pO->getKey()&&pUnit->isEnemyOf(pO))
         {
             pUnit->setHp(pUnit->getHp()-100);
         }
