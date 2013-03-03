@@ -97,7 +97,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kVamprie2].sName = "吸血";
     m_mapSkills[kVamprie2].sDesc = "对目标造成伤害的50%用来恢复自身";
 
-    pSkill = CDoubleAttackPas::create(30);
+    pSkill = CDoubleAttackPas::create(80);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kDoubleAttack1].iIndex = iKey;
     m_mapSkills[kDoubleAttack1].sName = "连击";
@@ -157,12 +157,12 @@ bool COrgSkillInfo::init()
     iKey = pSm->addSkill(pSkill);
 
     //盾
-    pSkill = CHarmShieldBuff::create(5,false,CExtraCoeff(1,1),true);
-    iKey = pSm->addSkill(pSkill);
+//    pSkill = CHarmShieldBuff::create(5,false,CExtraCoeff(1,1),true);
+ //   iKey = pSm->addSkill(pSkill);
 
     // for test
-    pSkill = CHarmShieldBuff::create(2, false, CExtraCoeff(0, 0), true);
-    iKey = pSm->addSkill(pSkill);
+//    pSkill = CHarmShieldBuff::create(5, false, CExtraCoeff(0, 0), true);
+//    iKey = pSm->addSkill(pSkill);
 
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
     iKey = pSm->addSkill(pSkill);
@@ -171,8 +171,14 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSpeedUp1].sName = "加速";
     m_mapSkills[kSpeedUp1].sDesc = "提高自身100%的移动速度和100%的攻击速度";
 
-    pSkill = CProjectileAct::create(5.0, 150, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning2), 0, 1);
-    dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CActiveSkill::kWTInstant);
+    pSkill = CChainBuff::create(0.5, false, 0, 300, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3));
+    dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
+    //pSkill = CChainBuff::create(0.5, false, 0, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kBall2));
+    //dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
+    iKey = pSm->addSkill(pSkill);
+    
+    pSkill = CProjectileAct::create(1.0, 1500, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3), iKey, 1);
+    dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderAttack1].iIndex = iKey;
     m_mapSkills[kThunderAttack1].sName = "雷霆一击";

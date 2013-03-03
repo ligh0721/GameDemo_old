@@ -1,10 +1,10 @@
-﻿生成启动时间为 2013/2/22 20:54:01。
+﻿生成启动时间为 2013/3/3 22:15:35。
      1>项目“D:\cocos2d-2.0-x-2.0.4\GameDemo\proj.win32\GameDemo.vcxproj”在节点 2 上(build 个目标)。
      1>InitializeBuildStatus:
          正在创建“Debug.win32\GameDemo.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
        ClCompile:
-         D:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I. /I..\Classes /I..\..\cocos2dx /I..\..\cocos2dx\include /I..\..\cocos2dx\kazmath\include /I..\..\cocos2dx\platform\win32 /I..\..\cocos2dx\platform\third_party\win32 /I..\..\cocos2dx\platform\third_party\win32\OGLES /I..\..\ /I..\..\CocosDenshion\Include /I..\..\external\chipmunk\include /I..\..\extensions /I..\..\cocos2dx\platform\third_party\win32\iconv /I..\..\cocos2dx\platform\third_party\win32\libxml2 /I..\..\external /Zi /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _WINDOWS /D STRICT /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS_DEBUG /D COCOS2D_DEBUG=1 /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug.win32\\" /Fd"Debug.win32\vc100.pdb" /Gd /TP /wd4305 /wd4267 /wd4251 /wd4244 /analyze- /errorReport:prompt ..\Classes\SkillInfo.cpp
-         SkillInfo.cpp
+         D:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I. /I..\Classes /I..\..\cocos2dx /I..\..\cocos2dx\include /I..\..\cocos2dx\kazmath\include /I..\..\cocos2dx\platform\win32 /I..\..\cocos2dx\platform\third_party\win32 /I..\..\cocos2dx\platform\third_party\win32\OGLES /I..\..\ /I..\..\CocosDenshion\Include /I..\..\external\chipmunk\include /I..\..\extensions /I..\..\cocos2dx\platform\third_party\win32\iconv /I..\..\cocos2dx\platform\third_party\win32\libxml2 /I..\..\external /Zi /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _WINDOWS /D STRICT /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS_DEBUG /D COCOS2D_DEBUG=1 /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug.win32\\" /Fd"Debug.win32\vc100.pdb" /Gd /TP /wd4305 /wd4267 /wd4251 /wd4244 /analyze- /errorReport:prompt ..\Classes\Skill.cpp
+         Skill.cpp
        ResourceCompile:
          所有输出均为最新。
        ManifestResourceCompile:
@@ -65,4 +65,4 @@
 
 生成成功。
 
-已用时间 00:00:03.32
+已用时间 00:00:03.46

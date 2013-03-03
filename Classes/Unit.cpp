@@ -1947,6 +1947,7 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
             pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
             pProj->setAttackData(pAtk);
             pProj->setOwner(getKey());
+            pProj->setStart(getKey());
             pProj->setTarget(getLastAttackTarget());
             pProj->getSprite()->setScale(getProjectileScale());
             pProj->setPosition(pTarget->getPosition());
@@ -1960,6 +1961,7 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
         getUnitLayer()->addProjectile(pProj);
         pProj->setAttackData(pAtk);
         pProj->setOwner(getKey());
+        pProj->setStart(getKey());
         pProj->setTarget(getLastAttackTarget());
         pProj->setBaseMoveSpeed(getProjectileMoveSpeed());
         const CCPoint& roPos1 = pProj->getPosition();
@@ -2214,8 +2216,10 @@ void CGameUnit::onDie()
 
 void CGameUnit::onDamaged( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
+    CUnit::onDamaged(pAttack, pSource, dwTriggerMask);
+
     CGameUnit* pSrc = dynamic_cast<CGameUnit*>(pSource);
-    CCLOG("dis:%.2f %.2f", getDistance(pSrc), getHostilityRange());
+    //CCLOG("dis:%.2f %.2f", getDistance(pSrc), getHostilityRange());
     CGameUnit* pLu;
     if ( pSrc && !isDoingOr(kIntended) && (
         ( isDoingOr(kAttacking) && ( pLu = getUnitLayer()->getUnitByKey(getLastAttackTarget()) ) && getDistance(pLu) > getHostilityRange() ) ||
@@ -2487,7 +2491,7 @@ bool CGameUnit::checkCastDistance( const CCPoint& roPos )
         return true;
     }
 
-    if (pSkill->getWeaponType() == CActiveSkill::kWTClosely && abs(roPos.y - roPos2.y) > CONST_MAX_CLOSE_ATTACK_Y_RANGE)
+    if (pSkill->getWeaponType() == CGameUnit::kWTClosely && abs(roPos.y - roPos2.y) > CONST_MAX_CLOSE_ATTACK_Y_RANGE)
     {
         return false;
     }
@@ -2520,7 +2524,7 @@ void CGameUnit::moveToCastPosition()
     UNIT_MOVE_PARAMS oMp;
     oMp.bIntended = false;
     oMp.bCancelCast = false;
-    if (pSkill->getWeaponType() == CActiveSkill::kWTClosely)
+    if (pSkill->getWeaponType() == CGameUnit::kWTClosely)
     {
         // 近战攻击位置修正
         moveTo(ccp(roPos2.x + ((roPos1.x > roPos2.x) ? fDis : -fDis), roPos2.y), oMp);
@@ -2548,6 +2552,7 @@ bool CProjectile::init()
 {
     m_pAttackData = NULL;
     setOwner(0);
+    setStart(0);
     m_iTarget = 0;
     setOffsetZ(0);
     setGeneration(0);
@@ -2559,6 +2564,7 @@ bool CProjectile::initWithName( const char* pProjectile, const CCPoint& roAnchor
 {
     m_pAttackData = NULL;
     setOwner(0);
+    setStart(0);
     m_iTarget = 0;
     setOffsetZ(0);
     setGeneration(0);
@@ -2593,6 +2599,7 @@ void CProjectile::onDie()
     CCAction* pAct;
     CGameUnit* pTarget = getUnitLayer()->getUnitByKey(getTarget());
     CGameUnit* pOwner = getUnitLayer()->getUnitByKey(getOwner());
+    CGameUnit* pStart = getUnitLayer()->getUnitByKey(getStart());
 
     if (pTarget && pOwner)
     {
@@ -2607,11 +2614,9 @@ void CProjectile::onDie()
         break;
 
     case kLightning:
-
         pAni = pGm->getUnitAnimation(getName(), m_astAniInfo[kAnimationDie].sAnimation.c_str());
         pAni->setDelayPerUnit(m_astAniInfo[kAnimationDie].fDelay);
-        //pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pOwner->getSprite(), pTarget->getSprite(), pOwner->getProjectileBirthOffsetX(), pOwner->getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
-        pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pOwner->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
+        pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pStart->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
         pAct->setTag(kActDie);
         m_oSprite.runAction(pAct);
         break;
@@ -3052,6 +3057,13 @@ void CCUnitLayer::onTickEvent( float fDt )
     CCARRAY_FOREACH(pArrUnit, pObj)
     {
         pUnit = dynamic_cast<CGameUnit*>(pObj);
+
+        //assert(pUnit!=NULL,"should not be NULL");
+        if (pUnit == NULL)
+        {
+            break;
+        }
+
         pUnit->onTick(fDt);
     }
     clearUnitDustbin();

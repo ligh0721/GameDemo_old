@@ -378,19 +378,19 @@ CGameMission* CDemoMission::mission01()
         pPath = CUnitPath::createWithFile(sz);
         aiPath[i] = oMission.addPath(pPath);
     }
-
+    /*
     iRound = oMission.addNewRound();
     oRush.init(aiPath[rand() % CONST_MAX_PATH]);
     oRush.addUnit(kMatchstick, 1, 0);
     oRush.addUnit(kMatchstick, 3, 5);
     oMission.addRush(iRound, oRush);
-
+    */
     // add a rush
     for (int i = 1; i < 30; ++i)
     {
         iRound = oMission.addNewRound();
         oRush.init(aiPath[rand() % CONST_MAX_PATH]);
-        oRush.addUnit(kMatchstick, 1, 10);
+        oRush.addUnit(kMatchstick, 1, 0);
         oRush.addUnit(kMatchstick, 10, 2);
         oMission.addRush(iRound, oRush);
 

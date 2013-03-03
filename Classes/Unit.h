@@ -729,6 +729,7 @@ public:
     virtual void setTarget(CGameUnit* pTarget);
     virtual int getTarget() const;
     M_SYNTHESIZE(int, m_iOwner, Owner);
+    M_SYNTHESIZE(int, m_iStart, Start);
     M_SYNTHESIZE(PROJECTILE_TYPE, m_eProjectileType, ProjectileType);
     
 
