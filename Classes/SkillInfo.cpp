@@ -31,20 +31,20 @@ bool COrgSkillInfo::init()
     pSkill = CAttackBuffMakerPas::create(100, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSlowDown1].iIndex = iKey;
-    m_mapSkills[kSlowDown1].sName = "å‡é€Ÿ";
-    m_mapSkills[kSlowDown1].sDesc = "é™ä½ç›®æ ‡50%çš„ç§»åŠ¨é€Ÿåº¦å’Œ50%çš„æ”»å‡»é€Ÿåº¦";
+    m_mapSkills[kSlowDown1].sName = "¼õËÙ";
+    m_mapSkills[kSlowDown1].sDesc = "½µµÍÄ¿±ê50%µÄÒÆ¶¯ËÙ¶ÈºÍ50%µÄ¹¥»÷ËÙ¶È";
     
     pSkill = CHpChangePas::create(0.1, 0.2, true, -1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kHpChange1].iIndex = iKey;
-    m_mapSkills[kHpChange1].sName = "è‡ªåŠ¨ç—Šæ„ˆ";
-    m_mapSkills[kHpChange1].sDesc = "æ¯ç§’æ¢å¤è‡ªèº«æœ€å¤§ç”Ÿå‘½çš„2%";
+    m_mapSkills[kHpChange1].sName = "×Ô¶¯È¬Óú";
+    m_mapSkills[kHpChange1].sDesc = "Ã¿Ãë»Ö¸´×ÔÉí×î´óÉúÃüµÄ2%";
     
     pSkill = CHpChangePas::create(0.1, 0.02, true, -1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kHpChange2].iIndex = iKey;
-    m_mapSkills[kHpChange2].sName = "è‡ªåŠ¨ç—Šæ„ˆ";
-    m_mapSkills[kHpChange2].sDesc = "æ¯ç§’æ¢å¤è‡ªèº«æœ€å¤§ç”Ÿå‘½çš„0.2%";
+    m_mapSkills[kHpChange2].sName = "×Ô¶¯È¬Óú";
+    m_mapSkills[kHpChange2].sDesc = "Ã¿Ãë»Ö¸´×ÔÉí×î´óÉúÃüµÄ0.2%";
     
     pSkill = CHpChangeBuff::create(3, false, 0.1, 0.5, true, -1);
     iKey = pSm->addSkill(pSkill);
@@ -52,8 +52,8 @@ bool COrgSkillInfo::init()
     pSkill = CAuraPas::create(150, CAuraPas::kOwn | CAuraPas::kAlly, 0.5, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kHpChangeAura1].iIndex = iKey;
-    m_mapSkills[kHpChangeAura1].sName = "æ¢å¤å…‰ç¯";
-    m_mapSkills[kHpChangeAura1].sDesc = "ä¸ºå‘¨å›´åŠå¾„150èŒƒå›´å†…çš„å‹æ–¹å•ä½(ä¸å«è‡ªèº«)æä¾›æ¯ç§’5%çš„æœ€å¤§ç”Ÿå‘½å€¼æ¢å¤";
+    m_mapSkills[kHpChangeAura1].sName = "»Ö¸´¹â»·";
+    m_mapSkills[kHpChangeAura1].sDesc = "ÎªÖÜÎ§°ë¾¶150·¶Î§ÄÚµÄÓÑ·½µ¥Î»(²»º¬×ÔÉí)Ìá¹©Ã¿Ãë5%µÄ×î´óÉúÃüÖµ»Ö¸´";
     
     pSkill = CSpeedBuff::create(1, false, CExtraCoeff(0.5, 0), CExtraCoeff(0.5, 0));
     iKey = pSm->addSkill(pSkill);
@@ -61,8 +61,8 @@ bool COrgSkillInfo::init()
     pSkill = CAuraPas::create(150, CAuraPas::kOwn | CAuraPas::kAlly, 0.5, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSpeedAura1].iIndex = iKey;
-    m_mapSkills[kSpeedAura1].sName = "æŒ¯å¥‹å…‰ç¯";
-    m_mapSkills[kSpeedAura1].sDesc = "ä¸ºå‘¨å›´åŠå¾„150èŒƒå›´å†…çš„å‹æ–¹å•ä½(ä¸å«è‡ªèº«)æä¾›50%ç§»åŠ¨é€Ÿåº¦å’Œ50%æ”»å‡»é€Ÿåº¦çš„æå‡";
+    m_mapSkills[kSpeedAura1].sName = "Õñ·Ü¹â»·";
+    m_mapSkills[kSpeedAura1].sDesc = "ÎªÖÜÎ§°ë¾¶150·¶Î§ÄÚµÄÓÑ·½µ¥Î»(²»º¬×ÔÉí)Ìá¹©50%ÒÆ¶¯ËÙ¶ÈºÍ50%¹¥»÷ËÙ¶ÈµÄÌáÉı";
     
     pSkill = CHpChangeBuff::create(20, true, 0.1, -0.02, true, -1);
     iKey = pSm->addSkill(pSkill);
@@ -70,44 +70,44 @@ bool COrgSkillInfo::init()
     pSkill = CAuraPas::create(150, CAuraPas::kEnemy, 0.5, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kImmo1].iIndex = iKey;
-    m_mapSkills[kImmo1].sName = "å‡‹é›¶å…‰ç¯";
-    m_mapSkills[kImmo1].sDesc = "å¯¹å‘¨å›´åŠå¾„150èŒƒå›´å†…çš„æ•Œæ–¹å•ä½é€ æˆæœ€å¤§ç”Ÿå‘½0.2%çš„ä¼¤å®³ï¼Œæ•ˆæœæ¯0.5så åŠ ä¸€æ¬¡";
+    m_mapSkills[kImmo1].sName = "µòÁã¹â»·";
+    m_mapSkills[kImmo1].sDesc = "¶ÔÖÜÎ§°ë¾¶150·¶Î§ÄÚµÄµĞ·½µ¥Î»Ôì³É×î´óÉúÃü0.2%µÄÉËº¦£¬Ğ§¹ûÃ¿0.5sµş¼ÓÒ»´Î";
     
     pSkill = CThumpPas::create(20, CExtraCoeff(2, 0), 0);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kCritical1].iIndex = iKey;
-    m_mapSkills[kCritical1].sName = "æš´å‡»";
-    m_mapSkills[kCritical1].sDesc = "æ”»å‡»æ—¶æœ‰20%çš„æ¦‚ç‡é€ æˆ2å€çš„æ”»å‡»æ•ˆæœ";
+    m_mapSkills[kCritical1].sName = "±©»÷";
+    m_mapSkills[kCritical1].sDesc = "¹¥»÷Ê±ÓĞ20%µÄ¸ÅÂÊÔì³É2±¶µÄ¹¥»÷Ğ§¹û";
     
     pSkill = CThumpPas::create(10, CExtraCoeff(5, 0), 0);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kCritical2].iIndex = iKey;
-    m_mapSkills[kCritical2].sName = "æš´å‡»";
-    m_mapSkills[kCritical2].sDesc = "æ”»å‡»æ—¶æœ‰10%çš„æ¦‚ç‡é€ æˆ5å€çš„æ”»å‡»æ•ˆæœ";
+    m_mapSkills[kCritical2].sName = "±©»÷";
+    m_mapSkills[kCritical2].sDesc = "¹¥»÷Ê±ÓĞ10%µÄ¸ÅÂÊÔì³É5±¶µÄ¹¥»÷Ğ§¹û";
     
     pSkill = CVampirePas::create(0.2);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kVamprie1].iIndex = iKey;
-    m_mapSkills[kVamprie1].sName = "å¸è¡€";
-    m_mapSkills[kVamprie1].sDesc = "å¯¹ç›®æ ‡é€ æˆä¼¤å®³çš„20%ç”¨æ¥æ¢å¤è‡ªèº«";
+    m_mapSkills[kVamprie1].sName = "ÎüÑª";
+    m_mapSkills[kVamprie1].sDesc = "¶ÔÄ¿±êÔì³ÉÉËº¦µÄ20%ÓÃÀ´»Ö¸´×ÔÉí";
     
     pSkill = CVampirePas::create(0.5);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kVamprie2].iIndex = iKey;
-    m_mapSkills[kVamprie2].sName = "å¸è¡€";
-    m_mapSkills[kVamprie2].sDesc = "å¯¹ç›®æ ‡é€ æˆä¼¤å®³çš„50%ç”¨æ¥æ¢å¤è‡ªèº«";
+    m_mapSkills[kVamprie2].sName = "ÎüÑª";
+    m_mapSkills[kVamprie2].sDesc = "¶ÔÄ¿±êÔì³ÉÉËº¦µÄ50%ÓÃÀ´»Ö¸´×ÔÉí";
     
     pSkill = CDoubleAttackPas::create(80);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kDoubleAttack1].iIndex = iKey;
-    m_mapSkills[kDoubleAttack1].sName = "è¿å‡»";
-    m_mapSkills[kDoubleAttack1].sDesc = "æ”»å‡»åæœ‰30%çš„æ¦‚ç‡ç«‹å³å‘åŠ¨ç¬¬äºŒæ¬¡æ”»å‡»";
+    m_mapSkills[kDoubleAttack1].sName = "Á¬»÷";
+    m_mapSkills[kDoubleAttack1].sDesc = "¹¥»÷ºóÓĞ30%µÄ¸ÅÂÊÁ¢¼´·¢¶¯µÚ¶ş´Î¹¥»÷";
     
     pSkill = CSplashPas::create(10, CExtraCoeff(0.6, 0), 30, CExtraCoeff(0.30, 0), 100, CExtraCoeff(0.15, 0));
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSplash1].iIndex = iKey;
-    m_mapSkills[kSplash1].sName = "æº…å°„";
-    m_mapSkills[kSplash1].sDesc = "æ”»å‡»å¯¹ç›®æ ‡å‘¨å›´100åŠå¾„çš„æ•Œæ–¹å•ä½åŒæ ·äº§ç”Ÿ15%~60%çš„æº…å°„æ•ˆæœ";
+    m_mapSkills[kSplash1].sName = "½¦Éä";
+    m_mapSkills[kSplash1].sDesc = "¹¥»÷¶ÔÄ¿±êÖÜÎ§100°ë¾¶µÄµĞ·½µ¥Î»Í¬Ñù²úÉú15%~60%µÄ½¦ÉäĞ§¹û";
     
     pSkill = CSpeedBuff::create(5, false, CExtraCoeff(-0.5, 0), CExtraCoeff(-0.5, 0));
     iKey = pSm->addSkill(pSkill);
@@ -115,20 +115,20 @@ bool COrgSkillInfo::init()
     pSkill = CSplashAct::create(8, 20, CAttackValue(1, CAttackValue::kPhysical, 80.0), 50, CAttackValue(1, CAttackValue::kPhysical, 40.0), 150, CAttackValue(1, CAttackValue::kPhysical, 20.0), iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderClap1].iIndex = iKey;
-    m_mapSkills[kThunderClap1].sName = "éœ‡æ’¼å¤§åœ°";
-    m_mapSkills[kThunderClap1].sDesc = "å¯¹åœ°é¢å‘å‡ºå¼ºæœ‰åŠ›çš„ä¸€å‡»ï¼Œå¯¹å‘¨å›´150åŠå¾„çš„æ•Œæ–¹å•ä½åŒæ ·é€ æˆ20~80çš„ç‰©ç†ä¼¤å®³ï¼Œå¹¶ä¸”5ç§’å†…é™ä½ç›®æ ‡50%ç§»åŠ¨é€Ÿåº¦å’Œ50%æ”»å‡»é€Ÿåº¦";
+    m_mapSkills[kThunderClap1].sName = "Õğº³´óµØ";
+    m_mapSkills[kThunderClap1].sDesc = "¶ÔµØÃæ·¢³öÇ¿ÓĞÁ¦µÄÒ»»÷£¬¶ÔÖÜÎ§150°ë¾¶µÄµĞ·½µ¥Î»Í¬ÑùÔì³É20~80µÄÎïÀíÉËº¦£¬²¢ÇÒ5ÃëÄÚ½µµÍÄ¿±ê50%ÒÆ¶¯ËÙ¶ÈºÍ50%¹¥»÷ËÙ¶È";
     
     pSkill = CHpChangePas::create(0.1, 0.05, true, -1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kHpChange3].iIndex = iKey;
-    m_mapSkills[kHpChange3].sName = "è‹±é›„èµ„è´¨";
-    m_mapSkills[kHpChange3].sDesc = "æ¯ç§’æ¢å¤è‡ªèº«æœ€å¤§ç”Ÿå‘½çš„0.5%";
+    m_mapSkills[kHpChange3].sName = "Ó¢ĞÛ×ÊÖÊ";
+    m_mapSkills[kHpChange3].sDesc = "Ã¿Ãë»Ö¸´×ÔÉí×î´óÉúÃüµÄ0.5%";
     
     pSkill = CThumpPas::create(20, CExtraCoeff(1, 10), 2);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThump1].iIndex = iKey;
-    m_mapSkills[kThump1].sName = "é‡å‡»";
-    m_mapSkills[kThump1].sDesc = "æ”»å‡»æ—¶æœ‰20%çš„æ¦‚ç‡å‡»æ™•ç›®æ ‡ï¼Œå¹¶é¢å¤–é€ æˆ10ç‚¹ä¼¤å®³";
+    m_mapSkills[kThump1].sName = "ÖØ»÷";
+    m_mapSkills[kThump1].sDesc = "¹¥»÷Ê±ÓĞ20%µÄ¸ÅÂÊ»÷ÔÎÄ¿±ê£¬²¢¶îÍâÔì³É10µãÉËº¦";
     
     pSkill = CStunBuff::create(2, false);
     iKey = pSm->addSkill(pSkill);
@@ -147,8 +147,8 @@ bool COrgSkillInfo::init()
 	pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThrowHit1].iIndex = iKey;
-    m_mapSkills[kThrowHit1].sName = "å‡»é£";
-    m_mapSkills[kThrowHit1].sDesc = "75%çš„æ¦‚ç‡å°†ç›®æ ‡å‡»é£è‡³150èŒƒå›´å†…çš„ä¸€ç‚¹ï¼Œè½åœ°åå¯¹å‘¨å›´50åŠå¾„èŒƒå›´å†…å•ä½é€ æˆ50ç‚¹ä¼¤å®³å¹¶çœ©æ™•2ç§’ï¼Œè¢«å è½å•ä½è¿˜å°†å—åˆ°50ç‚¹é¢å¤–ä¼¤å®³";
+    m_mapSkills[kThrowHit1].sName = "»÷·É";
+    m_mapSkills[kThrowHit1].sDesc = "75%µÄ¸ÅÂÊ½«Ä¿±ê»÷·ÉÖÁ150·¶Î§ÄÚµÄÒ»µã£¬ÂäµØºó¶ÔÖÜÎ§50°ë¾¶·¶Î§ÄÚµ¥Î»Ôì³É50µãÉËº¦²¢Ñ£ÔÎ2Ãë£¬±»×¹Âäµ¥Î»»¹½«ÊÜµ½50µã¶îÍâÉËº¦";
     
     pSkill = CSpeedBuff::create(7, true, CExtraCoeff(1.0, 0), CExtraCoeff(1.0, 0));
     iKey = pSm->addSkill(pSkill);
@@ -160,8 +160,8 @@ bool COrgSkillInfo::init()
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSpeedUp1].iIndex = iKey;
-    m_mapSkills[kSpeedUp1].sName = "åŠ é€Ÿ";
-    m_mapSkills[kSpeedUp1].sDesc = "æé«˜è‡ªèº«100%çš„ç§»åŠ¨é€Ÿåº¦å’Œ100%çš„æ”»å‡»é€Ÿåº¦";
+    m_mapSkills[kSpeedUp1].sName = "¼ÓËÙ";
+    m_mapSkills[kSpeedUp1].sDesc = "Ìá¸ß×ÔÉí100%µÄÒÆ¶¯ËÙ¶ÈºÍ100%µÄ¹¥»÷ËÙ¶È";
     
     pSkill = CChainBuff::create(0.5, false, 0, 300, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3));
     dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
@@ -173,10 +173,27 @@ bool COrgSkillInfo::init()
     dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderAttack1].iIndex = iKey;
-    m_mapSkills[kThunderAttack1].sName = "é›·éœ†ä¸€å‡»";
-    m_mapSkills[kThunderAttack1].sDesc = "çŒ›çƒˆé”¤å‡»åœ°é¢ï¼Œå‘ç›®æ ‡å°„å‡ºä¸€é“ç”µå…‰ï¼Œå°†é€ æˆ50ç‚¹é­”æ³•ä¼¤å®³";
+    m_mapSkills[kThunderAttack1].sName = "À×öªÒ»»÷";
+    m_mapSkills[kThunderAttack1].sDesc = "ÃÍÁÒ´¸»÷µØÃæ£¬ÏòÄ¿±êÉä³öÒ»µÀµç¹â£¬½«Ôì³É50µãÄ§·¨ÉËº¦";
     
-    
+    vector<int> vecUnitKey;
+    pSkill = CChainLightingBuff::create(5, false, 152, 600, 400, 8, CAttackValue(1, CAttackValue::kMagical, 80.0), vecUnitKey);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kChainLighting1].iIndex = iKey;
+    m_mapSkills[kChainLighting1].sName = "ÉÁµçÁ´";
+    m_mapSkills[kChainLighting1].sDesc = "Ê¹·¶Î§ÄÚµÄ±øÊÜµ½ÉÁµç";
+
+    pSkill = CSwordStormSkill::create(100, 3.0, 100, CAttackValue(1, CAttackValue::kMagical, 50.0), CExtraCoeff(0.30, 0), "act4");
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kSwordStorm1].iIndex = iKey;
+    m_mapSkills[kSwordStorm1].sName = "½£ÈĞ·ç±©";
+    m_mapSkills[kSwordStorm1].sDesc = "Ğı×ªÈç·ç±©Ê¹Ò»¶¨·¶Î§ÄÚµÄµĞÈË³ÖĞøµôÑª";
+
+    pSkill = CJumpChopSkill::create(100, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), "act5");
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kJumpChop1].iIndex = iKey;
+    m_mapSkills[kJumpChop1].sName = "ÌøÅü";
+    m_mapSkills[kJumpChop1].sDesc = "Ô¾Æğ¸øµĞÈËÖØÖØ´ò»÷";
     
     return true;
 }

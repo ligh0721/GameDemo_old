@@ -2036,7 +2036,7 @@ void CChainLightingBuff::onBuffDel()
 void CChainLightingBuff::turnNext(CCObject* pObj)
 {
     CChainLightingBuff* pSkillBuff = dynamic_cast<CChainLightingBuff*>(this->copy());
-    if (m_vecEffectedUnitKey.size() > m_iMaxJumpCount + 1)
+    if ((int)m_vecEffectedUnitKey.size() > m_iMaxJumpCount + 1)
     {
         return;
         
@@ -2102,7 +2102,7 @@ void CSwordStormSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
     pAnim->setDelayPerUnit(getDelayPerUnit());
     pAnim->setLoops(getCountAnimLoop());
     CCAnimate* pActAni = CCAnimate::create(pAnim);    
-    pOwn->getSprite()->runAction(CCRepeat::create(CCSequence::create(pActAni, CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pOwn)), round(m_fDuration/(getDelayPerUnit()*getCountAnimLoop()))));
+    pOwn->getSprite()->runAction(CCRepeat::create(CCSequence::create(pActAni, CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pOwn), NULL), m_fDuration/(getDelayPerUnit()*getCountAnimLoop())));
     
 }
 
@@ -2123,7 +2123,7 @@ void CSwordStormSkill::onActEndPerAnim(CCObject* pObj)
         if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
             && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
         {
-            //ç»™èŒƒå›´å†…çš„æ•Œäººå—åˆ°æŒç»­ä¼¤å®³
+            //¸ø·¶Î§ÄÚµÄµÐÈËÊÜµ½³ÖÐøÉËº¦
             CAttackData* pAttack = CAttackData::create();
             pAttack->setAttack(m_oMaxDamage);
             pUnit->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
@@ -2356,8 +2356,8 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
         m_pLastTargetUnit->damagedAdv(pAttackData, pU, dwTriggerMask);
         
     }
-    if (m_iMaxJumpCount + 2 <= m_vecEffectedUnitKey.size()
-        || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= m_vecEffectedUnitKey.size())
+    if (m_iMaxJumpCount + 2 <= (int)m_vecEffectedUnitKey.size()
+        || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= (int)m_vecEffectedUnitKey.size())
     {
         return;
     }

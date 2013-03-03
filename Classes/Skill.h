@@ -49,7 +49,7 @@ public:
     string m_sBtnImg;
 };
 
-// æŠ€èƒ½ï¼ŒåŒ…å«äº†ä¸€äº›æŠ€èƒ½åè®®çš„çº¦å®š
+// ¼¼ÄÜ£¬°üº¬ÁËÒ»Ğ©¼¼ÄÜĞ­ÒéµÄÔ¼¶¨
 class CSkill : public CCObject, public CLevelExp
 {
     friend class CUnit;
@@ -61,20 +61,20 @@ public:
     //CREATE_FUNC(CSkill);
     virtual bool init();
     
-    // æŠ€èƒ½æ·±æ‹·è´ï¼Œæ¯ä¸ªæ´¾ç”Ÿçš„æ–°æŠ€èƒ½éƒ½å¿…é¡»è¦†ç›–è¯¥å‡½æ•°ï¼Œä»¥ä¾¿äºæŠ€èƒ½æŒ‰ç…§æ¨¡æ¿æŠ€èƒ½å¤åˆ¶æ–°å¯¹è±¡
+    // ¼¼ÄÜÉî¿½±´£¬Ã¿¸öÅÉÉúµÄĞÂ¼¼ÄÜ¶¼±ØĞë¸²¸Ç¸Ãº¯Êı£¬ÒÔ±ãÓÚ¼¼ÄÜ°´ÕÕÄ£°å¼¼ÄÜ¸´ÖÆĞÂ¶ÔÏó
     // have to @override
     virtual CCObject* copyWithZone(CCZone* pZone) = 0;
     
-    // æŠ€èƒ½è¢«æ·»åŠ /åˆ é™¤æ—¶è§¦å‘
-    // å¿…é¡»è¦†ç›–ï¼Œä¸”è¦†ç›–åå¿…é¡»å†è°ƒç”¨çˆ¶ç±»å‡½æ•°ï¼Œåœ¨å…¶ä¸­è¿›è¡Œæ³¨å†Œ/æ³¨é”€è§¦å‘å™¨çš„æ“ä½œ
+    // ¼¼ÄÜ±»Ìí¼Ó/É¾³ıÊ±´¥·¢
+    // ±ØĞë¸²¸Ç£¬ÇÒ¸²¸Çºó±ØĞëÔÙµ÷ÓÃ¸¸Ààº¯Êı£¬ÔÚÆäÖĞ½øĞĞ×¢²á/×¢Ïú´¥·¢Æ÷µÄ²Ù×÷
     virtual void onSkillAdd(); // have to @override
     virtual void onSkillDel(); // have to @override
     
-    // æŠ€èƒ½å‡†å¤‡å°±ç»ª(CD)åè§¦å‘
+    // ¼¼ÄÜ×¼±¸¾ÍĞ÷(CD)ºó´¥·¢
     virtual void onSkillReady(); // @override
     
 protected:
-    // æŠ€èƒ½æŒæœ‰è€…äº‹ä»¶å“åº”ï¼Œåªè¦†è¢«æ³¨å†Œçš„è§¦å‘å™¨ç›¸åº”çš„äº‹ä»¶å‡½æ•°å³å¯
+    // ¼¼ÄÜ³ÖÓĞÕßÊÂ¼şÏìÓ¦£¬Ö»¸²±»×¢²áµÄ´¥·¢Æ÷ÏàÓ¦µÄÊÂ¼şº¯Êı¼´¿É
     // @override
     virtual void onUnitAttackTarget(CAttackData* pAttack, CUnit* pTarget);
     virtual CAttackData* onUnitAttacked(CAttackData* pAttack, CUnit* pSource);
@@ -86,7 +86,7 @@ protected:
     virtual void onUnitTick(float fDt);
     virtual void onUnitDestroyProjectile(CCProjectileWithAttackData* pProjectile);
     
-    // æ³¨å†Œè§¦å‘å™¨ï¼Œé€šå¸¸åœ¨ onSkillAdd ä¸­è¢«è°ƒç”¨
+    // ×¢²á´¥·¢Æ÷£¬Í¨³£ÔÚ onSkillAdd ÖĞ±»µ÷ÓÃ
     void registerOnAttackTargetTrigger();
     void registerOnAttackedTrigger();
     void registerOnDamagedSurfaceTrigger();
@@ -98,7 +98,7 @@ protected:
     void registerOnTickTrigger();
     void registerOnDestroyProjectileTrigger();
     
-    // æ³¨é”€è§¦å‘å™¨ï¼Œé€šå¸¸åœ¨ onSkillDel ä¸­è¢«è°ƒç”¨
+    // ×¢Ïú´¥·¢Æ÷£¬Í¨³£ÔÚ onSkillDel ÖĞ±»µ÷ÓÃ
     void unregisterOnAttackTargetTrigger();
     void unregisterOnAttackedTrigger();
     void unregisterOnDamagedSurfaceTrigger();
@@ -110,7 +110,7 @@ protected:
     void unregisterOnTickTrigger();
     void unregisterOnDestroyProjectileTrigger();
     
-    // å»¶è¿Ÿæ³¨é”€è§¦å‘å™¨ï¼Œé€šå¸¸åœ¨å…·å¤‡ä¸€å®šæŒç»­æ—¶é—´çš„BUFFç±»æŠ€èƒ½çš„ onSkillDel ä¸­è¢«è°ƒç”¨
+    // ÑÓ³Ù×¢Ïú´¥·¢Æ÷£¬Í¨³£ÔÚ¾ß±¸Ò»¶¨³ÖĞøÊ±¼äµÄBUFFÀà¼¼ÄÜµÄ onSkillDel ÖĞ±»µ÷ÓÃ
     void unregisterOnTickTriggerLater();
     
     
@@ -119,7 +119,7 @@ public:
     //virtual const char* getName();
     virtual int getKey() const;
     
-    // è·å–æŠ€èƒ½æŒæœ‰è€…
+    // »ñÈ¡¼¼ÄÜ³ÖÓĞÕß
     virtual CUnit* getOwner() const;
     
     
@@ -137,7 +137,7 @@ protected:
     std::string m_sName;
 };
 
-// å…·å¤‡ç­‰çº§çš„æŠ€èƒ½ï¼Œä¸ºæŠ€èƒ½ç­‰çº§å‡çº§å¢åŠ é™åˆ¶å‚æ•°
+// ¾ß±¸µÈ¼¶µÄ¼¼ÄÜ£¬Îª¼¼ÄÜµÈ¼¶Éı¼¶Ôö¼ÓÏŞÖÆ²ÎÊı
 class CLevelLimitSkill : public CSkill
 {
 public:
@@ -152,7 +152,7 @@ public:
     M_SYNTHESIZE_READONLY(uint32_t, m_dwLvlStp, LevelStep);
 };
 
-// ä¸»åŠ¨æŠ€èƒ½ï¼Œè§¦å‘æ—¶æœºç”±æŒæœ‰è€…è‡ªèº«æ§åˆ¶ï¼Œå¹¶å¸¦æœ‰CoolDownæ€§è´¨
+// Ö÷¶¯¼¼ÄÜ£¬´¥·¢Ê±»úÓÉ³ÖÓĞÕß×ÔÉí¿ØÖÆ£¬²¢´øÓĞCoolDownĞÔÖÊ
 class CActiveSkill : public CLevelLimitSkill
 {
 public:
@@ -182,7 +182,7 @@ public:
     virtual bool isCoolingDown() const;
     virtual void resetCD();
     
-    // å½“æŠ€èƒ½å¼€å§‹é‡Šæ”¾æ—¶è§¦å‘
+    // µ±¼¼ÄÜ¿ªÊ¼ÊÍ·ÅÊ±´¥·¢
     // @override
     virtual void onSkillCast();
     
@@ -203,7 +203,7 @@ public:
     float m_fCastEffectDelay;
 };
 
-// è¢«åŠ¨æŠ€èƒ½ï¼Œè§¦å‘æ—¶æœºç”±è¢«åŠ¨æŠ€èƒ½æ‰€æ³¨å†Œçš„è§¦å‘å™¨æ‰€å†³å®š
+// ±»¶¯¼¼ÄÜ£¬´¥·¢Ê±»úÓÉ±»¶¯¼¼ÄÜËù×¢²áµÄ´¥·¢Æ÷Ëù¾ö¶¨
 class CPassiveSkill : public CLevelLimitSkill
 {
 public:
@@ -213,7 +213,7 @@ public:
     virtual bool init();
 };
 
-// BUFFï¼Œç±»ä¼¼äºè¢«åŠ¨æŠ€èƒ½ï¼Œé€šå¸¸ç”±å¤–éƒ¨é™„åŠ ç»™å•ä½
+// BUFF£¬ÀàËÆÓÚ±»¶¯¼¼ÄÜ£¬Í¨³£ÓÉÍâ²¿¸½¼Ó¸øµ¥Î»
 class CBuffSkill : public CPassiveSkill
 {
     friend class CUnit;
@@ -225,33 +225,33 @@ public:
     //M_CREATE_FUNC_PARAM(CBuffSkill, (float fDuration, bool bCanBePlural), fDuration, bCanBePlural);
     M_GET_TYPE_KEY;
     
-    void timeStep(float dt); // æ—¶é—´æ­¥å¢ï¼Œåœ¨ onUnitTick ä¸­é¦–éƒ¨è°ƒç”¨
-    void delBuffIfTimeout(); // BUFFåˆ¤æ–­åˆ é™¤ï¼Œåœ¨ onUnitTick ä¸­å°¾éƒ¨è°ƒç”¨
+    void timeStep(float dt); // Ê±¼ä²½Ôö£¬ÔÚ onUnitTick ÖĞÊ×²¿µ÷ÓÃ
+    void delBuffIfTimeout(); // BUFFÅĞ¶ÏÉ¾³ı£¬ÔÚ onUnitTick ÖĞÎ²²¿µ÷ÓÃ
     
     M_SYNTHESIZE(float, m_fDuration, Duration);
     M_SYNTHESIZE(float, m_fPass, Pass);
     M_SYNTHESIZE(int, m_iSrcKey, SrcKey);
     
-    // BUFFæ˜¯å¦å¯é‡å é™„åŠ 
+    // BUFFÊÇ·ñ¿ÉÖØµş¸½¼Ó
     virtual void setPlural(bool bPlural);
     virtual bool canBePlural() const;
     
-    // ä¸»åŠ¨ä»æŒæœ‰è€…èº«ä¸Šåˆ é™¤BUFFè‡ªèº«ï¼Œå¹¶å°† Owner å±æ€§ç½®ä¸º NULL
+    // Ö÷¶¯´Ó³ÖÓĞÕßÉíÉÏÉ¾³ıBUFF×ÔÉí£¬²¢½« Owner ÊôĞÔÖÃÎª NULL
     virtual void delBuffFromOwner(bool bAfterTriggerLoop = true);
     
 protected:
-    // ä»BUFFæ´¾ç”Ÿçš„å­ç±»ï¼Œä¸éœ€è¦è¦†ç›–ä¸‹ä¸¤ä¸ªå‡½æ•°
-    // å†…éƒ¨æ³¨å†Œ/å»¶è¿Ÿæ³¨é”€äº†ä¸€ä¸ª onUnitTick è§¦å‘å™¨ï¼Œç”¨äºæ§åˆ¶BUFFæŒç»­æ—¶é—´
+    // ´ÓBUFFÅÉÉúµÄ×ÓÀà£¬²»ĞèÒª¸²¸ÇÏÂÁ½¸öº¯Êı
+    // ÄÚ²¿×¢²á/ÑÓ³Ù×¢ÏúÁËÒ»¸ö onUnitTick ´¥·¢Æ÷£¬ÓÃÓÚ¿ØÖÆBUFF³ÖĞøÊ±¼ä
     virtual void onSkillAdd();
     virtual void onSkillDel();
     
-    // ä»BUFFæ´¾ç”Ÿçš„å­ç±»ï¼Œå¿…é¡»è¦†ç›–ä¸‹ä¸¤ä¸ªå‡½æ•°ï¼Œå¹¶ä¸”è¦†ç›–å‡½æ•°ä¸­å¿…é¡»è°ƒç”¨çˆ¶ç±»å‡½æ•°
-    // BUFFçš„æ³¨å†Œ/æ³¨é”€æ³¨å†Œè§¦å‘å™¨ï¼Œéœ€è¦æ·»åŠ è‡³ä¸‹åˆ—å‡½æ•°ä¸­
+    // ´ÓBUFFÅÉÉúµÄ×ÓÀà£¬±ØĞë¸²¸ÇÏÂÁ½¸öº¯Êı£¬²¢ÇÒ¸²¸Çº¯ÊıÖĞ±ØĞëµ÷ÓÃ¸¸Ààº¯Êı
+    // BUFFµÄ×¢²á/×¢Ïú×¢²á´¥·¢Æ÷£¬ĞèÒªÌí¼ÓÖÁÏÂÁĞº¯ÊıÖĞ
     // have to @override
     virtual void onBuffAdd();
     virtual void onBuffDel();
     
-    // é€‰æ‹©æ€§è¦†ç›–ï¼Œå¦‚æœåœ¨BUFFæŒç»­çš„æ—¶é—´å†…ï¼Œéœ€è¦å‘¨æœŸæ€§çš„å¯¹å•ä½è¿›è¡Œå¤„ç†ï¼Œåˆ™éœ€è¦è¦†ç›–
+    // Ñ¡ÔñĞÔ¸²¸Ç£¬Èç¹ûÔÚBUFF³ÖĞøµÄÊ±¼äÄÚ£¬ĞèÒªÖÜÆÚĞÔµÄ¶Ôµ¥Î»½øĞĞ´¦Àí£¬ÔòĞèÒª¸²¸Ç
     // @override
     virtual void onUnitTick(float fDt);
     
