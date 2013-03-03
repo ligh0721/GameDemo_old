@@ -254,7 +254,7 @@ CGameUnit* CCBattleSceneLayer::randomSoldiers(int iForce)
         u = pUm->unitByInfo(COrgUnitInfo::kMatchstick);
         m_iHeroUnitKey = u->getKey();
         u->moveAlongPath(&m_oUnitPath, false);
-        u->addSkill(pOs->skill(COrgSkillInfo::kSwordStorm1));
+        u->addSkill(pOs->skill(COrgSkillInfo::kJumpChop1));
         u->setPosition(ccp(1000,600));
         u->setMaxHp(500);
     }

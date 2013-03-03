@@ -2298,9 +2298,9 @@ CJumpChopSkill::CJumpChopSkill()
 {
     m_pLastTargetUnit = NULL;
     setCountAnimLoop(1);
-    setDelayPerUnit(0.1);
+    setDelayPerUnit(0.2);
     setCountPerJump(1);
-    setDurationPerJump(0.5);
+    setDurationPerJump(1.0);
 }
 
 bool CJumpChopSkill::init(int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue &roDamage, char *pActName)
@@ -2320,6 +2320,7 @@ CCObject* CJumpChopSkill::copyWithZone(cocos2d::CCZone *pZone)
 void CJumpChopSkill::onSkillAdd()
 {
     CPassiveSkill::onSkillAdd();
+    registerOnDamageTargetTrigger();
 }
 
 void CJumpChopSkill::onSkillDel()
@@ -2338,23 +2339,25 @@ void CJumpChopSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
     {
         return;
     }
-    m_pAttackData = CAttackData::create();
-    m_pAttackData->setAttack(m_oMaxDamage);
     m_vecEffectedUnitKey.push_back(pOwn->getKey());
     m_vecEffectedUnitKey.push_back(pTarget->getKey());
+    onJumpChopEnd(pOwn);
  
 }
 
 void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
 {
     CGameUnit* pU = dynamic_cast<CGameUnit*>(pObj);
-    if (m_pLastTargetUnit == NULL || m_pLastTargetUnit->isDead())
+    if (m_pLastTargetUnit != NULL && !m_pLastTargetUnit->isDead())
     {
         uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
-        m_pLastTargetUnit->damagedAdv(m_pAttackData, pU, dwTriggerMask);
+        CAttackData* pAttackData = CAttackData::create();
+        pAttackData->setAttack(m_oMaxDamage);
+        m_pLastTargetUnit->damagedAdv(pAttackData, pU, dwTriggerMask);
         
     }
-    if (m_iMaxJumpCount + 2 <= m_vecEffectedUnitKey.size())
+    if (m_iMaxJumpCount + 2 <= m_vecEffectedUnitKey.size()
+        || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= m_vecEffectedUnitKey.size())
     {
         return;
     }
@@ -2411,6 +2414,10 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     pAnim->setDelayPerUnit(getDelayPerUnit());
     pAnim->setLoops(getCountAnimLoop());
     CCAnimate* pActAni = CCAnimate::create(pAnim);
-    pU->getSprite()->runAction(CCSequence::create(CCJumpTo::create(getDurationPerJump(), ccpAdd(pTarget->getPosition(), ccp(10, 10)), 60, getCountPerJump()), pActAni, CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pU)));
+    CCFiniteTimeAction* pJump = CCJumpTo::create(getDurationPerJump(), pTarget->getPosition(), 20, getCountPerJump());
+    CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopSkill::onJumpChopEnd), pU);
     
+    pU->getSprite()->runAction(CCSequence::createWithTwoActions(CCSequence::createWithTwoActions(pJump, pActAni), pCallO));
+    //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
+    m_pLastTargetUnit = pTarget;
 }
