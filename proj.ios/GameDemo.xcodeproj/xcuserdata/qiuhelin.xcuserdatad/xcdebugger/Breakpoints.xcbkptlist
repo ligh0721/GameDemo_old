@@ -7,19 +7,6 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "../Classes/SkillInfo.cpp"
-         timestampString = "383888873.337763"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "142"
-         endingLineNumber = "142"
-         landmarkName = "COrgSkillInfo::init()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "../Classes/BattleScene.cpp"
          timestampString = "383146260.465499"
          startingColumnNumber = "9223372036854775807"
@@ -85,19 +72,6 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "../Classes/Unit.cpp"
-         timestampString = "383337723.153731"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "954"
-         endingLineNumber = "954"
-         landmarkName = "CUnit::addSkill( CSkill* pSkill )"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
          timestampString = "383338254.047693"
          startingColumnNumber = "9223372036854775807"
@@ -118,32 +92,6 @@
          startingLineNumber = "254"
          endingLineNumber = "254"
          landmarkName = "CCBattleSceneLayer::randomSoldiers(int iForce)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../Classes/Unit.cpp"
-         timestampString = "383399637.257139"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "619"
-         endingLineNumber = "619"
-         landmarkName = "CUnit::damagedMid(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../Classes/Unit.cpp"
-         timestampString = "383399692.106316"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "621"
-         endingLineNumber = "621"
-         landmarkName = "CUnit::damagedMid(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask)"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -254,19 +202,6 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "../Classes/Unit.cpp"
-         timestampString = "383580004.480903"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2613"
-         endingLineNumber = "2613"
-         landmarkName = "CProjectile::onDie()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
          timestampString = "383932083.657929"
          startingColumnNumber = "9223372036854775807"
@@ -301,19 +236,6 @@
          endingLineNumber = "2104"
          landmarkName = "CSwordStormSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)"
          landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../Classes/Skill.h"
-         timestampString = "383912506.57683"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "729"
-         endingLineNumber = "729"
-         landmarkName = "class CSwordStormSkill"
-         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"

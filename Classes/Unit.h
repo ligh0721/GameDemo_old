@@ -17,9 +17,9 @@ public:
     virtual void onLevelChange(CLevelExp* pLevel, int32_t iChanged) = 0; // @override
 };
 
-// µÈ¼¶¾­ÑéÖµ£¬¸³Óè¶ÔÏóµÈ¼¶¾­ÑéÖµÌØĞÔ
-// ĞèÒª¸²¸Ç updateMaxExp£¬Ìá¹©µÈ¼¶±ä»¯Ê±µÄ×î´ó¾­ÑéÖµ±ä¸ü¹«Ê½
-// µÈ¼¶±ä»¯ºó´¥·¢ onLevelChange
+// ç­‰çº§ç»éªŒå€¼ï¼Œèµ‹äºˆå¯¹è±¡ç­‰çº§ç»éªŒå€¼ç‰¹æ€§
+// éœ€è¦è¦†ç›– updateMaxExpï¼Œæä¾›ç­‰çº§å˜åŒ–æ—¶çš„æœ€å¤§ç»éªŒå€¼å˜æ›´å…¬å¼
+// ç­‰çº§å˜åŒ–åè§¦å‘ onLevelChange
 class CLevelExp
 {
 public:
@@ -27,28 +27,28 @@ public:
     virtual ~CLevelExp();
     //CREATE_FUNC(CLevelExp);
     //virtual bool init();
-
+    
     virtual void updateMaxExp(); // @override
     virtual void onLevelChange(int32_t iChanged); // @override
     void addExp(uint32_t dwExp);
     void addLevel(uint32_t dwLvl);
     virtual void setLevel(uint32_t dwLvl);
     virtual void setMaxLevel(uint32_t dwMaxLvl);
-
+    
     uint32_t getLevel() const;
     uint32_t getMaxLevel() const;
     uint32_t getExp() const;
     uint32_t getMaxExp() const;
-
+    
     void setLevelUpdate(CLevelUpdate* pUpdate);
-
+    
 public:
     uint32_t m_dwLvl;
     uint32_t m_dwMaxLvl;
     uint32_t m_dwExp;
     uint32_t m_dwMaxExp;
     CLevelUpdate* m_pUpdate;
-
+    
 };
 
 
@@ -59,7 +59,7 @@ public:
     virtual ~CLife();
     CREATE_FUNC(CLife);
     virtual bool init();
-
+    
     bool revive(float fHp);
     bool setHp(float fHp);
     void setMaxHp(float fMaxHp);
@@ -67,15 +67,15 @@ public:
     virtual void onRevive();
     virtual void onDie();
     virtual void onHpChange(float fChanged);
-
-
+    
+    
     M_SYNTHESIZE_READONLY(float, m_fHp, Hp);
     M_SYNTHESIZE_READONLY(float, m_fMaxHp, MaxHp);
-
-
+    
+    
 };
 
-// ¹¥»÷ÊıÖµ£¬ÓÉ¶àÖÖÀàĞÍµÄ¹¥»÷×éºÏ¶ø³É
+// æ”»å‡»æ•°å€¼ï¼Œç”±å¤šç§ç±»å‹çš„æ”»å‡»ç»„åˆè€Œæˆ
 class CAttackValue
 {
 public:
@@ -95,27 +95,27 @@ public:
     };
     static const char* CONST_ARR_NAME[CONST_MAX_ATTACK_TYPE][CONST_MAX_NAME_INDEX];
     typedef float ARR_ATTACK_VALUES[CONST_MAX_ATTACK_TYPE];
-
+    
 public:
     CAttackValue();
     CAttackValue(int iCount, ATTACK_TYPE eType1, float fValue1, ...);
     virtual ~CAttackValue();
-
+    
     float getAttack(ATTACK_TYPE eAttackType) const;
     void setAttack(ATTACK_TYPE eAttackType, float fAttack);
     float getAttack(int iAttackType) const;
     void setAttack(int iAttackType, float fAttack);
     void setAttack(const CAttackValue& roAv);
     void setZero();
-
+    
     static const char* getName(ATTACK_TYPE eAttackType, int iIndex = 0);
-
+    
     const CAttackValue& operator=(const CAttackValue& roAv);
-
+    
     ARR_ATTACK_VALUES m_afAttack;
 };
 
-// »¤¼×ÊıÖµ£¬ÓÉ¶àÖÖÀàĞÍµÄ»¤¼××éºÏ¶ø³É
+// æŠ¤ç”²æ•°å€¼ï¼Œç”±å¤šç§ç±»å‹çš„æŠ¤ç”²ç»„åˆè€Œæˆ
 class CArmorValue
 {
 public:
@@ -135,48 +135,48 @@ public:
         kEnName = 0,
         kCnName = 1
     };
-
+    
     static const char* CONST_ARR_NAME[CONST_MAX_ARMOR_TYPE][CONST_MAX_NAME_INDEX];
     typedef float ARR_ARMOR_VALUES[CONST_MAX_ARMOR_TYPE];
-
+    
 public:
     CArmorValue();
     CArmorValue(int iCount, ARMOR_TYPE eType1, float fValue1, ...);
     virtual ~CArmorValue();
-
+    
     float getArmor(ARMOR_TYPE eArmorType) const;
     void setArmor(ARMOR_TYPE eArmorType, float fArmor);
     void setArmor(const CArmorValue& roAv);
     void setZero();
-
+    
     static const char* getName(ARMOR_TYPE eArmorType, int iIndex = 0);
-
+    
     const CArmorValue& operator=(const CArmorValue& roAv);
-
+    
     ARR_ARMOR_VALUES m_afArmor;
 };
 
-// ¹¥»÷-»¤¼×¼ÆËãÏµÊı
+// æ”»å‡»-æŠ¤ç”²è®¡ç®—ç³»æ•°
 extern float g_afAttackArmorTable[CArmorValue::CONST_MAX_ARMOR_TYPE][CAttackValue::CONST_MAX_ATTACK_TYPE];
 
-// ¹¥»÷¸½´øµÄBUFF£¬°üº¬¹¥»÷ÃüÖĞºóµÄ¸½¼Ó¸ÅÂÊ
+// æ”»å‡»é™„å¸¦çš„BUFFï¼ŒåŒ…å«æ”»å‡»å‘½ä¸­åçš„é™„åŠ æ¦‚ç‡
 class CAttackBuff : public CCObject
 {
 public:
     CAttackBuff();
     virtual ~CAttackBuff();
-
+    
     virtual bool init(CBuffSkill* pBuff, int iProbability);
     M_CREATE_FUNC_PARAM(CAttackBuff, (CBuffSkill* pBuff, int iProbability), pBuff, iProbability);
-
+    
     virtual CCObject* copyWithZone(CCZone* pZone);
-
+    
 public:
     CBuffSkill* m_pBuff;
     int m_iProbability;
 };
 
-// ¹¥»÷Êı¾İ£¬ÓÉ¹¥»÷ÊıÖµºÍ¹¥»÷BUFFÁ´×é³É£¬¹¥»÷¶¯×÷ÖĞÖ÷Òª´«µİµÄÊı¾İÌå
+// æ”»å‡»æ•°æ®ï¼Œç”±æ”»å‡»æ•°å€¼å’Œæ”»å‡»BUFFé“¾ç»„æˆï¼Œæ”»å‡»åŠ¨ä½œä¸­ä¸»è¦ä¼ é€’çš„æ•°æ®ä½“
 class CAttackData : public CCObject, public CAttackValue
 {
 public:
@@ -184,28 +184,28 @@ public:
     virtual ~CAttackData();
     CREATE_FUNC(CAttackData);
     virtual bool init();
-
+    
     virtual CCObject* copyWithZone(CCZone* pZone);
-
+    
     void addBuff(CBuffSkill* pBuff, int iProbability);
-
+    
     M_SYNTHESIZE(float, m_fAngle, Angle);
-
+    
 public:
     CCArray m_oArrBuff;
 };
 
-// f = ax + b£¬xÎª»ù×¼Öµ£¬aºÍb·ÖÎª¼ÆËã³ËÊıºÍ¼ÓÊı£¬Ó¦ÓÃÇéĞÎ£º´¥·¢ÖØ»÷½«Ôì³É×ÔÉí¹¥»÷Á¦µÄ2±¶²¢¶îÍâ¸½¼Ó30µãµÄÉËº¦£»ÌáÉı×ÔÉí20%µÄ»ù´¡Á¦Á¿Öµ
-// Ó¦ÓÃ¸Ã½Ó½á¹¹£¬¿ÉÇáÒ×½â¾ö×°±¸ÎäÆ÷/ĞÂÔöBUFF£¬Ğ¶ÔØÎäÆ÷/É¾³ıBUFFºóµÄÊôĞÔÒ»ÖÂ
+// f = ax + bï¼Œxä¸ºåŸºå‡†å€¼ï¼Œaå’Œbåˆ†ä¸ºè®¡ç®—ä¹˜æ•°å’ŒåŠ æ•°ï¼Œåº”ç”¨æƒ…å½¢ï¼šè§¦å‘é‡å‡»å°†é€ æˆè‡ªèº«æ”»å‡»åŠ›çš„2å€å¹¶é¢å¤–é™„åŠ 30ç‚¹çš„ä¼¤å®³ï¼›æå‡è‡ªèº«20%çš„åŸºç¡€åŠ›é‡å€¼
+// åº”ç”¨è¯¥æ¥ç»“æ„ï¼Œå¯è½»æ˜“è§£å†³è£…å¤‡æ­¦å™¨/æ–°å¢BUFFï¼Œå¸è½½æ­¦å™¨/åˆ é™¤BUFFåçš„å±æ€§ä¸€è‡´
 class CExtraCoeff
 {
 public:
     CExtraCoeff();
     CExtraCoeff(float fMulriple, float fAddend);
     virtual ~CExtraCoeff();
-
+    
     float getValue(float fBase) const;
-
+    
     M_SYNTHESIZE(float, m_fMulriple, Mulriple);
     M_SYNTHESIZE(float, m_fAddend, Addend);
 };
@@ -214,12 +214,12 @@ class CUnitForce
 {
 public:
     CUnitForce();
-
+    
     bool isAllyOf(const CUnitForce* pForce) const;
     bool isEnemyOf(const CUnitForce* pForce) const;
-
+    
     void setForceByIndex(int iForceIndex);
-
+    
     M_SYNTHESIZE(uint32_t, m_dwForceFlag, Force);
     M_SYNTHESIZE(uint32_t, m_dwAllyMaskFlag, Ally);
 };
@@ -229,24 +229,24 @@ class CForceResouce : public CCObject, public CUnitForce
 public:
     virtual bool init();
     CREATE_FUNC(CForceResouce);
-
+    
     virtual bool initWithChangeCallback(CCObject* pSender, SEL_CallFuncO pFunc);
     CREATEWITH_FUNC_PARAM(ChangeCallback, CForceResouce, (CCObject* pSender, SEL_CallFuncO pFunc), pSender, pFunc);
-
+    
     M_SYNTHESIZE(int, m_iGold, Gold);
     void changeGold(int iChange);
     virtual void onGoldChange(int iChange);
-
+    
 protected:
     CCObject* m_pSender;
     SEL_CallFuncO m_pCallback;
 };
 
-// ÓÎÏ·µ¥Î»£¬ÊÇ¹¥»÷Êı¾İµÄ·¢ÆğÔ´£¬»òÊÇ¹¥»÷Êı¾İµÄÊÜÌå
+// æ¸¸æˆå•ä½ï¼Œæ˜¯æ”»å‡»æ•°æ®çš„å‘èµ·æºï¼Œæˆ–æ˜¯æ”»å‡»æ•°æ®çš„å—ä½“
 class CUnit : public CLife
 {
     friend class CSkill;
-
+    
 public:
     enum TRIGGER_INDEX
     {
@@ -261,7 +261,7 @@ public:
         kTickTrigger,
         kDestroyProjectileTrigger
     };
-    // ·µ»ØTriggerÆÁ±Î±êÖ¾Î»
+    // è¿”å›Triggerå±è”½æ ‡å¿—ä½
 #define UNIT_TRIGGER_MASK(eTriggerIndex) (1 << eTriggerIndex)
     enum TRIGGER_MASK
     {
@@ -269,89 +269,89 @@ public:
         kMaskAll = 0xFFFFFFFF,
         kMaskActiveTrigger = UNIT_TRIGGER_MASK(kAttackTargetTrigger) | UNIT_TRIGGER_MASK(kDamageTargetTrigger)
     };
-
+    
 protected:
     inline static bool isMasked(TRIGGER_INDEX eTriggerIndex, uint32_t dwTriggerMask) { return (UNIT_TRIGGER_MASK(eTriggerIndex) & dwTriggerMask) != 0; }
-
+    
 public:
     CUnit();
     virtual ~CUnit();
     //CREATE_FUNC(CUnit);
     virtual bool init();
-
-    // ¸ß²ã¹¥»÷º¯Êı£¬ÓÃÓÚ×î³õÉú³É¹¥»÷Êı¾İ£¬Ò»¸ö¹¥»÷¶¯×÷Éú³ÉµÄ¹¥»÷Êı¾İ£¬Ò»°ãµ÷ÓÃ¸Ãº¯Êı
-    // ¹¥»÷¶¯×÷£¬¿É¶ÔÄ¿±êÔì³É¶¯×÷£¬ÈçÆÕÍ¨¹¥»÷¡¢¼¼ÄÜµÈ
-    // ¹¥»÷Êı¾İ£¬ÃèÊöÕâ´Î¹¥»÷µÄÊı¾İÌå£¬Ïê¼û CAttackData ¶¨Òå
-    // ÄÚ²¿»á×ÔĞĞµ÷ÓÃÖĞ²ã¡¢µ×²ã¹¥»÷º¯Êı£¬¶Ô¹¥»÷Êı¾İ½øĞĞ´«µİ²¢´¦Àí£¬Í¨³£·µ»Ø´¦ÀíºóµÄ¹¥»÷Êı¾İ£¬Ò²¿ÉÒÔ·µ»Ø NULL
-    // ÄÚ²¿»á¸ù¾İÈËÎïÊôĞÔ¶Ô¹¥»÷Êı¾İ½øĞĞÒ»´Î±ä»»£¬ÈçÁ¦Á¿¼Ó³ÉµÈ
+    
+    // é«˜å±‚æ”»å‡»å‡½æ•°ï¼Œç”¨äºæœ€åˆç”Ÿæˆæ”»å‡»æ•°æ®ï¼Œä¸€ä¸ªæ”»å‡»åŠ¨ä½œç”Ÿæˆçš„æ”»å‡»æ•°æ®ï¼Œä¸€èˆ¬è°ƒç”¨è¯¥å‡½æ•°
+    // æ”»å‡»åŠ¨ä½œï¼Œå¯å¯¹ç›®æ ‡é€ æˆåŠ¨ä½œï¼Œå¦‚æ™®é€šæ”»å‡»ã€æŠ€èƒ½ç­‰
+    // æ”»å‡»æ•°æ®ï¼Œæè¿°è¿™æ¬¡æ”»å‡»çš„æ•°æ®ä½“ï¼Œè¯¦è§ CAttackData å®šä¹‰
+    // å†…éƒ¨ä¼šè‡ªè¡Œè°ƒç”¨ä¸­å±‚ã€åº•å±‚æ”»å‡»å‡½æ•°ï¼Œå¯¹æ”»å‡»æ•°æ®è¿›è¡Œä¼ é€’å¹¶å¤„ç†ï¼Œé€šå¸¸è¿”å›å¤„ç†åçš„æ”»å‡»æ•°æ®ï¼Œä¹Ÿå¯ä»¥è¿”å› NULL
+    // å†…éƒ¨ä¼šæ ¹æ®äººç‰©å±æ€§å¯¹æ”»å‡»æ•°æ®è¿›è¡Œä¸€æ¬¡å˜æ¢ï¼Œå¦‚åŠ›é‡åŠ æˆç­‰
     CAttackData* attackAdv(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask = kNoMasked);
-
-    // ÖĞ²ã¹¥»÷º¯Êı
-    // ´¥·¢ onAttackTarget£¬
+    
+    // ä¸­å±‚æ”»å‡»å‡½æ•°
+    // è§¦å‘ onAttackTargetï¼Œ
     CAttackData* attackMid(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask = kNoMasked);
-
-    // µ×²ã¹¥»÷º¯Êı£¬Ä¿Ç°ÎŞÂß¼­£¬Ö»ÊÇ½«´«µİ¹ıÀ´µÄ¹¥»÷Êı¾İ·µ»Ø¸øÉÏ²ã
+    
+    // åº•å±‚æ”»å‡»å‡½æ•°ï¼Œç›®å‰æ— é€»è¾‘ï¼Œåªæ˜¯å°†ä¼ é€’è¿‡æ¥çš„æ”»å‡»æ•°æ®è¿”å›ç»™ä¸Šå±‚
     CAttackData* attackBot(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask = kNoMasked);
-
-    // ¸ß²ãÉËº¦º¯Êı£¬¹¥»÷ÕßÉú³ÉµÄ¹¥»÷µ½´ïÄ¿±êºó£¬Ä¿±ê½«µ÷ÓÃ¸Ãº¯Êı£¬¼ÆËã×ÔÉíÉËº¦
-    // ÄÚ²¿»á¶Ô¹¥»÷Êı¾İ½øĞĞÏòÏÂ´«µİ
-    // ´¥·¢ onAttacked£¬Èç¹ûonAttacked·µ»Ø NULL£¬ÉËº¦½«²»»á¼ÌĞøÏòÏÂ²ãº¯Êı´«µİ¡£±ÈÈçËµ£¬ÉÁ±Ü³É¹¦£¬ÉËº¦ÎŞĞè¼ÌĞø¼ÆËã
+    
+    // é«˜å±‚ä¼¤å®³å‡½æ•°ï¼Œæ”»å‡»è€…ç”Ÿæˆçš„æ”»å‡»åˆ°è¾¾ç›®æ ‡åï¼Œç›®æ ‡å°†è°ƒç”¨è¯¥å‡½æ•°ï¼Œè®¡ç®—è‡ªèº«ä¼¤å®³
+    // å†…éƒ¨ä¼šå¯¹æ”»å‡»æ•°æ®è¿›è¡Œå‘ä¸‹ä¼ é€’
+    // è§¦å‘ onAttackedï¼Œå¦‚æœonAttackedè¿”å› NULLï¼Œä¼¤å®³å°†ä¸ä¼šç»§ç»­å‘ä¸‹å±‚å‡½æ•°ä¼ é€’ã€‚æ¯”å¦‚è¯´ï¼Œé—ªé¿æˆåŠŸï¼Œä¼¤å®³æ— éœ€ç»§ç»­è®¡ç®—
     void damagedAdv(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask = kNoMasked);
-
-    // ÖĞ²ãÉËº¦º¯Êı£¬¹¥»÷Êı¾İÒÑ¾­²»¿ÉÏû³ı£¬µ«¿ÉÒÔ¸Ä±äÉËº¦Êı¾İ£¬ÈçÒ»´ÎÈ«¶îÉËº¦µÄµÖµ²£¬ËäÈ»½á¹ûÉÏ¿´HPÃ»ÓĞÊÜËğ£¬µ«ÈÔÈ»»á½øĞĞÒ»´Î0ÉËº¦ÅĞ¶¨
-    // ´¥·¢ onDamaged
-    // ±éÀú¹¥»÷Êı¾İĞ¯´øµÄBUFFÁ´£¬¸ù¾İ¸½×Å¸ÅÂÊ¶Ôµ¥Î»×ÔÉí½øĞĞBUFF¸½¼Ó
-    // ¸ù¾İµ¥Î»ÊôĞÔ£¬½øĞĞ¹¥»÷Êı¾İ±ä»»£¬Èç¿¹ĞÔ¶Ô¹¥»÷Êı¾İµÄÓ°Ïì
-    // ¸ù¾İµ¥Î»»¤¼×£¬½øĞĞ¹¥»÷Êı¾İÖĞµÄ¹¥»÷ÊıÖµ±ä»»
+    
+    // ä¸­å±‚ä¼¤å®³å‡½æ•°ï¼Œæ”»å‡»æ•°æ®å·²ç»ä¸å¯æ¶ˆé™¤ï¼Œä½†å¯ä»¥æ”¹å˜ä¼¤å®³æ•°æ®ï¼Œå¦‚ä¸€æ¬¡å…¨é¢ä¼¤å®³çš„æŠµæŒ¡ï¼Œè™½ç„¶ç»“æœä¸Šçœ‹HPæ²¡æœ‰å—æŸï¼Œä½†ä»ç„¶ä¼šè¿›è¡Œä¸€æ¬¡0ä¼¤å®³åˆ¤å®š
+    // è§¦å‘ onDamaged
+    // éå†æ”»å‡»æ•°æ®æºå¸¦çš„BUFFé“¾ï¼Œæ ¹æ®é™„ç€æ¦‚ç‡å¯¹å•ä½è‡ªèº«è¿›è¡ŒBUFFé™„åŠ 
+    // æ ¹æ®å•ä½å±æ€§ï¼Œè¿›è¡Œæ”»å‡»æ•°æ®å˜æ¢ï¼Œå¦‚æŠ—æ€§å¯¹æ”»å‡»æ•°æ®çš„å½±å“
+    // æ ¹æ®å•ä½æŠ¤ç”²ï¼Œè¿›è¡Œæ”»å‡»æ•°æ®ä¸­çš„æ”»å‡»æ•°å€¼å˜æ¢
     void damagedMid(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask = kNoMasked);
-
-    // µ×²ãÉËº¦º¯Êı£¬Ö±½Ó¿Û³ıÖ¸¶¨Á¿µÄHPÖµ
-    // ´¥·¢ÉËº¦Ô´µÄ onDamaeTarget
-    // µ÷ÓÃ setHp£¬´Ó¶ø»á´¥·¢ onHpChange£¬¿ÉÄÜ»á´¥·¢onDie
+    
+    // åº•å±‚ä¼¤å®³å‡½æ•°ï¼Œç›´æ¥æ‰£é™¤æŒ‡å®šé‡çš„HPå€¼
+    // è§¦å‘ä¼¤å®³æºçš„ onDamaeTarget
+    // è°ƒç”¨ setHpï¼Œä»è€Œä¼šè§¦å‘ onHpChangeï¼Œå¯èƒ½ä¼šè§¦å‘onDie
     void damagedBot(float fDamage, CUnit* pSource, uint32_t dwTriggerMask = kNoMasked);
-
-    // Îªµ¥Î»Ìí¼Ó/É¾³ı¼¼ÄÜ
+    
+    // ä¸ºå•ä½æ·»åŠ /åˆ é™¤æŠ€èƒ½
     void addSkill(CSkill* pSkill);
     void delSkill(CSkill* pSkill);
-
-	//Îªµ¥Î»Ìí¼Ó°ü
+    
+	//ä¸ºå•ä½æ·»åŠ åŒ…
 	void addPackage(CUnitPackage* pPackage);
-
-    // Îªµ¥Î»Ìí¼Ó/É¾³ıBUFF
+    
+    // ä¸ºå•ä½æ·»åŠ /åˆ é™¤BUFF
     void addBuff(CBuffSkill* pBuff, bool bForce = false);
     void delBuff(CBuffSkill* pBuff, bool bAfterTriggerLoop = true);
-
+    
     CSkill* getSkill(int iKey);
     CBuffSkill* getBuff(int iKey);
     CBuffSkill* getBuffByType(int iTypeKey);
-
+    
     virtual void cleanUpTriggers();
-
+    
     virtual void suspend() = 0;
     virtual void resume() = 0;
-
+    
     static float calcDamage(CAttackValue::ATTACK_TYPE eAttackType, float fAttackValue, CArmorValue::ARMOR_TYPE eArmorType, float fArmorValue);
-
+    
     // @override
-    virtual void onAttackTarget(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask);          // ¹¥»÷·¢³öÊ±£¬¹¥»÷Õß´¥·¢
-    virtual CAttackData* onAttacked(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);      // ¹¥»÷µÖ´ïÊ±£¬ÊÜº¦Õß´¥·¢
-    virtual void onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);               // ¹¥»÷ÃüÖĞÊ±£¬ÊÜº¦Õß´¥·¢
-    virtual void onDamageTarget(float fDamage, CUnit* pTarget, uint32_t dw0TriggerMask);                 // ¹¥»÷ÃüÖĞÊ±£¬¹¥»÷Õß´¥·¢
+    virtual void onAttackTarget(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask);          // æ”»å‡»å‘å‡ºæ—¶ï¼Œæ”»å‡»è€…è§¦å‘
+    virtual CAttackData* onAttacked(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);      // æ”»å‡»æŠµè¾¾æ—¶ï¼Œå—å®³è€…è§¦å‘
+    virtual void onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);               // æ”»å‡»å‘½ä¸­æ—¶ï¼Œå—å®³è€…è§¦å‘
+    virtual void onDamageTarget(float fDamage, CUnit* pTarget, uint32_t dwTriggerMask);                 // æ”»å‡»å‘½ä¸­æ—¶ï¼Œæ”»å‡»è€…è§¦å‘
     virtual void onRevive();
     virtual void onDie();
     virtual void onHpChange(float fChanged);
     virtual void onTick(float fDt);
-    virtual void onDestroyProjectile(CCProjectileWithAttackData* pProjectile); // ¹¥»÷Êı¾İÏû³ıÊ±»á´¥·¢£¬Í¨³£ÓÉÍ¶ÉäÎïĞ¯´ø¹¥»÷Êı¾İ£¬¶şÕßÉú´æÆÚÒ»ÖÂ
-
+    virtual void onDestroyProjectile(CCProjectileWithAttackData* pProjectile); // æ”»å‡»æ•°æ®æ¶ˆé™¤æ—¶ä¼šè§¦å‘ï¼Œé€šå¸¸ç”±æŠ•å°„ç‰©æºå¸¦æ”»å‡»æ•°æ®ï¼ŒäºŒè€…ç”Ÿå­˜æœŸä¸€è‡´
+    
     int getKey() const;
-
+    
 protected:
-    // ¸ù¾İÊôĞÔ¶Ô¹¥»÷Êı¾İ½øĞĞ±ä»»
+    // æ ¹æ®å±æ€§å¯¹æ”»å‡»æ•°æ®è¿›è¡Œå˜æ¢
     // @override
     virtual CAttackData* transformAttackByAttribute(CAttackData* pAttack);
     virtual CAttackData* transformDamageByAttribute(CAttackData* pAttack);
-
-    // Ìí¼Ó´¥·¢Æ÷£¬ÄÚ²¿µ÷ÓÃ
+    
+    // æ·»åŠ è§¦å‘å™¨ï¼Œå†…éƒ¨è°ƒç”¨
     void addToOnAttackTargetTrigger(CSkill* pSkill);
     void addToOnAttackedTrigger(CSkill* pSkill);
     void addToOnDamagedSurfaceTrigger(CSkill* pSkill);
@@ -362,8 +362,8 @@ protected:
     void addToOnDieTrigger(CSkill* pSkill);
     void addToOnTickTrigger(CSkill* pSkill);
     void addToOnDestroyProjectileTrigger(CSkill* pSkill);
-
-    // É¾³ı´¥·¢Æ÷£¬ÄÚ²¿µ÷ÓÃ
+    
+    // åˆ é™¤è§¦å‘å™¨ï¼Œå†…éƒ¨è°ƒç”¨
     void delFromOnAttackTargetTrigger(CSkill* pSkill);
     void delFromOnAttackedTrigger(CSkill* pSkill);
     void delFromOnDamagedSurfaceTrigger(CSkill* pSkill);
@@ -374,11 +374,11 @@ protected:
     void delFromOnDieTrigger(CSkill* pSkill);
     void delFromOnTickTrigger(CSkill* pSkill);
     void delFromOnDestroyProjectileTrigger(CSkill* pSkill);
-
-    // ÑÓ³ÙÉ¾³ı´¥·¢Æ÷£¬ÑÓ³Ùµ½Õû¸ö´¥·¢Æ÷±éÀú½áÊøºóÉ¾³ı£¬ÄÚ²¿µ÷ÓÃ
+    
+    // å»¶è¿Ÿåˆ é™¤è§¦å‘å™¨ï¼Œå»¶è¿Ÿåˆ°æ•´ä¸ªè§¦å‘å™¨éå†ç»“æŸååˆ é™¤ï¼Œå†…éƒ¨è°ƒç”¨
     void delFromOnTickTriggerLater(CSkill* pSkill);
-
-    // ´¥·¢Æ÷Á´µÄ´¥·¢£¬ÄÚ²¿µ÷ÓÃ
+    
+    // è§¦å‘å™¨é“¾çš„è§¦å‘ï¼Œå†…éƒ¨è°ƒç”¨
     void triggerOnAttackTarget(CAttackData* pAttack, CUnit* pTarget);
     CAttackData* triggerOnAttacked(CAttackData* pAttack, CUnit* pSource);
     void triggerOnDamagedSurface(CAttackData* pAttack, CUnit* pSource);
@@ -389,15 +389,15 @@ protected:
     void triggerOnDie();
     void triggerOnTick(float fDt);
     void triggerOnDestroyProjectileTrigger(CCProjectileWithAttackData* pProjectile);
-
+    
     static void addToTrigger(CCArray& roTrigger, CSkill* pSkill);
     static void delFromTrigger(CCArray& roTrigger, CSkill* pSkill);
-
+    
     void beginTrigger();
     void endTrigger();
     bool isTriggerFree() const;
-
-
+    
+    
 public:
     const int m_iKey;
     CCArray m_oArrOnAttackTargetChain;
@@ -411,7 +411,7 @@ public:
     CCArray m_oArrOnTickChain;
     CCArray m_oArrOnTickDelChain;
     CCArray m_oArrOnDestroyProjectileChain;
-
+    
     
     //CArmorValue m_oArmorValue;
     M_SYNTHESIZE(CArmorValue::ARMOR_TYPE, m_eArmorType, ArmorType);
@@ -430,7 +430,7 @@ public:
     M_SYNTHESIZE(float, m_fAgility, Agility);
     M_SYNTHESIZE(float, m_fSpirit, Spirit);
     int m_iTriggering;
-
+    
 	CUnitPackage* m_pUnitPackage;
 };
 
@@ -445,14 +445,14 @@ public:
     virtual bool initWithSpriteFrame(CCSpriteFrame *pSpriteFrame, const CCPoint& roAnchor = ccp(0.5f, 0.5f));
     virtual void setDisplayFrame(CCSpriteFrame *pNewFrame);
     virtual void draw();
-
+    
     virtual void setPosition(const CCPoint& roPos);
     virtual CCNode* getShadowNode();
     M_SYNTHESIZE(CGameUnit*, m_pControler, Controler);
-
+    
 protected:
     virtual void updateShadowNode();
-
+    
 protected:
     CCNode m_oShadowNode;
 };
@@ -490,7 +490,7 @@ public:
         kActCast,
         kActCastEffect
     };
-
+    
     static const int CONST_MAX_ANIMATION = 8;
     enum ANIMATION_INDEX
     {
@@ -504,7 +504,7 @@ public:
         kAnimationAct6 = 7,
     };
     typedef vector<ANIMATION_INDEX> VEC_ANI;
-
+    
     struct ARR_ANIMATION_INFO
     {
         ARR_ANIMATION_INFO() : fDelay(0.0) {}
@@ -513,28 +513,28 @@ public:
         float fDelay;
     };
     typedef struct ARR_ANIMATION_INFO UNIT_ANI_INFOS[CONST_MAX_ANIMATION];
-
+    
     enum WEAPON_TYPE
     {
         kWTClosely = 0,
         kWTInstant = 1,
         kWTDelayed = 2
     };
-
+    
     struct UNIT_MOVE_PARAMS
     {
         UNIT_MOVE_PARAMS(
-            bool bIntended_ = true,
-            bool bCancelAttack_ = true,
-            bool bAutoFlipX_ = true,
-            float fMaxOffsetY_ = 0.0f,
-            bool bCancelCast_ = true
-            )
-            : bIntended(bIntended_)
-            , bCancelAttack(bCancelAttack_)
-            , bAutoFlipX(bAutoFlipX_)
-            , fMaxOffsetY(fMaxOffsetY_)
-            , bCancelCast(bCancelCast_)
+                         bool bIntended_ = true,
+                         bool bCancelAttack_ = true,
+                         bool bAutoFlipX_ = true,
+                         float fMaxOffsetY_ = 0.0f,
+                         bool bCancelCast_ = true
+                         )
+        : bIntended(bIntended_)
+        , bCancelAttack(bCancelAttack_)
+        , bAutoFlipX(bAutoFlipX_)
+        , fMaxOffsetY(fMaxOffsetY_)
+        , bCancelCast(bCancelCast_)
         {}
         bool bIntended;
         bool bCancelAttack;
@@ -542,20 +542,20 @@ public:
         float fMaxOffsetY;
         bool bCancelCast;
     };
-
+    
     static const UNIT_MOVE_PARAMS CONST_DEFAULT_MOVE_PARAMS;
-
+    
 public:
     CGameUnit();
     virtual bool init();
     CREATE_FUNC_PARAM(CGameUnit, ());
-
+    
     virtual bool initWithName(const char* pUnit, const CCPoint& roAnchor = ccp(0.5f, 0.5f));
     CREATEWITH_FUNC_PARAM(Name, CGameUnit, (const char* pUnit, const CCPoint& roAnchor = ccp(0.5f, 0.5f)), pUnit, roAnchor);
-
+    
     virtual bool initWithInfo(const CUnitInfo& roUnitInfo);
     CREATEWITH_FUNC_PARAM(Info, CGameUnit, (const CUnitInfo& roUnitInfo), roUnitInfo);
-
+    
 public: // Move
     static const float CONST_MIN_MOVE_SPEED;
     static const float CONST_MAX_MOVE_SPEED;
@@ -574,10 +574,10 @@ public: // Move
     M_SYNTHESIZE(uint32_t, m_dwPathCurPos, PathCurPos);
     virtual void setPathIntended(bool bPathIntended = true);
     virtual bool isPathIntended() const;
-
+    
 protected:
     virtual void onActMoveEnd(CCNode* pNode);
-
+    
 public: // Attack
     static const float CONST_MIN_ATTACK_SPEED_INTERVAL;
     static const float CONST_MIN_ATTACK_SPEED_MULRIPLE;
@@ -615,7 +615,7 @@ public: // Attack
     M_SYNTHESIZE(float, m_fProjectileMaxOffsetY, ProjectileMaxOffsetY);
     M_SYNTHESIZE(float, m_fProjectileBirthOffsetX, ProjectileBirthOffsetX);
     M_SYNTHESIZE(float, m_fProjectileBirthOffsetY, ProjectileBirthOffsetY);
-
+    
 protected:
     virtual void onActAttackEffect(CCNode* pNode);
     virtual void onActAttackEnd(CCNode* pNode);
@@ -637,17 +637,17 @@ public:
     
     virtual void suspend();
     virtual void resume();
-
+    
     virtual void startDoing(uint32_t dwMask);
     virtual void endDoing(uint32_t dwMask);
     virtual bool isDoingOr(uint32_t dwMask) const;
     virtual bool isDoingAnd(uint32_t dwMask) const;
     virtual bool isDoingNothing() const;
-
+    
     virtual void onTick(float fDt);
     virtual void onDie();
     virtual void onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);
-
+    
     virtual CCGameUnitSprite* getSprite();
     virtual void setPosition(const CCPoint& roPos);
     virtual const CCPoint& getPosition();
@@ -669,33 +669,33 @@ public:
 	M_SYNTHESIZE(uint32_t, m_dwStatus, Status);
 	CUnitPath* getMovePath();
 	const CCPoint& getLastMoveToTarget();
-
+    
 protected:
     virtual void turnTo(CGameUnit* pTarget);
     virtual void onActDieEnd(CCNode* pNode);
-
+    
 public: // cast
     virtual bool cast();
     virtual void stopCast();
     M_SYNTHESIZE(CActiveSkill*, m_pToCastSkill, ToCastSkill);
     M_SYNTHESIZE(CActiveSkill*, m_pCastingSkill, CastingSkill);
-
+    
 protected:
     virtual void onActCastEffect(CCNode* pNode);
     virtual void onActCastEnd(CCNode* pNode);
     bool checkCastDistance(const CCPoint& roPos);
     void moveToCastPosition();
-
+    
 protected:
     CCGameUnitSprite m_oSprite;
     string m_sUnit;
     uint32_t m_dwDoingFlags;
     UNIT_ANI_INFOS m_astAniInfo;
-
+    
     float m_fBaseMoveSpeed;
     CExtraCoeff m_oExMoveSpeed;
-   CCPoint m_oLastMoveToTarget;
-
+    CCPoint m_oLastMoveToTarget;
+    
     float m_fBaseAttackInterval;
     CExtraCoeff m_oExAttackSpeed;
     
@@ -705,8 +705,8 @@ protected:
     int m_iLastAttackTarget;
     bool m_bIsFixed;
     CForceResouce* m_pRes;
-
-	CUnitPath* m_pMovePath;
+    
+    CUnitPath* m_pMovePath;
     bool m_bPathIntended;
     float m_fPathBufArrive;
 };
@@ -720,7 +720,7 @@ public:
         kLightning,
         kRange
     };
-
+    
 public:
     CProjectile();
     virtual ~CProjectile();
@@ -728,10 +728,10 @@ public:
     CREATE_FUNC_PARAM(CProjectile, ());
     virtual bool initWithName(const char* pProjectile, const CCPoint& roAnchor = ccp(0.5f, 0.5f));
     CREATEWITH_FUNC_PARAM(Name, CProjectile, (const char* pProjectile, const CCPoint& roAnchor = ccp(0.5f, 0.5f)), pProjectile, roAnchor);
-
+    
     virtual CAttackData* getAttackData() const;
     virtual void setAttackData(CAttackData* pAttackData);
-
+    
     M_SYNTHESIZE(int, m_iGeneration, Generation);
     virtual void setTarget(int iTarget);
     virtual void setTarget(CGameUnit* pTarget);
@@ -745,34 +745,33 @@ public:
     
     virtual void onDie();
     virtual CCObject* copyWithZone(CCZone* pZone);
-
+    
 protected:
     virtual void onActMoveEnd(CCNode* pNode);
     virtual void onActDieEnd(CCNode* pNode);
-
+    
 protected:
     CAttackData* m_pAttackData;
     int m_iTarget;
     
 };
-
 class CUnitPath;
 
 class CUnitGroup : public CCObject
 {
 public:
     typedef bool (*CONDITIONFUNC)(CGameUnit* pUnit, void* pParam);
-
+    
 public:
     CUnitGroup();
-
+    
     virtual bool init();
     CREATE_FUNC_PARAM(CUnitGroup, ());
     virtual bool initWithUnitsInRange(CUnitGroup* pSource, const CCPoint& roPos, float fRadius, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
     CREATEWITH_FUNC_PARAM(UnitsInRange, CUnitGroup, (CUnitGroup* pSource, const CCPoint& roPos, float fRadius, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL), pSource, roPos, fRadius, iMaxCount, pBoolFunc, pParam);
     virtual bool initWithCondition(CUnitGroup* pSource, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
     CREATEWITH_FUNC_PARAM(Condition, CUnitGroup, (CUnitGroup* pSource, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL), pSource, iMaxCount, pBoolFunc, pParam);
-
+    
     CGameUnit* getUnitByIndex(int iIndex);
     CGameUnit* getUnitByKey(int iKey);
     CGameUnit* getRandomUnit();
@@ -780,7 +779,7 @@ public:
     void addUnit(CGameUnit* pUnit);
     void delUnit(CGameUnit* pUnit);
     CGameUnit* copyUnit(int iKey);
-
+    
     CCArray* getUnitsArray();
     CUnitGroup* getUnitsInRange(const CCPoint& roPos, float fRadius, int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
     CUnitGroup* getUnits(int iMaxCount = INFINITE, CONDITIONFUNC pBoolFunc = NULL, void* pParam = NULL);
@@ -790,7 +789,7 @@ public:
     void delUnits(CUnitGroup* pUnits);
     void delUnits(CCArray* pUnits);
     int getUnitsCount();
-
+    
     virtual void setRangePosition(const CCPoint& roPos, float fRadius);
     virtual void turnTo(bool bLeft);
     virtual void moveTo(const CCPoint& roPos, const CGameUnit::UNIT_MOVE_PARAMS& roMoveParams = CGameUnit::CONST_DEFAULT_MOVE_PARAMS);
@@ -799,17 +798,18 @@ public:
     virtual void attack(int iTargetKey, bool bIntended = true);
     virtual void stopAttack();
     virtual void moveAlongPath(CUnitPath* pPath, bool bIntended = true, bool bRestart = false, float fBufArrive = 5.0);
-
+    
     void damagedAdv(CAttackData* pAttack, CUnit* pSource);
     void damagedMid(CAttackData* pAttack, CUnit* pSource);
     void damagedBot(float fDamage, CUnit* pSource);
     void addSkill(CSkill* pSkill);
     void addPackage(CUnitPackage* pPackage);
     void addBuff(CBuffSkill* pBuff, bool bForce = false);
-
+    
     static bool isLivingAllyOf(CGameUnit* pUnit, CUnitForce* pParam);
     static bool isLivingEnemyOf(CGameUnit* pUnit, CUnitForce* pParam);
-
+    
+    
 protected:
     CCArray m_oArrUnits;
 };
@@ -824,7 +824,7 @@ public:
         kNormalTouch = 0, // move, attack, select
         kUnitCastTarget = 1
     };
-
+    
 public:
     CCUnitLayer();
     virtual bool init();
@@ -833,43 +833,43 @@ public:
     CREATEWITH_FUNC_PARAM(Color, CCUnitLayer, (const ccColor4B& color), color);
     virtual void onEnter();
     virtual void onExit();
-
+    
     virtual void setUnitTickInterval(float fInterval);
     virtual float getUnitTickInterval() const;
-
+    
     virtual void onTickEvent(float fDt);
     virtual void addUnit(CGameUnit* pUnit);
     virtual void addProjectile(CProjectile* pProjectile);
-
+    
     CUnitGroup* getUnits();
     CGameUnit* getUnitByKey(int iKey);
-
+    
     CUnitGroup* getProjectiles();
     CProjectile* getProjectileByKey(int iKey);
-
+    
     void moveUnitToDustbin(CGameUnit* pToDel);
     void moveProjectileToDustbin(CProjectile* pToDel);
     CCArray* getUnitDustbin();
     CCArray* getProjectileDustbin();
     void clearUnitDustbin();
     void clearProjectileDustbin();
-
+    
     virtual int touchActionIndex() const;
     void preOrderUnitToCast(int iUnit, int iSkill);
     void endOrderUnitToCast();
     void orderUnitToCast(const CCPoint& roTargetPos);
-    void orderUnitToCast(CGameUnit* pTargetUnit); // ÒÔÈ·¶¨´æÔÚ£¬ÇÒÁ¢¼´Ö´ĞĞ£¬ÎŞºóĞøÂß¼­£¬¿ÉÒÔÊ¹ÓÃÖ¸Õë
-
+    void orderUnitToCast(CGameUnit* pTargetUnit); // ä»¥ç¡®å®šå­˜åœ¨ï¼Œä¸”ç«‹å³æ‰§è¡Œï¼Œæ— åç»­é€»è¾‘ï¼Œå¯ä»¥ä½¿ç”¨æŒ‡é’ˆ
+    
 protected:
     CUnitGroup m_oArrUnit;
     CUnitGroup m_oArrProjectile;
     CCArray m_oUnitDustbin;
     CCArray m_oProjectileDustbin;
-
+    
     float m_fUnitTickInterval;
-
+    
     int m_iPendingSkillOwner;
-
+    
 };
 
 class CCWinUnitLayer : public CCUnitLayer
@@ -882,18 +882,18 @@ public:
         kClickPoint = 2,
         kSlideWindow = 3
     };
-
+    
 public:
     static const float CONST_MIN_MOVE_DELTA;
     static const float CONST_MAX_CAN_MOVE_DURATION;
-
+    
 public:
     CCWinUnitLayer();
     virtual bool init();
     CREATE_FUNC(CCWinUnitLayer);
     virtual bool initWithColor(const ccColor4B& color);
     CREATEWITH_FUNC_PARAM(Color, CCWinUnitLayer, (const ccColor4B& color), color);
-
+    
     // default implements are used to call script callback if exist
     virtual void setBackGroundSprite(CCSprite* pSprite);
     virtual void setBackGroundSprite(CCSprite* pSprite, int zOrder, int tag);
@@ -904,7 +904,7 @@ public:
     virtual bool isSlideAction() const;
     virtual bool isClickAction() const;
     virtual int touchActionIndex() const;
-
+    
     virtual void onEnter();
     virtual void onExit();
     virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
@@ -914,9 +914,9 @@ public:
     virtual void touchDelegateRetain();
     virtual void touchDelegateRelease();
     virtual void bufferWindowEffect(float fDt);
-
+    
     void adjustWinPos(CCPoint& roPos);
-
+    
 protected:
     bool m_bIsTouching;
     float m_fMoveK;
@@ -933,7 +933,7 @@ class CUnitPath : public CCObject
 {
 public:
     typedef vector<CCPoint> VEC_POINTS;
-
+    
 public:
     virtual bool init();
     CREATE_FUNC_PARAM(CUnitPath, ());
@@ -941,13 +941,13 @@ public:
     CREATEWITH_FUNC_PARAM(Points, CUnitPath, (const VEC_POINTS& roVecPoints), roVecPoints);
     virtual bool initWithFile(const char* pFileName);
     CREATEWITH_FUNC_PARAM(File, CUnitPath, (const char* pFileName), pFileName);
-
+    
     void addPoint(const CCPoint& roPos);
     void addPoints(const char* pFileName);
     void saveAsFile(const char* pFileName);
     virtual const CCPoint* getCurTargetPoint(uint32_t dwCurPos);
     virtual void arriveCurTargetPoint(uint32_t& rCurPos);
-
+    
 public:
     VEC_POINTS m_vecPoints;
 };
@@ -956,50 +956,50 @@ class CUnitInfo
 {
 public:
     typedef CInitArray<CGameUnit::ANIMATION_INDEX> ARR_ATTACK_ANI;
-
+    
 public:
     CUnitInfo(
-        const char* pName,
-        const CCPoint& roAnchor,
-        float fHalfOfWidth,
-        float fHalfOfHeight,
-        float fScale,
-        float fActMoveDelay,
-        float fActDieDelay,
-        float fAct1Delay,
-        float fAct2Delay,
-        float fAct3Delay,
-        float fAct4Delay,
-        float fAct5Delay,
-        float fAct6Delay,
-        const ARR_ATTACK_ANI& roArrAttackAnis,
-        float fBaseMoveSpeed,
-        float fBaseAttackInterval,
-        float fAttackEffectDelay,
-        float fAttackMinRange,
-        float fAttackRange,
-        float fHostilityRange,
-        CGameUnit::WEAPON_TYPE eWeaponType,
-        int iProjectileKey,
-        float fProjectileMoveSpeed,
-        float fProjectileScale,
-        float fProjectileMaxOffsetY,
-        float fProjectileBirthOffsetX,
-        float fProjectileBirthOffsetY,
-        const CAttackValue& roBaseAttackValue,
-        float fExAttackRandomRange,
-        CArmorValue::ARMOR_TYPE eArmorType,
-        float fBaseArmorValue,
-        int iForceIndex,
-        uint32_t dwForceAlly,
-        float fMaxHp,
-        bool bIsFixed,
-        int iRewardGold,
-        int iRewardExp
-        );
-
+              const char* pName,
+              const CCPoint& roAnchor,
+              float fHalfOfWidth,
+              float fHalfOfHeight,
+              float fScale,
+              float fActMoveDelay,
+              float fActDieDelay,
+              float fAct1Delay,
+              float fAct2Delay,
+              float fAct3Delay,
+              float fAct4Delay,
+              float fAct5Delay,
+              float fAct6Delay,
+              const ARR_ATTACK_ANI& roArrAttackAnis,
+              float fBaseMoveSpeed,
+              float fBaseAttackInterval,
+              float fAttackEffectDelay,
+              float fAttackMinRange,
+              float fAttackRange,
+              float fHostilityRange,
+              CGameUnit::WEAPON_TYPE eWeaponType,
+              int iProjectileKey,
+              float fProjectileMoveSpeed,
+              float fProjectileScale,
+              float fProjectileMaxOffsetY,
+              float fProjectileBirthOffsetX,
+              float fProjectileBirthOffsetY,
+              const CAttackValue& roBaseAttackValue,
+              float fExAttackRandomRange,
+              CArmorValue::ARMOR_TYPE eArmorType,
+              float fBaseArmorValue,
+              int iForceIndex,
+              uint32_t dwForceAlly,
+              float fMaxHp,
+              bool bIsFixed,
+              int iRewardGold,
+              int iRewardExp
+              );
+    
     virtual ~CUnitInfo(void);
-
+    
 public:
     string m_sName;
     CCPoint m_oAnchor;
@@ -1045,14 +1045,14 @@ class CUnitInfoPatch
 public:
     static const uint16_t CONST_FILE_DATA_SIZE;
     typedef vector<int> VEC_SKILL_INDEX;
-
+    
 public:
     CUnitInfoPatch();
-
+    
     virtual bool initWithUnitInfo(int iUnitInfoIndex);
     virtual bool initWithFileStream(CGameFile* pFile);
     virtual void writeToFileStream(FILE* pFile);
-
+    
 public:
     int m_iOrgUnitIndex;
     char m_szName[32];
@@ -1076,37 +1076,37 @@ public:
 
 class CHeroUnit;
 
-// ´æÔÚÒ»¸öÈ«¾Ö¹²ÏíµÄ£¬ÓÃÓÚ´´½¨Ó¢ĞÛµÈ³£×¤µ¥Î»£¬µ«ÊÇÃ¿¸ö³¡¾°ĞèÒªµ¥¶ÀcreateÒ»¸ö£¬ÓÃÓÚ´´½¨µ±Ç°¹Ø¿¨µÄµ¥Î»
+// å­˜åœ¨ä¸€ä¸ªå…¨å±€å…±äº«çš„ï¼Œç”¨äºåˆ›å»ºè‹±é›„ç­‰å¸¸é©»å•ä½ï¼Œä½†æ˜¯æ¯ä¸ªåœºæ™¯éœ€è¦å•ç‹¬createä¸€ä¸ªï¼Œç”¨äºåˆ›å»ºå½“å‰å…³å¡çš„å•ä½
 class CUnitInfoPatchManager : public CCObject
 {
 public:
     typedef vector<CUnitInfoPatch> VEC_PATCHES;
-
+    
 public:
     virtual bool init();
     CREATE_FUNC_PARAM(CUnitInfoPatchManager, ());
-
+    
     virtual bool initWithFile(const char* pFileName);
     CREATEWITH_FUNC_PARAM(File, CUnitInfoPatchManager, (const char* pFileName), pFileName);
-
+    
     static CUnitInfoPatchManager* sharedUnitInfoPatchManager();
-
+    
     int addPatch(const CUnitInfoPatch& roPatch); // return index
     int addNewPatch(int iUnitIndex); // return index
     int addPatches(const char* pFileName);
     void saveAsFile(const char* pFileName);
     void setPatch(int iIndex, const CUnitInfoPatch& roPatch);
-
+    
     int count() const;
     CUnitInfoPatch* patchByIndex(int iIndex);
-
+    
     CGameUnit* unitByIndex(int iIndex);
     //CPathGameUnit* pathUnitByIndex(int iIndex);
     CHeroUnit* heroByIndex(int iIndex);
-
+    
 protected:
     void patch(CGameUnit* pUnit, CUnitInfoPatch* pPatch);
-
+    
 public:
     VEC_PATCHES m_vecPatches;
 };
@@ -1115,24 +1115,24 @@ class CUnitManager : public CCObject
 {
 public:
     typedef map<int, CUnitInfo> UNIT_MAP;
-
+    
 public:
     CUnitManager();
     virtual ~CUnitManager();
-
+    
     virtual bool init();
     CREATE_FUNC_PARAM(CUnitManager, ());
-
+    
     static CUnitManager* sharedUnitManager();
-
+    
     void addUnitInfo(int iUnitInfoIndex, const CUnitInfo& roUnitInfo);
-
+    
     CGameUnit* unitByInfo(int iUnitInfoIndex);
     //CPathGameUnit* pathUnitByInfo(int iUnitInfoIndex);
     CHeroUnit* heroByInfo(int iUnitInfoIndex);
-
+    
     CUnitInfo* unitInfoByIndex(int iUnitIndex);
-
+    
 public:
     static CUnitManager* m_pInst;
     UNIT_MAP m_mapUnitInfo;
@@ -1143,18 +1143,18 @@ class CProjectileManager : public CCObject
 public:
     CProjectileManager();
     virtual ~CProjectileManager();
-
+    
     virtual bool init();
     CREATE_FUNC_PARAM(CProjectileManager, ());
-
+    
     static CProjectileManager* sharedProjectileManager();
     virtual void cleanUp();
-
+    
     void addProjectile(CProjectile* pProjectile);
     CProjectile* getProjectile(int iKey);
     CProjectile* getProjectileByIndex(int iIndex);
     CProjectile* copyProjectile(int iKey);
-
+    
 public:
     static CProjectileManager* m_pInst;
     CUnitGroup m_oArrProjectile;
