@@ -73,10 +73,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #if defined QTPROJ
     CCScene *pScene = CCUnitEditorScene::create();
 #else
-//CCScene *pScene = CCWHomeScene::create();
+    CCScene *pScene = CCWHomeScene::create();
     //CCScene *pScene = CCUnitEditorScene::create();
 	//CCScene *pScene = CCBattleScene::create();
-	CCScene* pScene = CCGameChapterScene::create();
+	//CCScene* pScene = CCGameChapterScene::create();
 #endif
 	 
     // run

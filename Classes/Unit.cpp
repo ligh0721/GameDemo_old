@@ -3020,6 +3020,9 @@ bool CCUnitLayer::init()
     m_oProjectileDustbin.init();
     m_fUnitTickInterval = 0;
     m_iPendingSkillOwner = 0;
+    m_oArrUnitToAdd.init();
+    m_oArrProjectileToAdd.init();
+    m_bOnTickEvent = false;
     return CCLayerColor::init();
 }
 
@@ -3031,6 +3034,9 @@ bool CCUnitLayer::initWithColor( const ccColor4B& color )
     m_oProjectileDustbin.init();
     m_fUnitTickInterval = 0.1;
     m_iPendingSkillOwner = 0;
+    m_oArrUnitToAdd.init();
+    m_oArrProjectileToAdd.init();
+    m_bOnTickEvent = false;
     return CCLayerColor::initWithColor(color);
 }
 
@@ -3066,6 +3072,8 @@ void CCUnitLayer::onExit()
 
 void CCUnitLayer::onTickEvent( float fDt )
 {
+    m_bOnTickEvent = true;
+
     CCArray* pArrUnit = getUnits()->getUnitsArray();
     CCArray* pArrProj = getProjectiles()->getUnitsArray();
     
@@ -3085,11 +3093,35 @@ void CCUnitLayer::onTickEvent( float fDt )
         pProjectile->onTick(fDt);
     }
     clearProjectileDustbin();
+
+    m_bOnTickEvent = false;
+    CCARRAY_FOREACH(&m_oArrUnitToAdd, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        m_oArrUnit.addUnit(pUnit);
+    }
+
+    CCARRAY_FOREACH(&m_oArrProjectileToAdd, pObj)
+    {
+        pProjectile = dynamic_cast<CProjectile*>(pObj);
+        m_oArrProjectile.addUnit(pProjectile);
+    }
+
+    m_oArrUnitToAdd.removeAllObjects();
+    m_oArrProjectileToAdd.removeAllObjects();
 }
 
 void CCUnitLayer::addUnit( CGameUnit* pUnit )
 {
-    m_oArrUnit.addUnit(pUnit);
+    if (m_bOnTickEvent)
+    {
+        m_oArrUnitToAdd.addObject(pUnit);
+    }
+    else
+    {
+        m_oArrUnit.addUnit(pUnit);
+    }
+    
     pUnit->setUnitLayer(this);
     addChild(pUnit->getSprite());
     addChild(pUnit->getShadowNode(), 10);
@@ -3097,7 +3129,14 @@ void CCUnitLayer::addUnit( CGameUnit* pUnit )
 
 void CCUnitLayer::addProjectile( CProjectile* pProjectile )
 {
-    m_oArrProjectile.addUnit(pProjectile);
+    if (m_bOnTickEvent)
+    {
+        m_oArrProjectileToAdd.addObject(pProjectile);
+    }
+    else
+    {
+        m_oArrProjectile.addUnit(pProjectile);
+    }
     pProjectile->setUnitLayer(this);
     addChild(pProjectile->getSprite());
 }

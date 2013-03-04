@@ -799,6 +799,7 @@ private:
     CExtraCoeff m_oDamageCoef;
     char* m_pActName;
 };
+
 class CJumpChopSkill : public CPassiveSkill
 {
 public:
@@ -831,4 +832,24 @@ private:
     CAttackData* m_pAttackData;
 };
 
+class CThunderBolt2Buff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fRange, const CAttackValue& roDamage);
+    M_CREATE_FUNC_PARAM(CThunderBolt2Buff, (float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fRange, const CAttackValue& roDamage), fDuration, bCanBePlural, iSrcKey, fInterval, fRange, roDamage);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    M_GET_TYPE_KEY;
 
+protected:
+    virtual void onBuffAdd();
+    virtual void onBuffDel();
+
+    virtual void onUnitTick(float fDt);
+    virtual void onUnitInterval();
+
+public:
+    float m_fRange;
+    CAttackValue m_oDamage;
+    float m_fInterval;
+    float m_fIntervalPass;
+};

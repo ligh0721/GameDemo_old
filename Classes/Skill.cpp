@@ -2421,3 +2421,60 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
     m_pLastTargetUnit = pTarget;
 }
+
+bool CThunderBolt2Buff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fRange, const CAttackValue& roDamage )
+{
+    CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+    m_fRange = fRange;
+    m_oDamage = roDamage;
+    m_fInterval = fInterval;
+    m_fIntervalPass = 0;
+    return true;
+}
+
+CCObject* CThunderBolt2Buff::copyWithZone( CCZone* pZone )
+{
+    return CThunderBolt2Buff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fInterval, m_fRange, m_oDamage);
+}
+
+void CThunderBolt2Buff::onBuffAdd()
+{
+    CBuffSkill::onBuffAdd();
+}
+
+void CThunderBolt2Buff::onBuffDel()
+{
+    CBuffSkill::onBuffDel();
+}
+
+void CThunderBolt2Buff::onUnitTick( float fDt )
+{
+    timeStep(fDt);
+
+    if (m_fPass > m_fDuration)
+    {
+        m_fIntervalPass += fDt - m_fPass + m_fDuration;
+    }
+    else
+    {
+        m_fIntervalPass += fDt;
+    }
+
+    while (m_fIntervalPass >= m_fInterval)
+    {
+        onUnitInterval();
+        m_fIntervalPass -= m_fInterval;
+    }
+
+    delBuffIfTimeout();
+}
+
+void CThunderBolt2Buff::onUnitInterval()
+{
+    M_DEF_UM(pUm);
+    CGameUnit* t = pUm->unitByInfo(2);
+    CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+    o->getUnitLayer()->addUnit(t);
+    t->setPosition(o->getPosition());
+    t->attack(o->getKey());
+}

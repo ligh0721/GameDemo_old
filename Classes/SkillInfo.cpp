@@ -168,6 +168,9 @@ bool COrgSkillInfo::init()
     //pSkill = CChainBuff::create(0.5, false, 0, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kBall2));
     //dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
     iKey = pSm->addSkill(pSkill);
+
+    //pSkill = CThunderBolt2Buff::create(5, false, 0, 1, 100, CAttackValue(1, CAttackValue::kMagical, 50.0));
+    //iKey = pSm->addSkill(pSkill);
     
     pSkill = CProjectileAct::create(1.0, 1500, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3), iKey, 1);
     dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
