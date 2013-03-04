@@ -27,6 +27,7 @@ public:
         kThunderAttack1,
         kChainLighting1,
         kSwordStorm1,
+        kSwordStorm2,
         kJumpChop1
     };
 
