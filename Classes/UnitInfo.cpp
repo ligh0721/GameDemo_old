@@ -30,11 +30,11 @@ bool COrgUnitInfo::init()
         kAct6 = CGameUnit::kAnimationAct6,
     };
     
-    // ä¸‹é¢åŠ è½½èµ„æºéƒ¨åˆ†ï¼Œå°†æ”¹é€ ä¸ºæ ¹æ®å…³å¡ï¼Œéƒ¨åˆ†åŠ è½½
-    // åŠ è½½å›¾é›†
+    // ÏÂÃæ¼ÓÔØ×ÊÔ´²¿·Ö£¬½«¸ÄÔìÎª¸ù¾İ¹Ø¿¨£¬²¿·Ö¼ÓÔØ
+    // ¼ÓÔØÍ¼¼¯
     pFc->addSpriteFramesWithFile("unit.plist");
     
-    // åŠ è½½å•ä½åŠ¨ç”»
+    // ¼ÓÔØµ¥Î»¶¯»­
     pGm->loadUnitAnimation("Malik", "move");
     pGm->loadUnitAnimation("Malik", "die");
     pGm->loadUnitAnimation("Malik", "act1");
@@ -111,48 +111,48 @@ bool COrgUnitInfo::init()
     //pGm->preloadEffectSound("MalikAttack.wav");
     
     pProj = CProjectile::createWithName("Ball1");
-    pProj->setProjectileType(CProjectile::kFollow); // è®¾ç½®æŠ•å°„ç‰©
-    pProj->prepareMoveAnimation("move", 0.1); // åŠ è½½æŠ•å°„ç‰©ç§»åŠ¨åŠ¨ç”»
-    pProj->prepareDieAnimation("die", 0.1); // åŠ è½½æŠ•å°„ç‰©æ­»äº¡åŠ¨ç”»
+    pProj->setProjectileType(CProjectile::kFollow); // ÉèÖÃÍ¶ÉäÎï
+    pProj->prepareMoveAnimation("move", 0.1); // ¼ÓÔØÍ¶ÉäÎïÒÆ¶¯¶¯»­
+    pProj->prepareDieAnimation("die", 0.1); // ¼ÓÔØÍ¶ÉäÎïËÀÍö¶¯»­
     pProj->setBaseMoveSpeed(300.0);
-    pPm->addProjectile(pProj); // å°†æŠ•å°„ç‰©æ·»åŠ åˆ°PMä¸­
+    pPm->addProjectile(pProj); // ½«Í¶ÉäÎïÌí¼Óµ½PMÖĞ
     CProjectile* pProjBall1 = pProj;
     
     pProj = CProjectile::createWithName("Ball2");
-    pProj->setProjectileType(CProjectile::kFollow); // è®¾ç½®æŠ•å°„ç‰©
-    pProj->prepareMoveAnimation("move", 0.1); // åŠ è½½æŠ•å°„ç‰©ç§»åŠ¨åŠ¨ç”»
-    pProj->prepareDieAnimation("die", 0.1); // åŠ è½½æŠ•å°„ç‰©æ­»äº¡åŠ¨ç”»
+    pProj->setProjectileType(CProjectile::kFollow); // ÉèÖÃÍ¶ÉäÎï
+    pProj->prepareMoveAnimation("move", 0.1); // ¼ÓÔØÍ¶ÉäÎïÒÆ¶¯¶¯»­
+    pProj->prepareDieAnimation("die", 0.1); // ¼ÓÔØÍ¶ÉäÎïËÀÍö¶¯»­
     pProj->setBaseMoveSpeed(300.0);
-    pPm->addProjectile(pProj); // å°†æŠ•å°„ç‰©æ·»åŠ åˆ°PMä¸­
+    pPm->addProjectile(pProj); // ½«Í¶ÉäÎïÌí¼Óµ½PMÖĞ
     CProjectile* pProjBall2 = pProj;
     
     pProj = CProjectile::createWithName("Ball3");
-    pProj->setProjectileType(CProjectile::kFollow); // è®¾ç½®æŠ•å°„ç‰©
-    pProj->prepareMoveAnimation("move", 0.1); // åŠ è½½æŠ•å°„ç‰©ç§»åŠ¨åŠ¨ç”»
-    pProj->prepareDieAnimation("die", 0.1); // åŠ è½½æŠ•å°„ç‰©æ­»äº¡åŠ¨ç”»
+    pProj->setProjectileType(CProjectile::kFollow); // ÉèÖÃÍ¶ÉäÎï
+    pProj->prepareMoveAnimation("move", 0.1); // ¼ÓÔØÍ¶ÉäÎïÒÆ¶¯¶¯»­
+    pProj->prepareDieAnimation("die", 0.1); // ¼ÓÔØÍ¶ÉäÎïËÀÍö¶¯»­
     pProj->setBaseMoveSpeed(300.0);
-    pPm->addProjectile(pProj); // å°†æŠ•å°„ç‰©æ·»åŠ åˆ°PMä¸­
+    pPm->addProjectile(pProj); // ½«Í¶ÉäÎïÌí¼Óµ½PMÖĞ
     CProjectile* pProjBall3 = pProj;
     
     pProj = CProjectile::createWithName("Lightning1");
-    pProj->setProjectileType(CProjectile::kLightning); // è®¾ç½®æŠ•å°„ç‰©
-    pProj->prepareDieAnimation("die", 0.1); // åŠ è½½æŠ•å°„ç‰©æ­»äº¡åŠ¨ç”»
+    pProj->setProjectileType(CProjectile::kLightning); // ÉèÖÃÍ¶ÉäÎï
+    pProj->prepareDieAnimation("die", 0.1); // ¼ÓÔØÍ¶ÉäÎïËÀÍö¶¯»­
     pProj->setBaseMoveSpeed(0.0);
-    pPm->addProjectile(pProj); // å°†æŠ•å°„ç‰©æ·»åŠ åˆ°PMä¸­
+    pPm->addProjectile(pProj); // ½«Í¶ÉäÎïÌí¼Óµ½PMÖĞ
     CProjectile* pProjLightning1 = pProj;
     
     pProj = CProjectile::createWithName("Lightning1");
-    pProj->setProjectileType(CProjectile::kLightning); // è®¾ç½®æŠ•å°„ç‰©
-    pProj->prepareDieAnimation("die", 0.05); // åŠ è½½æŠ•å°„ç‰©æ­»äº¡åŠ¨ç”»
+    pProj->setProjectileType(CProjectile::kLightning); // ÉèÖÃÍ¶ÉäÎï
+    pProj->prepareDieAnimation("die", 0.05); // ¼ÓÔØÍ¶ÉäÎïËÀÍö¶¯»­
     pProj->setBaseMoveSpeed(0.0);
-    pPm->addProjectile(pProj); // å°†æŠ•å°„ç‰©æ·»åŠ åˆ°PMä¸­
+    pPm->addProjectile(pProj); // ½«Í¶ÉäÎïÌí¼Óµ½PMÖĞ
     CProjectile* pProjLightning2 = pProj;
     
     pProj = CProjectile::createWithName("Lightning2");
-    pProj->setProjectileType(CProjectile::kLightning); // è®¾ç½®æŠ•å°„ç‰©
-    pProj->prepareDieAnimation("die", 0.1); // åŠ è½½æŠ•å°„ç‰©æ­»äº¡åŠ¨ç”»
+    pProj->setProjectileType(CProjectile::kLightning); // ÉèÖÃÍ¶ÉäÎï
+    pProj->prepareDieAnimation("die", 0.1); // ¼ÓÔØÍ¶ÉäÎïËÀÍö¶¯»­
     pProj->setBaseMoveSpeed(0.0);
-    pPm->addProjectile(pProj); // å°†æŠ•å°„ç‰©æ·»åŠ åˆ°PMä¸­
+    pPm->addProjectile(pProj); // ½«Í¶ÉäÎïÌí¼Óµ½PMÖĞ
     CProjectile* pProjLightning3 = pProj;
     
     

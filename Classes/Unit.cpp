@@ -217,10 +217,10 @@ void CLife::onHpChange(float fChanged)
 }
 
 const char* CAttackValue::CONST_ARR_NAME[CONST_MAX_ATTACK_TYPE][CONST_MAX_NAME_INDEX] = {
-    { "kPhysical", "ç‰©ç†" },
-    { "kMagical", "é­”æ³•" },
-    { "kSiege", "æ”»åŸ" },
-    { "kHoly", "ç¥åœ£" }
+    { "kPhysical", "ÎïÀí" },
+    { "kMagical", "Ä§·¨" },
+    { "kSiege", "¹¥³Ç" },
+    { "kHoly", "ÉñÊ¥" }
 };
 
 CAttackValue::CAttackValue()
@@ -306,12 +306,12 @@ const CAttackValue& CAttackValue::operator=( const CAttackValue& roAv )
 }
 
 const char* CArmorValue::CONST_ARR_NAME[CONST_MAX_ARMOR_TYPE][CONST_MAX_NAME_INDEX] = {
-    { "Normal", "æ™®é€š" },
-    { "Heavy", "é‡è£…" },
-    { "Crystal", "æ°´æ™¶" },
-    { "Wall", "åŸå¢™" },
-    { "Hero", "è‹±é›„" },
-    { "Holy", "ç¥åœ£" }
+    { "Normal", "ÆÕÍ¨" },
+    { "Heavy", "ÖØ×°" },
+    { "Crystal", "Ë®¾§" },
+    { "Wall", "³ÇÇ½" },
+    { "Hero", "Ó¢ĞÛ" },
+    { "Holy", "ÉñÊ¥" }
 };
 
 CArmorValue::CArmorValue()
@@ -378,25 +378,25 @@ const CArmorValue& CArmorValue::operator=( const CArmorValue& roAv )
 }
 
 /*
- 0.00    æ— 
- 0.25    å¾®å¼±
- 0.50    å¼±
- 0.75    è¾ƒå¼±
- 1.00    æ­£å¸¸
- 1.25    è¾ƒå¼º
- 1.50    å¼º
- 1.75    è¶…å¼º
- 2.00    ç“¦è§£
+ 0.00    ÎŞ
+ 0.25    Î¢Èõ
+ 0.50    Èõ
+ 0.75    ½ÏÈõ
+ 1.00    Õı³£
+ 1.25    ½ÏÇ¿
+ 1.50    Ç¿
+ 1.75    ³¬Ç¿
+ 2.00    Íß½â
  */
 
 float g_afAttackArmorTable[CArmorValue::CONST_MAX_ARMOR_TYPE][CAttackValue::CONST_MAX_ATTACK_TYPE] = {
-    //           ç‰©ç†æ”»å‡» é­”æ³•æ”»å‡» æ”»åŸæ”»å‡» ç¥åœ£æ”»å‡»
-    /*æ™®é€šæŠ¤ç”²*/ { 1.00,   1.00,   1.00,   1.00 },
-    /*é‡è£…æŠ¤ç”²*/ { 0.50,   1.50,   0.75,   1.00 },
-    /*æ°´æ™¶æŠ¤ç”²*/ { 1.25,   0.50,   1.50,   1.00 },
-    /*åŸå¢™æŠ¤ç”²*/ { 0.50,   0.50,   1.50,   1.00 },
-    /*è‹±é›„æŠ¤ç”²*/ { 0.75,   0.75,   0.75,   1.00 },
-    /*ç¥åœ£æŠ¤ç”²*/ { 0.25,   0.25,   0.25,   1.00 }
+    //           ÎïÀí¹¥»÷ Ä§·¨¹¥»÷ ¹¥³Ç¹¥»÷ ÉñÊ¥¹¥»÷
+    /*ÆÕÍ¨»¤¼×*/ { 1.00,   1.00,   1.00,   1.00 },
+    /*ÖØ×°»¤¼×*/ { 0.50,   1.50,   0.75,   1.00 },
+    /*Ë®¾§»¤¼×*/ { 1.25,   0.50,   1.50,   1.00 },
+    /*³ÇÇ½»¤¼×*/ { 0.50,   0.50,   1.50,   1.00 },
+    /*Ó¢ĞÛ»¤¼×*/ { 0.75,   0.75,   0.75,   1.00 },
+    /*ÉñÊ¥»¤¼×*/ { 0.25,   0.25,   0.25,   1.00 }
 };
 
 CAttackBuff::CAttackBuff()
@@ -1205,7 +1205,7 @@ void CCGameUnitSprite::draw()
 
 const float CGameUnit::CONST_MIN_MOVE_SPEED = 1.0;
 const float CGameUnit::CONST_MAX_MOVE_SPEED = 500.0;
-const float CGameUnit::CONST_MIN_MOVE_SPEED_MULRIPLE = 0.2; // æœ€å°å˜ä¸ºåŸºç¡€é€Ÿåº¦çš„20%
+const float CGameUnit::CONST_MIN_MOVE_SPEED_MULRIPLE = 0.2; // ×îĞ¡±äÎª»ù´¡ËÙ¶ÈµÄ20%
 
 const float CGameUnit::CONST_MIN_ATTACK_SPEED_INTERVAL = 0.1; // 0.1s
 const float CGameUnit::CONST_MIN_ATTACK_SPEED_MULRIPLE = 0.2; // 20%
@@ -1487,12 +1487,12 @@ float CGameUnit::getRealMoveSpeed() const
 {
     float fMoveSpeed = getBaseMoveSpeed();
     float fRealMoveSpeed = m_oExMoveSpeed.getValue(fMoveSpeed);
-    // å–æœ€å°ç§»åŠ¨é€Ÿåº¦å’Œæœ€å°å‡é€Ÿåé€Ÿåº¦çš„æœ€å¤§å€¼ä½œä¸ºæœ€å°ç§»åŠ¨é€Ÿåº¦
+    // È¡×îĞ¡ÒÆ¶¯ËÙ¶ÈºÍ×îĞ¡¼õËÙºóËÙ¶ÈµÄ×î´óÖµ×÷Îª×îĞ¡ÒÆ¶¯ËÙ¶È
     float fMinMoveSpeed = fMoveSpeed * CONST_MIN_MOVE_SPEED_MULRIPLE;
     fMinMoveSpeed = MAX(CONST_MIN_MOVE_SPEED, fMinMoveSpeed);
-    // è®¡ç®—å®é™…ç§»åŠ¨é€Ÿåº¦ï¼Œä¸å¾—è¶…è¿‡ä¸Šè¿°è®¡ç®—æ‰€å¾—çš„æœ€å°å€¼
+    // ¼ÆËãÊµ¼ÊÒÆ¶¯ËÙ¶È£¬²»µÃ³¬¹ıÉÏÊö¼ÆËãËùµÃµÄ×îĞ¡Öµ
     fRealMoveSpeed = MAX(fRealMoveSpeed, fMinMoveSpeed);
-    // è®¡ç®—å®é™…ç§»åŠ¨é€Ÿåº¦ï¼Œä¸å¾—è¶…è¿‡æœ€å¤§ç§»åŠ¨é€Ÿåº¦
+    // ¼ÆËãÊµ¼ÊÒÆ¶¯ËÙ¶È£¬²»µÃ³¬¹ı×î´óÒÆ¶¯ËÙ¶È
     return MIN(fRealMoveSpeed, CONST_MAX_MOVE_SPEED);
 }
 
@@ -1558,7 +1558,7 @@ void CGameUnit::moveTo( const CCPoint& roPos, const UNIT_MOVE_PARAMS& roMovePara
     float fDelta = getRealMoveSpeed() / fMoveSpeed;
     CCSpeed* pActMoveTo = CCSpeed::create(pSeq, fDelta);
     pActMoveTo->setTag(kActMoveTo);
-    // çªå‘ç§»åŠ¨æŒ‡ä»¤ï¼Œæ‰“æ–­æ—§ç§»åŠ¨ï¼Œæ‰“æ–­æ”»å‡»ï¼Œæ‰“æ–­æ–½æ³•
+    // Í»·¢ÒÆ¶¯Ö¸Áî£¬´ò¶Ï¾ÉÒÆ¶¯£¬´ò¶Ï¹¥»÷£¬´ò¶ÏÊ©·¨
     if (isDoingOr(kMoving))
     {
         m_oSprite.stopActionByTag(kActMoveTo);
@@ -1617,7 +1617,7 @@ void CGameUnit::followTo( int iTargetKey, const UNIT_MOVE_PARAMS& roMoveParams /
     float fDelta = getRealMoveSpeed() / fMoveSpeed;
     CCSpeed* pActMoveTo = CCSpeed::create(pSeq, fDelta);
     pActMoveTo->setTag(kActMoveTo);
-    // çªå‘ç§»åŠ¨æŒ‡ä»¤ï¼Œæ‰“æ–­æ—§ç§»åŠ¨ï¼Œæ‰“æ–­æ”»å‡»
+    // Í»·¢ÒÆ¶¯Ö¸Áî£¬´ò¶Ï¾ÉÒÆ¶¯£¬´ò¶Ï¹¥»÷
     if (isDoingOr(kMoving))
     {
         m_oSprite.stopActionByTag(kActMoveTo);
@@ -1746,13 +1746,13 @@ float CGameUnit::getRealAttackSpeed() const
 float CGameUnit::getRealAttackInterval() const
 {
     float fAttackInterval = getBaseAttackInterval();
-    // å–æ”»å‡»é€Ÿåº¦ç³»æ•°ï¼Œä¸å¾—å°äºæœ€å°å€¼
+    // È¡¹¥»÷ËÙ¶ÈÏµÊı£¬²»µÃĞ¡ÓÚ×îĞ¡Öµ
     float fMulriple = m_oExAttackSpeed.getMulriple();
     fMulriple = MAX(fMulriple, CONST_MIN_ATTACK_SPEED_MULRIPLE);
-    // è®¡ç®—ä¸¤ç§æœ€çŸ­æ”»å‡»é—´éš”ä¸­çš„æœ€å¤§å€¼ä½œä¸ºæœ€çŸ­æ”»å‡»é—´éš”
+    // ¼ÆËãÁ½ÖÖ×î¶Ì¹¥»÷¼ä¸ôÖĞµÄ×î´óÖµ×÷Îª×î¶Ì¹¥»÷¼ä¸ô
     float fMinAttacSpeedInterval = fAttackInterval / CONST_MAX_ATTACK_SPEED_MULRIPLE;
     fMinAttacSpeedInterval = MAX(CONST_MIN_ATTACK_SPEED_INTERVAL, fMinAttacSpeedInterval);
-    // è®¡ç®—å®é™…æ”»å‡»é—´éš”ï¼Œä¸å¾—å°äºä¸Šè¿°æœ€çŸ­æ”»å‡»é—´éš”
+    // ¼ÆËãÊµ¼Ê¹¥»÷¼ä¸ô£¬²»µÃĞ¡ÓÚÉÏÊö×î¶Ì¹¥»÷¼ä¸ô
     float fRealAttackInterval = fAttackInterval / fMulriple;
     return MAX(fRealAttackInterval, fMinAttacSpeedInterval);
 }
@@ -1800,10 +1800,10 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
     CGameUnit* pTarget = getUnitLayer()->getUnitByKey(iTargetKey);
     if (!pTarget || pTarget->isDead() || pTarget->getStatus() == kNoAttacked)
     {
-        // åŸç›®æ ‡å·²ä¸å­˜åœ¨
+        // Ô­Ä¿±êÒÑ²»´æÔÚ
         if (isDoingOr(kAttacking) && !m_oSprite.getActionByTag(kActAttack))
         {
-            // æ”»å‡»ä¸­ï¼Œä¸”æ²¡æœ‰æ–½å±•åŠ¨ä½œï¼Œå¯èƒ½æ˜¯åŸåœ°æ‰“ï¼Œä¹Ÿå¯èƒ½æ˜¯è¿½å‡»ä¸­
+            // ¹¥»÷ÖĞ£¬ÇÒÃ»ÓĞÊ©Õ¹¶¯×÷£¬¿ÉÄÜÊÇÔ­µØ´ò£¬Ò²¿ÉÄÜÊÇ×·»÷ÖĞ
             endDoing(kAttacking | kIntended);
             //m_iLastAttackTarget = 0;
         }
@@ -1813,7 +1813,7 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
     
     if (isDoingOr(kSuspended))
     {
-        // çœ©æ™•ä¸­ï¼Œå°±é€€å‡º
+        // Ñ£ÔÎÖĞ£¬¾ÍÍË³ö
         //m_iLastAttackTarget = iTargetKey;
         return;
     }
@@ -1823,9 +1823,9 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
     //CCLOG("dis: %.2f, %.2f, %.2f | %.2f", pGm->getDistance(roPos1, roPos2) - getHalfOfWidth() - pTarget->getHalfOfWidth(), getAttackMinRange(), getAttackRange(), abs(roPos1.y - roPos2.y));
     if (checkAttackDistance(roPos1, pTarget))
     {
-        // å¯ä»¥å°†å¯¹è¯¥ç›®æ ‡è¿›è¡Œæ”»å‡»
+        // ¿ÉÒÔ½«¶Ô¸ÃÄ¿±ê½øĞĞ¹¥»÷
         
-        // ä½ç½®ç¬¦åˆï¼Œå¯ä»¥ç«‹å³å‘åŠ¨æ”»å‡»ï¼Œçªå‘æ”»å‡»æŒ‡ä»¤ï¼Œæ‰“æ–­ç§»åŠ¨ï¼Œæ‰“æ–­æ—§æ”»å‡»ï¼Œæ‰“æ–­æ–½æ³•
+        // Î»ÖÃ·ûºÏ£¬¿ÉÒÔÁ¢¼´·¢¶¯¹¥»÷£¬Í»·¢¹¥»÷Ö¸Áî£¬´ò¶ÏÒÆ¶¯£¬´ò¶Ï¾É¹¥»÷£¬´ò¶ÏÊ©·¨
         if (isDoingOr(kMoving))
         {
             stopMove();
@@ -1837,7 +1837,7 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
         
         if (getLastAttackTarget() == iTargetKey && m_oSprite.getActionByTag(kActAttack))
         {
-            // æ–°æ”»å‡»ç›®æ ‡å°±æ˜¯æ­£åœ¨æ”»å‡»ç€çš„ç›®æ ‡ï¼Œç›´æ¥è¿”å›
+            // ĞÂ¹¥»÷Ä¿±ê¾ÍÊÇÕıÔÚ¹¥»÷×ÅµÄÄ¿±ê£¬Ö±½Ó·µ»Ø
             return;
         }
         
@@ -1849,7 +1849,7 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
         m_iLastAttackTarget = iTargetKey;
         turnTo(pTarget);
         
-        // è®¾ç½®æ”»å‡»æ ‡å¿—ä½(ç¡®å®šæ”»å‡»æ„è¯†)
+        // ÉèÖÃ¹¥»÷±êÖ¾Î»(È·¶¨¹¥»÷ÒâÊ¶)
         startDoing(kAttacking);
         if (bIntended)
         {
@@ -1864,7 +1864,7 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
             return;
         }
         
-        // å‘åŠ¨æ”»å‡»åŠ¨ä½œ
+        // ·¢¶¯¹¥»÷¶¯×÷
         m_fAttackCD = fRealAttackInterval;
         float fDelta = getBaseAttackInterval() / fRealAttackInterval;
         setAnimation(m_vecAttackAniIndex[rand() % m_vecAttackAniIndex.size()], 0, fDelta, kActAttack, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEnd)));
@@ -1874,25 +1874,25 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
         return;
     }
     
-    // ç”±äºä½ç½®åŸå› ï¼Œæ— æ³•è¿›è¡Œæ”»å‡»
+    // ÓÉÓÚÎ»ÖÃÔ­Òò£¬ÎŞ·¨½øĞĞ¹¥»÷
     if (isFixed())
     {
-        // å¦‚æœæ˜¯å»ºç­‘ï¼Œåªéœ€ä¸¢å¤±æ”»å‡»ç›®æ ‡å³å¯
+        // Èç¹ûÊÇ½¨Öş£¬Ö»Ğè¶ªÊ§¹¥»÷Ä¿±ê¼´¿É
         m_iLastAttackTarget = 0;
         endDoing(kAttacking | kIntended);
         return;
     }
     
-    // è¿›è¡Œæ”»å‡»æ ¡æ­£
+    // ½øĞĞ¹¥»÷Ğ£Õı
     
     if (getLastAttackTarget() == iTargetKey)
     {
         if (isDoingAnd(kAttacking | kMoving))
         {
-            // ä½ç½®æ ¡æ­£ä¸­
+            // Î»ÖÃĞ£ÕıÖĞ
             if (!checkAttackDistance(getLastMoveToTarget(), pTarget))
             {
-                // æ”»å‡»ç›®æ ‡æœªå˜ï¼Œä½†ä¿®æ­£ä½ç½®å·²è¿‡æœŸ
+                // ¹¥»÷Ä¿±êÎ´±ä£¬µ«ĞŞÕıÎ»ÖÃÒÑ¹ıÆÚ
                 //if (getWeaponType() == kWTDelayed) CCLOG("!!!!!!!!!");
                 moveToAttackPosition(pTarget, bIntended);
             }
@@ -2070,12 +2070,12 @@ void CGameUnit::moveToAttackPosition( CGameUnit* pTarget, bool bIntended )
     oMp.bCancelAttack = false;
     if (getWeaponType() == kWTClosely)
     {
-        // è¿‘æˆ˜æ”»å‡»ä½ç½®ä¿®æ­£
+        // ½üÕ½¹¥»÷Î»ÖÃĞŞÕı
         moveTo(ccp(roPos2.x + ((roPos1.x > roPos2.x) ? fDis : -fDis), roPos2.y), oMp);
     }
     else
     {
-        // è¿œç¨‹æ”»å‡»ä½ç½®ä¿®æ­£
+        // Ô¶³Ì¹¥»÷Î»ÖÃĞŞÕı
         float fA = -ccpToAngle(ccpSub(roPos1, roPos2));
         moveTo(ccpAdd(roPos2, ccp(cos(fA) * fDis, sin(-fA) * fDis)), oMp);
     }
@@ -2143,7 +2143,7 @@ void CGameUnit::onTick( float fDt )
     CUnit::onTick(fDt);
     m_fAttackCD -= fDt;
     //CCLOG("%d %.2f/%.2f", m_iKey, m_fAttackPass, getRealAttackInterval());
-    // åŸºç¡€AI
+    // »ù´¡AI
     
     if (isDoingOr(kCasting))
     {
@@ -2151,7 +2151,7 @@ void CGameUnit::onTick( float fDt )
         return;
     }
     
-    // è·¯å¾„é€»è¾‘
+    // Â·¾¶Âß¼­
     if (m_pMovePath)
     {
         const CCPoint* pTarget;
@@ -2336,7 +2336,7 @@ CUnitPath* CGameUnit::getMovePath()
 bool CGameUnit::cast()
 {
     // test
-    CActiveSkill* pSkill = getToCastSkill(); // åªè¦skillæ²¡æœ‰castï¼Œå°±éNULL
+    CActiveSkill* pSkill = getToCastSkill(); // Ö»ÒªskillÃ»ÓĞcast£¬¾Í·ÇNULL
     if (!pSkill)
     {
         return false;
@@ -2350,17 +2350,17 @@ bool CGameUnit::cast()
     
     if (isDoingOr(kSuspended))
     {
-        // çœ©æ™•ä¸­ï¼Œå°±é€€å‡º
+        // Ñ£ÔÎÖĞ£¬¾ÍÍË³ö
         //m_iLastAttackTarget = iTargetKey;
         return false;
     }
     
     CCPoint roPos1 = getPosition();
     CCPoint roPos2 = pSkill->updateTargetUnitPoint();
-    switch (pSkill->getCastTargetType()) // break ä»£è¡¨å¯ä»¥æ–½æ³•
+    switch (pSkill->getCastTargetType()) // break ´ú±í¿ÉÒÔÊ©·¨
     {
         case CActiveSkill::kNoTarget:
-            // åŸåœ°é‡Šæ”¾æŠ€èƒ½
+            // Ô­µØÊÍ·Å¼¼ÄÜ
             break;
             
         case CActiveSkill::kUnitTarget:
@@ -2370,10 +2370,10 @@ bool CGameUnit::cast()
                 break;
             }
             
-            // ç”±äºä½ç½®åŸå› ï¼Œæ— æ³•è¿›è¡Œæ”»å‡»
+            // ÓÉÓÚÎ»ÖÃÔ­Òò£¬ÎŞ·¨½øĞĞ¹¥»÷
             if (isFixed())
             {
-                // å¦‚æœæ˜¯å»ºç­‘ï¼Œåªéœ€ä¸¢å¤±æ–½æ³•ç›®æ ‡å³å¯
+                // Èç¹ûÊÇ½¨Öş£¬Ö»Ğè¶ªÊ§Ê©·¨Ä¿±ê¼´¿É
                 setToCastSkill(NULL);
                 endDoing(kCasting);
                 return false;
@@ -2381,13 +2381,13 @@ bool CGameUnit::cast()
             
             if (getToCastSkill() == getCastingSkill())
             {
-                // è¿›è¡Œæ–½æ³•æ ¡æ­£
+                // ½øĞĞÊ©·¨Ğ£Õı
                 if (isDoingAnd(kCasting | kMoving))
                 {
-                    // ä½ç½®æ ¡æ­£ä¸­
+                    // Î»ÖÃĞ£ÕıÖĞ
                     if (!checkCastDistance(getLastMoveToTarget()))
                     {
-                        // ä½†ä¿®æ­£ä½ç½®å·²è¿‡æœŸ
+                        // µ«ĞŞÕıÎ»ÖÃÒÑ¹ıÆÚ
                         moveToCastPosition();
                     }
                     return false;
@@ -2406,9 +2406,9 @@ bool CGameUnit::cast()
             break;
     }
     
-    // å¯ä»¥å°†å¯¹è¯¥ç›®æ ‡è¿›è¡Œæ–½æ³•
+    // ¿ÉÒÔ½«¶Ô¸ÃÄ¿±ê½øĞĞÊ©·¨
     
-    // ä½ç½®ç¬¦åˆï¼Œå¯ä»¥ç«‹å³å‘åŠ¨æ–½æ³•ï¼Œçªå‘æ–½æ³•æŒ‡ä»¤ï¼Œæ‰“æ–­ç§»åŠ¨ï¼Œæ‰“æ–­æ”»å‡»ï¼Œæ‰“æ–­æ—§æ–½æ³•
+    // Î»ÖÃ·ûºÏ£¬¿ÉÒÔÁ¢¼´·¢¶¯Ê©·¨£¬Í»·¢Ê©·¨Ö¸Áî£¬´ò¶ÏÒÆ¶¯£¬´ò¶Ï¹¥»÷£¬´ò¶Ï¾ÉÊ©·¨
     if (isDoingOr(kMoving))
     {
         stopMove();
@@ -2421,7 +2421,7 @@ bool CGameUnit::cast()
     
     if (getToCastSkill() == getCastingSkill() && m_oSprite.getActionByTag(kActCast))
     {
-        // æ–°æ–½æ³•å°±æ˜¯æ­£åœ¨è¿›è¡Œçš„æ–½æ³•ï¼Œç›´æ¥è¿”å›
+        // ĞÂÊ©·¨¾ÍÊÇÕıÔÚ½øĞĞµÄÊ©·¨£¬Ö±½Ó·µ»Ø
         return true;
     }
     
@@ -2435,10 +2435,10 @@ bool CGameUnit::cast()
         turnTo(roPos2);
     }
     
-    // è®¾ç½®æ–½æ³•æ ‡å¿—ä½(ç¡®å®šæ–½æ³•æ„è¯†)
+    // ÉèÖÃÊ©·¨±êÖ¾Î»(È·¶¨Ê©·¨ÒâÊ¶)
     startDoing(kCasting | kIntended);
     
-    // å‘åŠ¨æ”»å‡»åŠ¨ä½œ
+    // ·¢¶¯¹¥»÷¶¯×÷
     if (!pSkill->canCast())
     {
         return false;
@@ -2514,6 +2514,7 @@ bool CGameUnit::checkCastDistance( const CCPoint& roPos )
         return false;
     }
     
+    
     return true;
 }
 
@@ -2536,12 +2537,12 @@ void CGameUnit::moveToCastPosition()
     oMp.bCancelCast = false;
     if (pSkill->getWeaponType() == CGameUnit::kWTClosely)
     {
-        // è¿‘æˆ˜æ”»å‡»ä½ç½®ä¿®æ­£
+        // ½üÕ½¹¥»÷Î»ÖÃĞŞÕı
         moveTo(ccp(roPos2.x + ((roPos1.x > roPos2.x) ? fDis : -fDis), roPos2.y), oMp);
     }
     else
     {
-        // è¿œç¨‹æ”»å‡»ä½ç½®ä¿®æ­£
+        // Ô¶³Ì¹¥»÷Î»ÖÃĞŞÕı
         float fA = -ccpToAngle(ccpSub(roPos1, roPos2));
         moveTo(ccpAdd(roPos2, ccp(cos(fA) * fDis, sin(-fA) * fDis)), oMp);
     }

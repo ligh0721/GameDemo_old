@@ -17,9 +17,9 @@ public:
     virtual void onLevelChange(CLevelExp* pLevel, int32_t iChanged) = 0; // @override
 };
 
-// ç­‰çº§ç»éªŒå€¼ï¼Œèµ‹äºˆå¯¹è±¡ç­‰çº§ç»éªŒå€¼ç‰¹æ€§
-// éœ€è¦è¦†ç›– updateMaxExpï¼Œæä¾›ç­‰çº§å˜åŒ–æ—¶çš„æœ€å¤§ç»éªŒå€¼å˜æ›´å…¬å¼
-// ç­‰çº§å˜åŒ–åŽè§¦å‘ onLevelChange
+// µÈ¼¶¾­ÑéÖµ£¬¸³Óè¶ÔÏóµÈ¼¶¾­ÑéÖµÌØÐÔ
+// ÐèÒª¸²¸Ç updateMaxExp£¬Ìá¹©µÈ¼¶±ä»¯Ê±µÄ×î´ó¾­ÑéÖµ±ä¸ü¹«Ê½
+// µÈ¼¶±ä»¯ºó´¥·¢ onLevelChange
 class CLevelExp
 {
 public:
@@ -75,7 +75,7 @@ public:
     
 };
 
-// æ”»å‡»æ•°å€¼ï¼Œç”±å¤šç§ç±»åž‹çš„æ”»å‡»ç»„åˆè€Œæˆ
+// ¹¥»÷ÊýÖµ£¬ÓÉ¶àÖÖÀàÐÍµÄ¹¥»÷×éºÏ¶ø³É
 class CAttackValue
 {
 public:
@@ -115,7 +115,7 @@ public:
     ARR_ATTACK_VALUES m_afAttack;
 };
 
-// æŠ¤ç”²æ•°å€¼ï¼Œç”±å¤šç§ç±»åž‹çš„æŠ¤ç”²ç»„åˆè€Œæˆ
+// »¤¼×ÊýÖµ£¬ÓÉ¶àÖÖÀàÐÍµÄ»¤¼××éºÏ¶ø³É
 class CArmorValue
 {
 public:
@@ -156,10 +156,10 @@ public:
     ARR_ARMOR_VALUES m_afArmor;
 };
 
-// æ”»å‡»-æŠ¤ç”²è®¡ç®—ç³»æ•°
+// ¹¥»÷-»¤¼×¼ÆËãÏµÊý
 extern float g_afAttackArmorTable[CArmorValue::CONST_MAX_ARMOR_TYPE][CAttackValue::CONST_MAX_ATTACK_TYPE];
 
-// æ”»å‡»é™„å¸¦çš„BUFFï¼ŒåŒ…å«æ”»å‡»å‘½ä¸­åŽçš„é™„åŠ æ¦‚çŽ‡
+// ¹¥»÷¸½´øµÄBUFF£¬°üº¬¹¥»÷ÃüÖÐºóµÄ¸½¼Ó¸ÅÂÊ
 class CAttackBuff : public CCObject
 {
 public:
@@ -176,7 +176,7 @@ public:
     int m_iProbability;
 };
 
-// æ”»å‡»æ•°æ®ï¼Œç”±æ”»å‡»æ•°å€¼å’Œæ”»å‡»BUFFé“¾ç»„æˆï¼Œæ”»å‡»åŠ¨ä½œä¸­ä¸»è¦ä¼ é€’çš„æ•°æ®ä½“
+// ¹¥»÷Êý¾Ý£¬ÓÉ¹¥»÷ÊýÖµºÍ¹¥»÷BUFFÁ´×é³É£¬¹¥»÷¶¯×÷ÖÐÖ÷Òª´«µÝµÄÊý¾ÝÌå
 class CAttackData : public CCObject, public CAttackValue
 {
 public:
@@ -195,8 +195,8 @@ public:
     CCArray m_oArrBuff;
 };
 
-// f = ax + bï¼Œxä¸ºåŸºå‡†å€¼ï¼Œaå’Œbåˆ†ä¸ºè®¡ç®—ä¹˜æ•°å’ŒåŠ æ•°ï¼Œåº”ç”¨æƒ…å½¢ï¼šè§¦å‘é‡å‡»å°†é€ æˆè‡ªèº«æ”»å‡»åŠ›çš„2å€å¹¶é¢å¤–é™„åŠ 30ç‚¹çš„ä¼¤å®³ï¼›æå‡è‡ªèº«20%çš„åŸºç¡€åŠ›é‡å€¼
-// åº”ç”¨è¯¥æŽ¥ç»“æž„ï¼Œå¯è½»æ˜“è§£å†³è£…å¤‡æ­¦å™¨/æ–°å¢žBUFFï¼Œå¸è½½æ­¦å™¨/åˆ é™¤BUFFåŽçš„å±žæ€§ä¸€è‡´
+// f = ax + b£¬xÎª»ù×¼Öµ£¬aºÍb·ÖÎª¼ÆËã³ËÊýºÍ¼ÓÊý£¬Ó¦ÓÃÇéÐÎ£º´¥·¢ÖØ»÷½«Ôì³É×ÔÉí¹¥»÷Á¦µÄ2±¶²¢¶îÍâ¸½¼Ó30µãµÄÉËº¦£»ÌáÉý×ÔÉí20%µÄ»ù´¡Á¦Á¿Öµ
+// Ó¦ÓÃ¸Ã½Ó½á¹¹£¬¿ÉÇáÒ×½â¾ö×°±¸ÎäÆ÷/ÐÂÔöBUFF£¬Ð¶ÔØÎäÆ÷/É¾³ýBUFFºóµÄÊôÐÔÒ»ÖÂ
 class CExtraCoeff
 {
 public:
@@ -242,7 +242,7 @@ protected:
     SEL_CallFuncO m_pCallback;
 };
 
-// æ¸¸æˆå•ä½ï¼Œæ˜¯æ”»å‡»æ•°æ®çš„å‘èµ·æºï¼Œæˆ–æ˜¯æ”»å‡»æ•°æ®çš„å—ä½“
+// ÓÎÏ·µ¥Î»£¬ÊÇ¹¥»÷Êý¾ÝµÄ·¢ÆðÔ´£¬»òÊÇ¹¥»÷Êý¾ÝµÄÊÜÌå
 class CUnit : public CLife
 {
     friend class CSkill;
@@ -261,7 +261,7 @@ public:
         kTickTrigger,
         kDestroyProjectileTrigger
     };
-    // è¿”å›žTriggerå±è”½æ ‡å¿—ä½
+    // ·µ»ØTriggerÆÁ±Î±êÖ¾Î»
 #define UNIT_TRIGGER_MASK(eTriggerIndex) (1 << eTriggerIndex)
     enum TRIGGER_MASK
     {
@@ -279,45 +279,45 @@ public:
     //CREATE_FUNC(CUnit);
     virtual bool init();
     
-    // é«˜å±‚æ”»å‡»å‡½æ•°ï¼Œç”¨äºŽæœ€åˆç”Ÿæˆæ”»å‡»æ•°æ®ï¼Œä¸€ä¸ªæ”»å‡»åŠ¨ä½œç”Ÿæˆçš„æ”»å‡»æ•°æ®ï¼Œä¸€èˆ¬è°ƒç”¨è¯¥å‡½æ•°
-    // æ”»å‡»åŠ¨ä½œï¼Œå¯å¯¹ç›®æ ‡é€ æˆåŠ¨ä½œï¼Œå¦‚æ™®é€šæ”»å‡»ã€æŠ€èƒ½ç­‰
-    // æ”»å‡»æ•°æ®ï¼Œæè¿°è¿™æ¬¡æ”»å‡»çš„æ•°æ®ä½“ï¼Œè¯¦è§ CAttackData å®šä¹‰
-    // å†…éƒ¨ä¼šè‡ªè¡Œè°ƒç”¨ä¸­å±‚ã€åº•å±‚æ”»å‡»å‡½æ•°ï¼Œå¯¹æ”»å‡»æ•°æ®è¿›è¡Œä¼ é€’å¹¶å¤„ç†ï¼Œé€šå¸¸è¿”å›žå¤„ç†åŽçš„æ”»å‡»æ•°æ®ï¼Œä¹Ÿå¯ä»¥è¿”å›ž NULL
-    // å†…éƒ¨ä¼šæ ¹æ®äººç‰©å±žæ€§å¯¹æ”»å‡»æ•°æ®è¿›è¡Œä¸€æ¬¡å˜æ¢ï¼Œå¦‚åŠ›é‡åŠ æˆç­‰
+    // ¸ß²ã¹¥»÷º¯Êý£¬ÓÃÓÚ×î³õÉú³É¹¥»÷Êý¾Ý£¬Ò»¸ö¹¥»÷¶¯×÷Éú³ÉµÄ¹¥»÷Êý¾Ý£¬Ò»°ãµ÷ÓÃ¸Ãº¯Êý
+    // ¹¥»÷¶¯×÷£¬¿É¶ÔÄ¿±êÔì³É¶¯×÷£¬ÈçÆÕÍ¨¹¥»÷¡¢¼¼ÄÜµÈ
+    // ¹¥»÷Êý¾Ý£¬ÃèÊöÕâ´Î¹¥»÷µÄÊý¾ÝÌå£¬Ïê¼û CAttackData ¶¨Òå
+    // ÄÚ²¿»á×ÔÐÐµ÷ÓÃÖÐ²ã¡¢µ×²ã¹¥»÷º¯Êý£¬¶Ô¹¥»÷Êý¾Ý½øÐÐ´«µÝ²¢´¦Àí£¬Í¨³£·µ»Ø´¦ÀíºóµÄ¹¥»÷Êý¾Ý£¬Ò²¿ÉÒÔ·µ»Ø NULL
+    // ÄÚ²¿»á¸ù¾ÝÈËÎïÊôÐÔ¶Ô¹¥»÷Êý¾Ý½øÐÐÒ»´Î±ä»»£¬ÈçÁ¦Á¿¼Ó³ÉµÈ
     CAttackData* attackAdv(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask = kNoMasked);
     
-    // ä¸­å±‚æ”»å‡»å‡½æ•°
-    // è§¦å‘ onAttackTargetï¼Œ
+    // ÖÐ²ã¹¥»÷º¯Êý
+    // ´¥·¢ onAttackTarget£¬
     CAttackData* attackMid(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask = kNoMasked);
     
-    // åº•å±‚æ”»å‡»å‡½æ•°ï¼Œç›®å‰æ— é€»è¾‘ï¼Œåªæ˜¯å°†ä¼ é€’è¿‡æ¥çš„æ”»å‡»æ•°æ®è¿”å›žç»™ä¸Šå±‚
+    // µ×²ã¹¥»÷º¯Êý£¬Ä¿Ç°ÎÞÂß¼­£¬Ö»ÊÇ½«´«µÝ¹ýÀ´µÄ¹¥»÷Êý¾Ý·µ»Ø¸øÉÏ²ã
     CAttackData* attackBot(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask = kNoMasked);
     
-    // é«˜å±‚ä¼¤å®³å‡½æ•°ï¼Œæ”»å‡»è€…ç”Ÿæˆçš„æ”»å‡»åˆ°è¾¾ç›®æ ‡åŽï¼Œç›®æ ‡å°†è°ƒç”¨è¯¥å‡½æ•°ï¼Œè®¡ç®—è‡ªèº«ä¼¤å®³
-    // å†…éƒ¨ä¼šå¯¹æ”»å‡»æ•°æ®è¿›è¡Œå‘ä¸‹ä¼ é€’
-    // è§¦å‘ onAttackedï¼Œå¦‚æžœonAttackedè¿”å›ž NULLï¼Œä¼¤å®³å°†ä¸ä¼šç»§ç»­å‘ä¸‹å±‚å‡½æ•°ä¼ é€’ã€‚æ¯”å¦‚è¯´ï¼Œé—ªé¿æˆåŠŸï¼Œä¼¤å®³æ— éœ€ç»§ç»­è®¡ç®—
+    // ¸ß²ãÉËº¦º¯Êý£¬¹¥»÷ÕßÉú³ÉµÄ¹¥»÷µ½´ïÄ¿±êºó£¬Ä¿±ê½«µ÷ÓÃ¸Ãº¯Êý£¬¼ÆËã×ÔÉíÉËº¦
+    // ÄÚ²¿»á¶Ô¹¥»÷Êý¾Ý½øÐÐÏòÏÂ´«µÝ
+    // ´¥·¢ onAttacked£¬Èç¹ûonAttacked·µ»Ø NULL£¬ÉËº¦½«²»»á¼ÌÐøÏòÏÂ²ãº¯Êý´«µÝ¡£±ÈÈçËµ£¬ÉÁ±Ü³É¹¦£¬ÉËº¦ÎÞÐè¼ÌÐø¼ÆËã
     void damagedAdv(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask = kNoMasked);
     
-    // ä¸­å±‚ä¼¤å®³å‡½æ•°ï¼Œæ”»å‡»æ•°æ®å·²ç»ä¸å¯æ¶ˆé™¤ï¼Œä½†å¯ä»¥æ”¹å˜ä¼¤å®³æ•°æ®ï¼Œå¦‚ä¸€æ¬¡å…¨é¢ä¼¤å®³çš„æŠµæŒ¡ï¼Œè™½ç„¶ç»“æžœä¸Šçœ‹HPæ²¡æœ‰å—æŸï¼Œä½†ä»ç„¶ä¼šè¿›è¡Œä¸€æ¬¡0ä¼¤å®³åˆ¤å®š
-    // è§¦å‘ onDamaged
-    // éåŽ†æ”»å‡»æ•°æ®æºå¸¦çš„BUFFé“¾ï¼Œæ ¹æ®é™„ç€æ¦‚çŽ‡å¯¹å•ä½è‡ªèº«è¿›è¡ŒBUFFé™„åŠ 
-    // æ ¹æ®å•ä½å±žæ€§ï¼Œè¿›è¡Œæ”»å‡»æ•°æ®å˜æ¢ï¼Œå¦‚æŠ—æ€§å¯¹æ”»å‡»æ•°æ®çš„å½±å“
-    // æ ¹æ®å•ä½æŠ¤ç”²ï¼Œè¿›è¡Œæ”»å‡»æ•°æ®ä¸­çš„æ”»å‡»æ•°å€¼å˜æ¢
+    // ÖÐ²ãÉËº¦º¯Êý£¬¹¥»÷Êý¾ÝÒÑ¾­²»¿ÉÏû³ý£¬µ«¿ÉÒÔ¸Ä±äÉËº¦Êý¾Ý£¬ÈçÒ»´ÎÈ«¶îÉËº¦µÄµÖµ²£¬ËäÈ»½á¹ûÉÏ¿´HPÃ»ÓÐÊÜËð£¬µ«ÈÔÈ»»á½øÐÐÒ»´Î0ÉËº¦ÅÐ¶¨
+    // ´¥·¢ onDamaged
+    // ±éÀú¹¥»÷Êý¾ÝÐ¯´øµÄBUFFÁ´£¬¸ù¾Ý¸½×Å¸ÅÂÊ¶Ôµ¥Î»×ÔÉí½øÐÐBUFF¸½¼Ó
+    // ¸ù¾Ýµ¥Î»ÊôÐÔ£¬½øÐÐ¹¥»÷Êý¾Ý±ä»»£¬Èç¿¹ÐÔ¶Ô¹¥»÷Êý¾ÝµÄÓ°Ïì
+    // ¸ù¾Ýµ¥Î»»¤¼×£¬½øÐÐ¹¥»÷Êý¾ÝÖÐµÄ¹¥»÷ÊýÖµ±ä»»
     void damagedMid(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask = kNoMasked);
     
-    // åº•å±‚ä¼¤å®³å‡½æ•°ï¼Œç›´æŽ¥æ‰£é™¤æŒ‡å®šé‡çš„HPå€¼
-    // è§¦å‘ä¼¤å®³æºçš„ onDamaeTarget
-    // è°ƒç”¨ setHpï¼Œä»Žè€Œä¼šè§¦å‘ onHpChangeï¼Œå¯èƒ½ä¼šè§¦å‘onDie
+    // µ×²ãÉËº¦º¯Êý£¬Ö±½Ó¿Û³ýÖ¸¶¨Á¿µÄHPÖµ
+    // ´¥·¢ÉËº¦Ô´µÄ onDamaeTarget
+    // µ÷ÓÃ setHp£¬´Ó¶ø»á´¥·¢ onHpChange£¬¿ÉÄÜ»á´¥·¢onDie
     void damagedBot(float fDamage, CUnit* pSource, uint32_t dwTriggerMask = kNoMasked);
     
-    // ä¸ºå•ä½æ·»åŠ /åˆ é™¤æŠ€èƒ½
+    // Îªµ¥Î»Ìí¼Ó/É¾³ý¼¼ÄÜ
     void addSkill(CSkill* pSkill);
     void delSkill(CSkill* pSkill);
     
-	//ä¸ºå•ä½æ·»åŠ åŒ…
+	//Îªµ¥Î»Ìí¼Ó°ü
 	void addPackage(CUnitPackage* pPackage);
     
-    // ä¸ºå•ä½æ·»åŠ /åˆ é™¤BUFF
+    // Îªµ¥Î»Ìí¼Ó/É¾³ýBUFF
     void addBuff(CBuffSkill* pBuff, bool bForce = false);
     void delBuff(CBuffSkill* pBuff, bool bAfterTriggerLoop = true);
     
@@ -333,25 +333,25 @@ public:
     static float calcDamage(CAttackValue::ATTACK_TYPE eAttackType, float fAttackValue, CArmorValue::ARMOR_TYPE eArmorType, float fArmorValue);
     
     // @override
-    virtual void onAttackTarget(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask);          // æ”»å‡»å‘å‡ºæ—¶ï¼Œæ”»å‡»è€…è§¦å‘
-    virtual CAttackData* onAttacked(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);      // æ”»å‡»æŠµè¾¾æ—¶ï¼Œå—å®³è€…è§¦å‘
-    virtual void onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);               // æ”»å‡»å‘½ä¸­æ—¶ï¼Œå—å®³è€…è§¦å‘
-    virtual void onDamageTarget(float fDamage, CUnit* pTarget, uint32_t dwTriggerMask);                 // æ”»å‡»å‘½ä¸­æ—¶ï¼Œæ”»å‡»è€…è§¦å‘
+    virtual void onAttackTarget(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask);          // ¹¥»÷·¢³öÊ±£¬¹¥»÷Õß´¥·¢
+    virtual CAttackData* onAttacked(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);      // ¹¥»÷µÖ´ïÊ±£¬ÊÜº¦Õß´¥·¢
+    virtual void onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);               // ¹¥»÷ÃüÖÐÊ±£¬ÊÜº¦Õß´¥·¢
+    virtual void onDamageTarget(float fDamage, CUnit* pTarget, uint32_t dwTriggerMask);                 // ¹¥»÷ÃüÖÐÊ±£¬¹¥»÷Õß´¥·¢
     virtual void onRevive();
     virtual void onDie();
     virtual void onHpChange(float fChanged);
     virtual void onTick(float fDt);
-    virtual void onDestroyProjectile(CCProjectileWithAttackData* pProjectile); // æ”»å‡»æ•°æ®æ¶ˆé™¤æ—¶ä¼šè§¦å‘ï¼Œé€šå¸¸ç”±æŠ•å°„ç‰©æºå¸¦æ”»å‡»æ•°æ®ï¼ŒäºŒè€…ç”Ÿå­˜æœŸä¸€è‡´
+    virtual void onDestroyProjectile(CCProjectileWithAttackData* pProjectile); // ¹¥»÷Êý¾ÝÏû³ýÊ±»á´¥·¢£¬Í¨³£ÓÉÍ¶ÉäÎïÐ¯´ø¹¥»÷Êý¾Ý£¬¶þÕßÉú´æÆÚÒ»ÖÂ
     
     int getKey() const;
     
 protected:
-    // æ ¹æ®å±žæ€§å¯¹æ”»å‡»æ•°æ®è¿›è¡Œå˜æ¢
+    // ¸ù¾ÝÊôÐÔ¶Ô¹¥»÷Êý¾Ý½øÐÐ±ä»»
     // @override
     virtual CAttackData* transformAttackByAttribute(CAttackData* pAttack);
     virtual CAttackData* transformDamageByAttribute(CAttackData* pAttack);
     
-    // æ·»åŠ è§¦å‘å™¨ï¼Œå†…éƒ¨è°ƒç”¨
+    // Ìí¼Ó´¥·¢Æ÷£¬ÄÚ²¿µ÷ÓÃ
     void addToOnAttackTargetTrigger(CSkill* pSkill);
     void addToOnAttackedTrigger(CSkill* pSkill);
     void addToOnDamagedSurfaceTrigger(CSkill* pSkill);
@@ -363,7 +363,7 @@ protected:
     void addToOnTickTrigger(CSkill* pSkill);
     void addToOnDestroyProjectileTrigger(CSkill* pSkill);
     
-    // åˆ é™¤è§¦å‘å™¨ï¼Œå†…éƒ¨è°ƒç”¨
+    // É¾³ý´¥·¢Æ÷£¬ÄÚ²¿µ÷ÓÃ
     void delFromOnAttackTargetTrigger(CSkill* pSkill);
     void delFromOnAttackedTrigger(CSkill* pSkill);
     void delFromOnDamagedSurfaceTrigger(CSkill* pSkill);
@@ -375,10 +375,10 @@ protected:
     void delFromOnTickTrigger(CSkill* pSkill);
     void delFromOnDestroyProjectileTrigger(CSkill* pSkill);
     
-    // å»¶è¿Ÿåˆ é™¤è§¦å‘å™¨ï¼Œå»¶è¿Ÿåˆ°æ•´ä¸ªè§¦å‘å™¨éåŽ†ç»“æŸåŽåˆ é™¤ï¼Œå†…éƒ¨è°ƒç”¨
+    // ÑÓ³ÙÉ¾³ý´¥·¢Æ÷£¬ÑÓ³Ùµ½Õû¸ö´¥·¢Æ÷±éÀú½áÊøºóÉ¾³ý£¬ÄÚ²¿µ÷ÓÃ
     void delFromOnTickTriggerLater(CSkill* pSkill);
     
-    // è§¦å‘å™¨é“¾çš„è§¦å‘ï¼Œå†…éƒ¨è°ƒç”¨
+    // ´¥·¢Æ÷Á´µÄ´¥·¢£¬ÄÚ²¿µ÷ÓÃ
     void triggerOnAttackTarget(CAttackData* pAttack, CUnit* pTarget);
     CAttackData* triggerOnAttacked(CAttackData* pAttack, CUnit* pSource);
     void triggerOnDamagedSurface(CAttackData* pAttack, CUnit* pSource);
@@ -858,7 +858,7 @@ public:
     void preOrderUnitToCast(int iUnit, int iSkill);
     void endOrderUnitToCast();
     void orderUnitToCast(const CCPoint& roTargetPos);
-    void orderUnitToCast(CGameUnit* pTargetUnit); // ä»¥ç¡®å®šå­˜åœ¨ï¼Œä¸”ç«‹å³æ‰§è¡Œï¼Œæ— åŽç»­é€»è¾‘ï¼Œå¯ä»¥ä½¿ç”¨æŒ‡é’ˆ
+    void orderUnitToCast(CGameUnit* pTargetUnit); // ÒÔÈ·¶¨´æÔÚ£¬ÇÒÁ¢¼´Ö´ÐÐ£¬ÎÞºóÐøÂß¼­£¬¿ÉÒÔÊ¹ÓÃÖ¸Õë
     
 protected:
     CUnitGroup m_oArrUnit;
@@ -1076,7 +1076,7 @@ public:
 
 class CHeroUnit;
 
-// å­˜åœ¨ä¸€ä¸ªå…¨å±€å…±äº«çš„ï¼Œç”¨äºŽåˆ›å»ºè‹±é›„ç­‰å¸¸é©»å•ä½ï¼Œä½†æ˜¯æ¯ä¸ªåœºæ™¯éœ€è¦å•ç‹¬createä¸€ä¸ªï¼Œç”¨äºŽåˆ›å»ºå½“å‰å…³å¡çš„å•ä½
+// ´æÔÚÒ»¸öÈ«¾Ö¹²ÏíµÄ£¬ÓÃÓÚ´´½¨Ó¢ÐÛµÈ³£×¤µ¥Î»£¬µ«ÊÇÃ¿¸ö³¡¾°ÐèÒªµ¥¶ÀcreateÒ»¸ö£¬ÓÃÓÚ´´½¨µ±Ç°¹Ø¿¨µÄµ¥Î»
 class CUnitInfoPatchManager : public CCObject
 {
 public:

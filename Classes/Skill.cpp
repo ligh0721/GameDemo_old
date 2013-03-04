@@ -2115,7 +2115,7 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
     float fDis = 0.0;
 
     
-    //ç»™èŒƒå›´å†…çš„æ•Œäººå—åˆ°æŒç»­ä¼¤å®³
+    //¸ø·¶Î§ÄÚµÄµÐÈËÊÜµ½³ÖÐøÉËº¦
     CAttackData* pAttack = CAttackData::create();
     pAttack->setAttack(m_oMaxDamage);
     
@@ -2133,7 +2133,7 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
         if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
             && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
         {
-            //ç»™èŒƒå›´å†…çš„æ•Œäººå—åˆ°æŒç»­ä¼¤å®³
+            //¸ø·¶Î§ÄÚµÄµÐÈËÊÜµ½³ÖÐøÉËº¦
             CAttackData* pAttack = CAttackData::create();
             pAttack->setAttack(m_oMaxDamage);
             pUnit->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
@@ -2214,7 +2214,7 @@ void CSwordStormSkill::onActEndPerAnim(CCObject* pObj)
         if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
             && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
         {
-            //ç»™èŒƒå›´å†…çš„æ•Œäººå—åˆ°æŒç»­ä¼¤å®³
+            //¸ø·¶Î§ÄÚµÄµÐÈËÊÜµ½³ÖÐøÉËº¦
             CAttackData* pAttack = CAttackData::create();
             pAttack->setAttack(m_oMaxDamage);
             pUnit->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));

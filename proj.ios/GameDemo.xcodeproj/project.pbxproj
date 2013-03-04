@@ -204,6 +204,7 @@
 		BF365AA812A103F70050DCF4 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BF365AA712A103F70050DCF4 /* AppController.mm */; };
 		BF4DE6AD138BB89600CF907D /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BF4DE6AC138BB89600CF907D /* RootViewController.mm */; };
 		D4ABB4B313B4395300552E6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D4ABB4B213B4395300552E6E /* main.m */; };
+		FE50A3A316E4C80D008AA1F2 /* test in Resources */ = {isa = PBXBuildFile; fileRef = FE50A3A216E4C80D008AA1F2 /* test */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -287,28 +288,28 @@
 		8B09163016C55465004C5566 /* Prop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prop.h; sourceTree = "<group>"; };
 		8B09163116C55465004C5566 /* PropUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PropUI.cpp; sourceTree = "<group>"; };
 		8B09163216C55465004C5566 /* PropUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropUI.h; sourceTree = "<group>"; };
-		8B09163316C55465004C5566 /* Skill.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skill.cpp; sourceTree = "<group>"; };
-		8B09163416C55465004C5566 /* Skill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skill.h; sourceTree = "<group>"; };
-		8B09163516C55465004C5566 /* SkillInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkillInfo.cpp; sourceTree = "<group>"; };
-		8B09163616C55465004C5566 /* SkillInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkillInfo.h; sourceTree = "<group>"; };
+		8B09163316C55465004C5566 /* Skill.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = Skill.cpp; sourceTree = "<group>"; };
+		8B09163416C55465004C5566 /* Skill.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Skill.h; sourceTree = "<group>"; };
+		8B09163516C55465004C5566 /* SkillInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = SkillInfo.cpp; sourceTree = "<group>"; };
+		8B09163616C55465004C5566 /* SkillInfo.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = SkillInfo.h; sourceTree = "<group>"; };
 		8B09163716C55465004C5566 /* SkillUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkillUI.cpp; sourceTree = "<group>"; };
 		8B09163816C55465004C5566 /* SkillUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkillUI.h; sourceTree = "<group>"; };
 		8B09163916C55465004C5566 /* SomeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SomeScene.cpp; sourceTree = "<group>"; };
 		8B09163A16C55465004C5566 /* SomeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SomeScene.h; sourceTree = "<group>"; };
 		8B09163B16C55465004C5566 /* TankSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TankSprite.cpp; sourceTree = "<group>"; };
-		8B09163C16C55465004C5566 /* TankSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TankSprite.h; sourceTree = "<group>"; };
+		8B09163C16C55465004C5566 /* TankSprite.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = TankSprite.h; sourceTree = "<group>"; };
 		8B09163D16C55465004C5566 /* TechTreeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TechTreeScene.cpp; sourceTree = "<group>"; };
 		8B09163E16C55465004C5566 /* TechTreeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TechTreeScene.h; sourceTree = "<group>"; };
 		8B09163F16C55465004C5566 /* TestScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestScene.cpp; sourceTree = "<group>"; };
 		8B09164016C55465004C5566 /* TestScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestScene.h; sourceTree = "<group>"; };
 		8B09164116C55465004C5566 /* Tower.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tower.cpp; sourceTree = "<group>"; };
 		8B09164216C55465004C5566 /* Tower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tower.h; sourceTree = "<group>"; };
-		8B09164316C55465004C5566 /* Unit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Unit.cpp; sourceTree = "<group>"; };
-		8B09164416C55465004C5566 /* Unit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Unit.h; sourceTree = "<group>"; };
+		8B09164316C55465004C5566 /* Unit.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = Unit.cpp; sourceTree = "<group>"; };
+		8B09164416C55465004C5566 /* Unit.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Unit.h; sourceTree = "<group>"; };
 		8B09164516C55465004C5566 /* UnitEditorScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitEditorScene.cpp; sourceTree = "<group>"; };
 		8B09164616C55465004C5566 /* UnitEditorScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitEditorScene.h; sourceTree = "<group>"; };
-		8B09164716C55465004C5566 /* UnitInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitInfo.cpp; sourceTree = "<group>"; };
-		8B09164816C55465004C5566 /* UnitInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitInfo.h; sourceTree = "<group>"; };
+		8B09164716C55465004C5566 /* UnitInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = UnitInfo.cpp; sourceTree = "<group>"; };
+		8B09164816C55465004C5566 /* UnitInfo.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = UnitInfo.h; sourceTree = "<group>"; };
 		8B09164916C55465004C5566 /* UnitShowScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitShowScene.cpp; sourceTree = "<group>"; };
 		8B09164A16C55465004C5566 /* UnitShowScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitShowScene.h; sourceTree = "<group>"; };
 		8B09164B16C55465004C5566 /* WHomeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WHomeScene.cpp; sourceTree = "<group>"; };
@@ -578,6 +579,7 @@
 		D4EF94E915BD319500D803EB /* Icon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-114.png"; path = "../proj.ios/Icon-114.png"; sourceTree = "<group>"; };
 		D4EF94EB15BD319B00D803EB /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../proj.ios/Icon-72.png"; sourceTree = "<group>"; };
 		D4EF94ED15BD319D00D803EB /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-144.png"; path = "../proj.ios/Icon-144.png"; sourceTree = "<group>"; };
+		FE50A3A216E4C80D008AA1F2 /* test */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = text; path = test; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1144,6 +1146,7 @@
 				1A1CF3661626CB6000AFC938 /* AppMacros.h */,
 				BF23D4E3143315EB00657E08 /* AppDelegate.cpp */,
 				BF23D4E4143315EB00657E08 /* AppDelegate.h */,
+				FE50A3A216E4C80D008AA1F2 /* test */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -1279,6 +1282,7 @@
 				8BEBFCEA16C580FB002BB5A3 /* Icon-144.png in Resources */,
 				8BEBFCEC16C5815E002BB5A3 /* Default-Landscape~ipad.png in Resources */,
 				8BEBFCEE16C5817C002BB5A3 /* Default-Landscape@2x~ipad.png in Resources */,
+				FE50A3A316E4C80D008AA1F2 /* test in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
