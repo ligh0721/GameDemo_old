@@ -361,7 +361,7 @@ void CCBattleSceneLayer::initTower( CCObject* pObject )
 {
 	CGameUnit* pTower = dynamic_cast<CGameUnit*>(pObject);
 	M_DEF_OS(pOs);
-	pTower->addSkill(pOs->skill(COrgSkillInfo::kTransmit1));
+	//pTower->addSkill(pOs->skill(COrgSkillInfo::kTransmit1));
 	pTower->setForceByIndex(2);
 	pTower->setAlly(1<<2);
 }

@@ -20,6 +20,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     freopen("CONIN$", "r", stdin);
     freopen("CONOUT$", "w", stdout);
     freopen("CONOUT$", "w", stderr);
+
 #endif
 
     // create the application instance

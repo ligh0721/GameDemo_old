@@ -429,10 +429,14 @@ void CCWHomeSceneLayer::onTickEvent( float fDt )
     static uint32_t dwOldExp = 0;
     if (pMemHero != heroUnit || heroUnit->getExp() != dwOldExp)
     {
-        dwOldExp = heroUnit->getExp();
-        float fPer = heroUnit->getExp() * 100 / heroUnit->getMaxExp();
-        m_oExpBar.setPercentage(fPer, 0);
-        m_oExpBar.setFillColor(ccc3(169, 147, 0));
+        if (heroUnit!=NULL&&heroUnit->getMaxExp()!=0)
+        {
+            dwOldExp = heroUnit->getExp();
+            float fPer = heroUnit->getExp() * 100 / heroUnit->getMaxExp();
+            m_oExpBar.setPercentage(fPer, 0);
+            m_oExpBar.setFillColor(ccc3(169, 147, 0));
+        }
+        
     }
 
     static uint32_t dwOldHp = 0;

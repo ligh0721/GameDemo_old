@@ -2636,6 +2636,7 @@ void CProjectile::onDie()
 {
     M_DEF_GM(pGm);
     CCAnimation* pAni;
+    CCLightning* pLigh;
     CCAction* pAct;
     CGameUnit* pTarget = getUnitLayer()->getUnitByKey(getTarget());
     CGameUnit* pOwner = getUnitLayer()->getUnitByKey(getOwner());
@@ -2656,7 +2657,9 @@ void CProjectile::onDie()
         case kLightning:
             pAni = pGm->getUnitAnimation(getName(), m_astAniInfo[kAnimationDie].sAnimation.c_str());
             pAni->setDelayPerUnit(m_astAniInfo[kAnimationDie].fDelay);
-            pAct = CCSequence::createWithTwoActions(CCLightning::create(pAni, pStart->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
+            pLigh = CCLightning::create(pAni, pStart->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight());
+            pLigh->fixTargetPosition(&m_oSprite);
+            pAct = CCSequence::createWithTwoActions(pLigh, CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
             pAct->setTag(kActDie);
             m_oSprite.runAction(pAct);
             break;

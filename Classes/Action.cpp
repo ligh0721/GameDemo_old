@@ -320,37 +320,41 @@ bool CCLightning::init( CCAnimation* pAnimation, CCNode* pStartNode, CCNode* pEn
 void CCLightning::startWithTarget( CCNode *pTarget )
 {
     CCAnimate::startWithTarget(pTarget);
-    update(0.0);
 }
 
 void CCLightning::update( float t )
 {
     if (m_pTarget)
     {
-        CCPoint oStartPos = m_pStartNode->getPosition();
-        CCPoint oEndPos = m_pEndNode->getPosition();
-        CCSprite* pS = dynamic_cast<CCSprite*>(m_pStartNode);
-        bool bFlipX;
-        if (pS)
-        {
-            bFlipX = pS->isFlipX();
-        }
-        else
-        {
-            bFlipX = oStartPos.x > oEndPos.x;
-        }
-        oStartPos.x += bFlipX ? -m_fStartNodeXOffsetOfAnchor : m_fStartNodeXOffsetOfAnchor;
-        oStartPos.y += m_fStartNodeYOffsetOfAnchor;
-        oEndPos.y += m_fEndNodeOffsetOfAnchor;
-        float fR = CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(oEndPos, oStartPos)));
-        CCPoint oDelta = ccpSub(oEndPos, oStartPos);
-        float fScale = sqrt(oDelta.x * oDelta.x + oDelta.y * oDelta.y) / m_pTarget->getContentSize().width;
-        m_pTarget->setPosition(ccp((oStartPos.x + oEndPos.x) / 2, (oStartPos.y + oEndPos.y) / 2));
-        m_pTarget->setRotation(fR);
-        m_pTarget->setScaleX(fScale);
+        fixTargetPosition(m_pTarget);
     }
 
     CCAnimate::update(t);
+}
+
+void CCLightning::fixTargetPosition(CCNode* pTarget)
+{
+    CCPoint oStartPos = m_pStartNode->getPosition();
+    CCPoint oEndPos = m_pEndNode->getPosition();
+    CCSprite* pS = dynamic_cast<CCSprite*>(m_pStartNode);
+    bool bFlipX;
+    if (pS)
+    {
+        bFlipX = pS->isFlipX();
+    }
+    else
+    {
+        bFlipX = oStartPos.x > oEndPos.x;
+    }
+    oStartPos.x += bFlipX ? -m_fStartNodeXOffsetOfAnchor : m_fStartNodeXOffsetOfAnchor;
+    oStartPos.y += m_fStartNodeYOffsetOfAnchor;
+    oEndPos.y += m_fEndNodeOffsetOfAnchor;
+    float fR = CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(oEndPos, oStartPos)));
+    CCPoint oDelta = ccpSub(oEndPos, oStartPos);
+    float fScale = sqrt(oDelta.x * oDelta.x + oDelta.y * oDelta.y) / pTarget->getContentSize().width;
+    pTarget->setPosition(ccp((oStartPos.x + oEndPos.x) / 2, (oStartPos.y + oEndPos.y) / 2));
+    pTarget->setRotation(fR);
+    pTarget->setScaleX(fScale);
 }
 
 CCSequenceEx* CCSequenceEx::createWithTwoActions( CCFiniteTimeAction *pActionOne, CCFiniteTimeAction *pActionTwo )

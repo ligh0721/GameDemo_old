@@ -854,3 +854,4 @@ public:
     float m_fInterval;
     float m_fIntervalPass;
 };
+

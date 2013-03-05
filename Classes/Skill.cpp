@@ -2492,10 +2492,44 @@ void CThunderBolt2Buff::onUnitTick( float fDt )
 
 void CThunderBolt2Buff::onUnitInterval()
 {
+    float xPos = rand()%(int)m_fRange;
+    float yPos = rand()%(int)m_fRange;
+
     M_DEF_UM(pUm);
     CGameUnit* t = pUm->unitByInfo(2);
     CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
     o->getUnitLayer()->addUnit(t);
-    t->setPosition(o->getPosition());
-    t->attack(o->getKey());
+
+    CCPoint targetPoint = ccp(o->getPosition().x-m_fRange/2+xPos,o->getPosition().y-m_fRange/2+yPos);
+
+    t->setPosition(ccp(o->getPosition().x-m_fRange/2+xPos,o->getPosition().y-m_fRange/2+yPos));
+    t->getSprite()->setVisible(false);
+    //t->attack(o->getKey());
+    CGameUnit* t2 = pUm->unitByInfo(2);
+    o->getUnitLayer()->addUnit(t2);
+    t2->setPosition(ccp(o->getPosition().x-m_fRange/2+xPos,o->getPosition().y-m_fRange/2+yPos));
+    t2->getSprite()->setVisible(false);
+
+    M_DEF_PM(pPm);
+    CProjectile * pProj = dynamic_cast<CProjectile*>(pPm->getProjectileByIndex(COrgUnitInfo::kLightning1)->copy());
+    
+    o->getUnitLayer()->addProjectile(pProj);
+    pProj->setProjectileBirthOffsetX(0);
+    pProj->setProjectileBirthOffsetY(800);
+    pProj->getSprite()->setScaleY(2);
+    
+    CAttackData *pAd = CAttackData::create();
+    pAd->setAttack(m_oDamage);
+
+    pProj->setAttackData(pAd);
+    pProj->setOwner(o->getKey());
+    pProj->setStart(t2->getKey());
+    pProj->setTarget(t);
+    //pProj->getSprite()->setScale(3.0);
+    pProj->setPosition(t->getPosition());
+    pProj->onDie();
+
+    o->getUnitLayer()->getUnits()
+        ->getUnitsInRange(targetPoint,100,-1,CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(o))->damagedAdv(pAd,o);
+
 }

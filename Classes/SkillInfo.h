@@ -23,9 +23,8 @@ public:
         kThump1,
         kThrowHit1,
         kSpeedUp1,
-		kTransmit1,
+		//kTransmit1,
         kThunderAttack1,
-        kChainLighting1,
         kSwordStorm1,
         kJumpChop1
     };

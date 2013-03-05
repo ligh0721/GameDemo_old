@@ -111,6 +111,8 @@ public:
     virtual void startWithTarget(CCNode *pTarget);
     virtual void update(float t);
 
+    virtual void fixTargetPosition(CCNode* pTarget);
+
 protected:
     CCNode* m_pStartNode;
     CCNode* m_pEndNode;

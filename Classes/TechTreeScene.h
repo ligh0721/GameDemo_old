@@ -126,6 +126,10 @@ public:
         int iStatus;
         char* sInfo;
         CCMenuItemImage* pNodeImage;
+        char* sNormalImage;
+        char* sSelectedImage;
+        char* sDisabledImage;
+
         TALENT_NODE();
     };
     typedef vector<TALENT_NODE> TALENT_TREE;

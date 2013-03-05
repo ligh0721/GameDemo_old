@@ -323,8 +323,9 @@ bool CTalentInfo::init()
         int nodeNum=m_talentForest[line].size();
         for (int node=0;node<nodeNum;node++)
         {
-            CCMenuItemImage* pItem = CCMenuItemImage::create("UI/button01.png", "UI/button01DOWN.png",
-                NULL, this, menu_selector(CTalentInfo::onTalentNodeClick));
+            CCMenuItemImage* pItem = CCMenuItemImage::create( m_talentForest[line][node].sNormalImage,
+                m_talentForest[line][node].sSelectedImage, m_talentForest[line][node].sDisabledImage
+                , this, menu_selector(CTalentInfo::onTalentNodeClick));
             m_oArrTalentNode.addObject(pItem);
             if (node==0&&m_talentForest[line][node].iStatus!=2)
             {
@@ -364,6 +365,8 @@ bool CTalentInfo::init()
     this->addChild(&m_talentInfo);
     m_talentInfo.setPosition(ccp(600,400));
     //从全局获得
+    //
+    
     m_iSkillPoint=5;
     m_skillPointShow.init();
     this->addChild(&m_skillPointShow);
@@ -454,6 +457,8 @@ void CTalentInfo::onItemResetClick( CCObject* pObject )
             if (m_talentForest[line][node].iStatus==2)
             {
                 m_iSkillPoint+=m_talentForest[line][node].iCost;
+                CCSprite* pLearnSprite=CCSprite::create("UI/button01.png");
+                m_talentForest[line][node].pNodeImage->setNormalImage(pLearnSprite);
             }
             if (node==0)
                 m_talentForest[line][node].iStatus=1;
@@ -474,6 +479,8 @@ void CTalentInfo::onItemLearnClick( CCObject* pObject )
         return;
     }
     m_talentForest[m_iFocusLine][m_iFocusNode].iStatus=2;
+    CCSprite* pLearnSprite=CCSprite::create("UI/button01DISABLE.png");
+    m_talentForest[m_iFocusLine][m_iFocusNode].pNodeImage->setNormalImage(pLearnSprite);
     int skillPoint=(int)m_iSkillPoint-m_talentForest[m_iFocusLine][m_iFocusNode].iCost;
     setSkillPoint(skillPoint);
     setSkillPointShow();
@@ -486,6 +493,7 @@ void CTalentInfo::onItemLearnClick( CCObject* pObject )
 
 void CTalentInfo::setSkillPointShow( void )
 {
+    //只能显示ascII码字符
     char* number;
     number=new char[4];
     number[2]=m_iSkillPoint%10+48;
@@ -532,8 +540,11 @@ CTalentInfo::TALENT_NODE::TALENT_NODE()
     iEffectIndex=0;
     iCost=1;
     iStatus=0;
-    sInfo="We live to DIE ,\nBUT we die for LIFE";
+    sInfo="We live to DIE ,BUT we die for LIFE";
     pNodeImage = NULL;
+    sNormalImage="UI/button01.png";
+    sSelectedImage="UI/button01DOWN.png";
+    sDisabledImage="UI/button01DISABLE.png";
     //node11.pNodeImage->setNormalSpriteFrame(pFc->spriteFrameByName(M_SKILL_PATH("cancel")));
    // pNodeImage->initWithNormalImage(pFc->spriteFrameByName(M_SKILL_PATH("cancel")), pFc->spriteFrameByName(M_SKILL_PATH("cancel")), pFc->spriteFrameByName(M_SKILL_PATH("cancel")),CTalentInfo::singleTalentInfo(),menu_selector(CTalentInfo::onTalentNodeClick));
 }
