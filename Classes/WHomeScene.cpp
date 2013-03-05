@@ -48,6 +48,7 @@ bool CCWHomeSceneLayer::init()
     M_DEF_FC(pFc);
     pFc->addSpriteFramesWithFile("background.plist");
     pFc->addSpriteFramesWithFile("UI.plist");
+    pFc->addSpriteFramesWithFile("tank.plist");
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("skill.plist");
     //setBackGroundSprite(CCSprite::create("levels/level01/LevelHD.png"));
     setBackGroundSprite(CCSprite::create("LevelDemo2HD.png"));

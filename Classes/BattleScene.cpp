@@ -273,7 +273,7 @@ CGameUnit* CCBattleSceneLayer::randomSoldiers(int iForce)
 	u->addSkill(CStatusShowPas::create());
 	u->prepareAttackAnimation(1,CGameUnit::kAnimationAct1,"act1",0.1);
 	u->setBaseAttackInterval(2.0);
-	u->setMaxHp(100);
+	u->setMaxHp(1000);
 	u->setBaseMoveSpeed(50);
 	u->setAttackMinRange(0);
   

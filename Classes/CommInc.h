@@ -14,6 +14,7 @@ USING_NS_CC_EXT;
 #include <stdint.h>
 #include <string>
 #include <sstream>
+#include <math.h>
 using namespace std;
 
 #include "CommDef.h"

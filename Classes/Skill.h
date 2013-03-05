@@ -805,8 +805,8 @@ class CSwordStormSkill : public CPassiveSkill
 public:
 	CSwordStormSkill();
     
-	virtual bool init(int iProbability, float fExcuDuration, float fMaxDamageRange, const CAttackValue& roMaxDamage, const CExtraCoeff& roDamageCoef,  char* pActName);
-	M_CREATE_FUNC_PARAM(CSwordStormSkill, (int iProbability, float fExcuDuration, float fMaxDamageRange, const CAttackValue& roMaxDamage, const CExtraCoeff& roDamageCoef,  char* pActName), iProbability, fExcuDuration, fMaxDamageRange, roMaxDamage, roDamageCoef, pActName);
+	virtual bool init(int iProbability, float fDuration, float fMaxDamageRange, const CAttackValue& roMaxDamage, const CExtraCoeff& roDamageCoef,  char* pActName);
+	M_CREATE_FUNC_PARAM(CSwordStormSkill, (int iProbability, float fDuration, float fMaxDamageRange, const CAttackValue& roMaxDamage, const CExtraCoeff& roDamageCoef,  char* pActName), iProbability, fDuration, fMaxDamageRange, roMaxDamage, roDamageCoef, pActName);
 	virtual CCObject* copyWithZone(CCZone* pZone);
     
 	virtual void onSkillAdd();
@@ -817,14 +817,69 @@ public:
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
     
     virtual void onActEndPerAnim(CCObject* pObj);
+    virtual void onActSpinEnd(CCNode* pObj);
     
 private:
     int m_iProbability;
-    float m_fExcuDuration;
+    float m_fDuration;
     float m_fMaxDamageRange;
     CAttackValue m_oMaxDamage;
     CExtraCoeff m_oDamageCoef;
     char* m_pActName;
+};
+
+class CJumpChopSkill : public CPassiveSkill
+{
+public:
+	CJumpChopSkill();
+    
+	virtual bool init(int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName);
+	M_CREATE_FUNC_PARAM(CJumpChopSkill, (int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName), iProbability, fMaxJumpRange, iMaxJumpCount, roDamage, pActName);
+	virtual CCObject* copyWithZone(CCZone* pZone);
+    
+	virtual void onSkillAdd();
+	virtual void onSkillDel();
+    virtual void onUnitDamageTarget(float fDamage, CUnit* pTarget);
+    
+    virtual void onJumpChopEnd(CCObject* pObj);
+    
+    M_SYNTHESIZE(float, m_fDelayPerUnit, DelayPerUnit);
+    M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
+    M_SYNTHESIZE(int, m_fDurationPerJump, DurationPerJump);
+    M_SYNTHESIZE(int, m_fCountPerJump, CountPerJump);
+    
+    
+private:
+    CGameUnit* m_pLastTargetUnit;
+    int m_iProbability;
+    float m_fMaxJumpRange;
+    int m_iMaxJumpCount;
+    CAttackValue m_oMaxDamage;
+    char* m_pActName;
+    vector<int> m_vecEffectedUnitKey;
+    CAttackData* m_pAttackData;
+};
+
+class CThunderBolt2Buff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fRange, const CAttackValue& roDamage);
+    M_CREATE_FUNC_PARAM(CThunderBolt2Buff, (float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fRange, const CAttackValue& roDamage), fDuration, bCanBePlural, iSrcKey, fInterval, fRange, roDamage);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    M_GET_TYPE_KEY;
+
+protected:
+    virtual void onBuffAdd();
+    virtual void onBuffDel();
+
+    virtual void onUnitTick(float fDt);
+    virtual void onUnitInterval();
+
+public:
+    float m_fRange;
+    CAttackValue m_oDamage;
+    float m_fInterval;
+    float m_fIntervalPass;
 };
 
 class CJumpChopBuff : public CBuffSkill
@@ -858,5 +913,3 @@ private:
     vector<int> m_vecEffectedUnitKey;
     CAttackData* m_pAttackData;
 };
-
-

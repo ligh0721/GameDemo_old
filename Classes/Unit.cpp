@@ -1,3 +1,4 @@
+
 #include "CommInc.h"
 
 #include "GameDisplay.h"
@@ -1572,7 +1573,11 @@ void CGameUnit::moveTo( const CCPoint& roPos, const UNIT_MOVE_PARAMS& roMovePara
         stopCast();
     }
     m_oSprite.runAction(pActMoveTo);
-    setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
+    if (!isDoingOr(kSpinning))
+    {
+        setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
+    }
+    
     startDoing(kMoving);
     if (roMoveParams.bIntended)
     {
@@ -1631,7 +1636,11 @@ void CGameUnit::followTo( int iTargetKey, const UNIT_MOVE_PARAMS& roMoveParams /
         stopCast();
     }
     m_oSprite.runAction(pActMoveTo);
-    setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
+    if (!isDoingOr(kSpinning))
+    {
+        setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
+    }
+    
     startDoing(kMoving);
     if (roMoveParams.bIntended)
     {
@@ -1693,7 +1702,10 @@ void CGameUnit::stopMove()
     m_oSprite.stopActionByTag(kActMoveTo);
     m_oSprite.stopActionByTag(kActMove);
     endDoing(kMoving | kIntended);
-    setDefaultFrame();
+    if (!isDoingOr(kSpinning))
+    {
+        setDefaultFrame();
+    }
 }
 
 const CCPoint& CGameUnit::getLastMoveToTarget() const
@@ -1859,7 +1871,7 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
         {
             endDoing(kIntended);
         }
-        if (m_fAttackCD > 0)
+        if (m_fAttackCD > 0 || isDoingOr(kSpinning))
         {
             return;
         }
@@ -1915,7 +1927,10 @@ void CGameUnit::stopAttack()
     m_oSprite.stopActionByTag(kActAttackEffect);
     m_iLastAttackTarget = 0;
     endDoing(kAttacking);
-    setDefaultFrame();
+    if (!isDoingOr(kSpinning))
+    {
+        setDefaultFrame();
+    }
 }
 
 void CGameUnit::onActAttackEffect( CCNode* pNode )
@@ -2216,6 +2231,7 @@ void CGameUnit::onDie()
     setForceResource(NULL);
     stopMove();
     stopAttack();
+    stopSpin();
     setAnimation(kAnimationDie, 1, 1, kActDie, CCSequence::create(CCDelayTime::create(5), CCFadeOut::create(1), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActDieEnd)), NULL));
     CUnit::onDie();
 }
@@ -2458,7 +2474,10 @@ void CGameUnit::stopCast()
     m_oSprite.stopActionByTag(kActCast);
     m_oSprite.stopActionByTag(kActCastEffect);
     endDoing(kCasting | kIntended);
-    setDefaultFrame();
+    if (!isDoingOr(kSpinning))
+    {
+        setDefaultFrame();
+    }
 }
 
 void CGameUnit::onActCastEffect( CCNode* pNode )
@@ -2514,7 +2533,6 @@ bool CGameUnit::checkCastDistance( const CCPoint& roPos )
         return false;
     }
     
-    
     return true;
 }
 
@@ -2548,6 +2566,16 @@ void CGameUnit::moveToCastPosition()
     }
     
     startDoing(kCasting | kIntended);
+}
+
+void CGameUnit::stopSpin()
+{
+    m_oSprite.stopActionByTag(kActSpin);
+    endDoing(kSpinning);
+    if (isDoingOr(kMoving))
+    {
+        setAnimation(kAnimationMove, -1, getRealMoveSpeed() / getBaseMoveSpeed(), kActMove, NULL);
+    }
 }
 
 CProjectile::CProjectile()
@@ -2926,7 +2954,7 @@ void CUnitGroup::moveAlongPath( CUnitPath* pPath, bool bIntended /*= true*/, boo
     }
 }
 
-void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource )
+void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
     CGameUnit* pUnit;
     CCObject* pObj;
@@ -2938,7 +2966,7 @@ void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource )
     }
 }
 
-void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource )
+void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
     CGameUnit* pUnit;
     CCObject* pObj;
@@ -2950,7 +2978,7 @@ void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource )
     }
 }
 
-void CUnitGroup::damagedBot( float fDamage, CUnit* pSource )
+void CUnitGroup::damagedBot( float fDamage, CUnit* pSource, uint32_t dwTriggerMask )
 {
     CGameUnit* pUnit;
     CCObject* pObj;
@@ -3021,6 +3049,9 @@ bool CCUnitLayer::init()
     m_oProjectileDustbin.init();
     m_fUnitTickInterval = 0;
     m_iPendingSkillOwner = 0;
+    m_oArrUnitToAdd.init();
+    m_oArrProjectileToAdd.init();
+    m_bOnTickEvent = false;
     return CCLayerColor::init();
 }
 
@@ -3032,6 +3063,9 @@ bool CCUnitLayer::initWithColor( const ccColor4B& color )
     m_oProjectileDustbin.init();
     m_fUnitTickInterval = 0.1;
     m_iPendingSkillOwner = 0;
+    m_oArrUnitToAdd.init();
+    m_oArrProjectileToAdd.init();
+    m_bOnTickEvent = false;
     return CCLayerColor::initWithColor(color);
 }
 
@@ -3067,6 +3101,8 @@ void CCUnitLayer::onExit()
 
 void CCUnitLayer::onTickEvent( float fDt )
 {
+    m_bOnTickEvent = true;
+
     CCArray* pArrUnit = getUnits()->getUnitsArray();
     CCArray* pArrProj = getProjectiles()->getUnitsArray();
     
@@ -3086,11 +3122,35 @@ void CCUnitLayer::onTickEvent( float fDt )
         pProjectile->onTick(fDt);
     }
     clearProjectileDustbin();
+
+    m_bOnTickEvent = false;
+    CCARRAY_FOREACH(&m_oArrUnitToAdd, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        m_oArrUnit.addUnit(pUnit);
+    }
+
+    CCARRAY_FOREACH(&m_oArrProjectileToAdd, pObj)
+    {
+        pProjectile = dynamic_cast<CProjectile*>(pObj);
+        m_oArrProjectile.addUnit(pProjectile);
+    }
+
+    m_oArrUnitToAdd.removeAllObjects();
+    m_oArrProjectileToAdd.removeAllObjects();
 }
 
 void CCUnitLayer::addUnit( CGameUnit* pUnit )
 {
-    m_oArrUnit.addUnit(pUnit);
+    if (m_bOnTickEvent)
+    {
+        m_oArrUnitToAdd.addObject(pUnit);
+    }
+    else
+    {
+        m_oArrUnit.addUnit(pUnit);
+    }
+    
     pUnit->setUnitLayer(this);
     addChild(pUnit->getSprite());
     addChild(pUnit->getShadowNode(), 10);
@@ -3098,7 +3158,14 @@ void CCUnitLayer::addUnit( CGameUnit* pUnit )
 
 void CCUnitLayer::addProjectile( CProjectile* pProjectile )
 {
-    m_oArrProjectile.addUnit(pProjectile);
+    if (m_bOnTickEvent)
+    {
+        m_oArrProjectileToAdd.addObject(pProjectile);
+    }
+    else
+    {
+        m_oArrProjectile.addUnit(pProjectile);
+    }
     pProjectile->setUnitLayer(this);
     addChild(pProjectile->getSprite());
 }

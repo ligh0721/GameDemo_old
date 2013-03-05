@@ -168,6 +168,9 @@ bool COrgSkillInfo::init()
     //pSkill = CChainBuff::create(0.5, false, 0, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kBall2));
     //dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
     iKey = pSm->addSkill(pSkill);
+
+    //pSkill = CThunderBolt2Buff::create(5, false, 0, 1, 100, CAttackValue(1, CAttackValue::kMagical, 50.0));
+    //iKey = pSm->addSkill(pSkill);
     
     pSkill = CProjectileAct::create(1.0, 1500, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3), iKey, 1);
     dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
@@ -176,25 +179,26 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThunderAttack1].sName = "雷霆一击";
     m_mapSkills[kThunderAttack1].sDesc = "猛烈锤击地面，向目标射出一道电光，将造成50点魔法伤害";
     
-    
     vector<int> vecUnitKey;
     pSkill = CChainLightingBuff::create(5, false, 152, 600, 400, 8, CAttackValue(1, CAttackValue::kMagical, 80.0), vecUnitKey);
     iKey = pSm->addSkill(pSkill);
-    
-    pSkill = CAttackBuffMakerPas::create(100, iKey, 1, CExtraCoeff(1, 0));
-    iKey = pSm->addSkill(pSkill);  
     m_mapSkills[kChainLighting1].iIndex = iKey;
     m_mapSkills[kChainLighting1].sName = "闪电链";
     m_mapSkills[kChainLighting1].sDesc = "使范围内的兵受到闪电";
+
+//    pSkill = CSwordStormSkill::create(100, 3.0, 100, CAttackValue(1, CAttackValue::kMagical, 50.0), CExtraCoeff(0.30, 0), "act4");
+//    dynamic_cast<CSwordStormSkill*>(pSkill)->setDelayPerUnit(0.03);
+//    iKey = pSm->addSkill(pSkill);
+//    m_mapSkills[kSwordStorm1].iIndex = iKey;
+//    m_mapSkills[kSwordStorm1].sName = "剑刃风暴";
+//    m_mapSkills[kSwordStorm1].sDesc = "旋转如风暴使一定范围内的敌人持续掉血";
+//
+//    pSkill = CJumpChopSkill::create(100, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), "act5");
+//    iKey = pSm->addSkill(pSkill);
+//    m_mapSkills[kJumpChop1].iIndex = iKey;
+//    m_mapSkills[kJumpChop1].sName = "跳劈";
+//    m_mapSkills[kJumpChop1].sDesc = "跃起给敌人重重打击";
     
-    pSkill = CSwordStormBuff::create(5, false, 152, 100, 3.0, 100, CAttackValue(1, CAttackValue::kMagical, 50.0), CExtraCoeff(0.30, 0), "act4");
-    iKey = pSm->addSkill(pSkill);
-    
-    pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
-    iKey = pSm->addSkill(pSkill);
-    m_mapSkills[kSwordStorm2].iIndex = iKey;
-    m_mapSkills[kSwordStorm2].sName = "剑刃风暴";
-    m_mapSkills[kSwordStorm2].sDesc = "旋转如风暴使一定范围内的敌人持续掉血";
     
     pSkill = CJumpChopBuff::create(5, false, 152, 100, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), "act5");
     iKey = pSm->addSkill(pSkill);
@@ -210,7 +214,8 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSwordStorm1].iIndex = iKey;
     m_mapSkills[kSwordStorm1].sName = "剑刃风暴";
     m_mapSkills[kSwordStorm1].sDesc = "旋转如风暴使一定范围内的敌人持续掉血";
-
+    
+    
 
     
     return true;
