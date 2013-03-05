@@ -22,6 +22,9 @@ public:
 
     virtual bool init();
     CREATE_FUNC(CCHomeSceneLayer);
+    void onBtnStartClick(CCNode* pNode);
+    void onBtnUpgradesClick(CCNode* pNode);
+    void onBtnAchievementsClick(CCNode* pNode);
     void onBtnStartClick(CCObject* pObject);
     void onBtnCfgClick(CCObject* pObject);
     void onTick(float fDt);

@@ -30,6 +30,32 @@
                 <key>sourceSize</key>
                 <string>{800,480}</string>
             </dict>
+            <key>Achievements.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{308,700},{172,150}}</string>
+                <key>offset</key>
+                <string>{-2,-13}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{40,66},{172,150}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>Achievements_ON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{644,472},{226,200}}</string>
+                <key>offset</key>
+                <string>{-2,-14}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{13,42},{226,200}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
             <key>HeroHead.png</key>
             <dict>
                 <key>frame</key>
@@ -94,6 +120,58 @@
                 <string>{{0,0},{78,352}}</string>
                 <key>sourceSize</key>
                 <string>{78,352}</string>
+            </dict>
+            <key>Start.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{874,308},{134,202}}</string>
+                <key>offset</key>
+                <string>{-4,3}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{57,24},{134,202}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>Start_ON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{644,82},{184,256}}</string>
+                <key>offset</key>
+                <string>{-5,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{31,0},{184,256}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>Upgrades.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{872,512},{150,186}}</string>
+                <key>offset</key>
+                <string>{-3,-18}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{50,53},{150,186}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>Upgrades_ON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{644,268},{202,228}}</string>
+                <key>offset</key>
+                <string>{-4,-14}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{23,28},{202,228}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
             </dict>
             <key>bar_320_32.png</key>
             <dict>
@@ -170,7 +248,7 @@
             <key>size</key>
             <string>{1024,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:e7f77b718910280b7052789560c01e34$</string>
+            <string>$TexturePacker:SmartUpdate:c28d895300f30a0f1ee97b181b362c0c$</string>
             <key>textureFileName</key>
             <string>UI.png</string>
         </dict>

@@ -14,6 +14,7 @@
 #include "SkillInfo.h"
 #include "PlayerInfo.h"
 #include "GameCtrl.h"
+#include "WHomeScene.h"
 
 
 bool CCHomeScene::init()
@@ -46,18 +47,33 @@ bool CCHomeSceneLayer::init()
     M_DEF_GM(pGm); // 定义游戏管理器
     M_DEF_OS(pOs);
     pFc->addSpriteFramesWithFile("background.plist");
-    pFc->addSpriteFramesWithFile("tank.plist");
     pFc->addSpriteFramesWithFile("UI.plist");
     //CCSprite* pSprite = CCSprite::createWithSpriteFrameName("kr/LevelDemo.png");
-    CCSprite* pSprite = CCSprite::create("LevelDemo2HD.png");
-    pSprite->setScale(0.5);
+    CCSprite* pSprite = CCSprite::create("Home.png");
+    //pSprite->setScale(0.5);
     setBackGroundSprite(pSprite);
-    setBufferEffectParam(0.9, 50, 0.1);
+    //setBufferEffectParam(0.9, 50, 0.1);
+    setBufferEffectParam(0, 0, 0);
 
+    /*
     m_oMenu.init();
     addChild(&m_oMenu);
     m_oMenu.setPosition(CCPointZero);
+    */
+    CCButtonPanel* pPanel = CCButtonPanel::create(1, 3, 256, 256, 50, NULL);
+    addChild(pPanel);
+    pPanel->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.2));
+    
+    CCSkillButtonNormal* pBtn = CCSkillButtonNormal::create("Start.png", "Start_ON.png", NULL, NULL, NULL, 0, this, callfuncN_selector(CCHomeSceneLayer::onBtnStartClick), NULL);
+    pPanel->addButton(pBtn, 0, 0);
 
+    pBtn = CCSkillButtonNormal::create("Upgrades.png", "Upgrades_ON.png", NULL, NULL, NULL, 0, this, callfuncN_selector(CCHomeSceneLayer::onBtnUpgradesClick), NULL);
+    pPanel->addButton(pBtn, 1, 0);
+
+    pBtn = CCSkillButtonNormal::create("Achievements.png", "Achievements_ON.png", NULL, NULL, NULL, 0, this, callfuncN_selector(CCHomeSceneLayer::onBtnAchievementsClick), NULL);
+    pPanel->addButton(pBtn, 2, 0);
+
+    /*
     m_oStart.initWithNormalImage("UI/start01.png", "UI/start01DOWN.png", NULL, this, menu_selector(CCHomeSceneLayer::onBtnStartClick));
     m_oMenu.addChild(&m_oStart);
     m_oStart.setPosition(ccp(oSz.width * 0.5, oSz.height * 0.2));
@@ -65,9 +81,9 @@ bool CCHomeSceneLayer::init()
     m_oCfg.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCHomeSceneLayer::onBtnCfgClick));
     m_oMenu.addChild(&m_oCfg);
     m_oCfg.setPosition(ccp(oSz.width * 0.9, oSz.height * 0.6));
-
+    */
     // demo code
-
+    /*
     CGameUnit* u;
     
     u = pUm->unitByInfo(COrgUnitInfo::kMalik);
@@ -143,14 +159,14 @@ bool CCHomeSceneLayer::init()
     g_oPath.addPoint(ccp(100, 400));
     g_oPath.addPoint(getAnchorPointInPoints());
 
-
+    */
     return true;
 }
 
 void CCHomeSceneLayer::onBtnStartClick(CCObject* pObject)
 {
     M_DEF_GM(pGm);
-    pGm->pushScene(CCMainScene::create());
+    pGm->pushScene(CCWHomeScene::create());
 }
 
 void CCHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
@@ -212,4 +228,21 @@ void CCHomeSceneLayer::onTick( float fDt )
         pU->setMaxHp(rand() % 2000 + 1000);
         fS = 0;
     }
+}
+
+
+void CCHomeSceneLayer::onBtnStartClick( CCNode* pNode )
+{
+    M_DEF_DR(pDr);
+    pDr->replaceScene(CCTransitionFade::create(0.5, CCWHomeScene::create()));
+}
+
+void CCHomeSceneLayer::onBtnUpgradesClick( CCNode* pNode )
+{
+
+}
+
+void CCHomeSceneLayer::onBtnAchievementsClick( CCNode* pNode )
+{
+
 }
