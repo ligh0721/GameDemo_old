@@ -472,7 +472,8 @@ public:
         kMoving = 1 << 1,
         kIntended = 1 << 2,
         kAttacking = 1 << 3,
-        kCasting = 1 << 4
+        kCasting = 1 << 4,
+        kSpinning = 1 << 5
     };
     //static const int kWithHostility = kAutoAttack;
 	enum STATUS
@@ -488,7 +489,8 @@ public:
         kActAttackEffect,
         kActDie,
         kActCast,
-        kActCastEffect
+        kActCastEffect,
+        kActSpin
     };
     
     static const int CONST_MAX_ANIMATION = 8;
@@ -685,6 +687,9 @@ protected:
     virtual void onActCastEnd(CCNode* pNode);
     bool checkCastDistance(const CCPoint& roPos);
     void moveToCastPosition();
+
+public:
+    virtual void stopSpin();
     
 protected:
     CCGameUnitSprite m_oSprite;
@@ -799,9 +804,9 @@ public:
     virtual void stopAttack();
     virtual void moveAlongPath(CUnitPath* pPath, bool bIntended = true, bool bRestart = false, float fBufArrive = 5.0);
     
-    void damagedAdv(CAttackData* pAttack, CUnit* pSource);
-    void damagedMid(CAttackData* pAttack, CUnit* pSource);
-    void damagedBot(float fDamage, CUnit* pSource);
+    void damagedAdv(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask = CUnit::kNoMasked);
+    void damagedMid(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask = CUnit::kNoMasked);
+    void damagedBot(float fDamage, CUnit* pSource, uint32_t dwTriggerMask = CUnit::kNoMasked);
     void addSkill(CSkill* pSkill);
     void addPackage(CUnitPackage* pPackage);
     void addBuff(CBuffSkill* pBuff, bool bForce = false);

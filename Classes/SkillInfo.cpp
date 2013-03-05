@@ -187,6 +187,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kChainLighting1].sDesc = "使范围内的兵受到闪电";
 
     pSkill = CSwordStormSkill::create(100, 3.0, 100, CAttackValue(1, CAttackValue::kMagical, 50.0), CExtraCoeff(0.30, 0), "act4");
+    dynamic_cast<CSwordStormSkill*>(pSkill)->setDelayPerUnit(0.03);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSwordStorm1].iIndex = iKey;
     m_mapSkills[kSwordStorm1].sName = "剑刃风暴";
@@ -218,3 +219,4 @@ CSkill* COrgSkillInfo::skill( int iSkillIndex )
     M_DEF_SM(pSm);
     return pSm->copySkill(m_mapSkills[iSkillIndex].iIndex);
 }
+

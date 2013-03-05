@@ -2067,11 +2067,16 @@ bool CSwordStormSkill::init(int iProbability, float fDuration, float fMaxDamageR
     m_oMaxDamage = roMaxDamage;
     m_oDamageCoef = roDamageCoef;
     m_pActName  = pActName;
+    m_fDelayPerUnit = 0.1;
+    m_iCountAnimLoop = 1;
     return true;
 }
 CCObject* CSwordStormSkill::copyWithZone(cocos2d::CCZone *pZone)
 {
-    return create(m_iProbability, m_fDuration, m_fMaxDamageRange, m_oMaxDamage, m_oDamageCoef, m_pActName);
+    CSwordStormSkill* pRet = CSwordStormSkill::create(m_iProbability, m_fDuration, m_fMaxDamageRange, m_oMaxDamage, m_oDamageCoef, m_pActName);
+    pRet->setDelayPerUnit(getDelayPerUnit());
+    pRet->setCountAnimLoop(getCountAnimLoop());
+    return pRet;
 }
 void CSwordStormSkill::onSkillAdd()
 {
@@ -2101,8 +2106,17 @@ void CSwordStormSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
     CCAnimation* pAnim = pGm->getUnitAnimation(pOwn->getName(), m_pActName);
     pAnim->setDelayPerUnit(getDelayPerUnit());
     pAnim->setLoops(getCountAnimLoop());
-    CCAnimate* pActAni = CCAnimate::create(pAnim);    
-    pOwn->getSprite()->runAction(CCRepeat::create(CCSequence::create(pActAni, CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pOwn), NULL), m_fDuration/(getDelayPerUnit()*getCountAnimLoop())));
+    CCAnimate* pActAni = CCAnimate::create(pAnim);
+    CCAction* pAction = CCSequence::createWithTwoActions(
+        CCRepeat::create(CCSequence::createWithTwoActions(
+            pActAni,
+            CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pOwn)
+        ), m_fDuration/(pAnim->getDuration() * getCountAnimLoop())),
+        CCCallFuncN::create(this, callfuncN_selector(CSwordStormSkill::onActSpinEnd))
+    );
+    pAction->setTag(CGameUnit::kActSpin);
+    pOwn->startDoing(CGameUnit::kSpinning);
+    pOwn->getSprite()->runAction(pAction);
     
 }
 
@@ -2132,6 +2146,13 @@ void CSwordStormSkill::onActEndPerAnim(CCObject* pObj)
     }
 
 }
+
+void CSwordStormSkill::onActSpinEnd( CCNode* pObj )
+{
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
+    pOwn->stopSpin();
+}
+
 CChainBuff::CChainBuff()
 {
 }

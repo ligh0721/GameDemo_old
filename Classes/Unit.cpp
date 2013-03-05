@@ -1572,7 +1572,11 @@ void CGameUnit::moveTo( const CCPoint& roPos, const UNIT_MOVE_PARAMS& roMovePara
         stopCast();
     }
     m_oSprite.runAction(pActMoveTo);
-    setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
+    if (!isDoingOr(kSpinning))
+    {
+        setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
+    }
+    
     startDoing(kMoving);
     if (roMoveParams.bIntended)
     {
@@ -1631,7 +1635,11 @@ void CGameUnit::followTo( int iTargetKey, const UNIT_MOVE_PARAMS& roMoveParams /
         stopCast();
     }
     m_oSprite.runAction(pActMoveTo);
-    setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
+    if (!isDoingOr(kSpinning))
+    {
+        setAnimation(kAnimationMove, -1, fDelta, kActMove, NULL);
+    }
+    
     startDoing(kMoving);
     if (roMoveParams.bIntended)
     {
@@ -1693,7 +1701,10 @@ void CGameUnit::stopMove()
     m_oSprite.stopActionByTag(kActMoveTo);
     m_oSprite.stopActionByTag(kActMove);
     endDoing(kMoving | kIntended);
-    setDefaultFrame();
+    if (!isDoingOr(kSpinning))
+    {
+        setDefaultFrame();
+    }
 }
 
 const CCPoint& CGameUnit::getLastMoveToTarget() const
@@ -1859,7 +1870,7 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
         {
             endDoing(kIntended);
         }
-        if (m_fAttackCD > 0)
+        if (m_fAttackCD > 0 || isDoingOr(kSpinning))
         {
             return;
         }
@@ -1915,7 +1926,10 @@ void CGameUnit::stopAttack()
     m_oSprite.stopActionByTag(kActAttackEffect);
     m_iLastAttackTarget = 0;
     endDoing(kAttacking);
-    setDefaultFrame();
+    if (!isDoingOr(kSpinning))
+    {
+        setDefaultFrame();
+    }
 }
 
 void CGameUnit::onActAttackEffect( CCNode* pNode )
@@ -2216,6 +2230,7 @@ void CGameUnit::onDie()
     setForceResource(NULL);
     stopMove();
     stopAttack();
+    stopSpin();
     setAnimation(kAnimationDie, 1, 1, kActDie, CCSequence::create(CCDelayTime::create(5), CCFadeOut::create(1), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActDieEnd)), NULL));
     CUnit::onDie();
 }
@@ -2458,7 +2473,10 @@ void CGameUnit::stopCast()
     m_oSprite.stopActionByTag(kActCast);
     m_oSprite.stopActionByTag(kActCastEffect);
     endDoing(kCasting | kIntended);
-    setDefaultFrame();
+    if (!isDoingOr(kSpinning))
+    {
+        setDefaultFrame();
+    }
 }
 
 void CGameUnit::onActCastEffect( CCNode* pNode )
@@ -2547,6 +2565,16 @@ void CGameUnit::moveToCastPosition()
     }
     
     startDoing(kCasting | kIntended);
+}
+
+void CGameUnit::stopSpin()
+{
+    m_oSprite.stopActionByTag(kActSpin);
+    endDoing(kSpinning);
+    if (isDoingOr(kMoving))
+    {
+        setAnimation(kAnimationMove, -1, getRealMoveSpeed() / getBaseMoveSpeed(), kActMove, NULL);
+    }
 }
 
 CProjectile::CProjectile()
@@ -2925,7 +2953,7 @@ void CUnitGroup::moveAlongPath( CUnitPath* pPath, bool bIntended /*= true*/, boo
     }
 }
 
-void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource )
+void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
     CGameUnit* pUnit;
     CCObject* pObj;
@@ -2937,7 +2965,7 @@ void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource )
     }
 }
 
-void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource )
+void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
     CGameUnit* pUnit;
     CCObject* pObj;
@@ -2949,7 +2977,7 @@ void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource )
     }
 }
 
-void CUnitGroup::damagedBot( float fDamage, CUnit* pSource )
+void CUnitGroup::damagedBot( float fDamage, CUnit* pSource, uint32_t dwTriggerMask )
 {
     CGameUnit* pUnit;
     CCObject* pObj;

@@ -790,6 +790,7 @@ public:
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
     
     virtual void onActEndPerAnim(CCObject* pObj);
+    virtual void onActSpinEnd(CCNode* pObj);
     
 private:
     int m_iProbability;
