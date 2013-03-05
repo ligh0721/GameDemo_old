@@ -871,10 +871,6 @@ protected:
     CCArray m_oUnitDustbin;
     CCArray m_oProjectileDustbin;
 
-    CCArray m_oArrUnitToAdd;
-    CCArray m_oArrProjectileToAdd;
-    bool m_bOnTickEvent;
-    
     float m_fUnitTickInterval;
     
     int m_iPendingSkillOwner;
