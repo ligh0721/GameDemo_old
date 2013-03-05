@@ -3202,7 +3202,22 @@ CUnitGroup* CCUnitLayer::getUnits()
 
 CGameUnit* CCUnitLayer::getUnitByKey( int iKey )
 {
-    return m_oArrUnit.getUnitByKey(iKey);
+    CGameUnit* pUnit = m_oArrUnit.getUnitByKey(iKey);
+    if (pUnit || !m_bOnTickEvent)
+    {
+        return pUnit;
+    }
+
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrUnitToAdd, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (pUnit->getKey() == iKey)
+        {
+            return pUnit;
+        }
+    }
+    return NULL;
 }
 
 CUnitGroup* CCUnitLayer::getProjectiles()
@@ -3212,7 +3227,22 @@ CUnitGroup* CCUnitLayer::getProjectiles()
 
 CProjectile* CCUnitLayer::getProjectileByKey( int iKey )
 {
-    return dynamic_cast<CProjectile*>(m_oArrProjectile.getUnitByKey(iKey));
+    CProjectile* pProj = dynamic_cast<CProjectile*>(m_oArrProjectile.getUnitByKey(iKey));
+    if (pProj || !m_bOnTickEvent)
+    {
+        return pProj;
+    }
+    
+    CCObject* pObj;
+    CCARRAY_FOREACH(&m_oArrProjectileToAdd, pObj)
+    {
+        pProj = dynamic_cast<CProjectile*>(pObj);
+        if (pProj->getKey() == iKey)
+        {
+            return pProj;
+        }
+    }
+    return NULL;
 }
 
 void CCUnitLayer::moveUnitToDustbin( CGameUnit* pToDel )
