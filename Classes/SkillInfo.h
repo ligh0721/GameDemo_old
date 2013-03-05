@@ -23,7 +23,11 @@ public:
         kThump1,
         kThrowHit1,
         kSpeedUp1,
-        kThunderAttack1
+		kTransmit1,
+        kThunderAttack1,
+        kChainLighting1,
+        kSwordStorm1,
+        kJumpChop1
     };
 
     struct SKILL_INFO

@@ -55,7 +55,7 @@ bool CGameResController::initResWithLevel( int level )
 	if (getTowerPatchManagerByLevel(level) ==  NULL)
 	{
 		char arrPath[128];
-		sprintf(arrPath, "levels/level%02d/TowerLevel.uip", level);
+		sprintf(arrPath, "levels/level%02d/Level.uip", level);
 		CUnitInfoPatchManager* pUnitInfoManager = new CUnitInfoPatchManager();
 		pUnitInfoManager->initWithFile(arrPath);
 		m_oTowerLevelPatchManager.insert(make_pair(level, pUnitInfoManager));

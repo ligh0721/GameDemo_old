@@ -11,7 +11,6 @@
 #include "GameCtrl.h"
 #include "UnitInfo.h"
 
-
 CSkill::CSkill()
     : m_iKey(CCGameManager::sharedGameManager()->getLogicBody()->keygen())
     , m_pOwner(NULL)
@@ -1718,57 +1717,91 @@ CTransmitBuff::CTransmitBuff()
 {
 }
 
-bool CTransmitBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, const CCPoint& oDestPos, float fMissDuration, unsigned int uBeginBlinks, unsigned int uEndBlinks, int iBuffTemplateKey, int iBuffLevel )
+bool CTransmitBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, vector<CCPoint>& vecRandomPoint, float fFadeInDuration,  float fFadeOutDuration, int iBuffTemplateKey, int iBuffLevel)
 {
-	setDestPos(oDestPos);
-	setMissDuration(fMissDuration);
-	setBeginBlinks(uBeginBlinks);
-	setEndBlinks(uEndBlinks);
+	setFadeInDuration(fFadeInDuration);
+	setFadeOutDuration(fFadeOutDuration);
 	m_iBuffTemplateKey = iBuffTemplateKey;
 	m_iBuffLevel = iBuffLevel;
-
+	m_vecRandomPoint = vecRandomPoint;
 	return CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
 
 }
 
 CCObject* CTransmitBuff::copyWithZone( CCZone* pZone )
 {
-	return CTransmitBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_oDestPos, m_fMissDuration, m_uBeginBlinks, m_uEndBlinks, m_iBuffTemplateKey, m_iBuffLevel);
+	return CTransmitBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_vecRandomPoint, m_fFadeInDuration, m_fFadeOutDuration, m_iBuffTemplateKey, m_iBuffLevel);
 }
 
 void CTransmitBuff::onBuffAdd()
 {
 	CBuffSkill::onBuffAdd();
-}
-
-void CTransmitBuff::onBuffDel()
-{
 	CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
 	if (!u || u->isDead())
 	{
 		return;
 	}
 	u->suspend();
+	u->setStatus(CGameUnit::kNoAttacked);
 	CCAction* pAct = CCSequence::createWithTwoActions(
-		CCBlink::create(m_fMissDuration, m_uBeginBlinks),
+		CCFadeOut::create(m_fFadeOutDuration),
 		CCCallFuncN::create(this, callfuncN_selector(CTransmitBuff::onTransmitBegin))
 		);
 	u->getSprite()->runAction(pAct);
 }
 
+void CTransmitBuff::onBuffDel()
+{
+	CBuffSkill::onBuffDel();
+}
+
 void CTransmitBuff::onTransmitBegin( CCNode* pNode )
 {
-	CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
-	u->getSprite()->setPosition(m_oDestPos);
+	CCPoint oPoint;
+	CCGameUnitSprite* pSprint = dynamic_cast<CCGameUnitSprite*>(pNode);
+	CGameUnit* pUnit = pSprint->getControler();
+	CCPoint oDestPoint;
+
+	if (m_vecRandomPoint.size() > 0)
+	{
+		oDestPoint = m_vecRandomPoint[rand()%(m_vecRandomPoint.size() - 1)];
+
+	}
+	else
+	{
+		CUnitPath* pPath = pUnit->getMovePath();
+		const CCPoint& lastPoint = pUnit->getLastMoveToTarget();
+		unsigned int i = 0;
+		for (; i < pPath->m_vecPoints.size(); i++)
+		{
+			if (pPath->m_vecPoints[i].equals(lastPoint))
+				break;
+		}
+		int iDestIndex = rand()%i;
+		oDestPoint = pPath->m_vecPoints[iDestIndex];
+		pUnit->setPathCurPos(iDestIndex + 1);
+
+	}
+
+	oPoint.setPoint(oDestPoint.x, oDestPoint.y);
+	if (oDestPoint.equals(CCPointZero))
+	{
+		oPoint.setPoint(rand()%800, rand()%480);
+
+	}
+	pNode->setPosition(oPoint);
 	CCAction* pAct = CCSequence::createWithTwoActions(
-		CCBlink::create(m_fMissDuration, m_uEndBlinks),
+		CCFadeIn::create(m_fFadeInDuration),
 		CCCallFuncN::create(this, callfuncN_selector(CTransmitBuff::onTransmitEnd))
 		);
-	u->getSprite()->runAction(pAct);
+	pNode->runAction(pAct);
 }
 
 void CTransmitBuff::onTransmitEnd( CCNode* pNode )
 {
+	CCGameUnitSprite* pSprite = dynamic_cast<CCGameUnitSprite*>(pNode);
+	pSprite->getControler()->resume();
+	pSprite->getControler()->setStatus(CGameUnit::kNormal);
 }
 
 bool CProjectileAct::init( float fCoolDown, float fCastRange, const CAttackValue& roDamage, CProjectile* pProj, int iBuffTemplateKey, int iBuffLevel )
@@ -1890,6 +1923,234 @@ void CProjectileAct::setTemplateProjectile( CProjectile* pProjectile )
 CProjectile* CProjectileAct::getTemplateProjectile()
 {
     return m_pTemplateProjectile;
+}
+
+bool CChainLightingBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &roDamage, const vector<int>& vecEffectedUnitKey)
+{
+    CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+    m_fMaxCastRange = fMaxCastRange;
+    m_fMaxJumpDistance = fMaxJumpDistance;
+    m_iMaxJumpCount = fMaxJumpDistance;
+    m_oDamage = roDamage;
+    m_vecEffectedUnitKey = vecEffectedUnitKey;
+    return true;
+    
+}
+
+CCObject* CChainLightingBuff::copyWithZone(CCZone *pZone)
+{
+    return create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fMaxCastRange, m_fMaxJumpDistance, m_iMaxJumpCount, m_oDamage, m_vecEffectedUnitKey);
+}
+
+void CChainLightingBuff::onBuffAdd()
+{
+	CBuffSkill::onBuffAdd();
+    CGameUnit* pSource = dynamic_cast<CGameUnit*>(getOwner());
+	if (!pSource || pSource->isDead())
+	{
+		return;
+	}
+    M_DEF_PM(pPm);
+   
+    CAttackData* pAd = NULL;
+    CGameUnit* pUnit = NULL;
+    CGameUnit* pTarget = NULL;
+    CCObject* pObj = NULL;
+    float fMinDis = 99999999;
+    float fDis = 0.0;
+    uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
+    
+    
+    CCARRAY_FOREACH(pSource->getUnitLayer()->getUnits()->getUnitsArray(), pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (!pUnit)
+        {
+            continue;
+        }
+        bool bflag = false;
+        for (vector<int>::size_type i = 0; i < m_vecEffectedUnitKey.size(); i++)
+        {
+            if(pUnit->getKey() == m_vecEffectedUnitKey[i])
+            {
+                bflag = true;
+                break;
+            }
+                
+        }
+        if (bflag
+            || pUnit->getKey() == pSource->getKey())
+        {
+            continue;
+        }
+        if ((fDis = ccpDistance(pUnit->getPosition(), pSource->getPosition())) < m_fMaxJumpDistance
+            && fMinDis > fDis
+            && CUnitGroup::isLivingAllyOf(pUnit, dynamic_cast<CUnitForce*>(pSource)))
+        {
+            pTarget = pUnit;
+            fMinDis = fDis;
+        }
+
+    }
+    
+    if (pTarget == NULL)
+    {
+        return;
+    }
+    pAd = CAttackData::create();
+    pAd->setAttack(m_oDamage);
+    pUnit->damagedAdv(pAd, pSource, dwTriggerMask);
+    
+    CProjectile* pProj = pPm->getProjectileByIndex(COrgUnitInfo::kLightning2);
+    pProj = dynamic_cast<CProjectile*>(pProj->copy());
+    pTarget->getUnitLayer()->addProjectile(pProj);
+    pProj->setProjectileBirthOffsetX(pSource->getProjectileBirthOffsetX());
+    pProj->setProjectileBirthOffsetY(pSource->getProjectileBirthOffsetY());
+    pProj->setAttackData(pAd);
+    pProj->setOwner(pSource->getKey());
+    pProj->setTarget(pTarget);
+    pProj->getSprite()->setScale(1);
+    pProj->setTargetObj(this);
+    pProj->setTargetFun(callfuncO_selector(CChainLightingBuff::turnNext));
+    //pProj->setPosition(pTarget->getPosition());
+    pProj->onDie();
+    
+    if(m_vecEffectedUnitKey.size() <= 0)
+    {
+        m_vecEffectedUnitKey.push_back(pTarget->getKey());
+        m_vecEffectedUnitKey.push_back(pSource->getKey());
+    }
+    else
+    {
+        m_vecEffectedUnitKey.push_back(pTarget->getKey());
+    }
+    m_pNextUnit = pTarget;
+
+}
+
+void CChainLightingBuff::onBuffDel()
+{
+	CBuffSkill::onBuffDel();    
+}
+
+void CChainLightingBuff::turnNext(CCObject* pObj)
+{
+    CChainLightingBuff* pSkillBuff = dynamic_cast<CChainLightingBuff*>(this->copy());
+    if ((int)m_vecEffectedUnitKey.size() > m_iMaxJumpCount + 1)
+    {
+        return;
+        
+    }
+    CAttackData* pAd = CAttackData::create();
+    pAd->setAttack(m_oDamage);
+    pAd->addBuff(pSkillBuff, 100);
+    if(m_pNextUnit != NULL
+       && !m_pNextUnit->isDead())
+    {
+        m_pNextUnit->addBuff(pSkillBuff);
+    }
+
+}
+
+CSwordStormSkill::CSwordStormSkill()
+{
+    setDelayPerUnit(0.02);
+    setCountAnimLoop(10);
+}
+
+bool CSwordStormSkill::init(int iProbability, float fDuration, float fMaxDamageRange, const CAttackValue &roMaxDamage, const CExtraCoeff &roDamageCoef, char *pActName)
+{
+    CPassiveSkill::init();
+    m_iProbability = iProbability;
+    m_fDuration = fDuration;
+    m_fMaxDamageRange = fMaxDamageRange;
+    m_oMaxDamage = roMaxDamage;
+    m_oDamageCoef = roDamageCoef;
+    m_pActName  = pActName;
+    m_fDelayPerUnit = 0.1;
+    m_iCountAnimLoop = 1;
+    return true;
+}
+CCObject* CSwordStormSkill::copyWithZone(cocos2d::CCZone *pZone)
+{
+    CSwordStormSkill* pRet = CSwordStormSkill::create(m_iProbability, m_fDuration, m_fMaxDamageRange, m_oMaxDamage, m_oDamageCoef, m_pActName);
+    pRet->setDelayPerUnit(getDelayPerUnit());
+    pRet->setCountAnimLoop(getCountAnimLoop());
+    return pRet;
+}
+void CSwordStormSkill::onSkillAdd()
+{
+    CPassiveSkill::onSkillAdd();
+    registerOnDamageTargetTrigger();
+    
+}
+
+void CSwordStormSkill::onSkillDel()
+{
+    CPassiveSkill::onSkillDel();
+}
+
+void CSwordStormSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
+{
+    if(!M_RAND_HIT(m_iProbability))
+    {
+        return;
+    }
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
+    if (!pOwn || pOwn->isDead())
+    {
+        return;
+    }
+    M_DEF_GM(pGm);
+    
+    CCAnimation* pAnim = pGm->getUnitAnimation(pOwn->getName(), m_pActName);
+    pAnim->setDelayPerUnit(getDelayPerUnit());
+    pAnim->setLoops(getCountAnimLoop());
+    CCAnimate* pActAni = CCAnimate::create(pAnim);
+    CCAction* pAction = CCSequence::createWithTwoActions(
+        CCRepeat::create(CCSequence::createWithTwoActions(
+            pActAni,
+            CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pOwn)
+        ), m_fDuration/(pAnim->getDuration() * getCountAnimLoop())),
+        CCCallFuncN::create(this, callfuncN_selector(CSwordStormSkill::onActSpinEnd))
+    );
+    pAction->setTag(CGameUnit::kActSpin);
+    pOwn->startDoing(CGameUnit::kSpinning);
+    pOwn->getSprite()->runAction(pAction);
+    
+}
+
+void CSwordStormSkill::onActEndPerAnim(CCObject* pObj)
+{
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(pObj);
+    CCObject* pObjItem = NULL;
+    CGameUnit* pUnit = NULL;
+    float fDis = 0.0;
+    
+    CCARRAY_FOREACH(pOwn->getUnitLayer()->getUnits()->getUnitsArray(), pObjItem)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObjItem);
+        if (!pUnit || pUnit->isDead())
+        {
+            continue;
+        }
+        if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
+            && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
+        {
+            //给范围内的敌人受到持续伤害
+            CAttackData* pAttack = CAttackData::create();
+            pAttack->setAttack(m_oMaxDamage);
+            pUnit->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
+        }
+        
+    }
+
+}
+
+void CSwordStormSkill::onActSpinEnd( CCNode* pObj )
+{
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
+    pOwn->stopSpin();
 }
 
 CChainBuff::CChainBuff()
@@ -2054,18 +2315,160 @@ CProjectile* CChainBuff::getTemplateProjectile()
 }
 
 
-bool CThunderBoltBuff::init( float fDuration,bool bCanBePlural,float fInterval,float fDamage,int iRadius )
+CJumpChopSkill::CJumpChopSkill()
 {
-    CBuffSkill::init(fDuration, bCanBePlural);
+    m_pLastTargetUnit = NULL;
+    setCountAnimLoop(1);
+    setDelayPerUnit(0.2);
+    setCountPerJump(1);
+    setDurationPerJump(1.0);
+}
+
+bool CJumpChopSkill::init(int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue &roDamage, char *pActName)
+{
+    CPassiveSkill::init();
+    m_iProbability = iProbability;
+    m_fMaxJumpRange = fMaxJumpRange;
+    m_iMaxJumpCount = iMaxJumpCount;
+    m_oMaxDamage = roDamage;
+    m_pActName = pActName;
+    return true;
+}
+CCObject* CJumpChopSkill::copyWithZone(cocos2d::CCZone *pZone)
+{
+    return create(m_iProbability, m_fMaxJumpRange, m_iMaxJumpCount, m_oMaxDamage, m_pActName);
+}
+void CJumpChopSkill::onSkillAdd()
+{
+    CPassiveSkill::onSkillAdd();
+    registerOnDamageTargetTrigger();
+}
+
+void CJumpChopSkill::onSkillDel()
+{
+    CPassiveSkill::onSkillDel();
+}
+
+void CJumpChopSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
+{
+    if(!M_RAND_HIT(m_iProbability))
+    {
+        return;
+    }
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
+    if (!pOwn || pOwn->isDead())
+    {
+        return;
+    }
+    m_vecEffectedUnitKey.push_back(pOwn->getKey());
+    m_vecEffectedUnitKey.push_back(pTarget->getKey());
+    onJumpChopEnd(pOwn);
+ 
+}
+
+void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
+{
+    CGameUnit* pU = dynamic_cast<CGameUnit*>(pObj);
+    if (m_pLastTargetUnit != NULL && !m_pLastTargetUnit->isDead())
+    {
+        uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
+        CAttackData* pAttackData = CAttackData::create();
+        pAttackData->setAttack(m_oMaxDamage);
+        m_pLastTargetUnit->damagedAdv(pAttackData, pU, dwTriggerMask);
+        
+    }
+    if (m_iMaxJumpCount + 2 <= (int)m_vecEffectedUnitKey.size()
+        || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= (int)m_vecEffectedUnitKey.size())
+    {
+        return;
+    }
+    if (!pU || pU->isDead())
+    {
+        return;
+    }
+    
+    CGameUnit* pUnit = NULL;
+    CGameUnit* pTarget = NULL;
+    CCObject* pObjItem = NULL;
+    float fMinDis = 99999999;
+    float fDis = 0.0;    
+    
+    CCARRAY_FOREACH(pU->getUnitLayer()->getUnits()->getUnitsArray(), pObjItem)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObjItem);
+        if (!pUnit || pUnit->isDead())
+        {
+            continue;
+        }
+        bool bflag = false;
+        for (vector<int>::size_type i = 0; i < m_vecEffectedUnitKey.size(); i++)
+        {
+            if(pUnit->getKey() == m_vecEffectedUnitKey[i])
+            {
+                bflag = true;
+                break;
+            }
+            
+        }
+        if (bflag)
+        {
+            continue;
+        }
+        if ((fDis = ccpDistance(pUnit->getPosition(), pU->getPosition())) < m_fMaxJumpRange
+            && fMinDis > fDis
+            && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pU)))
+        {
+            pTarget = pUnit;
+            fMinDis = fDis;
+        }
+    }
+    
+    if (pTarget == NULL || pTarget->isDead())
+    {
+        return;
+    }
+
+    m_vecEffectedUnitKey.push_back(pTarget->getKey());
+    
+    M_DEF_GM(pGm);
+    CCAnimation* pAnim = pGm->getUnitAnimation(pU->getName(), m_pActName);
+    pAnim->setDelayPerUnit(getDelayPerUnit());
+    pAnim->setLoops(getCountAnimLoop());
+    CCAnimate* pActAni = CCAnimate::create(pAnim);
+    CCFiniteTimeAction* pJump = CCJumpTo::create(getDurationPerJump(), pTarget->getPosition(), 20, getCountPerJump());
+    CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopSkill::onJumpChopEnd), pU);
+    
+    pU->getSprite()->runAction(CCSequence::createWithTwoActions(CCSequence::createWithTwoActions(pJump, pActAni), pCallO));
+    //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
+    m_pLastTargetUnit = pTarget;
+}
+
+bool CThunderBolt2Buff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fRange, const CAttackValue& roDamage )
+{
+    CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+    m_fRange = fRange;
+    m_oDamage = roDamage;
     m_fInterval = fInterval;
     m_fIntervalPass = 0;
-    m_fDamage=fDamage;
-    m_iRadius=iRadius;
-
     return true;
 }
 
-void CThunderBoltBuff::onUnitTick( float fDt )
+CCObject* CThunderBolt2Buff::copyWithZone( CCZone* pZone )
+{
+    return CThunderBolt2Buff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fInterval, m_fRange, m_oDamage);
+}
+
+void CThunderBolt2Buff::onBuffAdd()
+{
+    CBuffSkill::onBuffAdd();
+}
+
+void CThunderBolt2Buff::onBuffDel()
+{
+    CBuffSkill::onBuffDel();
+}
+
+void CThunderBolt2Buff::onUnitTick( float fDt )
 {
     timeStep(fDt);
 
@@ -2080,105 +2483,51 @@ void CThunderBoltBuff::onUnitTick( float fDt )
 
     while (m_fIntervalPass >= m_fInterval)
     {
-        onThunderBolt();
+        onUnitInterval();
         m_fIntervalPass -= m_fInterval;
     }
 
     delBuffIfTimeout();
 }
 
-void CThunderBoltBuff::afterThunderBoltCallback( CCNode* pSender )
+void CThunderBolt2Buff::onUnitInterval()
 {
-    pSender->removeFromParentAndCleanup(true);
-}
+    float xPos = rand()%(int)m_fRange;
+    float yPos = rand()%(int)m_fRange;
 
-void CThunderBoltBuff::onThunderBolt()
-{
-    CGameUnit* pO=dynamic_cast<CGameUnit*>(getOwner());
-    CCNode* nodePos=dynamic_cast<CGameUnit*>(getOwner())->getShadowNode();
-    float xPos=m_iRadius-rand()%(2*m_iRadius);
-    float yPos=m_iRadius-rand()%(2*m_iRadius);
-    CCSprite *thunderBolt=CCSprite::create("vortex3.png");
-    nodePos->getParent()->addChild(thunderBolt);
-    CCPoint damagePos=ccp(nodePos->getPositionX()+xPos,nodePos->getPositionY()+yPos);
-    thunderBolt->setPosition(damagePos);
-    CCFiniteTimeAction* pAction=CCRotateBy::create(5.0,1080);
-    CCFiniteTimeAction* pActionSeq=CCSequence::create(pAction
-        ,CCCallFuncN::create(this,callfuncN_selector(CThunderBoltBuff::afterThunderBoltCallback)),NULL);
-    thunderBolt->runAction(pActionSeq);
-    CCObject* pObj;
-    CGameUnit* pUnit;
-    CCPoint unitPos;
-
-
-    M_DEF_OU(pOu);
     M_DEF_UM(pUm);
+    CGameUnit* t = pUm->unitByInfo(2);
+    CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+    o->getUnitLayer()->addUnit(t);
+
+    CCPoint targetPoint = ccp(o->getPosition().x-m_fRange/2+xPos,o->getPosition().y-m_fRange/2+yPos);
+
+    t->setPosition(ccp(o->getPosition().x-m_fRange/2+xPos,o->getPosition().y-m_fRange/2+yPos));
+    //t->attack(o->getKey());
+    CGameUnit* t2 = pUm->unitByInfo(2);
+    o->getUnitLayer()->addUnit(t2);
+    t2->setPosition(ccp(o->getPosition().x-m_fRange/2+xPos,o->getPosition().y-m_fRange/2+yPos+200));
 
 
-    CGameUnit* pStartPos = pUm->unitByInfo(COrgUnitInfo::kMalik);
-    CGameUnit* pEndPos = pUm->unitByInfo(COrgUnitInfo::kMalik);
-
-    if (pStartPos!=NULL&&pEndPos!=NULL)
-    {
-        pStartPos->setPosition(pO->getPosition());
-        pEndPos->setPosition(ccp(pO->getPosition().x,pO->getPosition().y+100));
-        pO->getUnitLayer()->addUnit(pStartPos);
-        pO->getUnitLayer()->addUnit(pEndPos);       
-    }
-   
+    M_DEF_PM(pPm);
+    CProjectile * pProj = dynamic_cast<CProjectile*>(pPm->getProjectileByIndex(COrgUnitInfo::kLightning3)->copy());
     
-//     M_DEF_PM(pPm);
-//     CProjectile* pProj = CProjectile::create();
-//     pProj = dynamic_cast<CProjectile*>(pPm->getProjectileByIndex(5)->copy());
-//     if (pProj == NULL)
-//     {
-//         return;
-//     }
-//     
-// 
-//     pO->getUnitLayer()->addProjectile(pProj);
-//     pProj->setProjectileBirthOffsetX(0);
-//     pProj->setProjectileBirthOffsetY(0);
-//     pProj->setOwner(pO->getKey());
-//     pProj->setStart(pStartPos->getKey());
-//     pProj->setTarget(pEndPos);
-//     pProj->getSprite();
-//     pProj->setPosition(ccp(xPos,yPos));
-//     pProj->onDie();
-
-
-
-    CCARRAY_FOREACH(pO->getUnitLayer()->getUnits()->getUnitsArray(),pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-//         if (pUnit->getKey()==pStartPos->getKey()||pUnit->getKey()==pEndPos->getKey())
-//         {
-//             break;
-//         }
-        if (pUnit==NULL)
-        {
-            break;
-        }
-        unitPos = pUnit->getPosition();
-        CCPoint subPoint=ccpSub(damagePos,unitPos);
-        float dis=sqrtf(subPoint.x*subPoint.x+subPoint.y*subPoint.y);
-        if (dis<200&&pUnit->getKey()!=pO->getKey()&&pUnit->isEnemyOf(pO))
-        {
-            pUnit->setHp(pUnit->getHp()-100);
-
-        }
-    }
-}
-
-CCObject* CThunderBoltBuff::copyWithZone( CCZone* pZone )
-{
-    return CThunderBoltBuff::create(m_fDuration,m_bCanBePlural,m_fInterval,m_fDamage,m_iRadius);
-}
-
-void CThunderBoltBuff::onBuffAdd()
-{
-    CBuffSkill::onBuffAdd();
-    CGameUnit* pO = dynamic_cast<CGameUnit*>(getOwner());
+    o->getUnitLayer()->addProjectile(pProj);
+    pProj->setProjectileBirthOffsetX(0);
+    pProj->setProjectileBirthOffsetY(0);
     
-}
+    CAttackData *pAd = CAttackData::create();
+    pAd->setAttack(m_oDamage);
 
+    pProj->setAttackData(pAd);
+    pProj->setOwner(o->getKey());
+    pProj->setStart(t2->getKey());
+    pProj->setTarget(t);
+    pProj->getSprite()->setScale(3.0);
+    pProj->setPosition(t->getPosition());
+    pProj->onDie();
+
+    o->getUnitLayer()->getUnits()
+        ->getUnitsInRange(targetPoint,100,-1,CONDITION(CUnitGroup::isLivingEnemyOf),o)->damagedAdv(pAd,o);
+
+}
