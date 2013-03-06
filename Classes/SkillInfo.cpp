@@ -189,7 +189,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSwordStorm1].sName = "剑刃风暴";
     m_mapSkills[kSwordStorm1].sDesc = "如风暴般高速旋转手中剑刃，使周围单位受到伤害";
 
-    pSkill = CJumpChopSkill::create(100, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), "act5");
+    pSkill = CJumpChopSkill::create(100, 400, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), "act5");
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kJumpChop1].iIndex = iKey;
     m_mapSkills[kJumpChop1].sName = "跳劈";

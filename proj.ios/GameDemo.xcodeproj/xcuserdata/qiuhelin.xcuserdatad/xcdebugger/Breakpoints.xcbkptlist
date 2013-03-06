@@ -68,5 +68,18 @@
          landmarkName = "CCBattleSceneLayer::randomSoldiers(int iForce)"
          landmarkType = "5">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../Classes/Skill.cpp"
+         timestampString = "384271373.800162"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "2504"
+         endingLineNumber = "2504"
+         landmarkName = "CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)"
+         landmarkType = "5">
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

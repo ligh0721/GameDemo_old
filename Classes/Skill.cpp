@@ -2345,10 +2345,14 @@ void CJumpChopSkill::onSkillDel()
 
 void CJumpChopSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
 {
+    
     if(!M_RAND_HIT(m_iProbability))
     {
         return;
     }
+    m_vecEffectedUnitKey.clear();
+    m_pLastTargetUnit = NULL;
+    
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
     if (!pOwn || pOwn->isDead())
     {
@@ -2374,6 +2378,7 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     if (m_iMaxJumpCount + 2 <= (int)m_vecEffectedUnitKey.size()
         || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= (int)m_vecEffectedUnitKey.size())
     {
+        pU->stopSpin();
         return;
     }
     if (!pU || pU->isDead())
@@ -2419,6 +2424,7 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     
     if (pTarget == NULL || pTarget->isDead())
     {
+        pU->stopSpin();
         return;
     }
 
@@ -2432,7 +2438,13 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     CCFiniteTimeAction* pJump = CCJumpTo::create(getDurationPerJump(), pTarget->getPosition(), 20, getCountPerJump());
     CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopSkill::onJumpChopEnd), pU);
     
-    pU->getSprite()->runAction(CCSequence::createWithTwoActions(CCSequence::createWithTwoActions(pJump, pActAni), pCallO));
+    CCAction* pAction = CCSequence::create(pActAni, pCallO, NULL);
+    
+    pAction->setTag(CGameUnit::kActSpin);
+    
+    pU->startDoing(CGameUnit::kSpinning);
+    pU->getSprite()->runAction(pAction);
+    
     //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
     m_pLastTargetUnit = pTarget;
 }
@@ -2440,7 +2452,7 @@ CJumpChopBuff::CJumpChopBuff()
 {
     m_pLastTargetUnit = NULL;
     setCountAnimLoop(1);
-    setDelayPerUnit(0.2);
+    setDelayPerUnit(0.1);
     setCountPerJump(1);
     setDurationPerJump(1.0);
 }
@@ -2501,6 +2513,7 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     if (m_iMaxJumpCount + 2 <= (int)m_vecEffectedUnitKey.size()
         || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= (int)m_vecEffectedUnitKey.size())
     {
+        pU->stopSpin();
         return;
     }
     if (!pU || pU->isDead())
@@ -2557,9 +2570,15 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     pAnim->setLoops(getCountAnimLoop());
     CCAnimate* pActAni = CCAnimate::create(pAnim);
     CCFiniteTimeAction* pJump = CCJumpTo::create(getDurationPerJump(), pTarget->getPosition(), 20, getCountPerJump());
-    CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopSkill::onJumpChopEnd), pU);
+    CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopSkill::onJumpChopEnd), NULL);
     
-    pU->getSprite()->runAction(CCSequence::createWithTwoActions(CCSequence::createWithTwoActions(pJump, pActAni), pCallO));
+    CCAction* pAction = CCSequence::create(pJump, pActAni, pCallO, NULL);
+    
+    pAction->setTag(CGameUnit::kActSpin);
+   
+    pU->startDoing(CGameUnit::kSpinning);
+    pU->getSprite()->runAction(pAction);
+    
     //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
     m_pLastTargetUnit = pTarget;
 }

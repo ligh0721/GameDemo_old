@@ -285,7 +285,7 @@
 		8B09162E16C55465004C5566 /* PlayerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerInfo.h; sourceTree = "<group>"; };
 		8B09162F16C55465004C5566 /* Prop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Prop.cpp; sourceTree = "<group>"; };
 		8B09163016C55465004C5566 /* Prop.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Prop.h; sourceTree = "<group>"; };
-		8B09163116C55465004C5566 /* PropUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PropUI.cpp; sourceTree = "<group>"; };
+		8B09163116C55465004C5566 /* PropUI.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; path = PropUI.cpp; sourceTree = "<group>"; };
 		8B09163216C55465004C5566 /* PropUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropUI.h; sourceTree = "<group>"; };
 		8B09163316C55465004C5566 /* Skill.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = Skill.cpp; sourceTree = "<group>"; };
 		8B09163416C55465004C5566 /* Skill.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Skill.h; sourceTree = "<group>"; };
