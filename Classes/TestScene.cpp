@@ -18,7 +18,7 @@ bool CCTestLayer::init()
 	test2->setPosition(ccp(zeroPoint.x+visibleSize.width/2,zeroPoint.y+visibleSize.height/2));
 	CCActionInterval* act1=CCMoveTo::create(10.0,ccp(zeroPoint.x+visibleSize.width*3/4,zeroPoint.y+visibleSize.height*3/4));
 	test1->runAction(act1);
-	CCActionInterval* act2=CCMoveToNode::create(3.0, test1);
+	CCActionInterval* act2=CCMoveToNode::create(3.0, test1, true);
 	CCActionInterval* act3=CCMoveTo::create(5.0,ccp(zeroPoint.x+visibleSize.width*3/4,zeroPoint.y+visibleSize.height/2));
 	CCFiniteTimeAction* actSeq1=CCSequence::create(act2,act3,NULL);
 	CCAction* speedAct1=CCSpeed::create(act2,0.1);

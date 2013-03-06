@@ -221,17 +221,18 @@ CCMoveToNode::~CCMoveToNode()
     CC_SAFE_RELEASE(m_pEndNode);
 }
 
-bool CCMoveToNode::init( float fDuration, CCNode* pNode, float fMaxOffsetY, float fScaleY, float fYOffsetOfAnchor )
+bool CCMoveToNode::init( float fDuration, CCNode* pNode, bool bFixRotation, float fMaxOffsetY, float fScaleY, float fOffsetYOfAnchor )
 {
     if (CCActionInterval::initWithDuration(fDuration))
     {
         m_pEndNode=pNode;
         CC_SAFE_RETAIN(m_pEndNode);
+        m_bFixRotation = bFixRotation;
         m_oEndPos=pNode->getPosition();
         //deltaPosition=endPosition;
         m_fMaxOffsetY = fMaxOffsetY;
         m_fScaleY = fScaleY;
-        m_fYOffsetOfAnchor = fYOffsetOfAnchor;
+        m_fOffsetYOfAnchor = fOffsetYOfAnchor;
         m_fMinSpeed = 0;
         return true;
     }
@@ -253,7 +254,7 @@ void CCMoveToNode::update( float time )
     if (m_pTarget)
     {
         m_oEndPos=m_pEndNode->getPosition();
-        m_oEndPos.y += m_fYOffsetOfAnchor;
+        m_oEndPos.y += m_fOffsetYOfAnchor;
         m_oDeltaPos=ccpSub(m_oEndPos,m_oStartPos);
         setDuration(sqrt(m_oDeltaPos.x*m_oDeltaPos.x+m_oDeltaPos.y*m_oDeltaPos.y)/m_fMinSpeed);
 
@@ -264,7 +265,10 @@ void CCMoveToNode::update( float time )
         float fOffsetY = fA * fX * fX + m_fMaxOffsetY;
         float fOffsetR = atan(fA * fX);
         m_pTarget->setPosition(ccp(m_oStartPos.x + m_oDeltaPos.x * time, m_oStartPos.y + m_oDeltaPos.y * time + fOffsetY));
-        m_pTarget->setRotation(CC_RADIANS_TO_DEGREES((m_oStartPos.x > m_oEndPos.x ? fOffsetR : -fOffsetR) - ccpToAngle(ccpSub(m_oEndPos, m_oStartPos))));
+        if (m_bFixRotation)
+        {
+            m_pTarget->setRotation(CC_RADIANS_TO_DEGREES((m_oStartPos.x > m_oEndPos.x ? fOffsetR : -fOffsetR) - ccpToAngle(ccpSub(m_oEndPos, m_oStartPos))));
+        }
         //m_pTarget->setRotation(CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(m_oEndPos, m_oStartPos))) + (m_oStartPos.x > m_oEndPos.x ? CC_RADIANS_TO_DEGREES(fOffsetR) : -CC_RADIANS_TO_DEGREES(fOffsetR)));
         //CCLOG("%.2f, %.2f", CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(m_oEndPos, m_oStartPos))), (m_oStartPos.x > m_oEndPos.x ? CC_RADIANS_TO_DEGREES(fOffsetR) : CC_RADIANS_TO_DEGREES(fOffsetR)));
 
@@ -289,7 +293,7 @@ CCObject* CCMoveToNode::copyWithZone( CCZone* pZone )
 
     CCActionInterval::copyWithZone(pZone);
 
-    pCopy->init(m_fDuration, m_pEndNode, m_fYOffsetOfAnchor);
+    pCopy->init(m_fDuration, m_pEndNode, m_bFixRotation, m_fOffsetYOfAnchor);
 
     CC_SAFE_DELETE(pNewZone);
     return pCopy;
@@ -446,9 +450,6 @@ void CCDelayRelease::startWithTarget( CCNode *pTarget )
 
 void CCDelayRelease::onActEnd( CCNode* pNode )
 {
-    if (m_pTarget)
-    {
-        m_pTarget->removeFromParentAndCleanup(true);
-    }
+    pNode->removeFromParentAndCleanup(true);
 }
 

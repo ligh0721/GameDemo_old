@@ -309,7 +309,7 @@ bool COrgUnitInfo::init()
                           24, 27,    // 0.5w 0.5h
                           1,
                           0.1, 0.1, 0.08, 0.08, 0.1, 0.05, 0.1, 0.00,
-                          CUnitInfo::ARR_ATTACK_ANI(4, kAct1, kAct2, kAct4, kAct5),
+                          CUnitInfo::ARR_ATTACK_ANI(3, kAct1, kAct2, kAct4),
                           40,
                           2, 0.25, 0, 34, 150, CGameUnit::kWTClosely,
                           0, 0, 0, 0, 41, 29,

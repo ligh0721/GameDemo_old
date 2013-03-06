@@ -190,6 +190,7 @@
 		8B11D8C816C56A6600C54706 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781C33B11547F06B00633F88 /* OpenAL.framework */; };
 		8B11D8C916C56A8200C54706 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781C33B31547F06B00633F88 /* AudioToolbox.framework */; };
 		8B11D8CE16C56C2800C54706 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B11D8CD16C56C2800C54706 /* libcurl.a */; };
+		8B1D4A2816E7CE770092EEE9 /* Home.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B1D4A2716E7CE770092EEE9 /* Home.png */; };
 		8BEBFCE716C580DF002BB5A3 /* Icon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EF94E715BD319200D803EB /* Icon-57.png */; };
 		8BEBFCE816C580ED002BB5A3 /* Icon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EF94E915BD319500D803EB /* Icon-114.png */; };
 		8BEBFCE916C580F5002BB5A3 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EF94EB15BD319B00D803EB /* Icon-72.png */; };
@@ -558,6 +559,7 @@
 		8B11D7B616C566CE00C54706 /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequest.h; sourceTree = "<group>"; };
 		8B11D7B716C566CE00C54706 /* HttpResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpResponse.h; sourceTree = "<group>"; };
 		8B11D8CD16C56C2800C54706 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
+		8B1D4A2716E7CE770092EEE9 /* Home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Home.png; sourceTree = "<group>"; };
 		8BEBFCEB16C5815E002BB5A3 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		8BEBFCED16C5817C002BB5A3 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		BF137426128A8E4600D9F789 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -658,6 +660,7 @@
 		784521C214EBA449009D533B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B1D4A2716E7CE770092EEE9 /* Home.png */,
 				8B11D38116C5613700C54706 /* background.plist */,
 				8B11D38216C5613700C54706 /* background.png */,
 				8B11D38316C5613700C54706 /* BurstPipe.plist */,
@@ -1279,6 +1282,7 @@
 				8BEBFCEA16C580FB002BB5A3 /* Icon-144.png in Resources */,
 				8BEBFCEC16C5815E002BB5A3 /* Default-Landscape~ipad.png in Resources */,
 				8BEBFCEE16C5817C002BB5A3 /* Default-Landscape@2x~ipad.png in Resources */,
+				8B1D4A2816E7CE770092EEE9 /* Home.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1471,7 +1475,7 @@
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios\"",
 				);
 				INFOPLIST_FILE = "GameDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../CocosDenshion/third_party/blackberry/libraries/armle-v7\"",
@@ -1481,7 +1485,7 @@
 				PRODUCT_NAME = GameDemo;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv6 armv7 i386";
 			};
 			name = Debug;
@@ -1515,7 +1519,7 @@
 					"\"$(SRCROOT)/../../cocos2dx/platform/third_party/ios\"",
 				);
 				INFOPLIST_FILE = "GameDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../CocosDenshion/third_party/blackberry/libraries/armle-v7\"",
@@ -1525,7 +1529,7 @@
 				PRODUCT_NAME = GameDemo;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv6 armv7 i386";
 			};
