@@ -2199,7 +2199,7 @@ void CGameUnit::onDie()
     getSprite()->stopAllActions();
     
     CCMenu* pM = dynamic_cast<CCMenu*>(getUnitLayer()->getChildByTag(5131115));
-    if (pM && M_RAND_HIT(50))
+    if (pM && getRewardExp() && M_RAND_HIT(50))
     {
         // Spawn skills
         CCSkillButtonNormal* pBtn = CCSkillButtonNormal::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, NULL, NULL, NULL);

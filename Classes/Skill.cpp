@@ -2619,6 +2619,7 @@ void CThunderBolt2Buff::onUnitInterval()
 
     M_DEF_UM(pUm);
     CGameUnit* t = pUm->unitByInfo(2);
+    t->setRewardExp(0);
     CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
     CGameUnit* s = dynamic_cast<CGameUnit*>(o->getUnitLayer()->getUnitByKey(m_iSrcKey));
     o->getUnitLayer()->addUnit(t);
@@ -2629,6 +2630,7 @@ void CThunderBolt2Buff::onUnitInterval()
     t->getSprite()->setVisible(false);
     //t->attack(o->getKey());
     CGameUnit* t2 = pUm->unitByInfo(2);
+    t2->setRewardExp(0);
     o->getUnitLayer()->addUnit(t2);
     t2->setPosition(ccp(o->getPosition().x-m_fRange/2+xPos,o->getPosition().y-m_fRange/2+yPos));
     t2->getSprite()->setVisible(false);
