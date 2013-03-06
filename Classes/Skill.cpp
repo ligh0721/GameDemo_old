@@ -576,9 +576,11 @@ void CAuraPas::onUnitTick( float fDt )
         }
 
         pBuff = dynamic_cast<CBuffSkill*>(pSm->copySkill(pTmpltBuff));
+        pBuff->setSrcKey(getOwner()->getKey());
         pBuff->setLevel(m_iBuffLevel);
         pBuff->setDuration(fDuration);
         pLoopTank->addBuff(pBuff, true);
+        
     }	
 }
 
@@ -600,6 +602,7 @@ void CSelfBuffMakerAct::onSkillCast()
 {
     M_DEF_SM(pSm);
     CBuffSkill* pBuff = dynamic_cast<CBuffSkill*>(pSm->copySkill(m_iBuffTemplateKey));
+    pBuff->setSrcKey(getOwner()->getKey());
     CCAssert(pBuff, "is null");
     pBuff->setLevel(m_iBuffLevel);
     m_pOwner->addBuff(pBuff);
@@ -2616,6 +2619,7 @@ void CThunderBolt2Buff::onUnitInterval()
     M_DEF_UM(pUm);
     CGameUnit* t = pUm->unitByInfo(2);
     CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+    CGameUnit* s = dynamic_cast<CGameUnit*>(o->getUnitLayer()->getUnitByKey(m_iSrcKey));
     o->getUnitLayer()->addUnit(t);
 
     CCPoint targetPoint = ccp(o->getPosition().x-m_fRange/2+xPos,o->getPosition().y-m_fRange/2+yPos);
@@ -2629,7 +2633,7 @@ void CThunderBolt2Buff::onUnitInterval()
     t2->getSprite()->setVisible(false);
 
     M_DEF_PM(pPm);
-    CProjectile * pProj = dynamic_cast<CProjectile*>(pPm->getProjectileByIndex(COrgUnitInfo::kLightning1)->copy());
+    CProjectile * pProj = dynamic_cast<CProjectile*>(pPm->getProjectileByIndex(COrgUnitInfo::kLightning3)->copy());
     
     o->getUnitLayer()->addProjectile(pProj);
     pProj->setProjectileBirthOffsetX(0);
@@ -2640,7 +2644,7 @@ void CThunderBolt2Buff::onUnitInterval()
     pAd->setAttack(m_oDamage);
 
     pProj->setAttackData(pAd);
-    pProj->setOwner(o->getKey());
+    pProj->setOwner(m_iSrcKey);
     pProj->setStart(t2->getKey());
     pProj->setTarget(t);
     //pProj->getSprite()->setScale(3.0);
@@ -2648,7 +2652,7 @@ void CThunderBolt2Buff::onUnitInterval()
     pProj->onDie();
 
     o->getUnitLayer()->getUnits()
-        ->getUnitsInRange(targetPoint,100,-1,CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(o))->damagedAdv(pAd,o);
+        ->getUnitsInRange(targetPoint,100,-1,CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(s))->damagedAdv(pAd, s);
 
 }
 
