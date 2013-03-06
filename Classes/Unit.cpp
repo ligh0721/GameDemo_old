@@ -2198,6 +2198,18 @@ void CGameUnit::onDie()
 {
     getSprite()->stopAllActions();
     
+    CCMenu* pM = dynamic_cast<CCMenu*>(getUnitLayer()->getChildByTag(5131115));
+    if (pM && M_RAND_HIT(50))
+    {
+        // Spawn skills
+        CCSkillButtonNormal* pBtn = CCSkillButtonNormal::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, NULL, NULL, NULL);
+        pM->addChild(pBtn);
+        pBtn->setScale(0.5);
+        pBtn->setPosition(getPosition());
+        pBtn->runAction(CCJumpBy::create(0.5, ccp(0, 0), 50, 1));
+        pBtn->runAction(CCSequence::create(CCScaleTo::create(0.25, 1.0, 1.0), CCScaleTo::create(0.25, 0.75, 0.75), NULL));
+        pBtn->runAction(CCDelayRelease::create(2.0));
+    }
     // TODO: Reward
     CGameUnit* pUnit;
     CCObject* pObj;

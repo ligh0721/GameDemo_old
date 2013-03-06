@@ -144,3 +144,20 @@ protected:
     float m_fMaxOffsetY;
     bool m_bFixRotation;
 };
+
+class CCDelayRelease : public CCActionInterval
+{
+public:
+    static const float CONST_EX_DURATION;
+
+public:
+    virtual bool initWithDuration(float fDelay);
+    CREATE_INITWITH_FUNC_PARAM(Duration, CCDelayRelease, (float fDelay), fDelay);
+
+    virtual void startWithTarget(CCNode *pTarget);
+
+    void onActEnd(CCNode* pNode);
+
+public:
+    float m_fDelay;
+};

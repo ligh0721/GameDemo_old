@@ -425,3 +425,30 @@ CCObject* CCMoveToEx::copyWithZone( CCZone* pZone )
     CC_SAFE_DELETE(pNewZone);
     return pCopy;
 }
+
+const float CCDelayRelease::CONST_EX_DURATION = 1.0;
+
+bool CCDelayRelease::initWithDuration( float fDelay )
+{
+    m_fDelay = fDelay;
+    CCActionInterval::initWithDuration(m_fDelay + CONST_EX_DURATION);
+    return true;
+}
+
+void CCDelayRelease::startWithTarget( CCNode *pTarget )
+{
+    CCActionInterval::startWithTarget(pTarget);
+    if (m_pTarget)
+    {
+        m_pTarget->runAction(CCSequence::create(CCDelayTime::create(m_fDelay), CCFadeOut::create(CONST_EX_DURATION), CCCallFuncN::create(this, callfuncN_selector(CCDelayRelease::onActEnd)), NULL));
+    }
+}
+
+void CCDelayRelease::onActEnd( CCNode* pNode )
+{
+    if (m_pTarget)
+    {
+        m_pTarget->removeFromParentAndCleanup(true);
+    }
+}
+

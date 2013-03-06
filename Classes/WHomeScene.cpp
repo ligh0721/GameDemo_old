@@ -54,7 +54,7 @@ bool CCWHomeSceneLayer::init()
     setBackGroundSprite(CCSprite::create("LevelDemo2HD.png"));
     setBufferEffectParam(0.9, 10, 0.1);
     m_oMenu.init();
-    addChild(&m_oMenu);
+    addChild(&m_oMenu, 0, 5131115);
     m_oMenu.setPosition(CCPointZero);
 
     m_iTouchActionFlag = 0;
@@ -98,7 +98,7 @@ bool CCWHomeSceneLayer::init()
 
     CGameUnit* heroUnit=getHeroUnit();
 
-    addUnit(heroUnit);
+    //addUnit(heroUnit);
     heroUnit->setPosition(ccp(804,793));
     heroUnit->setForceByIndex(2);
     heroUnit->setAlly(1<<2);
@@ -274,7 +274,7 @@ bool CCWHomeSceneLayer::ccTouchBegan( CCTouch *pTouch, CCEvent *pEvent )
 {
     CCWinUnitLayer::ccTouchBegan(pTouch,pEvent);
     M_DEF_GM(pGm);
-    CGameUnit* heroUnit=CCWHomeSceneLayer::getHeroUnit();
+    CGameUnit* heroUnit=getHeroUnit();
     CCPoint touchPoint=ccpSub(pTouch->getLocation(), getPosition());
 #if 0
     if (heroUnit!=NULL&&!heroUnit->isDead())//incomplete
@@ -297,7 +297,7 @@ void CCWHomeSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
     CCWinUnitLayer::ccTouchEnded(pTouch,pEvent);
     M_DEF_GM(pGm);
 
-    CGameUnit* heroUnit = CCWHomeSceneLayer::getHeroUnit();
+    CGameUnit* heroUnit = getHeroUnit();
     if (!heroUnit || heroUnit->isDead())
     {
         return;
@@ -337,8 +337,6 @@ void CCWHomeSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
             return;
         }
 
-        
-        
         return;
     }
 
@@ -397,8 +395,15 @@ void CCWHomeSceneLayer::onBtnHeroClick( CCObject* pObject )
 
 CGameUnit* CCWHomeSceneLayer::getHeroUnit()
 {
-    M_DEF_PI(pPi);
-    return pPi->curHero(this);
+    CGameUnit* pHero = getUnitByKey(m_iHero);
+    if (pHero)
+    {
+        return pHero;
+    }
+    pHero = m_oUipm.unitByIndex(0);
+    m_iHero = pHero->getKey();
+    addUnit(pHero);
+    return pHero;
 }
 
 void CCWHomeSceneLayer::onBtnBuildClick( CCNode* pObject )
@@ -414,7 +419,7 @@ void CCWHomeSceneLayer::onBtnBuildClick( CCNode* pObject )
 void CCWHomeSceneLayer::onTickEvent( float fDt )
 {
     CCWinUnitLayer::onTickEvent(fDt);
-    CGameUnit* heroUnit = CCWHomeSceneLayer::getHeroUnit();
+    CGameUnit* heroUnit = getHeroUnit();
     if (!heroUnit)
     {
         return;

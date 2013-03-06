@@ -234,12 +234,14 @@ CPlayerInfo* CPlayerInfo::sharedPlayerInfo()
 CGameUnit* CPlayerInfo::curHero( CCUnitLayer* pLayer )
 {
     CGameUnit* pRet = pLayer->getUnitByKey(m_vecHero[m_iCurHero].m_iHeroKey);
+    CCLOG("%p(%d): %p", pLayer, m_vecHero[m_iCurHero].m_iHeroKey, pRet);
     if (pRet)
     {
         return pRet;
     }
     pRet = m_oUipm.unitByIndex(m_vecHero[m_iCurHero].m_iHeroIndex);
     m_vecHero[m_iCurHero].m_iHeroKey = pRet->getKey();
+    pLayer->addUnit(pRet);
     return pRet;
 }
 
