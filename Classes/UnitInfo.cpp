@@ -150,7 +150,7 @@ bool COrgUnitInfo::init()
     
     pProj = CProjectile::createWithName("Lightning2");
     pProj->setProjectileType(CProjectile::kLightning); // 设置投射物
-    pProj->prepareDieAnimation("die", 0.1); // 加载投射物死亡动画
+    pProj->prepareDieAnimation("die", 0.05); // 加载投射物死亡动画
     pProj->setBaseMoveSpeed(0.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjLightning3 = pProj;

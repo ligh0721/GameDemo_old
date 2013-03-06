@@ -2108,9 +2108,10 @@ void CSwordStormSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
         CCRepeat::create(CCSequence::createWithTwoActions(
             pActAni,
             CCCallFuncO::create(this, callfuncO_selector(CSwordStormSkill::onActEndPerAnim), pOwn)
-        ), m_fDuration/(pAnim->getDuration() * getCountAnimLoop())),
+        ), m_fDuration / (pAnim->getDuration() * getCountAnimLoop())),
         CCCallFuncN::create(this, callfuncN_selector(CSwordStormSkill::onActSpinEnd))
     );
+    pOwn->stopAttack();
     pAction->setTag(CGameUnit::kActSpin);
     pOwn->startDoing(CGameUnit::kSpinning);
     pOwn->getSprite()->runAction(pAction);
@@ -2710,9 +2711,10 @@ void CSwordStormBuff::onUnitDamageTarget(float fDamage, CUnit *pTarget)
         CCRepeat::create(CCSequence::createWithTwoActions(
         pActAni,
         CCCallFuncO::create(this, callfuncO_selector(CSwordStormBuff::onActEndPerAnim), pOwn)
-        ), m_fDuration/(pAnim->getDuration() * getCountAnimLoop())),
+        ), m_fDuration / (pAnim->getDuration() * getCountAnimLoop())),
         CCCallFuncN::create(this, callfuncN_selector(CSwordStormBuff::onActSpinEnd))
         );
+    pOwn->stopAttack();
     pAction->setTag(CGameUnit::kActSpin);
     pOwn->startDoing(CGameUnit::kSpinning);
     pOwn->getSprite()->runAction(pAction);

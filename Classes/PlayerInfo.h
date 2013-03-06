@@ -31,6 +31,7 @@ public:
     static uint16_t CONST_FILE_DATA_SIZE;
 
 public:
+    virtual bool init();
     virtual bool initWithFileStream(CGameFile* pFile);
     virtual void writeToFileStream(FILE* pFile);
     CHeroUnit* createHero();
@@ -38,6 +39,7 @@ public:
     void addSkill(int iOrgSkillIndex);
 
 public:
+    int m_iHeroKey;
     int m_iHeroIndex;
     VEC_SKILLS m_vecSkills; // org skill index
     uint32_t m_dwMaxLevel;
@@ -47,11 +49,15 @@ public:
     
 };
 
-class CPlayerInfo
+class CPlayerInfo : public CCObject
 {
 public:
     CPlayerInfo(void);
     virtual ~CPlayerInfo(void);
+    virtual bool init();
+    M_CREATE_FUNC_PARAM(CPlayerInfo, ());
+    static CPlayerInfo* sharedPlayerInfo();
+    CGameUnit* curHero(CCUnitLayer* pLayer);
 
     //virtual bool initWithFile();
 
@@ -59,5 +65,6 @@ public:
     vector<CHeroInfo> m_vecHero;
     int m_iCurHero;
     int m_iGold;
+    CUnitInfoPatchManager m_oUipm;
 };
 

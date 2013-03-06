@@ -397,13 +397,8 @@ void CCWHomeSceneLayer::onBtnHeroClick( CCObject* pObject )
 
 CGameUnit* CCWHomeSceneLayer::getHeroUnit()
 {
-    CGameUnit* pU = getUnitByKey(m_iHero);
-    if (!pU)
-    {
-        pU = m_oUipm.unitByIndex(0);
-        m_iHero = pU->getKey();
-    }
-    return pU;
+    M_DEF_PI(pPi);
+    return pPi->curHero(this);
 }
 
 void CCWHomeSceneLayer::onBtnBuildClick( CCNode* pObject )

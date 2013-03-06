@@ -2197,6 +2197,8 @@ void CGameUnit::onTick( float fDt )
 void CGameUnit::onDie()
 {
     getSprite()->stopAllActions();
+    
+    // TODO: Reward
     CGameUnit* pUnit;
     CCObject* pObj;
     M_DEF_GM(pGm);
@@ -2227,6 +2229,7 @@ void CGameUnit::onDie()
             }
         }
     }
+
     setForceResource(NULL);
     stopMove();
     stopAttack();

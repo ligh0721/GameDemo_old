@@ -111,6 +111,13 @@ uint16_t CHeroInfo::CONST_FILE_DATA_SIZE
 + sizeof(uint32_t);
 #endif
 
+bool CHeroInfo::init()
+{
+    m_iHeroIndex = 0;
+    m_iHeroKey = 0;
+    return true;
+}
+
 bool CHeroInfo::initWithFileStream( CGameFile* pFile )
 {
     uint16_t wDataSize = 0;
@@ -196,5 +203,43 @@ CPlayerInfo::CPlayerInfo(void)
 
 CPlayerInfo::~CPlayerInfo(void)
 {
+}
+
+bool CPlayerInfo::init()
+{
+    m_oUipm.initWithFile("heroes.uip");
+    m_iCurHero = 0;
+    m_iGold = 0;
+    // for Test
+    CHeroInfo oHi;
+    oHi.init();
+    oHi.m_iHeroIndex = 0;
+    m_vecHero.push_back(oHi);
+    return true;
+}
+
+CPlayerInfo* CPlayerInfo::sharedPlayerInfo()
+{
+    static CPlayerInfo* pRet = NULL;
+    if (pRet)
+    {
+        return pRet;
+    }
+
+    pRet = CPlayerInfo::create();
+    CC_SAFE_RETAIN(pRet);
+    return pRet;
+}
+
+CGameUnit* CPlayerInfo::curHero( CCUnitLayer* pLayer )
+{
+    CGameUnit* pRet = pLayer->getUnitByKey(m_vecHero[m_iCurHero].m_iHeroKey);
+    if (pRet)
+    {
+        return pRet;
+    }
+    pRet = m_oUipm.unitByIndex(m_vecHero[m_iCurHero].m_iHeroIndex);
+    m_vecHero[m_iCurHero].m_iHeroKey = pRet->getKey();
+    return pRet;
 }
 
