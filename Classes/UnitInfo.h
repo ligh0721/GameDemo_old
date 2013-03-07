@@ -26,7 +26,8 @@ public:
         kTesla,
         kVeznan,
         kMatchstick,
-        kKurokisi
+        kKurokisi,
+        kSlime
     };
 
 public:
