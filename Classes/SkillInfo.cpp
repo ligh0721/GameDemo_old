@@ -172,7 +172,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThunderBoltBuff1].sName = "À×»÷";
     m_mapSkills[kThunderBoltBuff1].sDesc = "ÔÝÎÞ";
 
-    pSkill = CChainBuff::create(0.75, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kChain1));
+    pSkill = CChainBuff::create(0.5, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kChain1));
     dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
     //pSkill = CChainBuff::create(0.5, false, 0, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kBall2));

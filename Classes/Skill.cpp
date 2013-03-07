@@ -1,4 +1,3 @@
-
 #include "CommInc.h"
 
 #include "GameDisplay.h"
@@ -2204,8 +2203,7 @@ void CChainBuff::onBuffDel()
         //return;
     }
     CCUnitLayer* l = o->getUnitLayer();
-    CUnitGroup* g = l->getUnits()->getUnitsInRange(o->getPosition(), m_fRange, INFINITE, CONDITION(CChainBuff::checkConditions), this);
-    CGameUnit* t = g->getRandomUnit();
+    CGameUnit* t = l->getUnits()->getNearestUnitInRange(o->getPosition(), m_fRange, CONDITION(CChainBuff::checkConditions), this);
     if (!t)
     {
         return;
@@ -2446,6 +2444,9 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     
     pU->startDoing(CGameUnit::kSpinning);
     pU->getSprite()->runAction(pAction);
+    
+    //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
+
     //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
     m_pLastTargetUnit = pTarget;
 }
