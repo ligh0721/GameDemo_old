@@ -2203,8 +2203,7 @@ void CChainBuff::onBuffDel()
         //return;
     }
     CCUnitLayer* l = o->getUnitLayer();
-    CUnitGroup* g = l->getUnits()->getUnitsInRange(o->getPosition(), m_fRange, INFINITE, CONDITION(CChainBuff::checkConditions), this);
-    CGameUnit* t = g->getRandomUnit();
+    CGameUnit* t = l->getUnits()->getNearestUnitInRange(o->getPosition(), m_fRange, CONDITION(CChainBuff::checkConditions), this);
     if (!t)
     {
         return;
