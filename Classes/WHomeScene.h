@@ -46,6 +46,9 @@ public:
     bool addTower(const CCPoint& roPos);
     void addTowerEnd(CCObject* pObject);
 
+    void onGetBuff(CCNode* pNode);
+    void onGetBuffEnd(CCNode* pNode);
+
 public:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     
     CCMenu m_oMenu;

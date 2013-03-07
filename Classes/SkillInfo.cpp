@@ -97,17 +97,17 @@ bool COrgSkillInfo::init()
     m_mapSkills[kVamprie2].sName = "吸血";
     m_mapSkills[kVamprie2].sDesc = "对目标造成伤害的50%用来恢复自身";
     
-    pSkill = CDoubleAttackPas::create(80);
+    pSkill = CDoubleAttackPas::create(30);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kDoubleAttack1].iIndex = iKey;
     m_mapSkills[kDoubleAttack1].sName = "连击";
     m_mapSkills[kDoubleAttack1].sDesc = "攻击后有30%的概率立即发动第二次攻击";
     
-    pSkill = CSplashPas::create(10, CExtraCoeff(0.6, 0), 30, CExtraCoeff(0.30, 0), 100, CExtraCoeff(0.15, 0));
+    pSkill = CSplashPas::create(5, CExtraCoeff(0.6, 0), 15, CExtraCoeff(0.30, 0), 50, CExtraCoeff(0.15, 0));
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSplash1].iIndex = iKey;
     m_mapSkills[kSplash1].sName = "溅射";
-    m_mapSkills[kSplash1].sDesc = "攻击对目标周围100半径的敌方单位同样产生15%~60%的溅射效果";
+    m_mapSkills[kSplash1].sDesc = "攻击对目标周围50半径的敌方单位同样产生15%~60%的溅射效果";
     
     pSkill = CSpeedBuff::create(5, false, CExtraCoeff(-0.5, 0), CExtraCoeff(-0.5, 0));
     iKey = pSm->addSkill(pSkill);
@@ -144,56 +144,76 @@ bool COrgSkillInfo::init()
     //pSkill = CHarmShieldBuff::create(2, false, CExtraCoeff(0, 0), true);
     //iKey = pSm->addSkill(pSkill);
     
-	pSkill = CAttackBuffMakerPas::create(75, iKey, 1, CExtraCoeff(1, 0));
+	pSkill = CAttackBuffMakerPas::create(20, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThrowHit1].iIndex = iKey;
     m_mapSkills[kThrowHit1].sName = "击飞";
-    m_mapSkills[kThrowHit1].sDesc = "75%的概率将目标击飞至150范围内的一点，落地后对周围50半径范围内单位造成50点伤害并眩晕2秒，被坠落单位还将受到50点额外伤害";
+    m_mapSkills[kThrowHit1].sDesc = "20%的概率将目标击飞至150范围内的一点，落地后对周围50半径范围内单位造成50点伤害并眩晕2秒，被坠落单位还将受到50点额外伤害";
     
     pSkill = CSpeedBuff::create(7, true, CExtraCoeff(1.0, 0), CExtraCoeff(1.0, 0));
     iKey = pSm->addSkill(pSkill);
     
     // for test
-    pSkill = CHarmShieldBuff::create(5, false, CExtraCoeff(0, 0), true);
-    iKey = pSm->addSkill(pSkill);
+    //pSkill = CHarmShieldBuff::create(5, false, CExtraCoeff(0, 0), true);
+    //iKey = pSm->addSkill(pSkill);
 
-    pSkill = CThunderBolt2Buff::create(400, false, 0, 5, 300, CAttackValue(1, CAttackValue::kMagical,200.0));
-    iKey = pSm->addSkill(pSkill);
+    //pSkill = CThunderBolt2Buff::create(5, false, 0, 5, 300, CAttackValue(1, CAttackValue::kMagical,200.0));
+    //iKey = pSm->addSkill(pSkill);
     
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSpeedUp1].iIndex = iKey;
     m_mapSkills[kSpeedUp1].sName = "加速";
     m_mapSkills[kSpeedUp1].sDesc = "提高自身100%的移动速度和100%的攻击速度";
-    
-    pSkill = CChainBuff::create(0.5, false, 0, 300, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3));
+
+    pSkill = CThunderBolt2Buff::create(5, false, 0, 1, 300, CAttackValue(1, CAttackValue::kMagical, 50.0));
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kThunderBoltBuff1].iIndex = iKey;
+    m_mapSkills[kThunderBoltBuff1].sName = "雷击";
+    m_mapSkills[kThunderBoltBuff1].sDesc = "暂无";
+
+    pSkill = CChainBuff::create(0.75, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kChain1));
     dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
+    dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
     //pSkill = CChainBuff::create(0.5, false, 0, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kBall2));
     //dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
     iKey = pSm->addSkill(pSkill);
-
-    pSkill = CThunderBolt2Buff::create(5, false, 0, 1, 100, CAttackValue(1, CAttackValue::kMagical, 50.0));
-    iKey = pSm->addSkill(pSkill);
     
-    pSkill = CProjectileAct::create(1.0, 1500, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3), iKey, 1);
+    pSkill = CProjectileAct::create(12.0, 300, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3), iKey, 1);
     dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderAttack1].iIndex = iKey;
     m_mapSkills[kThunderAttack1].sName = "雷霆一击";
     m_mapSkills[kThunderAttack1].sDesc = "猛烈锤击地面，向目标射出一道电光，将造成50点魔法伤害";
 
-    pSkill = CSwordStormSkill::create(40, 3.0, 100, CAttackValue(1, CAttackValue::kPhysical, 5.0), CExtraCoeff(0.30, 0), "act4");
-    dynamic_cast<CSwordStormSkill*>(pSkill)->setDelayPerUnit(0.03);
+    //pSkill = CSwordStormSkill::create(40, 3.0, 100, CAttackValue(1, CAttackValue::kPhysical, 5.0), CExtraCoeff(0.30, 0), "act4");
+    //dynamic_cast<CSwordStormSkill*>(pSkill)->setDelayPerUnit(0.03);
+    //iKey = pSm->addSkill(pSkill);
+    pSkill = CSwordStormBuff::create(5, false, 0, 100, CAttackValue(1, CAttackValue::kPhysical, 5.0), CExtraCoeff(0.30, 0), "act4");
+    dynamic_cast<CSwordStormBuff*>(pSkill)->setDelayPerUnit(0.03);
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSwordStorm1].iIndex = iKey;
     m_mapSkills[kSwordStorm1].sName = "剑刃风暴";
     m_mapSkills[kSwordStorm1].sDesc = "如风暴般高速旋转手中剑刃，使周围单位受到伤害";
 
-    pSkill = CJumpChopSkill::create(100, 400, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), "act5");
+    pSkill = CJumpChopSkill::create(100, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), "act5");
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kJumpChop1].iIndex = iKey;
     m_mapSkills[kJumpChop1].sName = "跳劈";
     m_mapSkills[kJumpChop1].sDesc = "跃起给敌人重重打击";
+
+    
+    pSkill = CHpChangeBuff::create(5, true, 0.1, 2, false, -1);
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kHealing1].iIndex = iKey;
+    m_mapSkills[kHealing1].sName = "快速愈合";
+    m_mapSkills[kHealing1].sDesc = "5秒内恢复100生命值";
     
     return true;
 }
@@ -215,4 +235,3 @@ CSkill* COrgSkillInfo::skill( int iSkillIndex )
     M_DEF_SM(pSm);
     return pSm->copySkill(m_mapSkills[iSkillIndex].iIndex);
 }
-

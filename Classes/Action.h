@@ -82,8 +82,8 @@ class CCMoveToNode : public CCActionInterval
 {
 public:
     virtual ~CCMoveToNode();
-    virtual bool init(float fDuration, CCNode* pNode, float fMaxOffsetY = 0.0, float fScaleY = 1.0, float fYOffsetOfAnchor = 0.0);
-    CREATE_FUNC_PARAM(CCMoveToNode, (float fDuration, CCNode* pNode, float fMaxOffsetY = 0.0, float fScaleY = 1.0, float fYOffsetOfAnchor = 0.0), fDuration, pNode, fMaxOffsetY, fScaleY, fYOffsetOfAnchor);
+    virtual bool init(float fDuration, CCNode* pNode, bool bFixRotation = false, float fMaxOffsetY = 0.0, float fScaleY = 1.0, float fYOffsetOfAnchor = 0.0);
+    CREATE_FUNC_PARAM(CCMoveToNode, (float fDuration, CCNode* pNode, bool bFixRotation = false, float fMaxOffsetY = 0.0, float fScaleY = 1.0, float fOffsetYOfAnchor = 0.0), fDuration, pNode, bFixRotation, fMaxOffsetY, fScaleY, fOffsetYOfAnchor);
     virtual void startWithTarget(CCNode *pTarget);
 
     virtual void update(float time);
@@ -95,10 +95,11 @@ protected:
     CCNode* m_pEndNode;
     CCPoint m_oStartPos;
     float m_fMinSpeed;
-    float m_fYOffsetOfAnchor;
+    float m_fOffsetYOfAnchor;
     float m_fScaleY;
     float m_fMaxOffsetY;
     float m_fA;
+    bool m_bFixRotation;
 };
 
 class CCLightning : public CCAnimate

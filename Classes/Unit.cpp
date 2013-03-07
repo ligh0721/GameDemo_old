@@ -12,6 +12,8 @@
 #include "GameFile.h"
 #include "UnitInfo.h"
 #include "SkillInfo.h"
+#include "WHomeScene.h"
+#include "SkillInfo.h"
 
 
 // CLevelExp
@@ -1615,7 +1617,7 @@ void CGameUnit::followTo( int iTargetKey, const UNIT_MOVE_PARAMS& roMoveParams /
     float fMoveSpeed = getBaseMoveSpeed();
     float fDur = pGm->getDistance(roOrg, roPos) / fMoveSpeed;
     CCActionInterval* pSeq = CCSequence::createWithTwoActions(
-                                                              CCMoveToNode::create(fDur, pTarget->getSprite(), roMoveParams.fMaxOffsetY, 1, pTarget->getHalfOfHeight()),
+                                                              CCMoveToNode::create(fDur, pTarget->getSprite(), true, roMoveParams.fMaxOffsetY, 1, pTarget->getHalfOfHeight()),
                                                               CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActMoveEnd))
                                                               );
     float fDelta = getRealMoveSpeed() / fMoveSpeed;
@@ -2184,7 +2186,7 @@ void CGameUnit::onTick( float fDt )
     {
         attack(getLastAttackTarget(), isDoingOr(kIntended));
     }
-    else if (!isDoingOr(kIntended) && (isDoingNothing() || isDoingOr(kMoving)))
+    else if (!isDoingOr(kIntended) && (isDoingNothing() || isDoingOr(kMoving | kSpinning)))
     {
         CGameUnit* pUnit = getUnitLayer()->getUnits()->getNearestUnitInRange(getPosition(), getHostilityRange(), CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(this));
         if (pUnit)
@@ -2199,16 +2201,19 @@ void CGameUnit::onDie()
     getSprite()->stopAllActions();
     
     CCMenu* pM = dynamic_cast<CCMenu*>(getUnitLayer()->getChildByTag(5131115));
-    if (pM && getRewardExp() && M_RAND_HIT(50))
+    CGameUnit* pHero;
+    if (pM && getRewardExp() && M_RAND_HIT(10) && isEnemyOf(dynamic_cast<CUnitForce*>(pHero = dynamic_cast<CCWHomeSceneLayer*>(getUnitLayer())->getHeroUnit())))
     {
         // Spawn skills
-        CCSkillButtonNormal* pBtn = CCSkillButtonNormal::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, NULL, NULL, NULL);
+        CCCommmButton* pBtn = CCCommmButton::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, getUnitLayer(), callfuncN_selector(CCWHomeSceneLayer::onGetBuff), NULL, COrgSkillInfo::kThunderBoltBuff1);
         pM->addChild(pBtn);
-        pBtn->setScale(0.5);
+        pBtn->setScale(0);
         pBtn->setPosition(getPosition());
-        pBtn->runAction(CCJumpBy::create(0.5, ccp(0, 0), 50, 1));
+        pBtn->runAction(CCScaleTo::create(0.5, 0.5, 0.5));
+        pBtn->runAction(CCJumpBy::create(0.5, ccp(0, 0), 100, 1));
         pBtn->runAction(CCSequence::create(CCScaleTo::create(0.25, 1.0, 1.0), CCScaleTo::create(0.25, 0.75, 0.75), NULL));
-        pBtn->runAction(CCDelayRelease::create(2.0));
+        pBtn->runAction(CCDelayRelease::create(5.0));
+        pBtn->runAction(CCRepeatForever::create(dynamic_cast<CCActionInterval*>(CCSequence::create(CCOrbitCamera::create(1, 10000, 0, 0, 360, 0, 0), CCDelayTime::create(1.5), NULL))));
     }
     // TODO: Reward
     CGameUnit* pUnit;
@@ -2260,7 +2265,7 @@ void CGameUnit::onDamaged( CAttackData* pAttack, CUnit* pSource, uint32_t dwTrig
     if ( pSrc && !isDoingOr(kIntended) && (
                                            ( isDoingOr(kAttacking) && ( pLu = getUnitLayer()->getUnitByKey(getLastAttackTarget()) ) && getDistance(pLu) > getHostilityRange() ) ||
                                            isDoingNothing() ||
-                                           ( isDoingOr(kMoving) && !isDoingOr(kAttacking))
+                                           ( isDoingOr(kMoving | kSpinning) && !isDoingOr(kAttacking))
                                            ))
     {
         attack(pSrc->getKey(), false);
@@ -2501,6 +2506,11 @@ void CGameUnit::onActCastEffect( CCNode* pNode )
     {
         case CActiveSkill::kPointTarget:
         case CActiveSkill::kUnitTarget:
+            CGameUnit* t = getUnitLayer()->getUnitByKey(pSkill->getTargetUnit());
+            if (!t)
+            {
+                return;
+            }
             const CCPoint& roPos2 = pSkill->updateTargetUnitPoint();
             if (getDistance(roPos2) > pSkill->getCastRange() + getHalfOfWidth() + pSkill->getTargetUnitHalfOfWidth() + CGameUnit::CONST_MAX_ATTACK_BUFFER_RANGE)
             {
@@ -2589,6 +2599,10 @@ void CGameUnit::stopSpin()
     if (isDoingOr(kMoving))
     {
         setAnimation(kAnimationMove, -1, getRealMoveSpeed() / getBaseMoveSpeed(), kActMove, NULL);
+    }
+    else if (isDoingNothing())
+    {
+        setDefaultFrame();
     }
 }
 
@@ -2979,7 +2993,7 @@ void CUnitGroup::damagedAdv( CAttackData* pAttack, CUnit* pSource, uint32_t dwTr
     {
         pAttack = dynamic_cast<CAttackData*>(pAttack->copy());
         pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->damagedAdv(pAttack, pSource);
+        pUnit->damagedAdv(pAttack, pSource, dwTriggerMask);
     }
 }
 
@@ -2991,7 +3005,7 @@ void CUnitGroup::damagedMid( CAttackData* pAttack, CUnit* pSource, uint32_t dwTr
     {
         pAttack = dynamic_cast<CAttackData*>(pAttack->copy());
         pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->damagedMid(pAttack, pSource);
+        pUnit->damagedMid(pAttack, pSource, dwTriggerMask);
     }
 }
 
@@ -3002,7 +3016,7 @@ void CUnitGroup::damagedBot( float fDamage, CUnit* pSource, uint32_t dwTriggerMa
     CCARRAY_FOREACH(&m_oArrUnits, pObj)
     {
         pUnit = dynamic_cast<CGameUnit*>(pObj);
-        pUnit->damagedBot(fDamage, pSource);
+        pUnit->damagedBot(fDamage, pSource, dwTriggerMask);
     }
 }
 

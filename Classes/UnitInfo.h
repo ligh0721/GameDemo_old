@@ -11,7 +11,8 @@ public:
         kBall3,
         kLightning1,
         kLightning2,
-        kLightning3
+        kLightning3,
+        kChain1
     };
 
     enum UNITINFO_INDEX
@@ -25,7 +26,8 @@ public:
         kTesla,
         kVeznan,
         kMatchstick,
-        kKurokisi
+        kKurokisi,
+        kSlime
     };
 
 public:

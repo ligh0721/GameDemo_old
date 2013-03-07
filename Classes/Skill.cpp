@@ -1,3 +1,4 @@
+
 #include "CommInc.h"
 
 #include "GameDisplay.h"
@@ -2173,6 +2174,11 @@ CCObject* CChainBuff::copyWithZone( CCZone* pZone )
 {
     CChainBuff* pSkill = CChainBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fRange, m_iMaxTimes, m_oDamage, m_pTemplateProjectile);
     pSkill->setWeaponType(getWeaponType());
+    pSkill->setProjectileScale(getProjectileScale());
+    pSkill->setProjectileBirthOffsetX(getProjectileBirthOffsetX());
+    pSkill->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
+    pSkill->setProjectileMaxOffsetY(getProjectileMaxOffsetY());
+    pSkill->setProjectileMoveSpeed(getProjectileMoveSpeed());
     return pSkill;
 }
 
@@ -2195,7 +2201,7 @@ void CChainBuff::onBuffDel()
     CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
     if (o->isDead())
     {
-        return;
+        //return;
     }
     CCUnitLayer* l = o->getUnitLayer();
     CUnitGroup* g = l->getUnits()->getUnitsInRange(o->getPosition(), m_fRange, INFINITE, CONDITION(CChainBuff::checkConditions), this);
@@ -2345,14 +2351,10 @@ void CJumpChopSkill::onSkillDel()
 
 void CJumpChopSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
 {
-    
     if(!M_RAND_HIT(m_iProbability))
     {
         return;
     }
-    m_vecEffectedUnitKey.clear();
-    m_pLastTargetUnit = NULL;
-    
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
     if (!pOwn || pOwn->isDead())
     {
@@ -2390,7 +2392,7 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     CGameUnit* pTarget = NULL;
     CCObject* pObjItem = NULL;
     float fMinDis = 99999999;
-    float fDis = 0.0;    
+    float fDis = 0.0;
     
     CCARRAY_FOREACH(pU->getUnitLayer()->getUnits()->getUnitsArray(), pObjItem)
     {
@@ -2427,7 +2429,7 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
         pU->stopSpin();
         return;
     }
-
+    
     m_vecEffectedUnitKey.push_back(pTarget->getKey());
     
     M_DEF_GM(pGm);
@@ -2444,7 +2446,6 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     
     pU->startDoing(CGameUnit::kSpinning);
     pU->getSprite()->runAction(pAction);
-    
     //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
     m_pLastTargetUnit = pTarget;
 }
@@ -2452,7 +2453,7 @@ CJumpChopBuff::CJumpChopBuff()
 {
     m_pLastTargetUnit = NULL;
     setCountAnimLoop(1);
-    setDelayPerUnit(0.1);
+    setDelayPerUnit(0.2);
     setCountPerJump(1);
     setDurationPerJump(1.0);
 }
@@ -2513,7 +2514,6 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     if (m_iMaxJumpCount + 2 <= (int)m_vecEffectedUnitKey.size()
         || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= (int)m_vecEffectedUnitKey.size())
     {
-        pU->stopSpin();
         return;
     }
     if (!pU || pU->isDead())
@@ -2570,15 +2570,9 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     pAnim->setLoops(getCountAnimLoop());
     CCAnimate* pActAni = CCAnimate::create(pAnim);
     CCFiniteTimeAction* pJump = CCJumpTo::create(getDurationPerJump(), pTarget->getPosition(), 20, getCountPerJump());
-    CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopSkill::onJumpChopEnd), NULL);
+    CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopSkill::onJumpChopEnd), pU);
     
-    CCAction* pAction = CCSequence::create(pJump, pActAni, pCallO, NULL);
-    
-    pAction->setTag(CGameUnit::kActSpin);
-   
-    pU->startDoing(CGameUnit::kSpinning);
-    pU->getSprite()->runAction(pAction);
-    
+    pU->getSprite()->runAction(CCSequence::createWithTwoActions(CCSequence::createWithTwoActions(pJump, pActAni), pCallO));
     //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
     m_pLastTargetUnit = pTarget;
 }
@@ -2665,7 +2659,7 @@ void CThunderBolt2Buff::onUnitInterval()
     CAttackData *pAd = CAttackData::create();
     pAd->setAttack(m_oDamage);
 
-    pProj->setAttackData(pAd);
+    //pProj->setAttackData(pAd);
     pProj->setOwner(m_iSrcKey);
     pProj->setStart(t2->getKey());
     pProj->setTarget(t);
@@ -2674,15 +2668,15 @@ void CThunderBolt2Buff::onUnitInterval()
     pProj->onDie();
 
     o->getUnitLayer()->getUnits()
-        ->getUnitsInRange(targetPoint,100,-1,CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(s))->damagedAdv(pAd, s);
-
+        ->getUnitsInRange(targetPoint,100,-1,CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(s))->damagedAdv(pAd, s, CUnit::kMaskActiveTrigger);
+    
+    t->setHp(0);
+    t2->setHp(0);
 }
 
-bool CSwordStormBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, int iProbability, float fExcuDuration, float fMaxDamageRange, const CAttackValue &roMaxDamage, const CExtraCoeff &roDamageCoef, char *pActName)
+bool CSwordStormBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxDamageRange, const CAttackValue &roMaxDamage, const CExtraCoeff &roDamageCoef, char *pActName)
 {
-    CPassiveSkill::init();
-    m_iProbability = iProbability;
-    m_fDuration = fDuration;
+    CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
     m_fMaxDamageRange = fMaxDamageRange;
     m_oMaxDamage = roMaxDamage;
     m_oDamageCoef = roDamageCoef;
@@ -2694,7 +2688,7 @@ bool CSwordStormBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, int 
 
 CCObject* CSwordStormBuff::copyWithZone(cocos2d::CCZone *pZone)
 {
-    CSwordStormBuff* pRet = CSwordStormBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_iProbability, m_fExcuDuration, m_fMaxDamageRange, m_oMaxDamage, m_oDamageCoef, m_pActName);
+    CSwordStormBuff* pRet = CSwordStormBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fMaxDamageRange, m_oMaxDamage, m_oDamageCoef, m_pActName);
     pRet->setDelayPerUnit(getDelayPerUnit());
     pRet->setCountAnimLoop(getCountAnimLoop());
     return pRet;
@@ -2702,44 +2696,32 @@ CCObject* CSwordStormBuff::copyWithZone(cocos2d::CCZone *pZone)
 void CSwordStormBuff::onBuffAdd()
 {
     CBuffSkill::onBuffAdd();
-    registerOnDamageTargetTrigger();
-    
-}
-
-void CSwordStormBuff::onBuffDel()
-{
-    CBuffSkill::onBuffDel();
-}
-
-void CSwordStormBuff::onUnitDamageTarget(float fDamage, CUnit *pTarget)
-{
-    if(!M_RAND_HIT(m_iProbability))
-    {
-        return;
-    }
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
     if (!pOwn || pOwn->isDead())
     {
         return;
     }
     M_DEF_GM(pGm);
-    
+
     CCAnimation* pAnim = pGm->getUnitAnimation(pOwn->getName(), m_pActName);
     pAnim->setDelayPerUnit(getDelayPerUnit());
     pAnim->setLoops(getCountAnimLoop());
     CCAnimate* pActAni = CCAnimate::create(pAnim);
-    CCAction* pAction = CCSequence::createWithTwoActions(
-        CCRepeat::create(CCSequence::createWithTwoActions(
+    CCAction* pAction = CCRepeatForever::create(CCSequence::createWithTwoActions(
         pActAni,
         CCCallFuncO::create(this, callfuncO_selector(CSwordStormBuff::onActEndPerAnim), pOwn)
-        ), m_fDuration / (pAnim->getDuration() * getCountAnimLoop())),
-        CCCallFuncN::create(this, callfuncN_selector(CSwordStormBuff::onActSpinEnd))
-        );
+    ));
     pOwn->stopAttack();
     pAction->setTag(CGameUnit::kActSpin);
     pOwn->startDoing(CGameUnit::kSpinning);
     pOwn->getSprite()->runAction(pAction);
-    
+}
+
+void CSwordStormBuff::onBuffDel()
+{
+    CBuffSkill::onBuffDel();
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
+    pOwn->stopSpin();
 }
 
 void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
@@ -2773,13 +2755,5 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
             pAttack->setAttack(m_oMaxDamage);
             pUnit->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
         }
-        
     }
-    
-}
-
-void CSwordStormBuff::onActSpinEnd( CCNode* pObj )
-{
-    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
-    pOwn->stopSpin();
 }

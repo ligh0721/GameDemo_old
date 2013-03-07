@@ -136,25 +136,29 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oSkillPanel);
     m_oSkillPanel.setPosition(ccp(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50));
 
-    CActiveSkill* pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSpeedUp1));
-    pSkill->setCastAniInfo(CGameUnit::kAnimationAct5, 0.4);
+    CActiveSkill* pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kHealing1));
+    pSkill->setCastAniInfo(CGameUnit::kAnimationAct3, 0.4);
     heroUnit->addSkill(pSkill);
     CCSkillButtonAdvance* pBtn;
     pBtn = M_CREATE_SKILL("skill2", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 4);
 
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kThunderClap1));
-    pSkill->setCastAniInfo(CGameUnit::kAnimationAct3, 0.8);
+    pSkill->setCastAniInfo(CGameUnit::kAnimationAct5, 0.7);
     heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill1", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 3);
-    //pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey(), this);
-    //pBtn->setEnabled(false);
-    //m_oSkillPanel.addButton(pBtn, 0, 2);
+    
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSwordStorm1));
+    pSkill->setCastAniInfo(CGameUnit::kAnimationAct4, 0.0);
+    heroUnit->addSkill(pSkill);
+    pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey(), this);
+    m_oSkillPanel.addButton(pBtn, 0, 2);
 
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kThunderAttack1));
-    pSkill->setCastAniInfo(CGameUnit::kAnimationAct4, 0.7);
-    dynamic_cast<CProjectileAct*>(pSkill)->setProjectileBirthOffsetX(20);
+    pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
+    dynamic_cast<CProjectileAct*>(pSkill)->setProjectileBirthOffsetX(0);
+    dynamic_cast<CProjectileAct*>(pSkill)->setProjectileBirthOffsetY(25);
     heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill4", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 1);
@@ -400,7 +404,7 @@ CGameUnit* CCWHomeSceneLayer::getHeroUnit()
     {
         return pHero;
     }
-    pHero = m_oUipm.unitByIndex(0);
+    pHero = m_oUipm.unitByIndex(3);
     m_iHero = pHero->getKey();
     addUnit(pHero);
     return pHero;
@@ -534,4 +538,25 @@ void CCWHomeSceneLayer::onGoldChange( CCObject* pObject )
     char sz[64];
     sprintf(sz, "%d", pFr->getGold());
     m_oGold.setString(sz);
+}
+
+void CCWHomeSceneLayer::onGetBuff( CCNode* pNode )
+{
+    CCCommmButton* pBtn = dynamic_cast<CCCommmButton*>(pNode);
+    CGameUnit* pHero = getHeroUnit();
+    pBtn->setEnabled(false);
+    pBtn->stopAllActions();
+    pBtn->setOpacity(0xFF);
+    pBtn->runAction(CCSequence::create(CCScaleTo::create(0.25, 1.5, 1.5), CCScaleTo::create(0.5, 0, -0), NULL));
+    pBtn->runAction(CCSequence::create(CCDelayTime::create(0.25), CCMoveToNode::create(0.5, pHero->getSprite(), false, 0, 1, pHero->getHalfOfHeight()), CCCallFuncN::create(this, callfuncN_selector(CCWHomeSceneLayer::onGetBuffEnd)), NULL));
+}
+
+void CCWHomeSceneLayer::onGetBuffEnd( CCNode* pNode )
+{
+    CCCommmButton* pBtn = dynamic_cast<CCCommmButton*>(pNode);
+    CGameUnit* pHero = getHeroUnit();
+    CBuffSkill* pBuff = dynamic_cast<CBuffSkill*>(COrgSkillInfo::sharedOrgSkillInfo()->skill(pBtn->m_iKey));
+    pBuff->setSrcKey(pHero->getKey());
+    pHero->addBuff(pBuff);
+    pNode->removeFromParentAndCleanup(true);
 }

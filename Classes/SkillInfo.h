@@ -26,7 +26,9 @@ public:
 		//kTransmit1,
         kThunderAttack1,
         kSwordStorm1,
-        kJumpChop1
+        kJumpChop1,
+        kThunderBoltBuff1,
+        kHealing1
     };
 
     struct SKILL_INFO

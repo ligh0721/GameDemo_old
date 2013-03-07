@@ -390,8 +390,8 @@ CGameMission* CDemoMission::mission01()
     {
         iRound = oMission.addNewRound();
         oRush.init(aiPath[rand() % CONST_MAX_PATH]);
-        oRush.addUnit(kMatchstick, 1, 0);
-        oRush.addUnit(kMatchstick, 10, 4);
+        oRush.addUnit(kMalik, 1, 0);
+        oRush.addUnit(kMalik, 10, 4);
         oMission.addRush(iRound, oRush);
 
         oRush.init(aiPath[rand() % CONST_MAX_PATH]);
@@ -407,8 +407,8 @@ CGameMission* CDemoMission::mission01()
 
     iRound = oMission.addNewRound();
     oRush.init(aiPath[rand() % CONST_MAX_PATH]);
-    oRush.addUnit(kMatchstick, 1, 10);
-    oRush.addUnit(kMatchstick, 2, 5);
+    oRush.addUnit(kMalik, 1, 10);
+    oRush.addUnit(kMalik, 2, 5);
     oMission.addRush(iRound, oRush);
     
     return &oMission;
