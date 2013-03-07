@@ -105,6 +105,8 @@ bool COrgUnitInfo::init()
     pGm->loadUnitAnimation("Lightning1", "die");
     
     pGm->loadUnitAnimation("Lightning2", "die");
+
+    pGm->loadUnitAnimation("Chain1", "die");
     
     //pGm->preloadEffectSound("Lightning1.wav");
     //pGm->preloadEffectSound("Ball1.wav");
@@ -154,6 +156,13 @@ bool COrgUnitInfo::init()
     pProj->setBaseMoveSpeed(0.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjLightning3 = pProj;
+
+    pProj = CProjectile::createWithName("Chain1");
+    pProj->setProjectileType(CProjectile::kLightning); // 设置投射物
+    pProj->prepareDieAnimation("die", 0.05); // 加载投射物死亡动画
+    pProj->setBaseMoveSpeed(0.0);
+    pPm->addProjectile(pProj); // 将投射物添加到PM中
+    CProjectile* pProjChain1 = pProj;
     
     
     CUnitInfo oMalik(

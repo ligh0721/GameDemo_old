@@ -2173,6 +2173,11 @@ CCObject* CChainBuff::copyWithZone( CCZone* pZone )
 {
     CChainBuff* pSkill = CChainBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fRange, m_iMaxTimes, m_oDamage, m_pTemplateProjectile);
     pSkill->setWeaponType(getWeaponType());
+    pSkill->setProjectileScale(getProjectileScale());
+    pSkill->setProjectileBirthOffsetX(getProjectileBirthOffsetX());
+    pSkill->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
+    pSkill->setProjectileMaxOffsetY(getProjectileMaxOffsetY());
+    pSkill->setProjectileMoveSpeed(getProjectileMoveSpeed());
     return pSkill;
 }
 
@@ -2195,7 +2200,7 @@ void CChainBuff::onBuffDel()
     CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
     if (o->isDead())
     {
-        return;
+        //return;
     }
     CCUnitLayer* l = o->getUnitLayer();
     CUnitGroup* g = l->getUnits()->getUnitsInRange(o->getPosition(), m_fRange, INFINITE, CONDITION(CChainBuff::checkConditions), this);
