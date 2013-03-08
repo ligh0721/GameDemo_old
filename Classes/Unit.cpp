@@ -565,7 +565,7 @@ bool CUnit::init()
     m_oArrOnReviveChain.init();
     m_oArrOnDieChain.init();
     m_oArrOnTickChain.init();
-    m_oArrOnTickDelChain.init();
+    //m_oArrOnTickDelChain.init();
     m_oArrOnDestroyProjectileChain.init();
     m_oArrBuff.init();
     m_oArrSkill.init();
@@ -818,12 +818,13 @@ void CUnit::delFromOnDestroyProjectileTrigger( CSkill* pSkill )
 {
     CUnit::delFromTrigger(m_oArrOnDestroyProjectileChain, pSkill);
 }
-
+/*
 void CUnit::delFromOnTickTriggerLater(CSkill* pSkill)
 {
-    m_oArrOnTickDelChain.addObject(pSkill);
+    delFromOnTickTrigger(pSkill);
+    //m_oArrOnTickDelChain.addObject(pSkill);
 }
-
+*/
 void CUnit::addToTrigger(CCArray& roTrigger, CSkill* pSkill)
 {
     roTrigger.addObject(pSkill);
@@ -927,15 +928,20 @@ void CUnit::triggerOnTick(float fDt)
 {
     beginTrigger();
     CCObject* pObj = NULL;
-    CCARRAY_FOREACH(&m_oArrOnTickChain, pObj)
+    CCArray oArrOnTick;
+    oArrOnTick.initWithArray(&m_oArrOnTickChain);
+    CCARRAY_FOREACH(&oArrOnTick, pObj)
     {
         dynamic_cast<CSkill*>(pObj)->onUnitTick(fDt);
     }
+    /*
     if (m_oArrOnTickDelChain.count())
     {
+        CCAssert(false, "");
         m_oArrOnTickChain.removeObjectsInArray(&m_oArrOnTickDelChain);
         m_oArrOnTickDelChain.removeAllObjects();
     }
+    */
     endTrigger();
 }
 
@@ -978,7 +984,7 @@ void CUnit::addBuff( CBuffSkill* pBuff, bool bForce )
         CBuffSkill* pOldBuff = getBuffByType(pBuff->getTypeKey());
         if (pOldBuff)
         {
-            delBuff(pOldBuff, false);
+            coverBuff(pOldBuff);
             //pOldBuff->setDuration(pOldBuff->getDuration() + pBuff->getDuration());
         }
     }
@@ -992,11 +998,20 @@ void CUnit::delBuff( CBuffSkill* pBuff, bool bAfterTriggerLoop )
     pBuff->onSkillDel();
     pBuff->setOwner(NULL);
     m_oArrBuff.removeObject(pBuff);
+    /*
     if (!bAfterTriggerLoop)
     {
         m_oArrOnTickChain.removeObjectsInArray(&m_oArrOnTickDelChain);
         m_oArrOnTickDelChain.removeAllObjects();
     }
+    */
+}
+
+void CUnit::coverBuff( CBuffSkill* pBuff )
+{
+    pBuff->onSkillCover();
+    pBuff->setOwner(NULL);
+    m_oArrBuff.removeObject(pBuff);
 }
 
 CSkill* CUnit::getSkill( int iKey )
@@ -1076,7 +1091,7 @@ void CUnit::cleanUpTriggers()
     m_oArrOnReviveChain.removeAllObjects();
     m_oArrOnDieChain.removeAllObjects();
     m_oArrOnTickChain.removeAllObjects();
-    m_oArrOnTickDelChain.removeAllObjects();
+    //m_oArrOnTickDelChain.removeAllObjects();
     m_oArrOnDestroyProjectileChain.removeAllObjects();
 }
 
@@ -1246,8 +1261,6 @@ bool CGameUnit::init()
     setAttackEffectDelay(0);
     setFixed(false);
     setHostilityRange(0);
-    setProjectileBirthOffsetX(0);
-    setProjectileBirthOffsetY(0);
     setRewardGold(0);
     setRewardExp(0);
     setExAttackRandomRange(0.000);
@@ -1285,8 +1298,6 @@ bool CGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor )
     setAttackEffectDelay(0);
     setFixed(false);
     setHostilityRange(0);
-    setProjectileBirthOffsetX(0);
-    setProjectileBirthOffsetY(0);
     setRewardGold(0);
     setRewardExp(0);
     setExAttackRandomRange(0.000);
@@ -1354,8 +1365,7 @@ bool CGameUnit::initWithInfo( const CUnitInfo& roUnitInfo )
     setProjectileMoveSpeed(roUnitInfo.m_fProjectileMoveSpeed);
     setProjectileScale(roUnitInfo.m_fProjectileScale);
     setProjectileMaxOffsetY(roUnitInfo.m_fProjectileMaxOffsetY);
-    setProjectileBirthOffsetX(roUnitInfo.m_fProjectileBirthOffsetX);
-    setProjectileBirthOffsetY(roUnitInfo.m_fProjectileBirthOffsetY);
+    setProjectileBirthOffset(ccp(roUnitInfo.m_fProjectileBirthOffsetX, roUnitInfo.m_fProjectileBirthOffsetY));
     setBaseAttackValue(roUnitInfo.m_oBaseAttackValue);
     setExAttackRandomRange(roUnitInfo.m_fExAttackRandomRange);
     setArmorType(roUnitInfo.m_eArmorType);
@@ -1963,10 +1973,11 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
             else
             {
                 pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
+                pProj->fireInstant(getUnitLayer(), this, this, pTarget, pAtk, getProjectileScale(), getProjectileBirthOffset());
+                /*
                 CCUnitLayer* pLayer = dynamic_cast<CCUnitLayer*>(m_oSprite.getParent());
                 pLayer->addProjectile(pProj);
-                pProj->setProjectileBirthOffsetX(getProjectileBirthOffsetX());
-                pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
+                pProj->setProjectileBirthOffset(getProjectileBirthOffset());
                 pProj->setAttackData(pAtk);
                 pProj->setOwner(getKey());
                 pProj->setStart(getKey());
@@ -1974,12 +1985,14 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
                 pProj->getSprite()->setScale(getProjectileScale());
                 pProj->setPosition(pTarget->getPosition());
                 pProj->onDie();
+                */
             }
             break;
             
         case kWTDelayed:
             pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
-            //CCUnitLayer* pLayer = dynamic_cast<CCUnitLayer*>(m_oSprite.getParent());
+            pProj->fireFolow(getUnitLayer(), this, this, pTarget, pAtk, getProjectileScale(), getProjectileBirthOffset(), getProjectileMaxOffsetY(), getProjectileMoveSpeed());
+            /*
             getUnitLayer()->addProjectile(pProj);
             pProj->setAttackData(pAtk);
             pProj->setOwner(getKey());
@@ -1992,9 +2005,8 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
             pProj->getSprite()->setScale(getProjectileScale());
             pProj->getSprite()->setRotation(fA);
             //float fOffsetX = getHalfOfWidth();
-            pProj->setProjectileBirthOffsetX(getProjectileBirthOffsetX());
-            pProj->setProjectileBirthOffsetY(getProjectileBirthOffsetY());
-            pProj->setPosition(ccpAdd(getPosition(), ccp(getSprite()->isFlipX() ? -pProj->getProjectileBirthOffsetX() : pProj->getProjectileBirthOffsetX(), pProj->getProjectileBirthOffsetY())));
+            pProj->setProjectileBirthOffset(getProjectileBirthOffset());
+            pProj->setPosition(ccpAdd(getPosition(), ccp(getSprite()->isFlipX() ? -pProj->getProjectileBirthOffset().x : pProj->getProjectileBirthOffset().x, pProj->getProjectileBirthOffset().y)));
             //pProj->setHalfOfWidth(11);
             //pProj->setHalfOfHeight(13);
             UNIT_MOVE_PARAMS oMp;
@@ -2002,7 +2014,7 @@ void CGameUnit::onActAttackEffect( CCNode* pNode )
             oMp.bAutoFlipX = false;
             oMp.fMaxOffsetY = getProjectileMaxOffsetY();
             pProj->followTo(getLastAttackTarget(), oMp);
-            
+            */
             break;
             
     }
@@ -2663,6 +2675,13 @@ void CProjectile::onActMoveEnd( CCNode* pNode )
 
 void CProjectile::onDie()
 {
+    if (m_eProjectileType == kRange)
+    {
+        m_oSprite.getScheduler()->unscheduleSelector(schedule_selector(CProjectile::onMovingTick), this);
+        setAnimation(kAnimationDie, 1, 1, kActDie, CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
+        return;
+    }
+
     M_DEF_GM(pGm);
     CCAnimation* pAni;
     CCLightning* pLigh;
@@ -2686,7 +2705,7 @@ void CProjectile::onDie()
         case kLightning:
             pAni = pGm->getUnitAnimation(getName(), m_astAniInfo[kAnimationDie].sAnimation.c_str());
             pAni->setDelayPerUnit(m_astAniInfo[kAnimationDie].fDelay);
-            pLigh = CCLightning::create(pAni, pStart->getSprite(), pTarget->getSprite(), getProjectileBirthOffsetX(), getProjectileBirthOffsetY(), pTarget->getHalfOfHeight());
+            pLigh = CCLightning::create(pAni, pStart->getSprite(), pTarget->getSprite(), getProjectileBirthOffset(), pTarget->getHalfOfHeight());
             pLigh->fixTargetPosition(&m_oSprite);
             pAct = CCSequence::createWithTwoActions(pLigh, CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
             pAct->setTag(kActDie);
@@ -2718,6 +2737,7 @@ CCObject* CProjectile::copyWithZone( CCZone* pZone )
         pProj->prepareAnimation((ANIMATION_INDEX)i, roAni.sAnimation.c_str(), roAni.fDelay);
     }
     pProj->setProjectileType(getProjectileType());
+    pProj->setBaseMoveSpeed(getBaseMoveSpeed());
     return pProj;
 }
 
@@ -2730,11 +2750,138 @@ void CProjectile::setTarget( CGameUnit* pTarget )
 {
     m_iTarget = pTarget->getKey();
     setOffsetZ(pTarget->getHalfOfHeight());
+    m_oTarget = pTarget->getPosition();
+}
+
+void CProjectile::setTarget( const CCPoint& roTarget )
+{
+    m_oTarget = roTarget;
 }
 
 int CProjectile::getTarget() const
 {
     return m_iTarget;
+}
+
+const CCPoint& CProjectile::getTargetPoint() const
+{
+    return m_oTarget;
+}
+
+void CProjectile::fireInstant( CCUnitLayer* pLayer, int iOwner, int iStart, int iTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset )
+{
+    CGameUnit* pOwner = pLayer->getUnitByKey(iOwner);
+    CGameUnit* pStart = pLayer->getUnitByKey(iStart);
+    CGameUnit* pTarget = pLayer->getUnitByKey(iTarget);
+    fireInstant(pLayer, pOwner, pStart, pTarget, pAtk, fProjectileScale, roProjectileBirthOffset);
+}
+
+void CProjectile::fireInstant( CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, CGameUnit* pTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset )
+{
+    pLayer->addProjectile(this);
+    setAttackData(pAtk);
+    setOwner(pOwner->getKey());
+    setStart(pStart->getKey());
+    setTarget(pTarget->getKey());
+    getSprite()->setScale(fProjectileScale);
+    setProjectileBirthOffset(roProjectileBirthOffset);
+    setPosition(pTarget->getPosition());
+    onDie();
+}
+
+void CProjectile::fireFolow( CCUnitLayer* pLayer, int iOwner, int iStart, int iTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMaxOffsetY, float fProjectileMoveSpeed )
+{
+    CGameUnit* pOwner = pLayer->getUnitByKey(iOwner);
+    CGameUnit* pStart = pLayer->getUnitByKey(iStart);
+    CGameUnit* pTarget = pLayer->getUnitByKey(iTarget);
+    fireFolow(pLayer, pOwner, pStart, pTarget, pAtk, fProjectileScale, roProjectileBirthOffset, fProjectileMaxOffsetY, fProjectileMoveSpeed);
+}
+
+void CProjectile::fireFolow( CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, CGameUnit* pTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMaxOffsetY, float fProjectileMoveSpeed )
+{
+    pLayer->addProjectile(this);
+    setAttackData(pAtk);
+    setOwner(pOwner->getKey());
+    setStart(pStart->getKey());
+    setTarget(pTarget->getKey());
+    setBaseMoveSpeed(fProjectileMoveSpeed);
+    getSprite()->setScale(fProjectileScale);
+    setProjectileBirthOffset(roProjectileBirthOffset);
+    setProjectileMaxOffsetY(fProjectileMaxOffsetY);
+    
+    const CCPoint& roPos1 = pStart->getPosition();
+    const CCPoint& roPos2 = pTarget->getPosition();
+    float fA = CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(roPos2, roPos1)));
+    getSprite()->setRotation(fA);
+    //float fOffsetX = getHalfOfWidth();
+    setPosition(ccpAdd(pStart->getPosition(), ccp(pStart->getSprite()->isFlipX() ? -roProjectileBirthOffset.x : roProjectileBirthOffset.x, roProjectileBirthOffset.y)));
+    //pProj->setHalfOfWidth(11);
+    //pProj->setHalfOfHeight(13);
+    
+    UNIT_MOVE_PARAMS oMp;
+    oMp.bAutoFlipX = false;
+    oMp.fMaxOffsetY = fProjectileMaxOffsetY;
+    followTo(pTarget->getKey(), oMp);
+}
+
+void CProjectile::fireWave( CCUnitLayer* pLayer, int iOwner, int iStart, const CCPoint& roTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMoveSpeed )
+{
+    CGameUnit* pOwner = pLayer->getUnitByKey(iOwner);
+    CGameUnit* pStart = pLayer->getUnitByKey(iStart);
+    fireWave(pLayer, pOwner, pStart, roTarget, pAtk, fProjectileScale, roProjectileBirthOffset, fProjectileMoveSpeed);
+}
+
+void CProjectile::fireWave( CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, const CCPoint& roTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMoveSpeed )
+{
+    pLayer->addProjectile(this);
+    setAttackData(pAtk);
+    setOwner(pOwner->getKey());
+    setStart(pStart->getKey());
+    setTarget(roTarget);
+    setBaseMoveSpeed(fProjectileMoveSpeed);
+    getSprite()->setScale(fProjectileScale);
+    setProjectileBirthOffset(roProjectileBirthOffset);
+
+    const CCPoint& roPos1 = pStart->getPosition();
+    const CCPoint& roPos2 = roTarget;
+    float fA = CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(roPos2, roPos1)));
+    getSprite()->setRotation(fA);
+    //float fOffsetX = getHalfOfWidth();
+    setPosition(ccpAdd(pStart->getPosition(), ccp(pStart->getSprite()->isFlipX() ? -roProjectileBirthOffset.x : roProjectileBirthOffset.x, roProjectileBirthOffset.y)));
+    //pProj->setHalfOfWidth(11);
+    //pProj->setHalfOfHeight(13);
+
+    UNIT_MOVE_PARAMS oMp;
+    oMp.bAutoFlipX = false;
+    if (m_eProjectileType == kRange)
+    {
+        m_oSprite.getScheduler()->scheduleSelector(schedule_selector(CProjectile::onMovingTick), this, 0.05, false);
+    }
+    
+    moveTo(roTarget, oMp);
+}
+
+void CProjectile::onMovingTick( float fDt )
+{
+    CGameUnit* pOwner = getUnitLayer()->getUnitByKey(getOwner());
+    if (!pOwner)
+    {
+        return;
+    }
+    CAttackData* pAtk;
+    CCArray* pArrUnits = getUnitLayer()->getUnits()->getUnitsArray();
+    CGameUnit* pUnit;
+    CCObject* pObj;
+    CCARRAY_FOREACH(pArrUnits, pObj)
+    {
+        pUnit = dynamic_cast<CGameUnit*>(pObj);
+        if (pUnit && pUnit->isEnemyOf(pOwner) && !pUnit->isDead() && pUnit->getDistance(getPosition()) - pUnit->getHalfOfWidth() - getHalfOfWidth() <= 0 && !m_mapDamaged[pUnit->getKey()])
+        {
+            m_mapDamaged[pUnit->getKey()] = true;
+            pAtk = dynamic_cast<CAttackData*>(getAttackData()->copy());
+            pUnit->damagedAdv(pAtk, pOwner);
+        }
+    }
 }
 
 CUnitGroup::CUnitGroup()

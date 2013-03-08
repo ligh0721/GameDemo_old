@@ -317,9 +317,10 @@ public:
 	//为单位添加包
 	void addPackage(CUnitPackage* pPackage);
     
-    // 为单位添加/删除BUFF
+    // 为单位添加/删除/覆盖删除BUFF
     void addBuff(CBuffSkill* pBuff, bool bForce = false);
     void delBuff(CBuffSkill* pBuff, bool bAfterTriggerLoop = true);
+    void coverBuff(CBuffSkill* pBuff);
     
     CSkill* getSkill(int iKey);
     CBuffSkill* getBuff(int iKey);
@@ -376,7 +377,7 @@ protected:
     void delFromOnDestroyProjectileTrigger(CSkill* pSkill);
     
     // 延迟删除触发器，延迟到整个触发器遍历结束后删除，内部调用
-    void delFromOnTickTriggerLater(CSkill* pSkill);
+    //void delFromOnTickTriggerLater(CSkill* pSkill);
     
     // 触发器链的触发，内部调用
     void triggerOnAttackTarget(CAttackData* pAttack, CUnit* pTarget);
@@ -409,7 +410,7 @@ public:
     CCArray m_oArrOnReviveChain;
     CCArray m_oArrOnDieChain;
     CCArray m_oArrOnTickChain;
-    CCArray m_oArrOnTickDelChain;
+    //CCArray m_oArrOnTickDelChain;
     CCArray m_oArrOnDestroyProjectileChain;
     
     
@@ -615,8 +616,7 @@ public: // Attack
     M_SYNTHESIZE(float, m_fProjectileMoveSpeed, ProjectileMoveSpeed);
     M_SYNTHESIZE(float, m_fProjectileScale, ProjectileScale);
     M_SYNTHESIZE(float, m_fProjectileMaxOffsetY, ProjectileMaxOffsetY);
-    M_SYNTHESIZE(float, m_fProjectileBirthOffsetX, ProjectileBirthOffsetX);
-    M_SYNTHESIZE(float, m_fProjectileBirthOffsetY, ProjectileBirthOffsetY);
+    M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oProjectileMaxOffset, ProjectileBirthOffset)
     
 protected:
     virtual void onActAttackEffect(CCNode* pNode);
@@ -725,7 +725,9 @@ public:
         kLightning,
         kRange
     };
-    
+
+    typedef map<int, bool> MAP_DAMAGED;
+
 public:
     CProjectile();
     virtual ~CProjectile();
@@ -740,7 +742,9 @@ public:
     M_SYNTHESIZE(int, m_iGeneration, Generation);
     virtual void setTarget(int iTarget);
     virtual void setTarget(CGameUnit* pTarget);
+    virtual void setTarget(const CCPoint& roTarget);
     virtual int getTarget() const;
+    virtual const CCPoint& getTargetPoint() const;
     M_SYNTHESIZE(int, m_iOwner, Owner);
     M_SYNTHESIZE(int, m_iStart, Start);
     M_SYNTHESIZE(PROJECTILE_TYPE, m_eProjectileType, ProjectileType);
@@ -750,6 +754,14 @@ public:
     
     virtual void onDie();
     virtual CCObject* copyWithZone(CCZone* pZone);
+    virtual void onMovingTick(float fDt);
+
+    virtual void fireInstant(CCUnitLayer* pLayer, int iOwner, int iStart, int iTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset);
+    virtual void fireInstant(CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, CGameUnit* pTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset);
+    virtual void fireFolow(CCUnitLayer* pLayer, int iOwner, int iStart, int iTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMaxOffsetY, float fProjectileMoveSpeed);
+    virtual void fireFolow(CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, CGameUnit* pTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMaxOffsetY, float fProjectileMoveSpeed);
+    virtual void fireWave(CCUnitLayer* pLayer, int iOwner, int iStart, const CCPoint& roTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMoveSpeed);
+    virtual void fireWave(CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, const CCPoint& roTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMoveSpeed);
     
 protected:
     virtual void onActMoveEnd(CCNode* pNode);
@@ -758,8 +770,11 @@ protected:
 protected:
     CAttackData* m_pAttackData;
     int m_iTarget;
-    
+    CCPoint m_oTarget;
+    MAP_DAMAGED m_mapDamaged;
+
 };
+
 class CUnitPath;
 
 class CUnitGroup : public CCObject

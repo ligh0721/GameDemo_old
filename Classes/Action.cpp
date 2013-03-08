@@ -305,7 +305,7 @@ CCLightning::~CCLightning()
     CC_SAFE_RELEASE(m_pEndNode);
 }
 
-bool CCLightning::init( CCAnimation* pAnimation, CCNode* pStartNode, CCNode* pEndNode, float fStartNodeXOffsetOfAnchor /*= 0.0*/, float fStartNodeYOffsetOfAnchor /*= 0.0*/, float fEndNodeYOffsetOfAnchor /*= 0.0*/ )
+bool CCLightning::init( CCAnimation* pAnimation, CCNode* pStartNode, CCNode* pEndNode, const CCPoint& roStartNodeOffsetOfAnchor /*= CCPointZero*/, float fEndNodeYOffsetOfAnchor /*= 0.0*/ )
 {
     if (!CCAnimate::initWithAnimation(pAnimation))
     {
@@ -315,8 +315,7 @@ bool CCLightning::init( CCAnimation* pAnimation, CCNode* pStartNode, CCNode* pEn
     m_pStartNode = pStartNode;
     CC_SAFE_RETAIN(pEndNode);
     m_pEndNode = pEndNode;
-    m_fStartNodeXOffsetOfAnchor = fStartNodeXOffsetOfAnchor;
-    m_fStartNodeYOffsetOfAnchor = fStartNodeYOffsetOfAnchor;
+    m_oStartNodeOffsetOfAnchor = roStartNodeOffsetOfAnchor;
     m_fEndNodeOffsetOfAnchor = fEndNodeYOffsetOfAnchor;
     return true;
 }
@@ -350,8 +349,8 @@ void CCLightning::fixTargetPosition(CCNode* pTarget)
     {
         bFlipX = oStartPos.x > oEndPos.x;
     }
-    oStartPos.x += bFlipX ? -m_fStartNodeXOffsetOfAnchor : m_fStartNodeXOffsetOfAnchor;
-    oStartPos.y += m_fStartNodeYOffsetOfAnchor;
+    oStartPos.x += bFlipX ? -m_oStartNodeOffsetOfAnchor.x : m_oStartNodeOffsetOfAnchor.x;
+    oStartPos.y += m_oStartNodeOffsetOfAnchor.y;
     oEndPos.y += m_fEndNodeOffsetOfAnchor;
     float fR = CC_RADIANS_TO_DEGREES(-ccpToAngle(ccpSub(oEndPos, oStartPos)));
     CCPoint oDelta = ccpSub(oEndPos, oStartPos);

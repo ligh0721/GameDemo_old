@@ -12,7 +12,8 @@ public:
         kLightning1,
         kLightning2,
         kLightning3,
-        kChain1
+        kChain1,
+        kWave1
     };
 
     enum UNITINFO_INDEX
