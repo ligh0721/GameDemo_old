@@ -111,7 +111,7 @@ protected:
     void unregisterOnDestroyProjectileTrigger();
     
     // 延迟注销触发器，通常在具备一定持续时间的BUFF类技能的 onSkillDel 中被调用
-    void unregisterOnTickTriggerLater();
+    //void unregisterOnTickTriggerLater();
     
     
 public:
@@ -244,12 +244,13 @@ protected:
     // 内部注册/延迟注销了一个 onUnitTick 触发器，用于控制BUFF持续时间
     virtual void onSkillAdd();
     virtual void onSkillDel();
+    virtual void onSkillCover();
     
     // 从BUFF派生的子类，必须覆盖下两个函数，并且覆盖函数中必须调用父类函数
     // BUFF的注册/注销注册触发器，需要添加至下列函数中
     // have to @override
     virtual void onBuffAdd();
-    virtual void onBuffDel();
+    virtual void onBuffDel(bool bCover);
     
     // 选择性覆盖，如果在BUFF持续的时间内，需要周期性的对单位进行处理，则需要覆盖
     // @override
@@ -394,7 +395,7 @@ public:
     
 protected:
     virtual void onBuffAdd();
-    virtual void onBuffDel();
+    virtual void onBuffDel(bool bCover);
 };
 
 class CDoubleAttackPas : public CPassiveSkill
@@ -424,7 +425,7 @@ public:
     
 protected:
     virtual void onBuffAdd();
-    virtual void onBuffDel();
+    virtual void onBuffDel(bool bCover);
     
     virtual void onUnitDamaged(CAttackData* pAttack, CUnit* pSource);
     
@@ -586,7 +587,7 @@ public:
     
 protected:
     virtual void onBuffAdd();
-    virtual void onBuffDel();
+    virtual void onBuffDel(bool bCover);
     
 public:
     CExtraCoeff m_oExMoveSpeed;
@@ -652,7 +653,7 @@ public:
     M_SYNTHESIZE(float, m_fThrowRange, ThrowRange);
     
     virtual void onBuffAdd();
-    virtual void onBuffDel();
+    virtual void onBuffDel(bool bCover);
     
     virtual void onThrowEnd(CCNode* pNode);
     
@@ -677,7 +678,7 @@ public:
 	M_SYNTHESIZE(float, m_fFadeInDuration, FadeInDuration);
 	M_SYNTHESIZE(float, m_fFadeOutDuration, FadeOutDuration);
 	virtual void onBuffAdd();
-	virtual void onBuffDel();
+	virtual void onBuffDel(bool bCover);
     
 	virtual void onTransmitBegin(CCNode* pNode);
 	virtual void onTransmitEnd(CCNode* pNode);
@@ -705,8 +706,7 @@ public:
     M_SYNTHESIZE(float, m_fProjectileMoveSpeed, ProjectileMoveSpeed);
     M_SYNTHESIZE(float, m_fProjectileScale, ProjectileScale);
     M_SYNTHESIZE(float, m_fProjectileMaxOffsetY, ProjectileMaxOffsetY);
-    M_SYNTHESIZE(float, m_fProjectileBirthOffsetX, ProjectileBirthOffsetX);
-    M_SYNTHESIZE(float, m_fProjectileBirthOffsetY, ProjectileBirthOffsetY);
+    M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oProjectileBirthOffset, ProjectileBirthOffset);
     
 public:
     CAttackValue m_oDamage;
@@ -718,7 +718,7 @@ public:
 class CChainBuff : public CBuffSkill
 {
 public:
-    typedef vector<int> VEC_DAMAGED;
+    typedef map<int, bool> MAP_DAMAGED;
     
 public:    
     virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fRange, int iMaxTimes, const CAttackValue& roDamage, CProjectile* pProj);
@@ -727,7 +727,7 @@ public:
     M_GET_TYPE_KEY;
     
     virtual void onBuffAdd();
-    virtual void onBuffDel();
+    virtual void onBuffDel(bool bCover);
     
     M_SYNTHESIZE(int, m_iMaxTimes, MaxTimes)
     M_SYNTHESIZE(int, m_iStartUnit, StartUnit);
@@ -737,8 +737,7 @@ public:
     M_SYNTHESIZE(float, m_fProjectileMoveSpeed, ProjectileMoveSpeed);
     M_SYNTHESIZE(float, m_fProjectileScale, ProjectileScale);
     M_SYNTHESIZE(float, m_fProjectileMaxOffsetY, ProjectileMaxOffsetY);
-    M_SYNTHESIZE(float, m_fProjectileBirthOffsetX, ProjectileBirthOffsetX);
-    M_SYNTHESIZE(float, m_fProjectileBirthOffsetY, ProjectileBirthOffsetY);
+    M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oProjectileBirthOffset, ProjectileBirthOffset);
     M_SYNTHESIZE(CGameUnit::WEAPON_TYPE, m_eWeaponType, WeaponType);
     
     static bool checkConditions(CGameUnit* pUnit, CChainBuff* pBuff);
@@ -746,7 +745,7 @@ public:
 public:
     float m_fRange;
     CAttackValue m_oDamage;
-    VEC_DAMAGED m_vecDamaged;
+    MAP_DAMAGED m_mapDamaged;
 };
 class CChainLightingBuff : public CBuffSkill
 {
@@ -756,7 +755,7 @@ public:
     virtual CCObject* copyWithZone(CCZone* pZone);
     
     virtual void onBuffAdd();
-	virtual void onBuffDel();
+	virtual void onBuffDel(bool bCover);
     virtual void turnNext(CCObject* pObj);
 public:
     float m_fMaxCastRange;
@@ -778,7 +777,7 @@ public:
 	virtual CCObject* copyWithZone(CCZone* pZone);
     
 	virtual void onBuffAdd();
-	virtual void onBuffDel();
+	virtual void onBuffDel(bool bCover);
     
     M_SYNTHESIZE(float, m_fDelayPerUnit, DelayPerUnit);
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
@@ -838,7 +837,6 @@ public:
     M_SYNTHESIZE(int, m_fDurationPerJump, DurationPerJump);
     M_SYNTHESIZE(int, m_fCountPerJump, CountPerJump);
     
-    
 private:
     CGameUnit* m_pLastTargetUnit;
     int m_iProbability;
@@ -860,7 +858,7 @@ public:
 
 protected:
     virtual void onBuffAdd();
-    virtual void onBuffDel();
+    virtual void onBuffDel(bool bCover);
 
     virtual void onUnitTick(float fDt);
     virtual void onUnitInterval();
@@ -882,7 +880,7 @@ public:
 	virtual CCObject* copyWithZone(CCZone* pZone);
     
 	virtual void onBuffAdd();
-	virtual void onBuffDel();
+	virtual void onBuffDel(bool bCover);
     virtual void onUnitDamageTarget(float fDamage, CUnit* pTarget);
     
     virtual void onJumpChopEnd(CCObject* pObj);

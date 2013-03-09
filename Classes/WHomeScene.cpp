@@ -83,6 +83,7 @@ bool CCWHomeSceneLayer::init()
     midTower->addSkill(CStatusShowPas::create());
     midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
     midTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kSpeedAura1));
     midTower->setForceResource(pFr);
 
     midTower= pUm->unitByInfo(COrgUnitInfo::kTesla);
@@ -157,8 +158,7 @@ bool CCWHomeSceneLayer::init()
 
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kThunderAttack1));
     pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
-    dynamic_cast<CProjectileAct*>(pSkill)->setProjectileBirthOffsetX(0);
-    dynamic_cast<CProjectileAct*>(pSkill)->setProjectileBirthOffsetY(25);
+    dynamic_cast<CProjectileAct*>(pSkill)->setProjectileBirthOffset(ccp(0, 25));
     heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill4", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 1);
