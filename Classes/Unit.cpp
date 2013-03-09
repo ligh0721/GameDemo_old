@@ -2692,6 +2692,10 @@ void CProjectile::onDie()
             pAct->setTag(kActDie);
             m_oSprite.runAction(pAct);
             break;
+
+        case kRange:
+
+            break;
     }
     
     CUnit::onDie(); // Don't call CGameUnit::onDie()

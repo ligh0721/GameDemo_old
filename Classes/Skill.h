@@ -903,3 +903,85 @@ private:
     vector<int> m_vecEffectedUnitKey;
     CAttackData* m_pAttackData;
 };
+
+
+
+
+class CForceMoveBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration, bool bCanBePlural,int iSrcKey, CCPoint tarPoint ,float fSpeed )
+    {
+        CBuffSkill::init(fDuration, bCanBePlural,iSrcKey);
+        m_tarPoint = tarPoint;
+        m_fSpeed = fSpeed;
+        return true;
+    }
+
+    CREATE_FUNC_PARAM(CForceMoveBuff,(float fDuration,bool bCanBePlural,int iSrcKey,CCPoint tarPoint,float fSpeed)
+        ,fDuration,bCanBePlural,iSrcKey,tarPoint,fSpeed);
+    virtual CCObject* copyWithZone(CCZone* pZone)
+    {
+        return CForceMoveBuff::create(m_fDuration,m_bCanBePlural,m_iSrcKey,m_tarPoint,m_fSpeed);
+    }
+    M_SYNTHESIZE(float,m_fSpeed,Speed);
+protected:
+    virtual void onBuffAdd()
+    {
+        CBuffSkill::onBuffAdd();
+        CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
+        pO->suspend();
+        pO->moveTo(m_tarPoint);
+    }
+    virtual void onBuffDel()
+    {
+        CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
+        pO->resume();
+        CBuffSkill::onBuffDel();
+    }
+protected:
+    CCPoint m_tarPoint;
+    float m_fSpeed;
+};
+
+
+class CWhirlWindBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration,bool bCanBePlural,int iSrcKey,const CAttackValue& roDamage)
+    {
+        CBuffSkill::init(fDuration,bCanBePlural,iSrcKey);
+        m_oDamage = roDamage;
+        return true;
+    }
+
+protected:
+    CAttackValue m_oDamage;
+    virtual void onBuffAdd()
+    {
+        CBuffSkill::onBuffAdd();
+        M_DEF_UM(pUm);
+        CGameUnit* t = pUm->unitByInfo(2);
+        t->setRewardExp(0);
+        CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+        CGameUnit* s = dynamic_cast<CGameUnit*>(o->getUnitLayer()->getUnitByKey(m_iSrcKey));
+        o->getUnitLayer()->addUnit(t);
+        t->setPosition(o->getPosition());
+        t->setForce(o->getForce());
+        t->setAlly(o->getAlly());
+        CBuffSkill *pSkill = CHpChangeBuff::create(20, true, 0.1, -0.02, true, -1);
+        t->addBuff(pSkill);
+    }
+    virtual void onBuffDel()
+    {
+        CBuffSkill::onBuffDel();
+    }
+};
+
+
+
+class CCountDownBuff : CBuffSkill
+{
+public:
+
+};
