@@ -587,8 +587,7 @@ public:
     
 protected:
     virtual void onBuffAdd();
-    virtual void onBuffDel(bool bCover);
-    
+    virtual void onBuffDel(bool bCover);    
 public:
     CExtraCoeff m_oExMoveSpeed;
     CExtraCoeff m_oExAttackSpeed;
@@ -738,6 +737,7 @@ public:
     M_SYNTHESIZE(float, m_fProjectileScale, ProjectileScale);
     M_SYNTHESIZE(float, m_fProjectileMaxOffsetY, ProjectileMaxOffsetY);
     M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oProjectileBirthOffset, ProjectileBirthOffset);
+
     M_SYNTHESIZE(CGameUnit::WEAPON_TYPE, m_eWeaponType, WeaponType);
     
     static bool checkConditions(CGameUnit* pUnit, CChainBuff* pBuff);
@@ -746,6 +746,7 @@ public:
     float m_fRange;
     CAttackValue m_oDamage;
     MAP_DAMAGED m_mapDamaged;
+
 };
 class CChainLightingBuff : public CBuffSkill
 {
@@ -756,6 +757,7 @@ public:
     
     virtual void onBuffAdd();
 	virtual void onBuffDel(bool bCover);
+
     virtual void turnNext(CCObject* pObj);
 public:
     float m_fMaxCastRange;
@@ -836,6 +838,7 @@ public:
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
     M_SYNTHESIZE(int, m_fDurationPerJump, DurationPerJump);
     M_SYNTHESIZE(int, m_fCountPerJump, CountPerJump);
+    M_SYNTHESIZE(CCPoint, m_oAttackPosRegulate, AttackPosRegulate);
     
 private:
     CGameUnit* m_pLastTargetUnit;
@@ -859,7 +862,6 @@ public:
 protected:
     virtual void onBuffAdd();
     virtual void onBuffDel(bool bCover);
-
     virtual void onUnitTick(float fDt);
     virtual void onUnitInterval();
 
