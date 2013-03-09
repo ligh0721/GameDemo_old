@@ -112,6 +112,9 @@ bool COrgUnitInfo::init()
 
     pGm->loadUnitAnimation("Chain1", "die");
 
+    pGm->loadUnitAnimation("Wave1", "move");
+    pGm->loadUnitAnimation("Wave1", "die");
+
     //pGm->preloadEffectSound("Lightning1.wav");
     //pGm->preloadEffectSound("Ball1.wav");
     //pGm->preloadEffectSound("MalikAttack.wav");
@@ -131,7 +134,7 @@ bool COrgUnitInfo::init()
     pProj->setBaseMoveSpeed(300.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjBall2 = pProj;
-
+    
     pProj = CProjectile::createWithName("Ball3");
     pProj->setProjectileType(CProjectile::kFollow); // 设置投射物
     pProj->prepareMoveAnimation("move", 0.1); // 加载投射物移动动画
@@ -167,6 +170,15 @@ bool COrgUnitInfo::init()
     pProj->setBaseMoveSpeed(0.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjChain1 = pProj;
+
+    pProj = CProjectile::createWithName("Wave1");
+    pProj->setProjectileType(CProjectile::kRange); // 设置投射物
+    pProj->prepareMoveAnimation("move", 0.1); // 加载投射物移动动画
+    pProj->prepareDieAnimation("die", 0.1); // 加载投射物死亡动画
+    pProj->setBaseMoveSpeed(800.0);
+    pProj->setHalfOfWidth(32);
+    pPm->addProjectile(pProj); // 将投射物添加到PM中
+    CProjectile* pProjWave1 = pProj;
 
 
     CUnitInfo oMalik(

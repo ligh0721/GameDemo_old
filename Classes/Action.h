@@ -106,8 +106,8 @@ class CCLightning : public CCAnimate
 {
 public:
     virtual ~CCLightning();
-    virtual bool init(CCAnimation* pAnimation, CCNode* pStartNode, CCNode* pEndNode, float fStartNodeXOffsetOfAnchor = 0.0, float fStartNodeYOffsetOfAnchor = 0.0, float fEndNodeYOffsetOfAnchor = 0.0);
-    CREATE_FUNC_PARAM(CCLightning, (CCAnimation *pAnimation, CCNode* pStartNode, CCNode* pEndNode, float fStartNodeXOffsetOfAnchor = 0.0, float fStartNodeYOffsetOfAnchor = 0.0, float fEndNodeYOffsetOfAnchor = 0.0), pAnimation, pStartNode, pEndNode, fStartNodeXOffsetOfAnchor, fStartNodeYOffsetOfAnchor, fEndNodeYOffsetOfAnchor);
+    virtual bool init(CCAnimation* pAnimation, CCNode* pStartNode, CCNode* pEndNode, const CCPoint& roStartNodeOffsetOfAnchor = CCPointZero, float fEndNodeYOffsetOfAnchor = 0.0);
+    CREATE_FUNC_PARAM(CCLightning, (CCAnimation *pAnimation, CCNode* pStartNode, CCNode* pEndNode, const CCPoint& roStartNodeOffsetOfAnchor = CCPointZero, float fEndNodeYOffsetOfAnchor = 0.0), pAnimation, pStartNode, pEndNode, roStartNodeOffsetOfAnchor, fEndNodeYOffsetOfAnchor);
 
     virtual void startWithTarget(CCNode *pTarget);
     virtual void update(float t);
@@ -117,8 +117,7 @@ public:
 protected:
     CCNode* m_pStartNode;
     CCNode* m_pEndNode;
-    float m_fStartNodeXOffsetOfAnchor;
-    float m_fStartNodeYOffsetOfAnchor;
+    CCPoint m_oStartNodeOffsetOfAnchor;
     float m_fEndNodeOffsetOfAnchor;
 };
 
