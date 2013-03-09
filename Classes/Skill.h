@@ -837,7 +837,7 @@ public:
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
     M_SYNTHESIZE(int, m_fDurationPerJump, DurationPerJump);
     M_SYNTHESIZE(int, m_fCountPerJump, CountPerJump);
-    
+    M_SYNTHESIZE(CCPoint, m_oAttackPosRegulate, AttackPosRegulate);
     
 private:
     CGameUnit* m_pLastTargetUnit;

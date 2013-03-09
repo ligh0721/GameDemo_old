@@ -2330,6 +2330,7 @@ bool CJumpChopSkill::init(int iProbability, float fMaxJumpRange, int iMaxJumpCou
     m_iMaxJumpCount = iMaxJumpCount;
     m_oMaxDamage = roDamage;
     m_pActName = pActName;
+    m_oAttackPosRegulate = ccp(40, 0);
     return true;
 }
 CCObject* CJumpChopSkill::copyWithZone(cocos2d::CCZone *pZone)
@@ -2358,8 +2359,11 @@ void CJumpChopSkill::onUnitDamageTarget(float fDamage, CUnit *pTarget)
     {
         return;
     }
+    m_vecEffectedUnitKey.clear();
+    if(m_pLastTargetUnit != NULL)
+        m_vecEffectedUnitKey.push_back(m_pLastTargetUnit->getKey());
     m_vecEffectedUnitKey.push_back(pOwn->getKey());
-    m_vecEffectedUnitKey.push_back(pTarget->getKey());
+    m_pLastTargetUnit = NULL;
     onJumpChopEnd(pOwn);
  
 }
@@ -2435,7 +2439,7 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     pAnim->setDelayPerUnit(getDelayPerUnit());
     pAnim->setLoops(getCountAnimLoop());
     CCAnimate* pActAni = CCAnimate::create(pAnim);
-    CCFiniteTimeAction* pJump = CCJumpTo::create(getDurationPerJump(), pTarget->getPosition(), 20, getCountPerJump());
+    
     CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopSkill::onJumpChopEnd), pU);
     
     CCAction* pAction = CCSequence::create(pActAni, pCallO, NULL);
@@ -2443,13 +2447,15 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     pAction->setTag(CGameUnit::kActSpin);
     
     pU->startDoing(CGameUnit::kSpinning);
+    pU->setPosition(ccpAdd(m_oAttackPosRegulate,pTarget->getPosition()));
+    pU->turnTo(pTarget->getPosition());
+    pU->moveTo(pTarget->getPosition());
     pU->getSprite()->runAction(pAction);
     
-    //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
-
-    //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
     m_pLastTargetUnit = pTarget;
+    CCLOG("target key is %d", pTarget->getKey());
 }
+
 CJumpChopBuff::CJumpChopBuff()
 {
     m_pLastTargetUnit = NULL;
