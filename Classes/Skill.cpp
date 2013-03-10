@@ -2557,7 +2557,6 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     pAction->setTag(CGameUnit::kActSpin);
     
     pU->startDoing(CGameUnit::kSpinning);
-    pU->setPosition(ccpAdd(m_oAttackPosRegulate,pTarget->getPosition()));
     pU->turnTo(pTarget->getPosition());
     pU->moveTo(pTarget->getPosition());
     pU->getSprite()->runAction(pAction);
@@ -2573,6 +2572,7 @@ CJumpChopBuff::CJumpChopBuff()
     setDelayPerUnit(0.1);
     setCountPerJump(1);
     setDurationPerJump(1.0);
+    setHalfWidth(30.0);
 }
 
 bool CJumpChopBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue &roDamage, char *pActName)
@@ -2582,24 +2582,26 @@ bool CJumpChopBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float 
     m_iMaxJumpCount = iMaxJumpCount;
     m_oMaxDamage = roDamage;
     m_pActName = pActName;
-    m_oAttackPosRegulate = ccp(30, 10);
+   // m_oAttackPosRegulate = ccp(30, 10);
     return true;
 }
 CCObject* CJumpChopBuff::copyWithZone(cocos2d::CCZone *pZone)
 {
     CJumpChopBuff* pBuff = create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fMaxJumpRange, m_iMaxJumpCount, m_oMaxDamage, m_pActName);
-    pBuff->setAttackPosRegulate(m_oAttackPosRegulate);
+    //pBuff->setAttackPosRegulate(m_oAttackPosRegulate);
+    pBuff->setHalfWidth(m_fHalfWidth);
     return pBuff;
 }
 void CJumpChopBuff::onBuffAdd()
 {
-    CBuffSkill::onBuffAdd();
+    CBuffSkill::onBuffAdd();    
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
     if (!pOwn || pOwn->isDead())
     {
         return;
     }
     m_vecEffectedUnitKey.push_back(pOwn->getKey());
+    pOwn->startDoing(CGameUnit::kSpinning);
     onJumpChopEnd(pOwn);
 }
 
@@ -2607,8 +2609,19 @@ void CJumpChopBuff::onBuffDel(bool bCover)
 {
     CBuffSkill::onBuffDel(bCover);
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
+    pOwn->setHalfOfWidth(m_fLastHalfWidth);
     pOwn->stopSpin();
 
+}
+void CJumpChopBuff::getAttackPoint(CUnit *pTarget, CCPoint& oPos)
+{
+    CGameUnit* pT = dynamic_cast<CGameUnit*>(pTarget);
+    CGameUnit* pU = dynamic_cast<CGameUnit*>(getOwner());
+    
+    float fDis = pT->getHalfOfWidth() + pU->getHalfOfWidth() + (pU->getAttackMinRange() + pU->getAttackRange()) * 0.5;
+    const CCPoint& roPos1 = pU->getPosition();
+    const CCPoint& roPos2 = pT->getPosition();
+    oPos.setPoint(roPos2.x + ((roPos1.x > roPos2.x) ? fDis : -fDis), roPos2.y);
 }
 
 void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
@@ -2690,10 +2703,11 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     
     pAction->setTag(CGameUnit::kActSpin);
     
-    pU->startDoing(CGameUnit::kSpinning);
-    pU->setPosition(ccpAdd(m_oAttackPosRegulate,pTarget->getPosition()));
-    pU->turnTo(pTarget->getPosition());
-    pU->moveTo(pTarget->getPosition());
+    CCPoint oTargetPoint;
+    getAttackPoint(pTarget, oTargetPoint);
+    
+    pU->turnTo(oTargetPoint);
+    pU->setPosition(oTargetPoint);
     pU->getSprite()->runAction(pAction);
     
     m_pLastTargetUnit = pTarget;
