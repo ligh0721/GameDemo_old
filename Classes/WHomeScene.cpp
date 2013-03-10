@@ -137,7 +137,7 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oSkillPanel);
     m_oSkillPanel.setPosition(ccp(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50));
 
-    CActiveSkill* pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kHealing1));
+    CActiveSkill* pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSpeedUp1));
     pSkill->setCastAniInfo(CGameUnit::kAnimationAct3, 0.4);
     heroUnit->addSkill(pSkill);
     CCSkillButtonAdvance* pBtn;

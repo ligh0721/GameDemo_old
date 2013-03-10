@@ -15,6 +15,7 @@
 #include "PlayerInfo.h"
 #include "GameCtrl.h"
 #include "WHomeScene.h"
+#include "TechTreeScene.h"
 
 
 bool CCHomeScene::init()
@@ -239,7 +240,8 @@ void CCHomeSceneLayer::onBtnStartClick( CCNode* pNode )
 
 void CCHomeSceneLayer::onBtnUpgradesClick( CCNode* pNode )
 {
-
+    M_DEF_DR(pDr);
+    pDr->replaceScene(CCTransitionFade::create(0.5,CCTechTreeScene::create()));
 }
 
 void CCHomeSceneLayer::onBtnAchievementsClick( CCNode* pNode )

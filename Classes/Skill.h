@@ -938,3 +938,70 @@ protected:
     CAttackData* m_pAttackData;
     float m_fLastHalfWidth;
 };
+
+
+
+
+class CForceMoveBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration, bool bCanBePlural,int iSrcKey, CCPoint tarPoint ,float fSpeed );
+
+    CREATE_FUNC_PARAM(CForceMoveBuff,(float fDuration,bool bCanBePlural,int iSrcKey,CCPoint tarPoint,float fSpeed)
+        ,fDuration,bCanBePlural,iSrcKey,tarPoint,fSpeed);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    M_SYNTHESIZE(float,m_fSpeed,Speed);
+protected:
+    virtual void onBuffAdd();
+    virtual void onBuffDel(bool bCover);
+protected:
+    CCPoint m_tarPoint;
+};
+
+
+class CWhirlWindBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration,bool bCanBePlural,int iSrcKey,const CAttackValue& roDamage);
+    CREATE_FUNC_PARAM(CWhirlWindBuff,(float fDuration,bool bCanBePlural,int iSrcKey,const CAttackValue& roDamage)
+        ,fDuration,bCanBePlural,iSrcKey,roDamage);
+    virtual CCObject* copyWithZone(CCZone *pZone);
+    M_SYNTHESIZE(float,m_fInterval,Interval);
+protected:
+    CAttackValue m_oDamage;
+    float m_fIntervalPass;
+    virtual void onUnitTick(float fDt);
+    virtual void onUnitInterval();
+    virtual void onBuffAdd();
+    virtual void onBuffDel(bool bCover);
+
+};
+
+
+
+class CCountDownBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration,bool bCanBePlural,int iSrcKey);
+    CREATE_FUNC_PARAM(CCountDownBuff,(float fDuration,bool bCanBePlural,int iSrcKey)
+        ,fDuration,bCanBePlural,iSrcKey);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+protected:
+    virtual void onBuffAdd();
+    virtual void onBuffDel(bool bCover);
+
+};
+
+
+
+
+class CDarkHoleBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration,bool bCanBePlural);
+    CREATE_FUNC_PARAM(CDarkHoleBuff,(float fDuration,bool bCanBePlural)
+        ,fDuration,bCanBePlural);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+protected:
+    virtual void onBuffAdd();
+};

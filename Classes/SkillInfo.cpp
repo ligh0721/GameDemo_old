@@ -152,6 +152,12 @@ bool COrgSkillInfo::init()
     
     pSkill = CSpeedBuff::create(7, true, CExtraCoeff(1.0, 0), CExtraCoeff(1.0, 0));
     iKey = pSm->addSkill(pSkill);
+
+    pSkill = CWhirlWindBuff::create(15,true,0,CAttackValue(1,CAttackValue::kMagical,50.0));
+    iKey = pSm->addSkill(pSkill);
+
+    //pSkill = CDarkHoleBuff::create(3,false);
+    //iKey = pSm->addSkill(pSkill);
     
     // for test
     //pSkill = CHarmShieldBuff::create(5, false, CExtraCoeff(0, 0), true);
