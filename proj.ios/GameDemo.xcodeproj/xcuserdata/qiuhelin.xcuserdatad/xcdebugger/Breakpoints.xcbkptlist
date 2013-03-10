@@ -86,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "384617545.816782"
+         timestampString = "384618249.639027"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2748"
-         endingLineNumber = "2748"
+         startingLineNumber = "2741"
+         endingLineNumber = "2741"
          landmarkName = "CSwordStormBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxDamageRange, const CAttackValue &amp;roMaxDamage, const CExtraCoeff &amp;roDamageCoef, char *pActName)"
          landmarkType = "5">
       </FileBreakpoint>

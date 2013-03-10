@@ -2511,8 +2511,11 @@ void CJumpChopBuff::onBuffAdd()
         return;
     }
     pOwn->startDoing(CGameUnit::kSpinning);
+    pOwn->suspend();
     m_fLastHalfWidth = pOwn->getHalfOfWidth();
     onJumpChopEnd(pOwn);
+    
+
 }
 
 void CJumpChopBuff::onBuffDel(bool bCover)
@@ -2521,7 +2524,8 @@ void CJumpChopBuff::onBuffDel(bool bCover)
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
     pOwn->setHalfOfWidth(m_fLastHalfWidth);
     pOwn->stopSpin();
-    pOwn->suspend();
+    pOwn->resume();
+
 
 }
 void CJumpChopBuff::getAttackPoint(CUnit *pTarget, CCPoint& oPos)
