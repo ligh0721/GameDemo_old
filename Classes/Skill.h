@@ -896,8 +896,6 @@ public:
     
     M_SYNTHESIZE(float, m_fDelayPerUnit, DelayPerUnit);
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
-    M_SYNTHESIZE(int, m_fDurationPerJump, DurationPerJump);
-    M_SYNTHESIZE(int, m_fCountPerJump, CountPerJump);
     //M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oAttackPosRegulate, AttackPosRegulate);
     M_SYNTHESIZE(float, m_fHalfWidth, HalfWidth);
     
