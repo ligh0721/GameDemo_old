@@ -2597,6 +2597,7 @@ CCObject* CThunderBolt2Buff::copyWithZone( CCZone* pZone )
 void CThunderBolt2Buff::onBuffAdd()
 {
     CBuffSkill::onBuffAdd();
+    onUnitInterval();
 }
 
 void CThunderBolt2Buff::onBuffDel(bool bCover)
