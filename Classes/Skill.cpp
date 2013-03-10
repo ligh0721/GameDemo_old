@@ -1942,21 +1942,22 @@ CProjectile* CProjectileAct::getTemplateProjectile()
     return m_pTemplateProjectile;
 }
 
-bool CChainLightingBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &roDamage, const vector<int>& vecEffectedUnitKey)
+bool CChainLightingBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &roDamage)
 {
     CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
     m_fMaxCastRange = fMaxCastRange;
     m_fMaxJumpDistance = fMaxJumpDistance;
     m_iMaxJumpCount = fMaxJumpDistance;
     m_oDamage = roDamage;
-    m_vecEffectedUnitKey = vecEffectedUnitKey;
     return true;
     
 }
 
 CCObject* CChainLightingBuff::copyWithZone(CCZone *pZone)
 {
-    return create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fMaxCastRange, m_fMaxJumpDistance, m_iMaxJumpCount, m_oDamage, m_vecEffectedUnitKey);
+    CChainLightingBuff* pBuff = create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fMaxCastRange, m_fMaxJumpDistance, m_iMaxJumpCount, m_oDamage);
+    pBuff->setEffectedUnitKey(m_vecEffectedUnitKey);
+    return pBuff;
 }
 
 void CChainLightingBuff::onBuffAdd()
@@ -2043,6 +2044,15 @@ void CChainLightingBuff::onBuffAdd()
     m_pNextUnit = pTarget;
 
 }
+void CChainLightingBuff::setEffectedUnitKey(const vector<int> &vecEffectedUnitKey)
+{
+    m_vecEffectedUnitKey = vecEffectedUnitKey;
+}
+
+vector<int>& CChainLightingBuff::getEffectedUnitKey()
+{
+    return m_vecEffectedUnitKey;
+}
 
 void CChainLightingBuff::onBuffDel(bool bCover)
 {
@@ -2052,6 +2062,7 @@ void CChainLightingBuff::onBuffDel(bool bCover)
 void CChainLightingBuff::turnNext(CCObject* pObj)
 {
     CChainLightingBuff* pSkillBuff = dynamic_cast<CChainLightingBuff*>(this->copy());
+    pSkillBuff->setEffectedUnitKey(m_vecEffectedUnitKey);
     if ((int)m_vecEffectedUnitKey.size() > m_iMaxJumpCount + 1)
     {
         return;
@@ -2346,7 +2357,9 @@ bool CJumpChopSkill::init(int iProbability, float fMaxJumpRange, int iMaxJumpCou
 }
 CCObject* CJumpChopSkill::copyWithZone(cocos2d::CCZone *pZone)
 {
-    return create(m_iProbability, m_fMaxJumpRange, m_iMaxJumpCount, m_oMaxDamage, m_pActName);
+    CJumpChopSkill* pSkill = create(m_iProbability, m_fMaxJumpRange, m_iMaxJumpCount, m_oMaxDamage, m_pActName);
+    pSkill->setAttackPosRegulate(m_oAttackPosRegulate);
+    return pSkill;
 }
 void CJumpChopSkill::onSkillAdd()
 {
@@ -2469,51 +2482,45 @@ CJumpChopBuff::CJumpChopBuff()
 {
     m_pLastTargetUnit = NULL;
     setCountAnimLoop(1);
-    setDelayPerUnit(0.2);
+    setDelayPerUnit(0.1);
     setCountPerJump(1);
     setDurationPerJump(1.0);
 }
 
-bool CJumpChopBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue &roDamage, char *pActName)
+bool CJumpChopBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue &roDamage, char *pActName)
 {
     CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
-    m_iProbability = iProbability;
     m_fMaxJumpRange = fMaxJumpRange;
     m_iMaxJumpCount = iMaxJumpCount;
     m_oMaxDamage = roDamage;
     m_pActName = pActName;
+    m_oAttackPosRegulate = ccp(30, 10);
     return true;
 }
 CCObject* CJumpChopBuff::copyWithZone(cocos2d::CCZone *pZone)
 {
-    return create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_iProbability, m_fMaxJumpRange, m_iMaxJumpCount, m_oMaxDamage, m_pActName);
+    CJumpChopBuff* pBuff = create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fMaxJumpRange, m_iMaxJumpCount, m_oMaxDamage, m_pActName);
+    pBuff->setAttackPosRegulate(m_oAttackPosRegulate);
+    return pBuff;
 }
 void CJumpChopBuff::onBuffAdd()
 {
     CBuffSkill::onBuffAdd();
-    registerOnDamageTargetTrigger();
-}
-
-void CJumpChopBuff::onBuffDel(bool bCover)
-{
-    CBuffSkill::onBuffDel(bCover);
-}
-
-void CJumpChopBuff::onUnitDamageTarget(float fDamage, CUnit *pTarget)
-{
-    if(!M_RAND_HIT(m_iProbability))
-    {
-        return;
-    }
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
     if (!pOwn || pOwn->isDead())
     {
         return;
     }
     m_vecEffectedUnitKey.push_back(pOwn->getKey());
-    m_vecEffectedUnitKey.push_back(pTarget->getKey());
     onJumpChopEnd(pOwn);
-    
+}
+
+void CJumpChopBuff::onBuffDel(bool bCover)
+{
+    CBuffSkill::onBuffDel(bCover);
+    CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
+    pOwn->stopSpin();
+
 }
 
 void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
@@ -2530,10 +2537,12 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     if (m_iMaxJumpCount + 2 <= (int)m_vecEffectedUnitKey.size()
         || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= (int)m_vecEffectedUnitKey.size())
     {
+        pU->stopSpin();
         return;
     }
     if (!pU || pU->isDead())
     {
+        pU->stopSpin();
         return;
     }
     
@@ -2575,6 +2584,7 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     
     if (pTarget == NULL || pTarget->isDead())
     {
+        pU->stopSpin();
         return;
     }
     
@@ -2585,12 +2595,21 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     pAnim->setDelayPerUnit(getDelayPerUnit());
     pAnim->setLoops(getCountAnimLoop());
     CCAnimate* pActAni = CCAnimate::create(pAnim);
-    CCFiniteTimeAction* pJump = CCJumpTo::create(getDurationPerJump(), pTarget->getPosition(), 20, getCountPerJump());
-    CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopSkill::onJumpChopEnd), pU);
     
-    pU->getSprite()->runAction(CCSequence::createWithTwoActions(CCSequence::createWithTwoActions(pJump, pActAni), pCallO));
-    //pU->getSprite()->runAction(CCSequence::createWithTwoActions(pActAni , pCallO));
+    CCFiniteTimeAction* pCallO = CCCallFuncO::create(this, callfuncO_selector(CJumpChopBuff::onJumpChopEnd), pU);
+    
+    CCAction* pAction = CCSequence::create(pActAni, pCallO, NULL);
+    
+    pAction->setTag(CGameUnit::kActSpin);
+    
+    pU->startDoing(CGameUnit::kSpinning);
+    pU->setPosition(ccpAdd(m_oAttackPosRegulate,pTarget->getPosition()));
+    pU->turnTo(pTarget->getPosition());
+    pU->moveTo(pTarget->getPosition());
+    pU->getSprite()->runAction(pAction);
+    
     m_pLastTargetUnit = pTarget;
+    CCLOG("target key is %d", pTarget->getKey());
 }
 
 
