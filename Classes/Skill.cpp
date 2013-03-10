@@ -2762,7 +2762,7 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
 
 bool CForceMoveBuff::init( float fDuration, bool bCanBePlural,int iSrcKey, CCNode *pNode ,float fSpeed )
 {
-    CBuffSkill::init(fDuration, bCanBePlural,iSrcKey);
+    CStunBuff::init(5,false);
     m_pNode = pNode;
     m_fSpeed = fSpeed;
     return true;
@@ -2775,9 +2775,8 @@ CCObject* CForceMoveBuff::copyWithZone( CCZone* pZone )
 
 void CForceMoveBuff::onBuffAdd()
 {
-    CBuffSkill::onBuffAdd();
+    CStunBuff::onBuffAdd();
     CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
-    pO->suspend();
     pO->getSprite()->runAction(CCMoveToNode::create(5,m_pNode));
 }
 
@@ -2856,14 +2855,16 @@ void CWhirlWindBuff::onUnitInterval()
     CCActionInterval *pAct = CCRotateBy::create(1,360);
     CCAction *pRep = CCRepeatForever::create(pAct);
     t->getSprite()->runAction(pRep);
-    int xOf = rand()%400-200;
-    int yOf = rand()%400-200;
-    t->moveTo(ccp(t->getPosition().x+xOf,t->getPosition().y+yOf));
+//     int xOf = rand()%400-200;
+//     int yOf = rand()%400-200;
+//     t->moveTo(ccp(t->getPosition().x+xOf,t->getPosition().y+yOf));
+    t->setHostilityRange(FLT_MAX);
 }
 
 bool CCountDownBuff::init( float fDuration,bool bCanBePlural,int iSrcKey )
 {
     CBuffSkill::init(fDuration,bCanBePlural,iSrcKey);
+   
     return true;
 }
 
@@ -2886,6 +2887,8 @@ void CCountDownBuff::onBuffAdd()
 bool CDarkHoleBuff::init( float fDuration,bool bCanBePlural)
 {
     CBuffSkill::init(fDuration,bCanBePlural);
+    m_fInterval = 1;
+    m_fIntervalPass = 0;
     return true;
 }
 
@@ -2896,9 +2899,44 @@ CCObject* CDarkHoleBuff::copyWithZone( CCZone* pZone )
 
 void CDarkHoleBuff::onBuffAdd()
 {
+    CBuffSkill::onBuffAdd();
     CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
     M_DEF_SM(pSm);
     CForceMoveBuff *pBuff = CForceMoveBuff::create(5,false,0,pO->getSprite(),50);
     pO->getUnitLayer()->getUnits()->getUnitsInRange(pO->getPosition(),300,-1
         ,CONDITION(CUnitGroup::isLivingEnemyOf),dynamic_cast<CUnitForce*>(pO))->addBuff(pBuff);
 }
+
+void CDarkHoleBuff::onUnitTick( float fDt )
+{
+    timeStep(fDt);
+
+    if (m_fPass > m_fDuration)
+    {
+        m_fIntervalPass += fDt - m_fPass + m_fDuration;
+    }
+    else
+    {
+        m_fIntervalPass += fDt;
+    }
+
+    while (m_fIntervalPass >= m_fInterval)
+    {
+        onUnitInterval();
+        m_fIntervalPass -= m_fInterval;
+    }
+
+    delBuffIfTimeout();
+}
+
+void CDarkHoleBuff::onUnitInterval()
+{
+    CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
+    M_DEF_SM(pSm);
+    CForceMoveBuff *pBuff = CForceMoveBuff::create(5,false,0,pO->getSprite(),50);
+    pO->getUnitLayer()->getUnits()->getUnitsInRange(pO->getPosition(),300,-1
+        ,CONDITION(CUnitGroup::isLivingEnemyOf),dynamic_cast<CUnitForce*>(pO))->addBuff(pBuff);
+}
+
+
+

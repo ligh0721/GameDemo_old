@@ -906,7 +906,7 @@ private:
 
 
 
-class CForceMoveBuff : public CBuffSkill
+class CForceMoveBuff : public CStunBuff
 {
 public:
     virtual bool init(float fDuration, bool bCanBePlural,int iSrcKey, CCNode *pNode ,float fSpeed );
@@ -966,6 +966,10 @@ public:
     CREATE_FUNC_PARAM(CDarkHoleBuff,(float fDuration,bool bCanBePlural)
         ,fDuration,bCanBePlural);
     virtual CCObject* copyWithZone(CCZone* pZone);
+    M_SYNTHESIZE(float,m_fIntervalPass,IntervalPass);
+    M_SYNTHESIZE(float,m_fInterval,Interval);
 protected:
     virtual void onBuffAdd();
+    virtual void onUnitTick(float fDt);
+    virtual void onUnitInterval();
 };
