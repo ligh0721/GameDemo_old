@@ -2565,19 +2565,13 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     CCLOG("target key is %d", pTarget->getKey());
 }
 
-CJumpChopBuff::CJumpChopBuff()
-{
-    m_pLastTargetUnit = NULL;
-    setCountAnimLoop(1);
-    setDelayPerUnit(0.1);
-    setCountPerJump(1);
-    setDurationPerJump(1.0);
-    setHalfWidth(30.0);
-}
-
 bool CJumpChopBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue &roDamage, char *pActName)
 {
     CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+    m_pLastTargetUnit = NULL;
+    setCountAnimLoop(1);
+    setDelayPerUnit(0.1);
+    setHalfWidth(30.0);
     m_fMaxJumpRange = fMaxJumpRange;
     m_iMaxJumpCount = iMaxJumpCount;
     m_oMaxDamage = roDamage;
@@ -2600,9 +2594,12 @@ void CJumpChopBuff::onBuffAdd()
     {
         return;
     }
-    m_vecEffectedUnitKey.push_back(pOwn->getKey());
     pOwn->startDoing(CGameUnit::kSpinning);
+    pOwn->suspend();
+    m_fLastHalfWidth = pOwn->getHalfOfWidth();
     onJumpChopEnd(pOwn);
+    
+
 }
 
 void CJumpChopBuff::onBuffDel(bool bCover)
@@ -2611,6 +2608,8 @@ void CJumpChopBuff::onBuffDel(bool bCover)
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
     pOwn->setHalfOfWidth(m_fLastHalfWidth);
     pOwn->stopSpin();
+    pOwn->resume();
+
 
 }
 void CJumpChopBuff::getAttackPoint(CUnit *pTarget, CCPoint& oPos)
@@ -2629,21 +2628,22 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     CGameUnit* pU = dynamic_cast<CGameUnit*>(pObj);
     if (m_pLastTargetUnit != NULL && !m_pLastTargetUnit->isDead())
     {
-        uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
+        uint32_t dwTriggerMask = CUnit::kNoMasked;
         CAttackData* pAttackData = CAttackData::create();
         pAttackData->setAttack(m_oMaxDamage);
         m_pLastTargetUnit->damagedAdv(pAttackData, pU, dwTriggerMask);
         
     }
-    if (m_iMaxJumpCount + 2 <= (int)m_vecEffectedUnitKey.size()
+    if (m_iMaxJumpCount + 1 <= (int)m_vecEffectedUnitKey.size()
         || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= (int)m_vecEffectedUnitKey.size())
     {
         pU->stopSpin();
+        pU->resume();
+        pU->setHalfOfWidth(m_fLastHalfWidth);
         return;
     }
     if (!pU || pU->isDead())
     {
-        pU->stopSpin();
         return;
     }
     
@@ -2686,6 +2686,8 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     if (pTarget == NULL || pTarget->isDead())
     {
         pU->stopSpin();
+        pU->resume();
+        pU->setHalfOfWidth(m_fLastHalfWidth);
         return;
     }
     
@@ -2706,14 +2708,13 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     CCPoint oTargetPoint;
     getAttackPoint(pTarget, oTargetPoint);
     
-    pU->turnTo(oTargetPoint);
+    pU->turnTo(pTarget->getPosition());
     pU->setPosition(oTargetPoint);
     pU->getSprite()->runAction(pAction);
     
     m_pLastTargetUnit = pTarget;
     CCLOG("target key is %d", pTarget->getKey());
 }
-
 
 bool CThunderBolt2Buff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fRange, const CAttackValue& roDamage )
 {

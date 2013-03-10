@@ -234,7 +234,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kShockWave1].sName = "真空波";
     m_mapSkills[kShockWave1].sDesc = "急速斩击形成真空冲击波，对直线上的敌人造成50点魔法伤害";
     
-    pSkill = CJumpChopBuff::create(20, false, 0, 300, 7, CAttackValue(1, CAttackValue::kPhysical, 5.0), "act5");
+    pSkill = CJumpChopBuff::create(20, false, 0, 300, 7, CAttackValue(1, CAttackValue::kPhysical, 50.0), "act5");
     iKey = pSm->addSkill(pSkill);
     
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
