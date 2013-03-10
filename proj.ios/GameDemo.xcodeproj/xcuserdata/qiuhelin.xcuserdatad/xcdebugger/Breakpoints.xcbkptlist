@@ -68,5 +68,79 @@
          landmarkName = "CCBattleSceneLayer::randomSoldiers(int iForce)"
          landmarkType = "5">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../Classes/SkillInfo.cpp"
+         timestampString = "384579218.041343"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "205"
+         endingLineNumber = "205"
+         landmarkName = "COrgSkillInfo::init()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../Classes/Skill.cpp"
+         timestampString = "384594565.0847"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "2734"
+         endingLineNumber = "2734"
+         landmarkName = "CSwordStormBuff::onBuffAdd()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../Classes/Skill.cpp"
+         timestampString = "384593751.96652"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "2508"
+         endingLineNumber = "2508"
+         landmarkName = "CJumpChopBuff::onUnitDamageTarget(float fDamage, CUnit *pTarget)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../Classes/Skill.cpp"
+         timestampString = "384593765.986345"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "2520"
+         endingLineNumber = "2520"
+         landmarkName = "CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../Classes/Skill.cpp"
+         timestampString = "384594565.0847"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "2611"
+         endingLineNumber = "2611">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../Classes/Skill.cpp"
+         timestampString = "384594565.0847"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "2612"
+         endingLineNumber = "2612">
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>
