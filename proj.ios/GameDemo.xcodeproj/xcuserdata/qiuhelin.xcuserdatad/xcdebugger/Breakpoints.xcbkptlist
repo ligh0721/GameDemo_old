@@ -86,11 +86,13 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../Classes/Skill.cpp"
-         timestampString = "384615605.957891"
+         timestampString = "384618249.639027"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2746"
-         endingLineNumber = "2746">
+         startingLineNumber = "2741"
+         endingLineNumber = "2741"
+         landmarkName = "CSwordStormBuff::copyWithZone(cocos2d::CCZone *pZone)"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
