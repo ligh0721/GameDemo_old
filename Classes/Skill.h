@@ -955,3 +955,17 @@ protected:
     virtual void onBuffDel(bool bCover);
 
 };
+
+
+
+
+class CDarkHoleBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration,bool bCanBePlural);
+    CREATE_FUNC_PARAM(CDarkHoleBuff,(float fDuration,bool bCanBePlural)
+        ,fDuration,bCanBePlural);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+protected:
+    virtual void onBuffAdd();
+};

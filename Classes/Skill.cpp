@@ -2778,7 +2778,7 @@ void CForceMoveBuff::onBuffAdd()
     CBuffSkill::onBuffAdd();
     CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
     pO->suspend();
-    pO->moveTo(m_tarPoint);
+    pO->getSprite()->runAction(CCMoveTo::create(5,pO->getPosition()));
 }
 
 void CForceMoveBuff::onBuffDel(bool bCover)
@@ -2878,4 +2878,24 @@ CCObject* CCountDownBuff::copyWithZone( CCZone* pZone )
 void CCountDownBuff::onBuffAdd()
 {
     CBuffSkill::onBuffAdd();
+}
+
+bool CDarkHoleBuff::init( float fDuration,bool bCanBePlural)
+{
+    CBuffSkill::init(fDuration,bCanBePlural);
+    return true;
+}
+
+CCObject* CDarkHoleBuff::copyWithZone( CCZone* pZone )
+{
+    return CDarkHoleBuff::create(m_fDuration,m_bCanBePlural);
+}
+
+void CDarkHoleBuff::onBuffAdd()
+{
+    CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
+    M_DEF_SM(pSm);
+    CForceMoveBuff *pBuff = CForceMoveBuff::create(5,false,0,pO->getPosition(),50);
+    pO->getUnitLayer()->getUnits()->getUnitsInRange(pO->getPosition(),300,-1
+        ,CONDITION(CUnitGroup::isLivingEnemyOf),dynamic_cast<CUnitForce*>(pO))->addBuff(pBuff);
 }
