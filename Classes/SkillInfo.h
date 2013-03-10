@@ -27,6 +27,7 @@ public:
         kThunderAttack1,
         kSwordStorm1,
         kJumpChop1,
+        kJumpChop2,
         kThunderBoltBuff1,
         kHealing1,
         kShockWave1

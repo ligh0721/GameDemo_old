@@ -35,6 +35,14 @@
          contextName = "cocos2d::CCLog(char const*, ...):CCCommon.mm">
       </ContextState>
       <ContextState
+         contextName = "CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject*):Skill.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "m_vecEffectedUnitKey.size()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "CChainLightingBuff::onBuffAdd():Skill.cpp">
          <PersistentStrings>
             <PersistentString
