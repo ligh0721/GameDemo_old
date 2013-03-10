@@ -2760,17 +2760,17 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
     }
 }
 
-bool CForceMoveBuff::init( float fDuration, bool bCanBePlural,int iSrcKey, CCPoint tarPoint ,float fSpeed )
+bool CForceMoveBuff::init( float fDuration, bool bCanBePlural,int iSrcKey, CCNode *pNode ,float fSpeed )
 {
     CBuffSkill::init(fDuration, bCanBePlural,iSrcKey);
-    m_tarPoint = tarPoint;
+    m_pNode = pNode;
     m_fSpeed = fSpeed;
     return true;
 }
 
 CCObject* CForceMoveBuff::copyWithZone( CCZone* pZone )
 {
-    return CForceMoveBuff::create(m_fDuration,m_bCanBePlural,m_iSrcKey,m_tarPoint,m_fSpeed);
+    return CForceMoveBuff::create(m_fDuration,m_bCanBePlural,m_iSrcKey,m_pNode,m_fSpeed);
 }
 
 void CForceMoveBuff::onBuffAdd()
@@ -2778,7 +2778,7 @@ void CForceMoveBuff::onBuffAdd()
     CBuffSkill::onBuffAdd();
     CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
     pO->suspend();
-    pO->getSprite()->runAction(CCMoveTo::create(5,pO->getPosition()));
+    pO->getSprite()->runAction(CCMoveToNode::create(5,m_pNode));
 }
 
 void CForceMoveBuff::onBuffDel(bool bCover)
@@ -2800,7 +2800,7 @@ bool CWhirlWindBuff::init( float fDuration,bool bCanBePlural,int iSrcKey,const C
 void CWhirlWindBuff::onBuffAdd()
 {
     CBuffSkill::onBuffAdd();
-    
+    onUnitInterval();
 }
 
 void CWhirlWindBuff::onBuffDel(bool bCover)
@@ -2856,6 +2856,9 @@ void CWhirlWindBuff::onUnitInterval()
     CCActionInterval *pAct = CCRotateBy::create(1,360);
     CCAction *pRep = CCRepeatForever::create(pAct);
     t->getSprite()->runAction(pRep);
+    int xOf = rand()%400-200;
+    int yOf = rand()%400-200;
+    t->moveTo(ccp(t->getPosition().x+xOf,t->getPosition().y+yOf));
 }
 
 bool CCountDownBuff::init( float fDuration,bool bCanBePlural,int iSrcKey )
@@ -2895,7 +2898,7 @@ void CDarkHoleBuff::onBuffAdd()
 {
     CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
     M_DEF_SM(pSm);
-    CForceMoveBuff *pBuff = CForceMoveBuff::create(5,false,0,pO->getPosition(),50);
+    CForceMoveBuff *pBuff = CForceMoveBuff::create(5,false,0,pO->getSprite(),50);
     pO->getUnitLayer()->getUnits()->getUnitsInRange(pO->getPosition(),300,-1
         ,CONDITION(CUnitGroup::isLivingEnemyOf),dynamic_cast<CUnitForce*>(pO))->addBuff(pBuff);
 }

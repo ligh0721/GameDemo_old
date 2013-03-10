@@ -909,17 +909,17 @@ private:
 class CForceMoveBuff : public CBuffSkill
 {
 public:
-    virtual bool init(float fDuration, bool bCanBePlural,int iSrcKey, CCPoint tarPoint ,float fSpeed );
+    virtual bool init(float fDuration, bool bCanBePlural,int iSrcKey, CCNode *pNode ,float fSpeed );
 
-    CREATE_FUNC_PARAM(CForceMoveBuff,(float fDuration,bool bCanBePlural,int iSrcKey,CCPoint tarPoint,float fSpeed)
-        ,fDuration,bCanBePlural,iSrcKey,tarPoint,fSpeed);
+    CREATE_FUNC_PARAM(CForceMoveBuff,(float fDuration,bool bCanBePlural,int iSrcKey,CCNode *pNode,float fSpeed)
+        ,fDuration,bCanBePlural,iSrcKey,pNode,fSpeed);
     virtual CCObject* copyWithZone(CCZone* pZone);
     M_SYNTHESIZE(float,m_fSpeed,Speed);
 protected:
     virtual void onBuffAdd();
     virtual void onBuffDel(bool bCover);
 protected:
-    CCPoint m_tarPoint;
+    CCNode *m_pNode;
 };
 
 
