@@ -90,7 +90,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "2748"
-         endingLineNumber = "2748">
+         endingLineNumber = "2748"
+         landmarkName = "CSwordStormBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxDamageRange, const CAttackValue &amp;roMaxDamage, const CExtraCoeff &amp;roDamageCoef, char *pActName)"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
