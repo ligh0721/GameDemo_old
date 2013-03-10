@@ -2759,3 +2759,123 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
         }
     }
 }
+
+bool CForceMoveBuff::init( float fDuration, bool bCanBePlural,int iSrcKey, CCPoint tarPoint ,float fSpeed )
+{
+    CBuffSkill::init(fDuration, bCanBePlural,iSrcKey);
+    m_tarPoint = tarPoint;
+    m_fSpeed = fSpeed;
+    return true;
+}
+
+CCObject* CForceMoveBuff::copyWithZone( CCZone* pZone )
+{
+    return CForceMoveBuff::create(m_fDuration,m_bCanBePlural,m_iSrcKey,m_tarPoint,m_fSpeed);
+}
+
+void CForceMoveBuff::onBuffAdd()
+{
+    CBuffSkill::onBuffAdd();
+    CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
+    pO->suspend();
+    pO->moveTo(m_tarPoint);
+}
+
+void CForceMoveBuff::onBuffDel(bool bCover)
+{
+    CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
+    pO->resume();
+    CBuffSkill::onBuffDel(bCover);
+}
+
+bool CWhirlWindBuff::init( float fDuration,bool bCanBePlural,int iSrcKey,const CAttackValue& roDamage )
+{
+    CBuffSkill::init(fDuration,bCanBePlural,iSrcKey);
+    m_oDamage = roDamage;
+    m_fIntervalPass = 0;
+    m_fInterval = 3;
+    return true;
+}
+
+void CWhirlWindBuff::onBuffAdd()
+{
+    CBuffSkill::onBuffAdd();
+    
+}
+
+void CWhirlWindBuff::onBuffDel(bool bCover)
+{
+    CBuffSkill::onBuffDel(bCover);
+}
+
+CCObject* CWhirlWindBuff::copyWithZone( CCZone *pZone )
+{
+    return CWhirlWindBuff::create(m_fDuration,m_bCanBePlural,m_iSrcKey,m_oDamage);
+}
+
+void CWhirlWindBuff::onUnitTick( float fDt )
+{
+    timeStep(fDt);
+
+    if (m_fPass > m_fDuration)
+    {
+        m_fIntervalPass += fDt - m_fPass + m_fDuration;
+    }
+    else
+    {
+        m_fIntervalPass += fDt;
+    }
+
+    while (m_fIntervalPass >= m_fInterval)
+    {
+        onUnitInterval();
+        m_fIntervalPass -= m_fInterval;
+    }
+
+    delBuffIfTimeout();
+}
+
+void CWhirlWindBuff::onUnitInterval()
+{
+    M_DEF_UM(pUm);
+    CGameUnit* t = pUm->unitByInfo(2);
+    t->setRewardExp(0);
+    CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+    o->getUnitLayer()->addUnit(t);
+    t->setPosition(o->getPosition());
+    t->setForce(o->getForce());
+    t->setAlly(o->getAlly());
+    float dmg = 0 - m_oDamage.getAttack(CAttackValue::kMagical);
+    CBuffSkill *pSkill = CHpChangeBuff::create(20, true, 0.1, dmg, false, -1);
+    M_DEF_SM(pSm);
+    int iKey = pSm->addSkill(pSkill);
+    CBuffSkill *pBuff2 = CCountDownBuff::create(6,false,0);
+    CSkill *pSkill2 = CAuraPas::create(150, CAuraPas::kEnemy, 0.5, iKey, 1);
+    t->addSkill(pSkill2);
+    t->addBuff(pBuff2);
+    CCActionInterval *pAct = CCRotateBy::create(1,360);
+    CCAction *pRep = CCRepeatForever::create(pAct);
+    t->getSprite()->runAction(pRep);
+}
+
+bool CCountDownBuff::init( float fDuration,bool bCanBePlural,int iSrcKey )
+{
+    CBuffSkill::init(fDuration,bCanBePlural,iSrcKey);
+    return true;
+}
+
+void CCountDownBuff::onBuffDel( bool bCover )
+{
+    getOwner()->setHp(0);
+    CBuffSkill::onBuffDel(bCover);
+}
+
+CCObject* CCountDownBuff::copyWithZone( CCZone* pZone )
+{
+    return CCountDownBuff::create(m_fDuration,m_bCanBePlural,m_iSrcKey);
+}
+
+void CCountDownBuff::onBuffAdd()
+{
+    CBuffSkill::onBuffAdd();
+}
