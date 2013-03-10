@@ -2523,6 +2523,7 @@ void CJumpChopBuff::onBuffDel(bool bCover)
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
     pOwn->setHalfOfWidth(m_fLastHalfWidth);
     pOwn->stopSpin();
+    pOwn->suspend();
 
 }
 void CJumpChopBuff::getAttackPoint(CUnit *pTarget, CCPoint& oPos)
@@ -2551,11 +2552,11 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
         || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= (int)m_vecEffectedUnitKey.size())
     {
         pU->stopSpin();
+        pU->resume();
         return;
     }
     if (!pU || pU->isDead())
     {
-        pU->stopSpin();
         return;
     }
     
@@ -2598,6 +2599,7 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     if (pTarget == NULL || pTarget->isDead())
     {
         pU->stopSpin();
+        pU->resume();
         return;
     }
     
@@ -2618,7 +2620,7 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     CCPoint oTargetPoint;
     getAttackPoint(pTarget, oTargetPoint);
     
-    pU->turnTo(oTargetPoint);
+    pU->turnTo(pTarget->getPosition());
     pU->setPosition(oTargetPoint);
     pU->getSprite()->runAction(pAction);
     
