@@ -2030,7 +2030,7 @@ CProjectile* CProjectileWaveAct::getTemplateProjectile()
     return m_pTemplateProjectile;
 }
 
-bool CChainLightingBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue &roDamage, const vector<int>& vecEffectedUnitKey)
+bool CChainLightingBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue& roDamage)
 {
     CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
     m_fMaxCastRange = fMaxCastRange;
