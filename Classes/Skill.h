@@ -690,6 +690,7 @@ public:
 	int m_iBuffLevel;
 };
 
+
 class CProjectileAct : public CActiveSkill
 {
 public:
@@ -713,6 +714,32 @@ public:
     int m_iBuffTemplateKey;
     int m_iBuffLevel;
     
+};
+
+class CProjectileWaveAct : public CActiveSkill
+{
+public:
+    virtual bool init(float fCoolDown, float fCastRange, const CAttackValue& roDamage, CProjectile* pProj, float fProjRange, int iBuffTemplateKey, int iBuffLevel);
+    M_CREATE_FUNC_PARAM(CProjectileWaveAct, (float fCoolDown, float fCastRange, const CAttackValue& roDamage, CProjectile* pProj, float fProjRange, int iBuffTemplateKey, int iBuffLevel), fCoolDown, fCastRange, roDamage, pProj, fProjRange, iBuffTemplateKey, iBuffLevel);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+
+    virtual void onSkillAdd();
+    virtual void onSkillDel();
+
+    virtual void onSkillCast();
+
+    CC_PROPERTY(CProjectile*, m_pTemplateProjectile, TemplateProjectile);
+    M_SYNTHESIZE(float, m_fProjectileMoveSpeed, ProjectileMoveSpeed);
+    M_SYNTHESIZE(float, m_fProjectileScale, ProjectileScale);
+    M_SYNTHESIZE(float, m_fProjectileMaxOffsetY, ProjectileMaxOffsetY);
+    M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oProjectileBirthOffset, ProjectileBirthOffset);
+    M_SYNTHESIZE(float, m_fProjectileRange, ProjectileRange);
+
+public:
+    CAttackValue m_oDamage;
+    int m_iBuffTemplateKey;
+    int m_iBuffLevel;
+
 };
 
 class CChainBuff : public CBuffSkill

@@ -1818,6 +1818,7 @@ bool CProjectileAct::init( float fCoolDown, float fCastRange, const CAttackValue
 {
     CActiveSkill::init(fCoolDown);
     setCastTargetType(kUnitTarget);
+    setWeaponType(CGameUnit::kWTDelayed);
     setCastRange(fCastRange);
     m_oDamage = roDamage;
     m_pTemplateProjectile = pProj;
@@ -1872,11 +1873,6 @@ void CProjectileAct::onSkillCast()
     CGameUnit* t = dynamic_cast<CGameUnit*>(u->getUnitLayer()->getUnitByKey(getTargetUnit()));
     CProjectile* pProj;
 
-    M_DEF_PM(pPm);
-    pProj = dynamic_cast<CProjectile*>(pPm->getProjectileByIndex(COrgUnitInfo::kWave1)->copy());
-    pProj->fireWave(u->getUnitLayer(), u, u, roPos2, pAtk, getProjectileScale(), getProjectileBirthOffset(), pProj->getBaseMoveSpeed());
-    return;
-
     switch (getWeaponType())
     {
     case CGameUnit::kWTClosely:
@@ -1905,7 +1901,7 @@ void CProjectileAct::onSkillCast()
 
     case CGameUnit::kWTDelayed:
         pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
-        pProj->fireFolow(u->getUnitLayer(), u, u, t, pAtk, getProjectileScale(), getProjectileBirthOffset(), getProjectileMaxOffsetY(), getProjectileMoveSpeed());
+        pProj->fireFolow(u->getUnitLayer(), u, u, t, pAtk, getProjectileScale(), getProjectileBirthOffset(), getProjectileMoveSpeed(), getProjectileMaxOffsetY());
         /*
         u->getUnitLayer()->addProjectile(pProj);
         pProj->setAttackData(pAtk);
@@ -1938,6 +1934,98 @@ void CProjectileAct::setTemplateProjectile( CProjectile* pProjectile )
 }
 
 CProjectile* CProjectileAct::getTemplateProjectile()
+{
+    return m_pTemplateProjectile;
+}
+
+bool CProjectileWaveAct::init( float fCoolDown, float fCastRange, const CAttackValue& roDamage, CProjectile* pProj, float fProjRange, int iBuffTemplateKey, int iBuffLevel )
+{
+    CActiveSkill::init(fCoolDown);
+    setCastTargetType(kPointTarget);
+    setWeaponType(CGameUnit::kWTDelayed);
+    setCastRange(fCastRange);
+    m_oDamage = roDamage;
+    m_pTemplateProjectile = pProj;
+    m_iBuffTemplateKey = iBuffTemplateKey;
+    m_iBuffLevel = iBuffLevel;
+    setTemplateProjectile(pProj);
+    setProjectileMoveSpeed(pProj->getBaseMoveSpeed());
+    setProjectileScale(pProj->getSprite()->getScale());
+    setProjectileMaxOffsetY(0.0);
+    setProjectileRange(fProjRange);
+    return true;
+}
+
+CCObject* CProjectileWaveAct::copyWithZone( CCZone* pZone )
+{
+    CProjectileWaveAct* pSkill = CProjectileWaveAct::create(m_fCoolDown, m_fCastRange, m_oDamage, m_pTemplateProjectile, m_fProjectileRange, m_iBuffTemplateKey, m_iBuffLevel);
+    pSkill->setCastTargetType(getCastTargetType());
+    pSkill->setCastRange(getCastRange());
+    pSkill->setWeaponType(getWeaponType());
+    pSkill->setProjectileMoveSpeed(getProjectileMoveSpeed());
+    pSkill->setProjectileScale(getProjectileScale());
+    pSkill->setProjectileRange(getProjectileRange());
+    return pSkill;
+}
+
+void CProjectileWaveAct::onSkillAdd()
+{
+    CActiveSkill::onSkillAdd();
+}
+
+void CProjectileWaveAct::onSkillDel()
+{
+    CActiveSkill::onSkillDel();
+}
+
+void CProjectileWaveAct::onSkillCast()
+{
+    M_DEF_SM(pSm);
+
+    CAttackData* pAtk = CAttackData::create();
+    pAtk->setAttack(m_oDamage);
+
+    CBuffSkill* pBuff = dynamic_cast<CBuffSkill*>(pSm->copySkill(m_iBuffTemplateKey));
+    if (pBuff && pBuff->getDuration())
+    {
+        pBuff->setSrcKey(getOwner()->getKey());
+        pBuff->setLevel(m_iBuffLevel);
+        pAtk->addBuff(pBuff, 100);
+    }
+    
+    CGameUnit* u = dynamic_cast<CGameUnit*>(getOwner());
+    const CCPoint& roPos2 = updateTargetUnitPoint();
+
+    CProjectile* pProj;
+
+    switch (getWeaponType())
+    {
+    case CGameUnit::kWTClosely:
+    case CGameUnit::kWTInstant:
+        if (!getTemplateProjectile())
+        {
+        }
+        else
+        {
+            pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
+        }
+        break;
+
+    case CGameUnit::kWTDelayed:
+        pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
+        pProj->fireWave(u->getUnitLayer(), u, u, getTargetPoint(), pAtk, getProjectileScale(), getProjectileBirthOffset(), getProjectileMoveSpeed(), getProjectileRange());
+
+        break;
+
+    }
+}
+
+void CProjectileWaveAct::setTemplateProjectile( CProjectile* pProjectile )
+{
+    m_pTemplateProjectile = pProjectile;
+}
+
+CProjectile* CProjectileWaveAct::getTemplateProjectile()
 {
     return m_pTemplateProjectile;
 }
@@ -2275,7 +2363,7 @@ void CChainBuff::onBuffDel(bool bCover)
 
     case CGameUnit::kWTDelayed:
         pProj = dynamic_cast<CProjectile*>(getTemplateProjectile()->copy());
-        pProj->fireFolow(l, s, o, t, pAtk, getProjectileScale(), getProjectileBirthOffset(), getProjectileMaxOffsetY(), getProjectileMoveSpeed());
+        pProj->fireFolow(l, s, o, t, pAtk, getProjectileScale(), getProjectileBirthOffset(), getProjectileMoveSpeed(), getProjectileMaxOffsetY());
         /*
         l->addProjectile(pProj);
         pProj->setAttackData(pAtk);

@@ -96,6 +96,10 @@ bool COrgUnitInfo::init()
     pGm->loadUnitAnimation("Slime", "die");
     pGm->loadUnitAnimation("Slime", "act1");
 
+    pGm->loadUnitAnimation("Slime2", "move");
+    pGm->loadUnitAnimation("Slime2", "die");
+    pGm->loadUnitAnimation("Slime2", "act1");
+
     pGm->loadUnitAnimation("Ball1", "move");
     pGm->loadUnitAnimation("Ball1", "die");
     pGm->loadUnitAnimation("Ball1", "act1");
@@ -105,6 +109,9 @@ bool COrgUnitInfo::init()
 
     pGm->loadUnitAnimation("Ball3", "move");
     pGm->loadUnitAnimation("Ball3", "die");
+
+    pGm->loadUnitAnimation("SlimeBall", "move");
+    pGm->loadUnitAnimation("SlimeBall", "die");
 
     pGm->loadUnitAnimation("Lightning1", "die");
 
@@ -142,6 +149,14 @@ bool COrgUnitInfo::init()
     pProj->setBaseMoveSpeed(300.0);
     pPm->addProjectile(pProj); // 将投射物添加到PM中
     CProjectile* pProjBall3 = pProj;
+
+    pProj = CProjectile::createWithName("SlimeBall");
+    pProj->setProjectileType(CProjectile::kFollow); // 设置投射物
+    pProj->prepareMoveAnimation("move", 0.1); // 加载投射物移动动画
+    pProj->prepareDieAnimation("die", 0.1); // 加载投射物死亡动画
+    pProj->setBaseMoveSpeed(300.0);
+    pPm->addProjectile(pProj); // 将投射物添加到PM中
+    CProjectile* pProjSlimeBall = pProj;
 
     pProj = CProjectile::createWithName("Lightning1");
     pProj->setProjectileType(CProjectile::kLightning); // 设置投射物
@@ -384,12 +399,33 @@ bool COrgUnitInfo::init()
         0.150,
         CArmorValue::kNormal, 1,
         0, 0,
-        100,
+        100,    // maxHp
         false,
         10,
         10
         );
     pUm->addUnitInfo(COrgUnitInfo::kSlime, oSlime);
+
+    CUnitInfo oSlime2(
+        "Slime2",
+        ccp(0.5, 10.0 / 64),
+        16, 19,
+        1,
+        0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+        CUnitInfo::ARR_ATTACK_ANI(1, kAct1),
+        25,
+        2, 0.3, 0, 100, 150, CGameUnit::kWTDelayed,
+        pProjSlimeBall->getKey(), 500, 1, 50, 0, 23,
+        CAttackValue(1, CAttackValue::kMagical, 10.0),
+        0.150,
+        CArmorValue::kNormal, 1,
+        0, 0,
+        70,
+        false,
+        13,
+        14
+        );
+    pUm->addUnitInfo(COrgUnitInfo::kSlime2, oSlime2);
 
     return true;
 }
