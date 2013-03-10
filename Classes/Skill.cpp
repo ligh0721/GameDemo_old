@@ -2511,8 +2511,11 @@ void CJumpChopBuff::onBuffAdd()
         return;
     }
     pOwn->startDoing(CGameUnit::kSpinning);
+    pOwn->suspend();
     m_fLastHalfWidth = pOwn->getHalfOfWidth();
     onJumpChopEnd(pOwn);
+    
+
 }
 
 void CJumpChopBuff::onBuffDel(bool bCover)
@@ -2521,6 +2524,8 @@ void CJumpChopBuff::onBuffDel(bool bCover)
     CGameUnit* pOwn = dynamic_cast<CGameUnit*>(getOwner());
     pOwn->setHalfOfWidth(m_fLastHalfWidth);
     pOwn->stopSpin();
+    pOwn->resume();
+
 
 }
 void CJumpChopBuff::getAttackPoint(CUnit *pTarget, CCPoint& oPos)
@@ -2549,13 +2554,12 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
         || pU->getUnitLayer()->getUnits()->getUnitsArray()->count() <= (int)m_vecEffectedUnitKey.size())
     {
         pU->stopSpin();
+        pU->resume();
         pU->setHalfOfWidth(m_fLastHalfWidth);
         return;
     }
     if (!pU || pU->isDead())
     {
-        pU->stopSpin();
-        pU->setHalfOfWidth(m_fLastHalfWidth);
         return;
     }
     
@@ -2598,6 +2602,7 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     if (pTarget == NULL || pTarget->isDead())
     {
         pU->stopSpin();
+        pU->resume();
         pU->setHalfOfWidth(m_fLastHalfWidth);
         return;
     }
