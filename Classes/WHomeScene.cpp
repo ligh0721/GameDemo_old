@@ -151,7 +151,7 @@ bool CCWHomeSceneLayer::init()
     m_oSkillPanel.addButton(pBtn, 0, 3);
     
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSwordStorm1));
-    pSkill->setCastAniInfo(CGameUnit::kAnimationAct4, 0.0);
+    //pSkill->setCastAniInfo(CGameUnit::kAnimationAct4, 0.0);
     heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 2);
