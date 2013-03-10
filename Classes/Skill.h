@@ -751,19 +751,24 @@ public:
 class CChainLightingBuff : public CBuffSkill
 {
 public:
-    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue& roDamage, const vector<int>& vecEffectedUnitKey);
-    M_CREATE_FUNC_PARAM(CChainLightingBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue& roDamage, const vector<int>& vecEffectedUnitKey), fDuration, bCanBePlural, iSrcKey, fMaxCastRange, fMaxJumpDistance, iMaxJumpCount, roDamage, vecEffectedUnitKey);
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue& roDamage);
+    M_CREATE_FUNC_PARAM(CChainLightingBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fMaxCastRange, float fMaxJumpDistance, int iMaxJumpCount, const CAttackValue& roDamage), fDuration, bCanBePlural, iSrcKey, fMaxCastRange, fMaxJumpDistance, iMaxJumpCount, roDamage);
     virtual CCObject* copyWithZone(CCZone* pZone);
     
     virtual void onBuffAdd();
 	virtual void onBuffDel(bool bCover);
 
     virtual void turnNext(CCObject* pObj);
+    
+    void setEffectedUnitKey(const vector<int>& vecEffectedUnitKey);
+    vector<int>& getEffectedUnitKey();
 public:
     float m_fMaxCastRange;
     float m_fMaxJumpDistance;
     int m_iMaxJumpCount;
     CAttackValue m_oDamage;
+
+protected:
     vector<int>  m_vecEffectedUnitKey;
     
 private:
@@ -838,7 +843,7 @@ public:
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
     M_SYNTHESIZE(int, m_fDurationPerJump, DurationPerJump);
     M_SYNTHESIZE(int, m_fCountPerJump, CountPerJump);
-    M_SYNTHESIZE(CCPoint, m_oAttackPosRegulate, AttackPosRegulate);
+    M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oAttackPosRegulate, AttackPosRegulate);
     
 private:
     CGameUnit* m_pLastTargetUnit;
@@ -877,13 +882,13 @@ class CJumpChopBuff : public CBuffSkill
 public:
 	CJumpChopBuff();
     
-	virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName);
-	M_CREATE_FUNC_PARAM(CJumpChopBuff, (float fDuration, bool bCanBePlural, int iSrcKey, int iProbability, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName), fDuration, bCanBePlural, iSrcKey, iProbability, fMaxJumpRange, iMaxJumpCount, roDamage, pActName);
+	virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName);
+	M_CREATE_FUNC_PARAM(CJumpChopBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName), fDuration, bCanBePlural, iSrcKey, fMaxJumpRange, iMaxJumpCount, roDamage, pActName);
 	virtual CCObject* copyWithZone(CCZone* pZone);
     
 	virtual void onBuffAdd();
 	virtual void onBuffDel(bool bCover);
-    virtual void onUnitDamageTarget(float fDamage, CUnit* pTarget);
+    //virtual void onUnitDamageTarget(float fDamage, CUnit* pTarget);
     
     virtual void onJumpChopEnd(CCObject* pObj);
     
@@ -891,11 +896,10 @@ public:
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
     M_SYNTHESIZE(int, m_fDurationPerJump, DurationPerJump);
     M_SYNTHESIZE(int, m_fCountPerJump, CountPerJump);
+    M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oAttackPosRegulate, AttackPosRegulate);
     
-    
-private:
+protected:
     CGameUnit* m_pLastTargetUnit;
-    int m_iProbability;
     float m_fMaxJumpRange;
     int m_iMaxJumpCount;
     CAttackValue m_oMaxDamage;

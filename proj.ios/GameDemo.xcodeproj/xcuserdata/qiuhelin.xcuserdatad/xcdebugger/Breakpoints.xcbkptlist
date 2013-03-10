@@ -104,7 +104,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "2508"
          endingLineNumber = "2508"
-         landmarkName = "CJumpChopBuff::onUnitDamageTarget(float fDamage, CUnit *pTarget)"
+         landmarkName = "CJumpChopBuff::onBuffAdd()"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -117,7 +117,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "2520"
          endingLineNumber = "2520"
-         landmarkName = "CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)"
+         landmarkName = "CJumpChopBuff::onBuffDel(bool bCover)"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -129,7 +129,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "2611"
-         endingLineNumber = "2611">
+         endingLineNumber = "2611"
+         landmarkName = "CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -140,7 +142,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "2612"
-         endingLineNumber = "2612">
+         endingLineNumber = "2612"
+         landmarkName = "CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)"
+         landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

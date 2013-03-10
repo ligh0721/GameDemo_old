@@ -218,6 +218,15 @@ bool COrgSkillInfo::init()
     m_mapSkills[kHealing1].sName = "快速愈合";
     m_mapSkills[kHealing1].sDesc = "5秒内恢复100生命值";
     
+    pSkill = CJumpChopBuff::create(20, false, 0, 300, 7, CAttackValue(1, CAttackValue::kPhysical, 5.0), "act5");
+    iKey = pSm->addSkill(pSkill);
+    
+    pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kJumpChop2].iIndex = iKey;
+    m_mapSkills[kJumpChop2].sName = "一刀斩";
+    m_mapSkills[kJumpChop2].sDesc = "连续跃起给给范围内的敌人致命一击";
+    
     return true;
 }
 
