@@ -803,8 +803,8 @@ CCObject* CStunBuff::copyWithZone( CCZone* pZone )
 
 void CStunBuff::onBuffAdd()
 {
-    M_DEF_GM(pGm);
-    pGm->playEffectSound("sound/cannon2.wav");
+    //M_DEF_GM(pGm);
+    //pGm->playEffectSound("sound/cannon2.wav");
     CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
     o->suspend();
 }
@@ -2734,6 +2734,7 @@ CCObject* CThunderBolt2Buff::copyWithZone( CCZone* pZone )
 void CThunderBolt2Buff::onBuffAdd()
 {
     CBuffSkill::onBuffAdd();
+    onUnitInterval();
 }
 
 void CThunderBolt2Buff::onBuffDel(bool bCover)
@@ -2892,37 +2893,34 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
             //给范围内的敌人受到持续伤害
             CAttackData* pAttack = CAttackData::create();
             pAttack->setAttack(m_oMaxDamage);
-            pUnit->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
+            pUnit->damagedAdv(pAttack,  pOwn, CUnit::kMaskActiveTrigger);
         }
     }
 }
 
-bool CForceMoveBuff::init( float fDuration, bool bCanBePlural,int iSrcKey, CCPoint tarPoint ,float fSpeed )
+bool CForceMoveBuff::init( float fDuration, bool bCanBePlural,int iSrcKey, CCNode *pNode ,float fSpeed )
 {
-    CBuffSkill::init(fDuration, bCanBePlural,iSrcKey);
-    m_tarPoint = tarPoint;
+    CStunBuff::init(5,false);
+    m_pNode = pNode;
     m_fSpeed = fSpeed;
     return true;
 }
 
 CCObject* CForceMoveBuff::copyWithZone( CCZone* pZone )
 {
-    return CForceMoveBuff::create(m_fDuration,m_bCanBePlural,m_iSrcKey,m_tarPoint,m_fSpeed);
+    return CForceMoveBuff::create(m_fDuration,m_bCanBePlural,m_iSrcKey,m_pNode,m_fSpeed);
 }
 
 void CForceMoveBuff::onBuffAdd()
 {
-    CBuffSkill::onBuffAdd();
+    CStunBuff::onBuffAdd();
     CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
-    pO->suspend();
-    pO->getSprite()->runAction(CCMoveTo::create(5,pO->getPosition()));
+    pO->getSprite()->runAction(CCMoveToNode::create(5,m_pNode));
 }
 
 void CForceMoveBuff::onBuffDel(bool bCover)
 {
-    CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
-    pO->resume();
-    CBuffSkill::onBuffDel(bCover);
+    CStunBuff::onBuffDel(bCover);
 }
 
 bool CWhirlWindBuff::init( float fDuration,bool bCanBePlural,int iSrcKey,const CAttackValue& roDamage )
@@ -2937,7 +2935,7 @@ bool CWhirlWindBuff::init( float fDuration,bool bCanBePlural,int iSrcKey,const C
 void CWhirlWindBuff::onBuffAdd()
 {
     CBuffSkill::onBuffAdd();
-    
+    onUnitInterval();
 }
 
 void CWhirlWindBuff::onBuffDel(bool bCover)
@@ -2993,11 +2991,16 @@ void CWhirlWindBuff::onUnitInterval()
     CCActionInterval *pAct = CCRotateBy::create(1,360);
     CCAction *pRep = CCRepeatForever::create(pAct);
     t->getSprite()->runAction(pRep);
+//     int xOf = rand()%400-200;
+//     int yOf = rand()%400-200;
+//     t->moveTo(ccp(t->getPosition().x+xOf,t->getPosition().y+yOf));
+    t->setHostilityRange(FLT_MAX);
 }
 
 bool CCountDownBuff::init( float fDuration,bool bCanBePlural,int iSrcKey )
 {
     CBuffSkill::init(fDuration,bCanBePlural,iSrcKey);
+   
     return true;
 }
 
@@ -3020,6 +3023,8 @@ void CCountDownBuff::onBuffAdd()
 bool CDarkHoleBuff::init( float fDuration,bool bCanBePlural)
 {
     CBuffSkill::init(fDuration,bCanBePlural);
+    m_fInterval = 1;
+    m_fIntervalPass = 0;
     return true;
 }
 
@@ -3030,9 +3035,44 @@ CCObject* CDarkHoleBuff::copyWithZone( CCZone* pZone )
 
 void CDarkHoleBuff::onBuffAdd()
 {
+    CBuffSkill::onBuffAdd();
     CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
     M_DEF_SM(pSm);
-    CForceMoveBuff *pBuff = CForceMoveBuff::create(5,false,0,pO->getPosition(),50);
+    CForceMoveBuff *pBuff = CForceMoveBuff::create(5,false,0,pO->getSprite(),50);
     pO->getUnitLayer()->getUnits()->getUnitsInRange(pO->getPosition(),300,-1
         ,CONDITION(CUnitGroup::isLivingEnemyOf),dynamic_cast<CUnitForce*>(pO))->addBuff(pBuff);
 }
+
+void CDarkHoleBuff::onUnitTick( float fDt )
+{
+    timeStep(fDt);
+
+    if (m_fPass > m_fDuration)
+    {
+        m_fIntervalPass += fDt - m_fPass + m_fDuration;
+    }
+    else
+    {
+        m_fIntervalPass += fDt;
+    }
+
+    while (m_fIntervalPass >= m_fInterval)
+    {
+        onUnitInterval();
+        m_fIntervalPass -= m_fInterval;
+    }
+
+    delBuffIfTimeout();
+}
+
+void CDarkHoleBuff::onUnitInterval()
+{
+    CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
+    M_DEF_SM(pSm);
+    CForceMoveBuff *pBuff = CForceMoveBuff::create(5,false,0,pO->getSprite(),50);
+    pO->getUnitLayer()->getUnits()->getUnitsInRange(pO->getPosition(),300,-1
+        ,CONDITION(CUnitGroup::isLivingEnemyOf),dynamic_cast<CUnitForce*>(pO))->addBuff(pBuff);
+}
+
+
+

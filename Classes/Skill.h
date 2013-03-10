@@ -935,25 +935,21 @@ protected:
     float m_fLastHalfWidth;
 };
 
-
-
-
-class CForceMoveBuff : public CBuffSkill
+class CForceMoveBuff : public CStunBuff
 {
 public:
-    virtual bool init(float fDuration, bool bCanBePlural,int iSrcKey, CCPoint tarPoint ,float fSpeed );
+    virtual bool init(float fDuration, bool bCanBePlural,int iSrcKey, CCNode *pNode ,float fSpeed );
 
-    CREATE_FUNC_PARAM(CForceMoveBuff,(float fDuration,bool bCanBePlural,int iSrcKey,CCPoint tarPoint,float fSpeed)
-        ,fDuration,bCanBePlural,iSrcKey,tarPoint,fSpeed);
+    CREATE_FUNC_PARAM(CForceMoveBuff,(float fDuration,bool bCanBePlural,int iSrcKey,CCNode *pNode,float fSpeed)
+        ,fDuration,bCanBePlural,iSrcKey,pNode,fSpeed);
     virtual CCObject* copyWithZone(CCZone* pZone);
     M_SYNTHESIZE(float,m_fSpeed,Speed);
 protected:
     virtual void onBuffAdd();
     virtual void onBuffDel(bool bCover);
 protected:
-    CCPoint m_tarPoint;
+    CCNode *m_pNode;
 };
-
 
 class CWhirlWindBuff : public CBuffSkill
 {
@@ -973,8 +969,6 @@ protected:
 
 };
 
-
-
 class CCountDownBuff : public CBuffSkill
 {
 public:
@@ -988,9 +982,6 @@ protected:
 
 };
 
-
-
-
 class CDarkHoleBuff : public CBuffSkill
 {
 public:
@@ -998,6 +989,11 @@ public:
     CREATE_FUNC_PARAM(CDarkHoleBuff,(float fDuration,bool bCanBePlural)
         ,fDuration,bCanBePlural);
     virtual CCObject* copyWithZone(CCZone* pZone);
+    M_SYNTHESIZE(float,m_fIntervalPass,IntervalPass);
+    M_SYNTHESIZE(float,m_fInterval,Interval);
 protected:
     virtual void onBuffAdd();
+    virtual void onUnitTick(float fDt);
+    virtual void onUnitInterval();
 };
+
