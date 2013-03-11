@@ -714,6 +714,8 @@ protected:
     CUnitPath* m_pMovePath;
     bool m_bPathIntended;
     float m_fPathBufArrive;
+
+    int m_iSuspendRef;
 };
 
 class CProjectile : public CGameUnit
