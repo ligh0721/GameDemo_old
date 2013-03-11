@@ -2778,14 +2778,14 @@ void CForceMoveBuff::onBuffAdd()
 {
     CStunBuff::onBuffAdd();
     CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
-    pO->getSprite()->runAction(CCMoveToNode::create(5,m_pNode));
+    pO->getSprite()->runAction(CCMoveToNode::create(6,m_pNode));
 }
 
 void CForceMoveBuff::onBuffDel(bool bCover)
 {
     CGameUnit *pO = dynamic_cast<CGameUnit*>(getOwner());
-    pO->resume();
-    CBuffSkill::onBuffDel(bCover);
+    pO->getSprite()->stopAllActions();
+    CStunBuff::onBuffDel(bCover);
 }
 
 bool CWhirlWindBuff::init( float fDuration,bool bCanBePlural,int iSrcKey,const CAttackValue& roDamage )
