@@ -152,6 +152,12 @@ bool COrgSkillInfo::init()
     
     pSkill = CSpeedBuff::create(7, true, CExtraCoeff(1.0, 0), CExtraCoeff(1.0, 0));
     iKey = pSm->addSkill(pSkill);
+
+    pSkill = CWhirlWindBuff::create(15,true,0,CAttackValue(1,CAttackValue::kMagical,50.0));
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CDarkHoleBuff::create(3,false);
+    iKey = pSm->addSkill(pSkill);
     
     // for test
     //pSkill = CHarmShieldBuff::create(5, false, CExtraCoeff(0, 0), true);
@@ -175,8 +181,6 @@ bool COrgSkillInfo::init()
     pSkill = CChainBuff::create(0.5, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kChain1));
     dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
-    //pSkill = CChainBuff::create(0.5, false, 0, 100, 10, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kBall2));
-    //dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
     iKey = pSm->addSkill(pSkill);
 
     //pSkill = CSpeedBuff::create(1, true, CExtraCoeff(-0.5, 0), CExtraCoeff(-0.5, 0));
@@ -217,8 +221,20 @@ bool COrgSkillInfo::init()
     m_mapSkills[kHealing1].iIndex = iKey;
     m_mapSkills[kHealing1].sName = "快速愈合";
     m_mapSkills[kHealing1].sDesc = "5秒内恢复100生命值";
+
+    pSkill = CChainBuff::create(0.5, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kChain1));
+    dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
+    dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CProjectileWaveAct::create(20.0, 500, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kWave1), 600, iKey, 1);
+    dynamic_cast<CProjectileWaveAct*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kShockWave1].iIndex = iKey;
+    m_mapSkills[kShockWave1].sName = "真空波";
+    m_mapSkills[kShockWave1].sDesc = "急速斩击形成真空冲击波，对直线上的敌人造成50点魔法伤害";
     
-    pSkill = CJumpChopBuff::create(20, false, 0, 300, 7, CAttackValue(1, CAttackValue::kPhysical, 5.0), "act5");
+    pSkill = CJumpChopBuff::create(20, false, 0, 300, 7, CAttackValue(1, CAttackValue::kPhysical, 50.0), "act5");
     iKey = pSm->addSkill(pSkill);
     
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);

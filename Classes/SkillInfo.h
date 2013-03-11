@@ -29,7 +29,8 @@ public:
         kJumpChop1,
         kJumpChop2,
         kThunderBoltBuff1,
-        kHealing1
+        kHealing1,
+        kShockWave1
     };
 
     struct SKILL_INFO
