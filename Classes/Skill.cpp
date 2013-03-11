@@ -2874,11 +2874,14 @@ void CForceMoveBuff::onBuffAdd()
 {
     CStunBuff::onBuffAdd();
     CGameUnit *pO = getOwner();
-    pO->getSprite()->runAction(CCMoveToNode::create(6,m_pNode));
+    CCAction *pAct = CCMoveToNode::create(6,m_pNode);
+    pAct->setTag(2);
+    pO->getSprite()->runAction(pAct);
 }
 
 void CForceMoveBuff::onBuffDel(bool bCover)
 {
+    getOwner()->getSprite()->stopActionByTag(2);
     CStunBuff::onBuffDel(bCover);
 }
 
@@ -3192,16 +3195,17 @@ void CDarkHoleAct::onSkillCast()
     t->setPosition(tarPoint);
     t->setForce(o->getForce());
     t->setAlly(o->getAlly());
-    CDarkHoleBuff *pBuff = CDarkHoleBuff::create(5,false);
     CCountDownBuff *pBuff2 = CCountDownBuff::create(5,false,0);
-    t->addBuff(pBuff);
     t->addBuff(pBuff2);
-
-    CBuffSkill *pSkill = CHpChangeBuff::create(20, true, 0.1, -10, false, -1);
+    CBuffSkill *pSkill = CHpChangeBuff::create(1, true, 1, -10, false, -1);
     M_DEF_SM(pSm);
     int iKey = pSm->addSkill(pSkill);
-    CSkill *pSkill2 = CAuraPas::create(150, CAuraPas::kEnemy, 0.5, iKey, 1);
-    t->addSkill(pSkill2);
+    CBuffSkill *pSkill2 = CForceMoveBuff::create(1,false,0,t->getSprite(),50);
+    int iKey2 = pSm->addSkill(pSkill2);
+    CSkill *pSkill4 = CAuraPas::create(200, CAuraPas::kEnemy, 1, iKey2, 1);
+    CSkill *pSkill3 = CAuraPas::create(200, CAuraPas::kEnemy, 1, iKey, 1);
+    t->addSkill(pSkill3);
+    t->addSkill(pSkill4);
 }
 
 void CDarkHoleAct::onSkillDel()
