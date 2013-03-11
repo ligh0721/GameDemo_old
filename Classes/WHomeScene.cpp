@@ -150,15 +150,18 @@ bool CCWHomeSceneLayer::init()
     pBtn = M_CREATE_SKILL("skill1", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 3);
     
-    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSwordStorm1));
-    pSkill->setCastAniInfo(CGameUnit::kAnimationAct4, 0.0);
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kFastStrikeBack1));
+    pSkill->setCastAniInfo(CGameUnit::kAnimationAct3, 0.4);
     heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 2);
 
-    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kThunderAttack1));
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kShockWave1));
     pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
-    dynamic_cast<CProjectileAct*>(pSkill)->setProjectileBirthOffset(ccp(0, 25));
+    dynamic_cast<CProjectileWaveAct*>(pSkill)->setProjectileBirthOffset(ccp(0, 25));
+    
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kJumpChop2));
+    //pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
     heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill4", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.addButton(pBtn, 0, 1);

@@ -714,6 +714,8 @@ protected:
     CUnitPath* m_pMovePath;
     bool m_bPathIntended;
     float m_fPathBufArrive;
+
+    int m_iSuspendRef;
 };
 
 class CProjectile : public CGameUnit
@@ -756,12 +758,12 @@ public:
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual void onMovingTick(float fDt);
 
-    virtual void fireInstant(CCUnitLayer* pLayer, int iOwner, int iStart, int iTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset);
-    virtual void fireInstant(CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, CGameUnit* pTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset);
-    virtual void fireFolow(CCUnitLayer* pLayer, int iOwner, int iStart, int iTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMaxOffsetY, float fProjectileMoveSpeed);
-    virtual void fireFolow(CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, CGameUnit* pTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMaxOffsetY, float fProjectileMoveSpeed);
-    virtual void fireWave(CCUnitLayer* pLayer, int iOwner, int iStart, const CCPoint& roTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMoveSpeed);
-    virtual void fireWave(CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, const CCPoint& roTarget, CAttackData* pAtk, float fProjectileScale, const CCPoint& roProjectileBirthOffset, float fProjectileMoveSpeed);
+    virtual void fireInstant(CCUnitLayer* pLayer, int iOwner, int iStart, int iTarget, CAttackData* pAtk, float fScale, const CCPoint& roBirthOffset);
+    virtual void fireInstant(CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, CGameUnit* pTarget, CAttackData* pAtk, float fScale, const CCPoint& roBirthOffset);
+    virtual void fireFolow(CCUnitLayer* pLayer, int iOwner, int iStart, int iTarget, CAttackData* pAtk, float fScale, const CCPoint& roBirthOffset, float fMoveSpeed, float fMaxOffsetY);
+    virtual void fireFolow(CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, CGameUnit* pTarget, CAttackData* pAtk, float fScale, const CCPoint& roBirthOffset, float fMoveSpeed, float fMaxOffsetY);
+    virtual void fireWave(CCUnitLayer* pLayer, int iOwner, int iStart, const CCPoint& roTarget, CAttackData* pAtk, float fScale, const CCPoint& roBirthOffset, float fMoveSpeed, float fRange); // fRange can be set -1
+    virtual void fireWave(CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* pStart, const CCPoint& roTarget, CAttackData* pAtk, float fScale, const CCPoint& roBirthOffset, float fMoveSpeed, float fRange);
     
 protected:
     virtual void onActMoveEnd(CCNode* pNode);

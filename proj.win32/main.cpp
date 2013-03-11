@@ -13,10 +13,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                        HINSTANCE hPrevInstance,
                        LPTSTR    lpCmdLine,
                        int       nCmdShow)
-{
+{    
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-//#define USE_WIN32_CONSOLE
+#define USE_WIN32_CONSOLE
 #ifdef USE_WIN32_CONSOLE
     AllocConsole();
     freopen("CONIN$", "r", stdin);
@@ -24,6 +24,26 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     freopen("CONOUT$", "w", stderr);
 
 #endif
+
+    srand(time(NULL));
+    int a = 0, b = 0;
+    for (int i = 0; i < 100; ++i)
+    {
+        int n = rand() % 100;
+
+        if (n < 50)
+        {
+            ++a;
+        }
+        else
+        {
+            ++b;
+        }
+    }
+    printf("%d/%d\n\n\n\n\n", a, b);
+
+
+
 
     // create the application instance
     AppDelegate app;

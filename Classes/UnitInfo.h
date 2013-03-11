@@ -9,6 +9,7 @@ public:
         kBall1,
         kBall2,
         kBall3,
+        kSlimeBall,
         kLightning1,
         kLightning2,
         kLightning3,
@@ -28,7 +29,8 @@ public:
         kVeznan,
         kMatchstick,
         kKurokisi,
-        kSlime
+        kSlime,
+        kSlime2
     };
 
 public:
