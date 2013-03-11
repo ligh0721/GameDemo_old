@@ -20,7 +20,7 @@ void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
         return;
     }
 
-    pU->setMaxHp(1000000 + pLevel->getLevel() * 50);
+    pU->setMaxHp(100 + pLevel->getLevel() * 50);
 
     CAttackValue oAv;
     for (int i = 0; i < CAttackValue::CONST_MAX_ATTACK_TYPE; ++i)
