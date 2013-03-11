@@ -130,10 +130,13 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThump1].sName = "重击";
     m_mapSkills[kThump1].sDesc = "攻击时有20%的概率击晕目标，并额外造成10点伤害";
     
-    pSkill = CStunBuff::create(2, false);
+    pSkill = CStunBuff::create(2, false, 0);
     iKey = pSm->addSkill(pSkill);
     
-    pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
+    //pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
+    //iKey = pSm->addSkill(pSkill);
+
+    pSkill = CKnockBackBuff::create(0.5, false, 0, 100, 0.0, CAttackValue(1, CAttackValue::kPhysical, 50.0), iKey, 1);
     iKey = pSm->addSkill(pSkill);
     
     // for test
@@ -144,7 +147,7 @@ bool COrgSkillInfo::init()
     //pSkill = CHarmShieldBuff::create(2, false, CExtraCoeff(0, 0), true);
     //iKey = pSm->addSkill(pSkill);
     
-	pSkill = CAttackBuffMakerPas::create(20, iKey, 1, CExtraCoeff(1, 0));
+	pSkill = CAttackBuffMakerPas::create(50, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThrowHit1].iIndex = iKey;
     m_mapSkills[kThrowHit1].sName = "击飞";
@@ -242,6 +245,15 @@ bool COrgSkillInfo::init()
     m_mapSkills[kJumpChop2].iIndex = iKey;
     m_mapSkills[kJumpChop2].sName = "一刀斩";
     m_mapSkills[kJumpChop2].sDesc = "连续跃起给给范围内的敌人致命一击";
+
+    pSkill = CFastStrikeBackBuff::create(10, false, 0, 1000, 3, 0, 1);
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kFastStrikeBack1].iIndex = iKey;
+    m_mapSkills[kFastStrikeBack1].sName = "瞬身反击";
+    m_mapSkills[kFastStrikeBack1].sDesc = "受到攻击前瞬间移动到攻击者的背后，对其进行致命反击";
     
     return true;
 }

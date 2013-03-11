@@ -618,7 +618,7 @@ void CUnit::damagedMid(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerM
     CCARRAY_FOREACH(&pAttack->m_oArrBuff, pObj)
     {
         pAtkBuff = dynamic_cast<CAttackBuff*>(pObj);
-        if (rand() % 100 < pAtkBuff->m_iProbability)
+        if (M_RAND_HIT(pAtkBuff->m_iProbability))
         {
             addBuff(pAtkBuff->m_pBuff);
         }
@@ -1273,6 +1273,7 @@ bool CGameUnit::init()
     m_fPathBufArrive = FLT_EPSILON;
     setToCastSkill(NULL);
     setCastingSkill(NULL);
+    m_iSuspendRef = 0;
     
     return true;
 }
@@ -1309,6 +1310,7 @@ bool CGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor )
     m_fPathBufArrive = FLT_EPSILON;
     setToCastSkill(NULL);
     setCastingSkill(NULL);
+    m_iSuspendRef = 0;
     
     return true;
 }
@@ -2131,6 +2133,7 @@ CProjectile* CGameUnit::getTemplateProjectile()
 
 void CGameUnit::suspend()
 {
+    ++m_iSuspendRef;
     startDoing(kSuspended);
     stopMove();
     stopAttack();
@@ -2138,7 +2141,14 @@ void CGameUnit::suspend()
 
 void CGameUnit::resume()
 {
-    endDoing(kSuspended);
+    if (m_iSuspendRef > 0)
+    {
+        --m_iSuspendRef;
+        if (!m_iSuspendRef)
+        {
+            endDoing(kSuspended);
+        }
+    }
 }
 
 void CGameUnit::startDoing( uint32_t dwMask)
@@ -2492,10 +2502,18 @@ bool CGameUnit::cast()
     }
     
     setCastingSkill(getToCastSkill());
-    setAnimation(pSkill->getCastAniIndex(), 0, 1, kActCast, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEnd)));
-    CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(pSkill->getCastEffectDelay()), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEffect)));
-    pAct->setTag(kActCastEffect);
-    m_oSprite.runAction(pAct);
+    if (pSkill->getCastAniIndex() < 0)
+    {
+        onActCastEnd(getSprite());
+        onActCastEffect(getSprite());
+    }
+    else
+    {
+        setAnimation(pSkill->getCastAniIndex(), 0, 1, kActCast, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEnd)));
+        CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(pSkill->getCastEffectDelay()), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEffect)));
+        pAct->setTag(kActCastEffect);
+        m_oSprite.runAction(pAct);
+    }
     
     return true;
 }
@@ -2872,7 +2890,6 @@ void CProjectile::fireWave( CCUnitLayer* pLayer, CGameUnit* pOwner, CGameUnit* p
     {
         moveTo(ccpAdd(roPos1, ccp(cos(fR) * fRange, sin(fR) * fRange)), oMp);
     }
-    
 }
 
 void CProjectile::onMovingTick( float fDt )

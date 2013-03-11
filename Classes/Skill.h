@@ -61,12 +61,12 @@ public:
     //CREATE_FUNC(CSkill);
     virtual bool init();
     
-    // ÿ¼ܶ븲ǸúԱڼܰģ弼ܸ¶
+    // ÿ¼ܶ븲ǸúԱڼܰģ弼ܸ�
     // have to @override
     virtual CCObject* copyWithZone(CCZone* pZone) = 0;
     
     // ܱ/ɾʱ
-    // 븲ǣҸǺٵøຯнע/ע�Ĳ
+    // 븲ǣҸǺٵøຯнע/ע��
     virtual void onSkillAdd(); // have to @override
     virtual void onSkillDel(); // have to @override
     
@@ -86,7 +86,7 @@ protected:
     virtual void onUnitTick(float fDt);
     virtual void onUnitDestroyProjectile(CCProjectileWithAttackData* pProjectile);
     
-    // עᴥͨ onSkillAdd б
+    // עᴥ�onSkillAdd б
     void registerOnAttackTargetTrigger();
     void registerOnAttackedTrigger();
     void registerOnDamagedSurfaceTrigger();
@@ -98,7 +98,7 @@ protected:
     void registerOnTickTrigger();
     void registerOnDestroyProjectileTrigger();
     
-    // ע�ͨ onSkillDel б
+    // ע��onSkillDel б
     void unregisterOnAttackTargetTrigger();
     void unregisterOnAttackedTrigger();
     void unregisterOnDamagedSurfaceTrigger();
@@ -110,7 +110,7 @@ protected:
     void unregisterOnTickTrigger();
     void unregisterOnDestroyProjectileTrigger();
     
-    // ӳע�ͨھ߱һʱBUFF༼ܵ onSkillDel б
+    // ӳע�ͨھ߱һʱBUFF༼�onSkillDel б
     //void unregisterOnTickTriggerLater();
     
     
@@ -120,7 +120,7 @@ public:
     virtual int getKey() const;
     
     // ȡܳ
-    virtual CUnit* getOwner() const;
+    virtual CGameUnit* getOwner() const;
     
     
     M_SYNTHESIZE(float, m_fCoolDown, CoolDown);
@@ -195,6 +195,7 @@ public:
     const CCPoint& updateTargetUnitPoint();
     virtual CCSkillButtonAdvance* getSkillButton();
     virtual void setCastAniInfo(CGameUnit::ANIMATION_INDEX eAniIndex, float fCastEffectDelay);
+    virtual void setNoCastAni();
     virtual CGameUnit::ANIMATION_INDEX getCastAniIndex() const;
     virtual float getCastEffectDelay() const;
     
@@ -213,7 +214,7 @@ public:
     virtual bool init();
 };
 
-// BUFFڱܣͨⲿӸλ
+// BUFFڱܣͨⲿӸ�
 class CBuffSkill : public CPassiveSkill
 {
     friend class CUnit;
@@ -225,7 +226,7 @@ public:
     //M_CREATE_FUNC_PARAM(CBuffSkill, (float fDuration, bool bCanBePlural), fDuration, bCanBePlural);
     M_GET_TYPE_KEY;
     
-    void timeStep(float dt); // ʱ䲽 onUnitTick ײ
+    void timeStep(float dt); // ʱ�onUnitTick ײ
     void delBuffIfTimeout(); // BUFFжɾ onUnitTick β
     
     M_SYNTHESIZE(float, m_fDuration, Duration);
@@ -236,25 +237,25 @@ public:
     virtual void setPlural(bool bPlural);
     virtual bool canBePlural() const;
     
-    // �ӳɾBUFF� Owner Ϊ NULL
+    // �ӳɾBUFF�Owner Ϊ NULL
     virtual void delBuffFromOwner(bool bAfterTriggerLoop = true);
     
 protected:
-    // BUFF࣬Ҫ
-    // ڲע/ӳעһ onUnitTick ڿBUFFʱ
+    // BUFF࣬�    // ڲע/ӳעһ onUnitTick ڿBUFFʱ
     virtual void onSkillAdd();
     virtual void onSkillDel();
     virtual void onSkillCover();
     
-    // BUFF࣬븲ҸǺбøຯ
-    // BUFFע/עעᴥҪк
+    // BUFF࣬븲ҸǺбø�    // BUFFע/עעᴥҪ�
     // have to @override
     virtual void onBuffAdd();
     virtual void onBuffDel(bool bCover);
     
-    // ѡԸǣBUFFʱڣҪԵĶԵλд�Ҫ
+    // ѡԸǣBUFFʱڣҪԵĶԵλд��
     // @override
     virtual void onUnitTick(float fDt);
+
+    virtual CGameUnit* getSource() const;
     
 public:
     bool m_bCanBePlural;
@@ -388,8 +389,8 @@ public:
 class CStunBuff : public CBuffSkill
 {
 public:
-    virtual bool init(float fDuration, bool bCanBePlural);
-    M_CREATE_FUNC_PARAM(CStunBuff, (float fDuration, bool bCanBePlural), fDuration, bCanBePlural);
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey);
+    M_CREATE_FUNC_PARAM(CStunBuff, (float fDuration, bool bCanBePlural, int iSrcKey), fDuration, bCanBePlural, iSrcKey);
     virtual CCObject* copyWithZone(CCZone* pZone);
     M_GET_TYPE_KEY;
     
@@ -755,7 +756,8 @@ public:
     virtual void onBuffAdd();
     virtual void onBuffDel(bool bCover);
     
-    M_SYNTHESIZE(int, m_iMaxTimes, MaxTimes)
+    M_SYNTHESIZE(int, m_iMaxTimes, MaxTimes);
+    M_SYNTHESIZE(int, m_iTimesLeft, TimesLeft);
     M_SYNTHESIZE(int, m_iStartUnit, StartUnit);
     M_SYNTHESIZE(int, m_iEndUnit, EndUnit);
     
@@ -775,6 +777,7 @@ public:
     MAP_DAMAGED m_mapDamaged;
 
 };
+
 class CChainLightingBuff : public CBuffSkill
 {
 public:
@@ -907,6 +910,9 @@ public:
 class CJumpChopBuff : public CBuffSkill
 {
 public:
+    typedef map<int, bool> MAP_DAMAGED;
+
+public:
 	virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName);
 	M_CREATE_FUNC_PARAM(CJumpChopBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue& roDamage,  char* pActName), fDuration, bCanBePlural, iSrcKey, fMaxJumpRange, iMaxJumpCount, roDamage, pActName);
 	virtual CCObject* copyWithZone(CCZone* pZone);
@@ -923,14 +929,17 @@ public:
     M_SYNTHESIZE(int, m_iCountAnimLoop, CountAnimLoop);
     //M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oAttackPosRegulate, AttackPosRegulate);
     M_SYNTHESIZE(float, m_fHalfWidth, HalfWidth);
+
+    static bool checkConditions(CGameUnit* pUnit, CJumpChopBuff* pBuff);
     
 protected:
-    CGameUnit* m_pLastTargetUnit;
+    int m_iLastTargetUnit;
     float m_fMaxJumpRange;
+    int m_iJumpCountLeft;
     int m_iMaxJumpCount;
     CAttackValue m_oMaxDamage;
     char* m_pActName;
-    vector<int> m_vecEffectedUnitKey;
+    MAP_DAMAGED m_mapDamaged;
     CAttackData* m_pAttackData;
     float m_fLastHalfWidth;
 };
@@ -995,5 +1004,52 @@ protected:
     virtual void onBuffAdd();
     virtual void onUnitTick(float fDt);
     virtual void onUnitInterval();
+};
+
+class CFastStrikeBackBuff : public CBuffSkill
+{
+public:    
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fRange, float fInterval, int iBuffKey, int iBuffLevel);
+    M_CREATE_FUNC_PARAM(CFastStrikeBackBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fRange, float fInterval, int iBuffKey, int iBuffLevel), fDuration, bCanBePlural, iSrcKey, fRange, fInterval, iBuffKey, iBuffLevel);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    M_GET_TYPE_KEY;
+
+    virtual void onBuffAdd();
+    virtual void onBuffDel(bool bCover);
+    virtual void onUnitTick(float fDt);
+    virtual CAttackData* onUnitAttacked(CAttackData* pAttack, CUnit* pSource);
+
+    void onFadeEnd(CCNode* pNode);
+
+public:
+    float m_fRange;
+    float m_fInterval;
+    float m_fPass;
+    int m_iBuffKey;
+    int m_iBuffLevel;
+};
+
+class CKnockBackBuff : public CStunBuff
+{
+public:
+    CKnockBackBuff(): m_iActKnockBackKey(CGameManager::sharedGameManager()->keygen()) {}
+
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fRange, float fInterval, const CAttackValue& roDamage, int iBuffKey, int iBuffLevel);
+    M_CREATE_FUNC_PARAM(CKnockBackBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fRange, float fInterval, const CAttackValue& roDamage, int iBuffKey, int iBuffLevel), fDuration, bCanBePlural, iSrcKey, fRange, fInterval, roDamage, iBuffKey, iBuffLevel);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    M_GET_TYPE_KEY;
+
+    virtual void onBuffAdd();
+    virtual void onBuffDel(bool bCover);
+
+    void onKnockBackEnd(CCNode* pNode);
+
+public:
+    float m_fRange;
+    float m_fInterval;
+    CAttackValue m_oDamage;
+    int m_iBuffKey;
+    int m_iBuffLevel;
+    const int m_iActKnockBackKey;
 };
 
