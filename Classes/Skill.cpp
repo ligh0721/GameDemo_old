@@ -2859,7 +2859,7 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
 
 bool CForceMoveBuff::init( float fDuration, bool bCanBePlural,int iSrcKey, CCNode *pNode ,float fSpeed )
 {
-    CStunBuff::init(5, false, iSrcKey);
+    CStunBuff::init(fDuration, false, iSrcKey);
     m_pNode = pNode;
     m_fSpeed = fSpeed;
     return true;
@@ -3197,7 +3197,7 @@ void CDarkHoleAct::onSkillCast()
     t->setAlly(o->getAlly());
     CCountDownBuff *pBuff2 = CCountDownBuff::create(5,false,0);
     t->addBuff(pBuff2);
-    CBuffSkill *pSkill = CHpChangeBuff::create(1, true, 1, -10, false, -1);
+    CBuffSkill *pSkill = CHpChangeBuff::create(1, true, 0.6, -10, false, -1);
     M_DEF_SM(pSm);
     int iKey = pSm->addSkill(pSkill);
     CBuffSkill *pSkill2 = CForceMoveBuff::create(1,false,0,t->getSprite(),50);
