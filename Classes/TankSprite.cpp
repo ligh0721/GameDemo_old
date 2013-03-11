@@ -527,7 +527,7 @@ void CCSkillTankSprite::skill1( float fPower, int iKey )
     CAttackData* pAtkData = CAttackData::create();
     pAtkData->setAttack(CAttackValue::kPhysical, getFirePower());
 
-    CBuffSkill* pBuff = CHpChangeBuff::create(10, true, 0.1, -0.9, false, 1);    
+    CBuffSkill* pBuff = CHpChangeBuff::create(10, true, 0, 0.1, -0.9, false, 1);    
     pAtkData->addBuff(pBuff, 100);
 
     pAtkData = dynamic_cast<CUnit*>(getLogicBody())->attackAdv(pAtkData, NULL);

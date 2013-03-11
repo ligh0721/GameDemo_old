@@ -333,8 +333,8 @@ public:
 class CHpChangeBuff : public CBuffSkill
 {
 public:
-    virtual bool init(float fDuration, bool bCanBePlural, float fInterval, float fHpChange, bool bPercent, float fMinHp);
-    M_CREATE_FUNC_PARAM(CHpChangeBuff, (float fDuration, bool bCanBePlural, float fInterval, float fHpChange, bool bPercent, float fMinHp), fDuration, bCanBePlural, fInterval, fHpChange, bPercent, fMinHp);
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fHpChange, bool bPercent, float fMinHp);
+    M_CREATE_FUNC_PARAM(CHpChangeBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fHpChange, bool bPercent, float fMinHp), fDuration, bCanBePlural, iSrcKey, fInterval, fHpChange, bPercent, fMinHp);
     virtual CCObject* copyWithZone(CCZone* pZone);
     M_GET_TYPE_KEY;
     
@@ -949,17 +949,20 @@ protected:
 class CForceMoveBuff : public CStunBuff
 {
 public:
+    CForceMoveBuff(): m_iActMoveKey(CGameManager::sharedGameManager()->keygen()) {}
     virtual bool init(float fDuration, bool bCanBePlural,int iSrcKey, CCNode *pNode ,float fSpeed );
-
     CREATE_FUNC_PARAM(CForceMoveBuff,(float fDuration,bool bCanBePlural,int iSrcKey,CCNode *pNode,float fSpeed)
         ,fDuration,bCanBePlural,iSrcKey,pNode,fSpeed);
     virtual CCObject* copyWithZone(CCZone* pZone);
     M_SYNTHESIZE(float,m_fSpeed,Speed);
+
 protected:
     virtual void onBuffAdd();
     virtual void onBuffDel(bool bCover);
+
 protected:
     CCNode *m_pNode;
+    const int m_iActMoveKey;
 };
 
 class CWhirlWindBuff : public CBuffSkill
