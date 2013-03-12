@@ -3166,3 +3166,40 @@ void CKnockBackBuff::onKnockBackEnd( CCNode* pNode )
 {
 
 }
+
+bool CAddDamageBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, const CExtraCoeff &roAddDamageFormula, int iBuffKey, int iBuffLevel)
+{
+    CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+    m_oAddDamageFormula = roAddDamageFormula;
+    return true;
+    
+}
+
+CCObject* CAddDamageBuff::copyWithZone(cocos2d::CCZone *pZone)
+{
+    return create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_oAddDamageFormula, m_iBuffKey, m_iBuffLevel);
+
+}
+
+void CAddDamageBuff::onBuffAdd()
+{
+    CBuffSkill::onBuffAdd();
+    registerOnAttackTargetTrigger();
+}
+
+void CAddDamageBuff::onBuffDel( bool bCover )
+{
+    CBuffSkill::onBuffDel(bCover);
+    unregisterOnAttackTargetTrigger();
+
+}
+
+void CAddDamageBuff::onUnitAttackTarget(CAttackData *pAttack, CUnit *pTarget)
+{
+    for (int i = 0; i < CAttackValue::CONST_MAX_ATTACK_TYPE; i++)
+    {
+        float base =  pAttack->getAttack((CAttackValue::ATTACK_TYPE)i);
+        pAttack->setAttack((CAttackValue::ATTACK_TYPE)i, m_oAddDamageFormula.getValue(base));
+    }
+}
+

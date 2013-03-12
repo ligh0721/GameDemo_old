@@ -255,6 +255,15 @@ bool COrgSkillInfo::init()
     m_mapSkills[kFastStrikeBack1].sName = "瞬身反击";
     m_mapSkills[kFastStrikeBack1].sDesc = "受到攻击前瞬间移动到攻击者的背后，对其进行致命反击";
     
+    pSkill = CAddDamageBuff::create(10, false, 0, CExtraCoeff(10, 0), 3, 0);
+    iKey = pSm->addSkill(pSkill);
+    
+    pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kAddDamage1].iIndex = iKey;
+    m_mapSkills[kAddDamage1].sName = "怒火";
+    m_mapSkills[kAddDamage1].sDesc = "在一定时间内攻击力加强";
+    
     return true;
 }
 
