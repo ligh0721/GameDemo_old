@@ -879,6 +879,23 @@ bool CCSkillButtonAdvance::isPressed() const
     return m_bPressed;
 }
 
+CCButtonPanel::CCButtonPanel()
+    : m_ppBtnPos(NULL)
+    , m_pRetain(NULL)
+{
+}
+
+CCButtonPanel::~CCButtonPanel()
+{
+    if (m_ppBtnPos)
+    {
+        delete[] m_ppBtnPos;
+    }
+    CC_SAFE_RELEASE(m_pRetain);
+}
+
+const float CCButtonPanel::CONST_ACTION_DURATION = 0.25;
+
 bool CCButtonPanel::init( int iRow, int iLine, float fButtonWidth, float fBorderWidth, float fInnerBorderWidth, const char* pBackgroundFrameName )
 {
     m_iRow = iRow;
@@ -895,37 +912,425 @@ bool CCButtonPanel::init( int iRow, int iLine, float fButtonWidth, float fBorder
     else
     {
         m_pBackground = NULL;
-// 		m_pBackground=CCSprite::create("HelloWorld.png",CCRectMake(0,0,84,84));
-// 		addChild(m_pBackground);
-// 		m_pBackground->setPosition(getAnchorPointInPoints());
     }
     
     CCSize oSz = CCSizeMake(m_fBorderWidth * 2 + m_fInnerBorderWidth * (m_iLine - 1) + m_fButtonWidth * m_iLine, m_fBorderWidth * 2 + m_fInnerBorderWidth * (m_iRow - 1) + m_fButtonWidth * m_iRow);
     setContentSize(oSz);
     
+    m_iOwnerKey = 0;
 
     m_pSkillMenu = CCMenu::create();
     addChild(m_pSkillMenu);
     m_pSkillMenu->setContentSize(getContentSize());
     m_pSkillMenu->setPosition(CCPointZero);
 
+    if (m_ppBtnPos)
+    {
+        delete[] m_ppBtnPos;
+    }
+    CC_SAFE_RELEASE(m_pRetain);
+
+    size_t uCount = iRow * iLine;
+    m_ppBtnPos = new CCSkillButtonBase*[uCount];
+    memset(m_ppBtnPos, 0, sizeof(CCSkillButtonBase*) * uCount);
+
+    m_iCount = 0;
+
     return true;
+}
+
+void CCButtonPanel::addButton( CCSkillButtonBase* pButton, int iIndex )
+{
+    CCAssert(iIndex < m_iRow * m_iLine, "Break Bounds");
+    CCAssert(m_iCount <= m_iRow * m_iLine, "already full");
+    CCSkillButtonBase* pBtn = getButton(iIndex);
+    if (pBtn)
+    {
+        delButton(iIndex);
+    }
+
+    m_pSkillMenu->addChild(pButton);
+    pButton->setPosition(index2Point(iIndex));
+
+    m_ppBtnPos[iIndex] = pButton;
+
+    ++m_iCount;
 }
 
 void CCButtonPanel::addButton( CCSkillButtonBase* pButton, int iX, int iY )
 {
-    m_pSkillMenu->addChild(pButton);
-    float fTmp = m_fButtonWidth + m_fInnerBorderWidth;
-    float fTmp2 = m_fBorderWidth + m_fButtonWidth / 2;
-    CCSize oSz = getContentSize();
-    pButton->setPosition(ccp(iX * fTmp - oSz.width / 2 + fTmp2, iY * fTmp - oSz.height / 2 + fTmp2));
+    CCAssert(iY < m_iRow && iX < m_iLine, "Break Bounds");
+    addButton(pButton, toIndex(iX, iY));
 }
 
+void CCButtonPanel::delButton( int iIndex )
+{
+    --m_iCount;
+    m_pSkillMenu->removeChild(m_ppBtnPos[iIndex], true);
+    m_ppBtnPos[iIndex] = NULL;
+}
 void CCButtonPanel::delButton( CCSkillButtonBase* pButton )
 {
-    m_pSkillMenu->removeChild(pButton, true);
+    int iIndex = getButtonIndex(pButton);
+    CCAssert(iIndex >= 0, "button not found");
+    delButton(iIndex);
 }
 
+void CCButtonPanel::delButton(int iX, int iY)
+{
+    CCAssert(iY < m_iRow && iX < m_iLine, "Break Bounds");
+    delButton(toIndex(iX, iY));
+}
+
+
+int CCButtonPanel::allotSlot( ADD_VERTICAL eVer /*= kBottomToTop*/, ADD_HORIZONTAL eHor /*= kLeftToRight*/ )
+{
+    bool bY = (eVer == kBottomToTop);
+    bool bX = (eHor == kLeftToRight);
+
+    int iStartY = bY ? 0 : (m_iRow - 1);
+    int iStartX = bX ? 0 : (m_iLine - 1);
+
+    int iEndY = bY ? (m_iRow - 1) : 0;
+    int iEndX = bX ? (m_iLine - 1) : 0;
+
+    return allotSlot(iStartX, iStartY, iEndX, iEndY, eVer, eHor);
+}
+
+int CCButtonPanel::allotSlot( int iStartX, int iStartY, int iEndX, int iEndY, ADD_VERTICAL eVer, ADD_HORIZONTAL eHor )
+{
+    bool bY = (eVer == kBottomToTop);
+    bool bX = (eHor == kLeftToRight);
+
+    int iY = bY ? 1 : -1;
+    int iX = bX ? 1 : -1;
+    
+    int iIndex;
+    for (int y = iStartY; bY ? (y <= iEndY) : (y >= iEndY); y += iY)
+    {
+        int iStartX0 = (y == iStartY ? iStartX : (bX ? 0 : (m_iLine - 1)));
+        int iEndX0 = (y == iEndY ? iEndX : (bX ? (m_iLine - 1) : 0));
+        for (int x = iStartX0; bX ? (x <= iEndX0) : (x >= iEndX0); x += iX)
+        {
+            iIndex = toIndex(x, y);
+            if (!getButton(iIndex))
+            {
+                return iIndex;
+            }
+        }
+    }
+
+    return -1;
+}
+
+void CCButtonPanel::clearUpSlot( ADD_VERTICAL eVer /*= kBottomToTop*/, ADD_HORIZONTAL eHor /*= kLeftToRight*/ )
+{
+    bool bY = (eVer == kBottomToTop);
+    bool bX = (eHor == kLeftToRight);
+
+    int iY = bY ? 1 : -1;
+    int iX = bX ? 1 : -1;
+
+    int iStartY = bY ? 0 : (m_iRow - 1);
+    int iEndY = bY ? (m_iRow - 1) : 0;
+
+    int iStartX = bX ? 0 : (m_iLine - 1);
+    int iEndX = bX ? (m_iLine - 1) : 0;
+    
+    int iEmpty = -1;
+    int iIndex;
+    for (int y = iStartY; bY ? (y <= iEndY) : (y >= iEndY); y += iY)
+    {
+        for (int x = iStartX; bX ? (x <= iEndX) : (x >= iEndX); x += iX)
+        {
+            iIndex = toIndex(x, y);
+            if (getButton(iIndex))
+            {
+                if (iEmpty >= 0)
+                {
+                    // 遇到按钮后且前面有空槽，移动按钮
+                    moveButton(iIndex, iEmpty);
+                    // 在前面找一块新空槽
+                    iEmpty = allotSlot(index2X(iEmpty), index2Y(iEmpty), x, y, eVer, eHor);
+                }
+            }
+            else
+            {
+                if (iEmpty < 0)
+                {
+                    // 首次遇到空槽
+                    iEmpty = iIndex;
+                }
+            }
+        }
+    }
+}
+
+CCSkillButtonBase* CCButtonPanel::getButton(int iX, int iY) const
+{
+    return getButton(toIndex(iX, iY));
+}
+
+CCSkillButtonBase* CCButtonPanel::getButton( int iIndex ) const
+{
+    CCAssert(iIndex < m_iRow * m_iLine, "Break Bounds");
+    return m_ppBtnPos[iIndex];
+}
+
+int CCButtonPanel::getButtonIndex(CCSkillButtonBase* pButton) const
+{
+    int n = m_iRow * m_iLine;
+    for (int i = 0; i < n; ++i)
+    {
+        if (m_ppBtnPos[i] == pButton)
+        {
+            return i;
+        }
+    }
+    
+    return -1;
+}
+
+bool CCButtonPanel::isFull()
+{
+    return m_iCount == m_iRow * m_iLine;
+}
+
+int CCButtonPanel::index2Y( int iIndex ) const
+{
+    return iIndex / m_iLine;
+}
+
+int CCButtonPanel::index2X( int iIndex ) const
+{
+    return iIndex % m_iLine;
+}
+
+void CCButtonPanel::retainButton( CCSkillButtonBase* pButton )
+{
+    CC_SAFE_RETAIN(pButton);
+    CC_SAFE_RELEASE(m_pRetain);
+    m_pRetain = pButton;
+}
+
+CCSkillButtonBase* CCButtonPanel::getRetainButton() const
+{
+    return m_pRetain;
+}
+
+int CCButtonPanel::toIndex( int iX, int iY ) const
+{
+    return iY * m_iLine + iX;
+}
+
+void CCButtonPanel::addButtonEx( CCSkillButtonBase* pButton, ADD_VERTICAL eVer /*= kBottomToTop*/, ADD_HORIZONTAL eHor /*= kLeftToRight*/ )
+{
+    addButton(pButton, allotSlot(eVer, eHor));
+}
+
+void CCButtonPanel::moveButton( int iIndexSrc, int iIndexDst )
+{
+    CCSkillButtonBase* pSrc = getButton(iIndexSrc);
+    m_ppBtnPos[iIndexDst] = pSrc;
+    m_ppBtnPos[iIndexSrc] = NULL;
+    pSrc->setPosition(index2Point(iIndexDst));
+}
+
+CCPoint CCButtonPanel::index2Point( int iIndex )
+{
+    float fTmp = m_fButtonWidth + m_fInnerBorderWidth;
+    float fTmp2 = m_fBorderWidth + m_fButtonWidth / 2;
+    const CCSize& roSz = getContentSize();
+    int iX = index2X(iIndex);
+    int iY = index2Y(iIndex);
+    return ccp(iX * fTmp - roSz.width / 2 + fTmp2, iY * fTmp - roSz.height / 2 + fTmp2);
+}
+
+void CCButtonPanel::pushAction( const ACTION_NODE& roAct )
+{
+    m_lstActs.push_back(roAct);
+    if (m_lstActs.size() == 1)
+    {
+        onPrevActEnd(NULL);
+    }
+}
+
+void CCButtonPanel::onPrevActEnd( CCNode* pNode )
+{
+    // 动作前半段，上一个动作即将结束，进行一些收尾工作
+    CCAssert(!m_lstActs.empty(), "cannot be empty");
+    
+    if (pNode)
+    {
+        // 不是启动执行
+        ACTION_NODE rNode = m_lstActs.front();
+        switch (rNode.eAct)
+        {
+        case kAdd:
+            break;
+
+        case kDel:
+            //m_pSkillMenu->removeChild(m_ppBtnPos[rNode.stDel.iIndex], true);
+            delButton(rNode.stDel.iIndex);
+            m_lstActs.pop_front();
+            m_lstActs.push_front(ACTION_NODE(rNode.stDel.eVer, rNode.stDel.eHor));
+            m_lstActs.push_front(rNode);
+            break;
+
+        case kMove:
+            moveButton(rNode.stMove.iIndexSrc, rNode.stMove.iIndexDst);
+            break;
+
+        case kAddEx:
+            break;
+
+        case kClearUp:
+            break;
+
+        default:
+            ;
+        }
+
+        m_lstActs.pop_front();
+    }
+    
+    if (m_lstActs.empty())
+    {
+        return;
+    }
+
+    // 动作后半段，上一个动作彻底执行结束，并且已弹出，新的动作开始运行
+    ACTION_NODE rNode = m_lstActs.front();
+    CCSkillButtonBase* pBtn;
+    switch (rNode.eAct)
+    {
+    case kAdd:
+        addButton(rNode.stAdd.pBtn, rNode.stAdd.iIndex);
+        CC_SAFE_RELEASE(rNode.stAdd.pBtn);
+        rNode.stAdd.pBtn->setOpacity(0);
+        rNode.stAdd.pBtn->runAction(CCSequence::create(CCFadeIn::create(CONST_ACTION_DURATION), NULL));
+        onPrevActEnd(rNode.stAdd.pBtn);
+        break;
+
+    case kDel:
+        pBtn = getButton(rNode.stDel.iIndex);
+        pBtn->stopAllActions();
+        pBtn->runAction(CCSequence::create(CCFadeOut::create(CONST_ACTION_DURATION), CCCallFuncN::create(this, callfuncN_selector(CCButtonPanel::onPrevActEnd)), NULL));
+        break;
+
+    case kMove:
+        pBtn = getButton(rNode.stMove.iIndexSrc);
+        pBtn->runAction(CCSequence::create(CCMoveTo::create(CONST_ACTION_DURATION, index2Point(rNode.stMove.iIndexDst)), CCCallFuncN::create(this, callfuncN_selector(CCButtonPanel::onPrevActEnd)), NULL));
+        break;
+
+    case kAddEx:
+        addButton(rNode.stAddEx.pBtn, allotSlot(rNode.stAddEx.eVer, rNode.stAddEx.eHor));
+        CC_SAFE_RELEASE(rNode.stAddEx.pBtn);
+        rNode.stAddEx.pBtn->setOpacity(0);
+        rNode.stAddEx.pBtn->runAction(CCSequence::create(CCFadeIn::create(CONST_ACTION_DURATION), NULL));
+        onPrevActEnd(rNode.stAddEx.pBtn);
+        break;
+
+    case kClearUp:
+        {
+            bool bY = (rNode.stClearUp.eVer == kBottomToTop);
+            bool bX = (rNode.stClearUp.eHor == kLeftToRight);
+
+            int iY = bY ? 1 : -1;
+            int iX = bX ? 1 : -1;
+
+            int iStartY = bY ? 0 : (m_iRow - 1);
+            int iEndY = bY ? (m_iRow - 1) : 0;
+
+            int iStartX = bX ? 0 : (m_iLine - 1);
+            int iEndX = bX ? (m_iLine - 1) : 0;
+
+            int iMove = 0;
+            m_lstActs.pop_front();
+            CCSkillButtonBase* pBtn;
+            int iEmpty = -1;
+            int iIndex;
+            for (int y = iStartY; bY ? (y <= iEndY) : (y >= iEndY); y += iY)
+            {
+                int iStartX0 = (y == iStartY ? iStartX : (bX ? 0 : (m_iLine - 1)));
+                int iEndX0 = (y == iEndY ? iEndX : (bX ? (m_iLine - 1) : 0));
+                for (int x = iStartX0; bX ? (x <= iEndX0) : (x >= iEndX0); x += iX)
+                {
+                    iIndex = toIndex(x, y);
+                    pBtn = getButton(iIndex);
+                    if (pBtn)
+                    {
+                        if (iEmpty >= 0)
+                        {
+                            // 遇到按钮后且前面有空槽，移动按钮
+                            m_ppBtnPos[iEmpty] = pBtn;
+                            m_ppBtnPos[iIndex] = NULL;
+                            
+                            m_lstActs.push_front(ACTION_NODE()); // empty action
+                            ++iMove;
+                            
+                            pBtn->runAction(CCSequence::create(CCMoveTo::create(CONST_ACTION_DURATION, index2Point(iEmpty)), CCCallFuncN::create(this, callfuncN_selector(CCButtonPanel::onPrevActEnd)), NULL));
+                            // 在前面找一块新空槽
+                            iEmpty = allotSlot(index2X(iEmpty), index2Y(iEmpty), x, y, rNode.stClearUp.eVer, rNode.stClearUp.eHor);
+                        }
+                    }
+                    else
+                    {
+                        if (iEmpty < 0)
+                        {
+                            // 首次遇到空槽
+                            iEmpty = iIndex;
+                        }
+                    }
+                }
+            }
+
+            //if (!iMove) onPrevActEnd((CCNode*)(1));
+        }
+        
+        break;
+
+    default:
+        ;
+    }
+}
+
+void CCButtonPanel::pushAddButtonAction( CCSkillButtonBase* pButton, int iIndex )
+{
+    CC_SAFE_RETAIN(pButton);
+    pushAction(ACTION_NODE(pButton, iIndex));
+}
+
+void CCButtonPanel::pushDelButtonAction( int iIndex, ADD_VERTICAL eVer /*= kBottomToTop*/, ADD_HORIZONTAL eHor /*= kLeftToRight*/ )
+{
+    pushAction(ACTION_NODE(iIndex, eVer, eHor));
+}
+
+void CCButtonPanel::pushMoveButtonAction( int iIndexSrc, int iIndexDst )
+{
+    pushAction(ACTION_NODE(iIndexSrc, iIndexDst));
+}
+
+void CCButtonPanel::pushAddButtonExAction( CCSkillButtonBase* pButton, ADD_VERTICAL eVer /*= kBottomToTop*/, ADD_HORIZONTAL eHor /*= kLeftToRight*/ )
+{
+    CC_SAFE_RETAIN(pButton);
+    pushAction(ACTION_NODE(pButton, eVer, eHor));
+}
+
+void CCButtonPanel::pushClearUpSlotAction( ADD_VERTICAL eVer /*= kBottomToTop*/, ADD_HORIZONTAL eHor /*= kLeftToRight*/ )
+{
+    pushAction(ACTION_NODE(eVer, eHor));
+}
+
+int CCButtonPanel::getMaxCount() const
+{
+    return m_iRow * m_iLine;
+}
+
+int CCButtonPanel::getCount() const
+{
+    return m_iCount;
+}
 
 CCProgressBar::CCProgressBar()
 {

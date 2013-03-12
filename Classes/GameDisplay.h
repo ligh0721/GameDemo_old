@@ -336,11 +336,127 @@ public:
 class CCButtonPanel : public CCNode
 {
 public:
+    enum ADD_HORIZONTAL
+    {
+        kLeftToRight,
+        kRightToLeft
+    };
+
+    enum ADD_VERTICAL
+    {
+        kBottomToTop,
+        kTopToBottom
+    };
+
+    enum ACTION_CMD
+    {
+        kUnknown,
+        kAdd,
+        kDel,
+        kMove,
+        kAddEx,
+        kClearUp
+    };
+
+    static const float CONST_ACTION_DURATION;
+
+    struct ACTION_NODE
+    {
+        ACTION_NODE() { memset(this, 0, sizeof(ACTION_NODE)); }
+        ACTION_NODE(CCSkillButtonBase* pBtn, int iIndex): eAct(kAdd) { stAdd.pBtn = pBtn; stAdd.iIndex = iIndex; }
+        ACTION_NODE(int iIndex, ADD_VERTICAL eVer, ADD_HORIZONTAL eHor): eAct(kDel) { stDel.iIndex = iIndex; stDel.eVer = eVer; stDel.eHor = eHor; }
+        ACTION_NODE(int iIndexSrc, int iIndexDst): eAct(kMove) { stMove.iIndexSrc = iIndexSrc; stMove.iIndexDst = iIndexDst; }
+        ACTION_NODE(CCSkillButtonBase* pBtn, ADD_VERTICAL eVer, ADD_HORIZONTAL eHor): eAct(kAddEx) { stAddEx.pBtn = pBtn; stAddEx.eVer = eVer; stAddEx.eHor = eHor; }
+        ACTION_NODE(ADD_VERTICAL eVer, ADD_HORIZONTAL eHor): eAct(kClearUp) { stClearUp.eVer = eVer; stClearUp.eHor = eHor; }
+        //~ACTION_NODE() { if (eAct == kAdd) {CC_SAFE_RELEASE(stAdd.pBtn); } else if (eAct == kAddEx) {CCLOG("release");CC_SAFE_RELEASE(stAddEx.pBtn);} }
+
+        ACTION_CMD eAct;
+        union
+        {
+            struct ACT_ADD // ADD
+            {
+                CCSkillButtonBase* pBtn;
+                int iIndex;
+            } stAdd;
+
+            struct ACT_DEL // DEL
+            {
+                int iIndex;
+                ADD_VERTICAL eVer;
+                ADD_HORIZONTAL eHor;
+            } stDel;
+
+            struct ACT_MOVE // MOVE
+            {
+                int iIndexSrc;
+                int iIndexDst;
+            } stMove;
+
+            struct ACT_ADDEX // ADDEX
+            {
+                CCSkillButtonBase* pBtn;
+                ADD_VERTICAL eVer;
+                ADD_HORIZONTAL eHor;
+            } stAddEx;
+
+            struct ACT_CLEARUP // CLEARUP
+            {
+                ADD_VERTICAL eVer;
+                ADD_HORIZONTAL eHor;
+            } stClearUp;
+        };
+    };
+
+    typedef list<ACTION_NODE> LIST_ACTION;
+
+public:
+    CCButtonPanel();
+    virtual ~CCButtonPanel();
+
     virtual bool init(int iRow, int iLine, float fButtonWidth, float fBorderWidth, float fInnerBorderWidth, const char* pBackgroundFrameName);
     CREATE_FUNC_PARAM(CCButtonPanel, (int iRow, int iLine, float fButtonWidth, float fBorderWidth, float fInnerBorderWidth, const char* pBackgroundFrameName), iRow, iLine, fButtonWidth, fBorderWidth, fInnerBorderWidth, pBackgroundFrameName);
 
-    virtual void addButton(CCSkillButtonBase* pButton, int iX, int iY);
-    virtual void delButton(CCSkillButtonBase* pButton);
+    void addButton(CCSkillButtonBase* pButton, int iIndex); // org
+    void addButton(CCSkillButtonBase* pButton, int iX, int iY);
+    
+    void delButton(int iIndex); // org
+    void delButton(int iX, int iY);
+    void delButton(CCSkillButtonBase* pButton);
+
+    void moveButton(int iIndexSrc, int iIndexDst); // org
+
+    void addButtonEx(CCSkillButtonBase* pButton, ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight);
+
+    int allotSlot(ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight);
+    int allotSlot(int iStartX, int iStartY, int iEndX, int iEndY, ADD_VERTICAL eVer, ADD_HORIZONTAL eHor);
+    void clearUpSlot(ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight);
+
+    void retainButton(CCSkillButtonBase* pButton);
+    CCSkillButtonBase* getRetainButton() const;
+
+    CCSkillButtonBase* getButton(int iX, int iY) const;
+    CCSkillButtonBase* getButton(int iIndex) const;
+
+    int getButtonIndex(CCSkillButtonBase* pButton) const;
+
+    int index2Y(int iIndex) const;
+    int index2X(int iIndex) const;
+    int toIndex(int iX, int iY) const;
+    CCPoint index2Point(int iIndex);
+
+    bool isFull();
+
+    void pushAction(const ACTION_NODE& roAct);
+    void onPrevActEnd(CCNode* pNode);
+
+    void pushAddButtonAction(CCSkillButtonBase* pButton, int iIndex);
+    void pushDelButtonAction(int iIndex, ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight);
+    void pushMoveButtonAction(int iIndexSrc, int iIndexDst);
+    void pushAddButtonExAction(CCSkillButtonBase* pButton, ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight);
+    void pushClearUpSlotAction(ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight);
+
+    int getMaxCount() const;
+    int getCount() const;
 
 public:
     CC_SYNTHESIZE(int, m_iRow, Row);
@@ -353,6 +469,10 @@ public:
 
 public:
     int m_iOwnerKey;
+    CCSkillButtonBase** m_ppBtnPos;
+    CCSkillButtonBase* m_pRetain;
+    LIST_ACTION m_lstActs;
+    int m_iCount;
 };
 
 class CCProgressBar : public CCNode

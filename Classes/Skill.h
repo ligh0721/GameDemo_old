@@ -645,8 +645,8 @@ class CThrowBuff : public CBuffSkill
 public:
     CThrowBuff();
     
-    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fThrowRange, float fThrowDuration, float fMaxHeight, const CAttackValue& roDamage, float fDamageRange, int iBuffTemplateKey, int iBuffLevel);
-    M_CREATE_FUNC_PARAM(CThrowBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fThrowRange, float fThrowDuration, float fMaxHeight, const CAttackValue& roDamage, float fDamageRange, int iBuffTemplateKey, int iBuffLevel), fDuration, bCanBePlural, iSrcKey, fThrowRange, fThrowDuration, fMaxHeight, roDamage, fDamageRange, iBuffTemplateKey, iBuffLevel);
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, float fThrowRange, float fThrowDuration, float fMaxHeight, const CAttackValue& roDamage, float fDamageRange, bool bRotate, int iBuffTemplateKey, int iBuffLevel);
+    M_CREATE_FUNC_PARAM(CThrowBuff, (float fDuration, bool bCanBePlural, int iSrcKey, float fThrowRange, float fThrowDuration, float fMaxHeight, const CAttackValue& roDamage, float fDamageRange, bool bRotate, int iBuffTemplateKey, int iBuffLevel), fDuration, bCanBePlural, iSrcKey, fThrowRange, fThrowDuration, fMaxHeight, roDamage, fDamageRange, bRotate, iBuffTemplateKey, iBuffLevel);
     virtual CCObject* copyWithZone(CCZone* pZone);
     
     M_SYNTHESIZE_PASS_BY_REF(CCPoint, m_oEndPos, EndPos);
@@ -666,6 +666,7 @@ public:
     int m_iBuffTemplateKey;
     int m_iBuffLevel;
     float m_fDamageRange;
+    bool m_bRotate;
 };
 
 class CTransmitBuff : public CBuffSkill

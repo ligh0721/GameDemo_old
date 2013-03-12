@@ -74,6 +74,7 @@ public:
     int m_iHero;
 
     CUnitInfoPatchManager m_oUipm;
+    int m_iBuffGetting;
 };
 
 

@@ -10,6 +10,8 @@
 #include "Skill.h"
 #include "GameCtrl.h"
 #include "UnitInfo.h"
+#include "WHomeScene.h"
+
 
 CSkill::CSkill()
     : m_iKey(CCGameManager::sharedGameManager()->getLogicBody()->keygen())
@@ -59,7 +61,9 @@ void CSkill::onSkillDel()
     {
         return;
     }
-    pPanel->delButton(pDisplayBody);
+    //pPanel->pushDelButtonAction(pPanel->getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())));
+    pPanel->delButton(pPanel->getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())));
+    pPanel->clearUpSlot();
 }
 
 void CSkill::onSkillReady()
@@ -1584,24 +1588,29 @@ void CSplashAct::onSkillCast()
         {
             pAd = CAttackData::create();
             (!pTBuff) && (pTBuff = dynamic_cast<CBuffSkill*>(pSm->getSkill(m_iBuffTemplateKey)));
-            pBuff = dynamic_cast<CBuffSkill*>(pTBuff->copy());
-            pAd->addBuff(pBuff, 100);
+            if (pTBuff)
+            {
+                pBuff = dynamic_cast<CBuffSkill*>(pTBuff->copy());
+                pBuff->setSrcKey(pO->getKey());
+                pAd->addBuff(pBuff, 100);
+            }
+
             if (fDis <= m_fNearRange)
             {
                 pAd->setAttack(m_oNearDamage);
-                pO->attackAdv(pAd, pUnit, dwTriggerMask);
+                //pO->attackAdv(pAd, pUnit, dwTriggerMask);
                 pUnit->damagedAdv(pAd, pO, dwTriggerMask);
             }
             else if (fDis <= m_fMidRange)
             {
                 pAd->setAttack(m_oMidDamage);
-                pO->attackAdv(pAd, pUnit, dwTriggerMask);
+                //pO->attackAdv(pAd, pUnit, dwTriggerMask);
                 pUnit->damagedAdv(pAd, pO, dwTriggerMask);
             }
             else
             {
                 pAd->setAttack(m_oFarDamage);
-                pO->attackAdv(pAd, pUnit, dwTriggerMask);
+                //pO->attackAdv(pAd, pUnit, dwTriggerMask);
                 pUnit->damagedAdv(pAd, pO, dwTriggerMask);
             }
         }
@@ -1617,7 +1626,7 @@ CThrowBuff::CThrowBuff()
 
 }
 
-bool CThrowBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fThrowRange, float fThrowDuration, float fMaxHeight, const CAttackValue& roDamage, float fDamageRange, int iBuffTemplateKey, int iBuffLevel )
+bool CThrowBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fThrowRange, float fThrowDuration, float fMaxHeight, const CAttackValue& roDamage, float fDamageRange, bool bRotate, int iBuffTemplateKey, int iBuffLevel )
 {
     setThrowRange(fThrowRange);
     setThrowDuration(fThrowDuration);
@@ -1626,12 +1635,13 @@ bool CThrowBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fT
     m_iBuffTemplateKey = iBuffTemplateKey;
     m_iBuffLevel = iBuffLevel;
     m_fDamageRange = fDamageRange;
+    m_bRotate = bRotate;
     return CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
 }
 
 CCObject* CThrowBuff::copyWithZone( CCZone* pZone )
 {
-    return CThrowBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fThrowRange, m_fThrowDuration, m_fMaxHeight, m_oDamage, m_fDamageRange, m_iBuffTemplateKey, m_iBuffLevel);
+    return CThrowBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fThrowRange, m_fThrowDuration, m_fMaxHeight, m_oDamage, m_fDamageRange, m_bRotate, m_iBuffTemplateKey, m_iBuffLevel);
 }
 
 void CThrowBuff::onBuffAdd()
@@ -1655,7 +1665,16 @@ void CThrowBuff::onBuffAdd()
     if (m_oEndPos.equals(CCPointZero))
     {
         float fA = rand();
-        float fR = rand() % (int)m_fThrowRange;
+        float fR;
+        if (m_fThrowRange < FLT_EPSILON)
+        {
+            fR = 0;
+        }
+        else
+        {
+            fR = rand() % (int)m_fThrowRange;
+        }
+
         oEndPos = ccpAdd(u->getPosition(), ccp(cos(fA) * fR, sin(-fA) * fR));
     }
     else
@@ -1671,9 +1690,12 @@ void CThrowBuff::onBuffAdd()
     pAct->setTag(m_iActThrowKey);
     u->getSprite()->runAction(pAct);
 
-    pAct = CCRepeatForever::create(CCRotateBy::create(1, rand() % 3600 - 1800));
-    pAct->setTag(m_iActRotateKey);
-    u->getSprite()->runAction(pAct);
+    if (m_bRotate)
+    {
+        pAct = CCRepeatForever::create(CCRotateBy::create(1, rand() % 3600 - 1800));
+        pAct->setTag(m_iActRotateKey);
+        u->getSprite()->runAction(pAct);
+    }
 }
 
 void CThrowBuff::onBuffDel(bool bCover)
@@ -1683,15 +1705,12 @@ void CThrowBuff::onBuffDel(bool bCover)
 
 void CThrowBuff::onThrowEnd( CCNode* pNode )
 {
-    M_DEF_SM(pSm);
-    CBuffSkill* pBuff = dynamic_cast<CBuffSkill*>(pSm->copySkill(m_iBuffTemplateKey));
-    pBuff->setLevel(m_iBuffLevel);
-
     CGameUnit* u = getOwner();
     if (!u)
     {
         return;
     }
+    u->resume();
 
     u->getSprite()->stopActionByTag(m_iActRotateKey);
     u->getSprite()->setRotation(0);
@@ -1706,9 +1725,23 @@ void CThrowBuff::onThrowEnd( CCNode* pNode )
     CGameUnit* pS = u->getUnitLayer()->getUnitByKey(m_iSrcKey);
     CAttackData* pAd = CAttackData::create();
     pAd->setAttack(m_oDamage);
-    pAd->addBuff(pBuff, 50);
+
+    M_DEF_SM(pSm);
+    CBuffSkill* pBuff = dynamic_cast<CBuffSkill*>(pSm->copySkill(m_iBuffTemplateKey));
+    if (pBuff)
+    {
+        pBuff->setLevel(m_iBuffLevel);
+        pAd->addBuff(pBuff, 50);
+    }
+    
+    
     u->damagedAdv(pAd, pS);
-    u->getUnitLayer()->getUnits()->getUnitsInRange(u->getPosition(), m_fDamageRange, -1, CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(pS))->damagedAdv(pAd, pS);
+
+    if (m_fDamageRange > FLT_EPSILON)
+    {
+        u->getUnitLayer()->getUnits()->getUnitsInRange(u->getPosition(), m_fDamageRange, -1, CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(pS))->damagedAdv(pAd, pS);
+    }
+    
     u->getUnitLayer()->runAction(CCShakeAct::create(0.3, 0.02, 5));
 }
 
@@ -2679,6 +2712,7 @@ bool CJumpChopBuff::checkConditions( CGameUnit* pUnit, CJumpChopBuff* pBuff )
 
 bool CThunderBolt2Buff::init( float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fRange, const CAttackValue& roDamage )
 {
+    fDuration = rand() % 10 + 2;
     CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
     m_fRange = fRange;
     m_oDamage = roDamage;
@@ -2696,10 +2730,15 @@ void CThunderBolt2Buff::onBuffAdd()
 {
     CBuffSkill::onBuffAdd();
     onUnitInterval();
+    CCSkillButtonBase* pBtn = CCSkillButtonNormal::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0.0, NULL, NULL, NULL);
+    setDisplayBody(pBtn);
+    //dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.pushAddButtonExAction(pBtn);
+    dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.addButtonEx(pBtn);
 }
 
 void CThunderBolt2Buff::onBuffDel(bool bCover)
 {
+    //dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.pushDelButtonAction(dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())));
     CBuffSkill::onBuffDel(bCover);
 }
 

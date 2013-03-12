@@ -25,9 +25,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     pDirector->setOpenGLView(pEGLView);
 #if 1
-    pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
+    //pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
+    //pDirector->setContentScaleFactor(1.0);
     //CCFileUtils::sharedFileUtils()->setResourceDirectory(largeResource.directory);
+
+    //pEGLView->setFrameSize(512, 384);
+    pEGLView->setFrameZoomFactor(0.5);
+
+    pEGLView->setDesignResolutionSize(1024, 768, kResolutionNoBorder);
     pDirector->setContentScaleFactor(1.0);
+    
 #else
     // Set the design resolution
     pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);

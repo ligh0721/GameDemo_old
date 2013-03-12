@@ -504,7 +504,7 @@ public:
         kAnimationAct3 = 4,
         kAnimationAct4 = 5,
         kAnimationAct5 = 6,
-        kAnimationAct6 = 7,
+        kAnimationAct6 = 7
     };
     typedef vector<ANIMATION_INDEX> VEC_ANI;
     

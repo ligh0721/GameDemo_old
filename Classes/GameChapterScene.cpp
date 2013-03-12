@@ -95,10 +95,20 @@ bool CCGameChapterSceneLayer::init()
 			m_oSp.addButton(pSb, line, rowCount - row - 1);
 		}
 	}
+    
 	addChild(&m_oSp);
 	CCLog("charpter panel size width=%d, height=%d" , m_oSp.getSkillMenu()->getContentSize().width, m_oSp.getSkillMenu()->getContentSize().height);
 	m_oSp.setPosition(ccp(oSz.width/2 , oSz.height/2));
 
+    //m_oSp.delButton(9);
+    //m_oSp.clearUpSlot(CCButtonPanel::kBottomToTop);
+    //m_oSp.clearUpSlot(CCButtonPanel::kTopToBottom);
+    
+    
+    m_oSp.pushDelButtonAction(9);
+    m_oSp.pushClearUpSlotAction(CCButtonPanel::kBottomToTop, CCButtonPanel::kRightToLeft);
+    m_oSp.pushClearUpSlotAction(CCButtonPanel::kTopToBottom);
+    
 
 	m_oMenu.init();
     addChild(&m_oMenu);

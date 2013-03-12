@@ -112,6 +112,9 @@ bool COrgSkillInfo::init()
     pSkill = CSpeedBuff::create(5, false, CExtraCoeff(-0.5, 0), CExtraCoeff(-0.5, 0));
     iKey = pSm->addSkill(pSkill);
     
+    pSkill = CThrowBuff::create(5, false, 0, 0, 0.5, 50, CAttackValue(0, CAttackValue::kPhysical, 0.0), 0.0, false, iKey, 1);
+    iKey = pSm->addSkill(pSkill);
+    
     pSkill = CSplashAct::create(8, 20, CAttackValue(1, CAttackValue::kPhysical, 80.0), 50, CAttackValue(1, CAttackValue::kPhysical, 40.0), 150, CAttackValue(1, CAttackValue::kPhysical, 20.0), iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderClap1].iIndex = iKey;
@@ -179,7 +182,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSpeedUp1].sName = "加速";
     m_mapSkills[kSpeedUp1].sDesc = "提高自身100%的移动速度和100%的攻击速度";
 
-    pSkill = CThunderBolt2Buff::create(5, false, 0, 1, 300, CAttackValue(1, CAttackValue::kMagical, 50.0));
+    pSkill = CThunderBolt2Buff::create(5, true, 0, 1, 300, CAttackValue(1, CAttackValue::kMagical, 50.0));
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderBoltBuff1].iIndex = iKey;
     m_mapSkills[kThunderBoltBuff1].sName = "雷击";
