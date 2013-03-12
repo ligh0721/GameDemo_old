@@ -46,7 +46,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kHpChange2].sName = "自动痊愈";
     m_mapSkills[kHpChange2].sDesc = "每秒恢复自身最大生命的0.2%";
     
-    pSkill = CHpChangeBuff::create(3, false, 0.1, 0.5, true, -1);
+    pSkill = CHpChangeBuff::create(3, false, 0, 0.1, 0.5, true, -1);
     iKey = pSm->addSkill(pSkill);
     
     pSkill = CAuraPas::create(150, CAuraPas::kOwn | CAuraPas::kAlly, 0.5, iKey, 1);
@@ -64,7 +64,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSpeedAura1].sName = "振奋光环";
     m_mapSkills[kSpeedAura1].sDesc = "为周围半径150范围内的友方单位(不含自身)提供50%移动速度和50%攻击速度的提升";
     
-    pSkill = CHpChangeBuff::create(20, true, 0.1, -0.02, true, -1);
+    pSkill = CHpChangeBuff::create(20, true, 0, 0.1, -0.02, true, -1);
     iKey = pSm->addSkill(pSkill);
     
     pSkill = CAuraPas::create(150, CAuraPas::kEnemy, 0.5, iKey, 1);
@@ -136,7 +136,7 @@ bool COrgSkillInfo::init()
     //pSkill = CThrowBuff::create(5, false, 0, 150, 0.5, 100, CAttackValue(1, CAttackValue::kPhysical, 50.0), 50.0, iKey, 1);
     //iKey = pSm->addSkill(pSkill);
 
-    pSkill = CKnockBackBuff::create(0.5, false, 0, 100, 0.0, CAttackValue(1, CAttackValue::kPhysical, 50.0), iKey, 1);
+    pSkill = CKnockBackBuff::create(0.3, false, 0, 50, 0.0, CAttackValue(1, CAttackValue::kPhysical, 50.0), iKey, 1);
     iKey = pSm->addSkill(pSkill);
     
     // for test
@@ -147,7 +147,7 @@ bool COrgSkillInfo::init()
     //pSkill = CHarmShieldBuff::create(2, false, CExtraCoeff(0, 0), true);
     //iKey = pSm->addSkill(pSkill);
     
-	pSkill = CAttackBuffMakerPas::create(50, iKey, 1, CExtraCoeff(1, 0));
+	pSkill = CAttackBuffMakerPas::create(100, iKey, 1, CExtraCoeff(1, 0));
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThrowHit1].iIndex = iKey;
     m_mapSkills[kThrowHit1].sName = "击飞";
@@ -171,6 +171,10 @@ bool COrgSkillInfo::init()
     
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
     iKey = pSm->addSkill(pSkill);
+
+    pSkill = CDarkHoleAct::create(10,300);
+    iKey = pSm->addSkill(pSkill);
+
     m_mapSkills[kSpeedUp1].iIndex = iKey;
     m_mapSkills[kSpeedUp1].sName = "加速";
     m_mapSkills[kSpeedUp1].sDesc = "提高自身100%的移动速度和100%的攻击速度";
@@ -179,7 +183,7 @@ bool COrgSkillInfo::init()
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderBoltBuff1].iIndex = iKey;
     m_mapSkills[kThunderBoltBuff1].sName = "雷击";
-    m_mapSkills[kThunderBoltBuff1].sDesc = "暂无";
+    m_mapSkills[kThunderBoltBuff1].sDesc = "召唤圣雷对周围进行随机范围性打击";
 
     pSkill = CChainBuff::create(0.5, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kChain1));
     dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
@@ -208,15 +212,8 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSwordStorm1].iIndex = iKey;
     m_mapSkills[kSwordStorm1].sName = "剑刃风暴";
     m_mapSkills[kSwordStorm1].sDesc = "如风暴般高速旋转手中剑刃，使周围单位受到伤害";
-
-    pSkill = CJumpChopSkill::create(100, 200, 10, CAttackValue(1, CAttackValue::kPhysical, 50.0), "act5");
-    iKey = pSm->addSkill(pSkill);
-    m_mapSkills[kJumpChop1].iIndex = iKey;
-    m_mapSkills[kJumpChop1].sName = "跳劈";
-    m_mapSkills[kJumpChop1].sDesc = "跃起给敌人重重打击";
-
     
-    pSkill = CHpChangeBuff::create(5, true, 0.1, 2, false, -1);
+    pSkill = CHpChangeBuff::create(5, true, 0, 0.1, 2, false, -1);
     iKey = pSm->addSkill(pSkill);
 
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
@@ -237,14 +234,14 @@ bool COrgSkillInfo::init()
     m_mapSkills[kShockWave1].sName = "真空波";
     m_mapSkills[kShockWave1].sDesc = "急速斩击形成真空冲击波，对直线上的敌人造成50点魔法伤害";
     
-    pSkill = CJumpChopBuff::create(20, false, 0, 300, 7, CAttackValue(1, CAttackValue::kPhysical, 50.0), "act5");
+    pSkill = CJumpChopBuff::create(20, false, 0, 200, 7, CAttackValue(1, CAttackValue::kPhysical, 50.0), "act5");
     iKey = pSm->addSkill(pSkill);
     
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
     iKey = pSm->addSkill(pSkill);
-    m_mapSkills[kJumpChop2].iIndex = iKey;
-    m_mapSkills[kJumpChop2].sName = "一刀斩";
-    m_mapSkills[kJumpChop2].sDesc = "连续跃起给给范围内的敌人致命一击";
+    m_mapSkills[kJumpChop1].iIndex = iKey;
+    m_mapSkills[kJumpChop1].sName = "一刀斩";
+    m_mapSkills[kJumpChop1].sDesc = "连续跃起给范围内的敌人致命一击";
 
     pSkill = CFastStrikeBackBuff::create(10, false, 0, 1000, 3, 0, 1);
     iKey = pSm->addSkill(pSkill);
@@ -254,8 +251,8 @@ bool COrgSkillInfo::init()
     m_mapSkills[kFastStrikeBack1].iIndex = iKey;
     m_mapSkills[kFastStrikeBack1].sName = "瞬身反击";
     m_mapSkills[kFastStrikeBack1].sDesc = "受到攻击前瞬间移动到攻击者的背后，对其进行致命反击";
-    
-    pSkill = CAddDamageBuff::create(10, false, 0, CExtraCoeff(10, 0), 3, 0);
+        
+	pSkill = CAddDamageBuff::create(5, false, 0, CExtraCoeff(10, 0), 3, 0);
     iKey = pSm->addSkill(pSkill);
     
     pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
@@ -263,7 +260,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kAddDamage1].iIndex = iKey;
     m_mapSkills[kAddDamage1].sName = "怒火";
     m_mapSkills[kAddDamage1].sDesc = "在一定时间内攻击力加强";
-    
+
     return true;
 }
 

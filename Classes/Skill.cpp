@@ -648,9 +648,9 @@ void CAttackBuffMakerPas::onUnitAttackTarget( CAttackData* pAttack, CUnit* pTarg
     }
 }
 
-bool CHpChangeBuff::init(float fDuration, bool bCanBePlural, float fInterval, float fHpChange, bool bPercent, float fMinHp)
+bool CHpChangeBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float fInterval, float fHpChange, bool bPercent, float fMinHp)
 {
-    CBuffSkill::init(fDuration, bCanBePlural);
+    CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
     m_fInterval = fInterval;
     m_fIntervalPass = 0;
     m_fHpChange = fHpChange;
@@ -662,7 +662,7 @@ bool CHpChangeBuff::init(float fDuration, bool bCanBePlural, float fInterval, fl
 
 CCObject* CHpChangeBuff::copyWithZone( CCZone* pZone )
 {
-    return CHpChangeBuff::create(m_fDuration, m_bCanBePlural, m_fInterval, m_fHpChange, m_bPercent, m_fMinHp);
+    return CHpChangeBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_fInterval, m_fHpChange, m_bPercent, m_fMinHp);
 }
 
 void CHpChangeBuff::onUnitTick( float fDt )
@@ -1569,7 +1569,8 @@ void CSplashAct::onSkillCast()
     CCObject* pObj;
     CBuffSkill* pTBuff = NULL;
     CBuffSkill* pBuff;
-    uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
+    //uint32_t dwTriggerMask = CUnit::kMaskActiveTrigger;
+    uint32_t dwTriggerMask = UNIT_TRIGGER_MASK(CGameUnit::kDamageTargetTrigger);
 
     CCARRAY_FOREACH(pO->getUnitLayer()->getUnits()->getUnitsArray(), pObj)
     {
@@ -1588,16 +1589,19 @@ void CSplashAct::onSkillCast()
             if (fDis <= m_fNearRange)
             {
                 pAd->setAttack(m_oNearDamage);
+                pO->attackAdv(pAd, pUnit, dwTriggerMask);
                 pUnit->damagedAdv(pAd, pO, dwTriggerMask);
             }
             else if (fDis <= m_fMidRange)
             {
                 pAd->setAttack(m_oMidDamage);
+                pO->attackAdv(pAd, pUnit, dwTriggerMask);
                 pUnit->damagedAdv(pAd, pO, dwTriggerMask);
             }
             else
             {
                 pAd->setAttack(m_oFarDamage);
+                pO->attackAdv(pAd, pUnit, dwTriggerMask);
                 pUnit->damagedAdv(pAd, pO, dwTriggerMask);
             }
         }
@@ -2232,7 +2236,7 @@ void CSwordStormSkill::onActEndPerAnim(CCObject* pObj)
         if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
             && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
         {
-            //给范围内的敌人受到持续伤害
+            //围诘牡艿撕
             CAttackData* pAttack = CAttackData::create();
             pAttack->setAttack(m_oMaxDamage);
             pUnit->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
@@ -2283,7 +2287,6 @@ void CChainBuff::onBuffAdd()
     m_iStartUnit = o->getKey();
     setTimesLeft(getTimesLeft() - 1);
     m_mapDamaged[m_iStartUnit] = true;
-    //CCLOG("addBuff add %d to map, left %d times", m_iStartUnit, getTimesLeft());
 }
 
 void CChainBuff::onBuffDel(bool bCover)
@@ -2311,7 +2314,6 @@ void CChainBuff::onBuffDel(bool bCover)
 
     m_iStartUnit = o->getKey();
     m_iEndUnit = t->getKey();
-    CCLOG("Ligh: %d -> %d", m_iStartUnit, m_iEndUnit);
 
     CGameUnit* s = dynamic_cast<CGameUnit*>(l->getUnitByKey(m_iSrcKey));
 
@@ -2549,7 +2551,6 @@ void CJumpChopSkill::onJumpChopEnd(cocos2d::CCObject *pObj)
     pU->getSprite()->runAction(pAction);
     
     m_pLastTargetUnit = pTarget;
-    CCLOG("target key is %d", pTarget->getKey());
 }
 
 bool CJumpChopBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, float fMaxJumpRange, int iMaxJumpCount, const CAttackValue &roDamage, char *pActName)
@@ -2621,9 +2622,10 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
     if (pLast)
     {
         uint32_t dwTriggerMask = CUnit::kNoMasked;
-        CAttackData* pAttackData = CAttackData::create();
-        pAttackData->setAttack(m_oMaxDamage);
-        pLast->damagedAdv(pAttackData, o, dwTriggerMask);
+        CAttackData* pAtk = CAttackData::create();
+        pAtk->setAttack(m_oMaxDamage);
+        //o->attackAdv(pAtk, pLast, dwTriggerMask);
+        pLast->damagedAdv(pAtk, o, dwTriggerMask);
         pStart = pLast;
         --m_iJumpCountLeft;
     }
@@ -2632,7 +2634,7 @@ void CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject *pObj)
         pStart = o;
         m_iJumpCountLeft = m_iMaxJumpCount;
     }
-
+    
     CGameUnit* pTarget;
 
     if (m_iJumpCountLeft <= 0 || !(pTarget = l->getUnits()->getUnitsInRange(pStart->getPosition(), m_fMaxJumpRange, INFINITE, CONDITION(CJumpChopBuff::checkConditions), this)->getRandomUnit()))
@@ -2752,19 +2754,6 @@ void CThunderBolt2Buff::onUnitInterval()
 
     CProjectile * pProj = dynamic_cast<CProjectile*>(pPm->getProjectileByIndex(COrgUnitInfo::kLightning3)->copy());
     pProj->fireInstant(o->getUnitLayer(), o, t, t2, pAd, 2, ccp(0, 800));
-    /*
-    o->getUnitLayer()->addProjectile(pProj);
-    pProj->setProjectileBirthOffset(ccp(0, 800));
-    pProj->getSprite()->setScaleY(2);
-
-    //pProj->setAttackData(pAd);
-    pProj->setOwner(m_iSrcKey);
-    pProj->setStart(t2->getKey());
-    pProj->setTarget(t);
-    //pProj->getSprite()->setScale(3.0);
-    pProj->setPosition(t->getPosition());
-    pProj->onDie();
-    */
 
     o->getUnitLayer()->getUnits()
         ->getUnitsInRange(targetPoint,100,-1,CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(s))->damagedAdv(pAd, s, CUnit::kMaskActiveTrigger);
@@ -2831,7 +2820,7 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
     float fDis = 0.0;
     
     
-    //给范围内的敌人受到持续伤害
+    //围诘牡艿撕
     CAttackData* pAttack = CAttackData::create();
     pAttack->setAttack(m_oMaxDamage);
     
@@ -2849,7 +2838,7 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
         if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
             && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
         {
-            //给范围内的敌人受到持续伤害
+            //围诘牡艿撕
             CAttackData* pAttack = CAttackData::create();
             pAttack->setAttack(m_oMaxDamage);
             pUnit->damagedAdv(pAttack,  pOwn, CUnit::kMaskActiveTrigger);
@@ -2859,7 +2848,7 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
 
 bool CForceMoveBuff::init( float fDuration, bool bCanBePlural,int iSrcKey, CCNode *pNode ,float fSpeed )
 {
-    CStunBuff::init(5, false, iSrcKey);
+    CStunBuff::init(fDuration, false, iSrcKey);
     m_pNode = pNode;
     m_fSpeed = fSpeed;
     return true;
@@ -2874,11 +2863,14 @@ void CForceMoveBuff::onBuffAdd()
 {
     CStunBuff::onBuffAdd();
     CGameUnit *pO = getOwner();
-    pO->getSprite()->runAction(CCMoveToNode::create(5,m_pNode));
+    CCAction *pAct = CCEaseIn::create(CCMoveToNode::create(getDuration(), m_pNode), 2.5);
+    pAct->setTag(m_iActMoveKey);
+    pO->getSprite()->runAction(pAct);
 }
 
 void CForceMoveBuff::onBuffDel(bool bCover)
 {
+    getOwner()->getSprite()->stopActionByTag(m_iActMoveKey);
     CStunBuff::onBuffDel(bCover);
 }
 
@@ -2940,7 +2932,7 @@ void CWhirlWindBuff::onUnitInterval()
     t->setForce(o->getForce());
     t->setAlly(o->getAlly());
     float dmg = 0 - m_oDamage.getAttack(CAttackValue::kMagical);
-    CBuffSkill *pSkill = CHpChangeBuff::create(20, true, 0.1, dmg, false, -1);
+    CBuffSkill *pSkill = CHpChangeBuff::create(20, true, o->getKey(), 0.1, dmg, false, -1);
     M_DEF_SM(pSm);
     int iKey = pSm->addSkill(pSkill);
     CBuffSkill *pBuff2 = CCountDownBuff::create(6,false,0);
@@ -3149,7 +3141,7 @@ void CKnockBackBuff::onBuffAdd()
     const CCPoint& roPos2 = o->getPosition();
     float fR = ccpToAngle(ccpSub(roPos2, roPos1));
     
-    CCAction* pAct = CCMoveBy::create(m_fDuration, ccp(cos(fR) * m_fRange, sin(fR) * m_fRange));
+    CCAction* pAct = CCEaseExponentialOut::create(CCMoveBy::create(m_fDuration, ccp(cos(fR) * m_fRange, sin(fR) * m_fRange)));
     pAct->setTag(m_iActKnockBackKey);
     o->getSprite()->runAction(pAct);
     s->attack(s->isDoingOr(CGameUnit::kIntended) ? s->getLastAttackTarget() : 0, s->isDoingOr(CGameUnit::kIntended));
@@ -3166,6 +3158,55 @@ void CKnockBackBuff::onKnockBackEnd( CCNode* pNode )
 {
 
 }
+
+bool CDarkHoleAct::init( float fCoolDown,float fCastRange )
+{
+    CActiveSkill::init(fCoolDown);
+    setCastTargetType(CActiveSkill::kPointTarget);
+    setCastRange(fCastRange);
+    return true;
+}
+
+void CDarkHoleAct::onSkillAdd()
+{
+    CActiveSkill::onSkillAdd();
+}
+
+void CDarkHoleAct::onSkillCast()
+{
+    CCPoint tarPoint = getTargetPoint();
+    M_DEF_UM(pUm);
+    CGameUnit* t = pUm->unitByInfo(2);
+    t->setRewardExp(0);
+    t->setFixed(true);
+    CGameUnit* o = getOwner();
+    o->getUnitLayer()->addUnit(t);
+    t->setPosition(tarPoint);
+    t->setForce(o->getForce());
+    t->setAlly(o->getAlly());
+    CCountDownBuff *pBuff2 = CCountDownBuff::create(5, false,0);
+    t->addBuff(pBuff2);
+    CBuffSkill *pSkill = CHpChangeBuff::create(1, false, o->getKey(), 0.6, -10, false, -1);
+    M_DEF_SM(pSm);
+    int iKey = pSm->addSkill(pSkill);
+    CBuffSkill *pSkill2 = CForceMoveBuff::create(2, false, 0, t->getSprite(), 50);
+    int iKey2 = pSm->addSkill(pSkill2);
+    CSkill *pSkill4 = CAuraPas::create(200, CAuraPas::kEnemy, 0.5, iKey2, 1);
+    CSkill *pSkill3 = CAuraPas::create(200, CAuraPas::kEnemy, 0.5, iKey, 1);
+    t->addSkill(pSkill3);
+    t->addSkill(pSkill4);
+}
+
+void CDarkHoleAct::onSkillDel()
+{
+    CActiveSkill::onSkillDel();
+}
+
+CCObject* CDarkHoleAct::copyWithZone( CCZone* pZone )
+{
+    return CDarkHoleAct::create(m_fCoolDown,m_fCastRange);
+}
+
 
 bool CAddDamageBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, const CExtraCoeff &roAddDamageFormula, int iBuffKey, int iBuffLevel)
 {

@@ -60,7 +60,7 @@ bool CCWHomeSceneLayer::init()
     m_iTouchActionFlag = 0;
     m_iHero = 0;
 
-    CForceResouce* pFr = CForceResouce::createWithChangeCallback(this, callfuncO_selector(CCWHomeSceneLayer::onGoldChange)); // 势力资源
+    CForceResouce* pFr = CForceResouce::createWithChangeCallback(this, callfuncO_selector(CCWHomeSceneLayer::onGoldChange)); // 源
 
     m_oCfg.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnCfgClick));
     m_oMenu.addChild(&m_oCfg);
@@ -160,9 +160,9 @@ bool CCWHomeSceneLayer::init()
     pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
     dynamic_cast<CProjectileWaveAct*>(pSkill)->setProjectileBirthOffset(ccp(0, 25));
     
-    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kJumpChop2));
-    
-    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kAddDamage1));
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kJumpChop1));
+	pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kAddDamage1));
+
     //pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
     heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill4", heroUnit->getKey(), pSkill->getKey(), this);
@@ -181,7 +181,7 @@ bool CCWHomeSceneLayer::init()
     m_oGold.setPosition(ccp(oSz.width - 50, oSz.height - 30));
     m_oGold.setColor(ccYELLOW);
     pFr->onGoldChange(0);
-    //m_oGold.setString(UTEXT("我们"));
+    //m_oGold.setString(UTEXT(""));
 
     onBtnCfgClick(&m_oCfg);
 

@@ -727,7 +727,7 @@ void CTankDemoByTS::onInit( CGameInfo* pGameInfo )
         pSkillBtn = M_CREATE_SKILL("skill1", pGm->m_iPlayerKey, pSkill->getKey(), NULL);
         pGm->m_pCtrlLayer->m_pSkillPanel->addButton(pSkillBtn, 0, 3);
 
-        pBuff = CHpChangeBuff::create(10, true, 0.1, -1.7, false, 1);
+        pBuff = CHpChangeBuff::create(10, true, 0, 0.1, -1.7, false, 1);
         pSm->addSkill(pBuff);
         pSkill = CHomingMissileAct::create(20, 20, 1, pBuff->getKey(), 1);
         addSkill(pSkill);

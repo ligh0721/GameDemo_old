@@ -25,26 +25,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 #endif
 
-    srand(time(NULL));
-    int a = 0, b = 0;
-    for (int i = 0; i < 100; ++i)
-    {
-        int n = rand() % 100;
-
-        if (n < 50)
-        {
-            ++a;
-        }
-        else
-        {
-            ++b;
-        }
-    }
-    printf("%d/%d\n\n\n\n\n", a, b);
-
-
-
-
     // create the application instance
     AppDelegate app;
     CCEGLView* eglView = CCEGLView::sharedOpenGLView();
