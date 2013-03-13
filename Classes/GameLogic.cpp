@@ -458,7 +458,7 @@ void CTankDemoA::onInit( CGameInfo* pGameInfo )
     setTurningVelocity(100);
     setTurningGunVelocity(100);
     setFireRange(800);
-    addSkill(CThumpPas::create(20, CExtraCoeff(5, 0), 5));
+    addSkill(CThumpPas::create(20, CExtraCoeff(5, 0), 0, 1));
     addSkill(CVampirePas::create(1.0));
     addSkill(CStatusShowPas::create());
 }
@@ -696,7 +696,7 @@ void CTankDemoByTS::onInit( CGameInfo* pGameInfo )
     m_iBulletKey = 0;
     addExp(0);
 
-    addSkill(CThumpPas::create(75, CExtraCoeff(1, 2.3), 0.3));
+    addSkill(CThumpPas::create(75, CExtraCoeff(1, 2.3), 0, 1));
     addSkill(CStatusShowPas::create());
 
     if (getLogicKey() == pGm->m_iPlayerKey)
@@ -757,7 +757,7 @@ void CTankDemoByTS::onInit( CGameInfo* pGameInfo )
     {
         setFireRange(400);
         addSkill(CDoubleAttackPas::create(80));
-        addSkill(CThumpPas::create(10, CExtraCoeff(10, 0), 2));
+        addSkill(CThumpPas::create(10, CExtraCoeff(10, 0), 0, 1));
         addSkill(CVampirePas::create(0.5));
     }
     

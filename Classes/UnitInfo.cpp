@@ -33,6 +33,7 @@ bool COrgUnitInfo::init()
     // 下面加载资源部分，将改造为根据关卡，部分加载
     // 加载图集
     pFc->addSpriteFramesWithFile("unit.plist");
+    pFc->addSpriteFramesWithFile("effect.plist");
 
     // 加载单位动画
     pGm->loadUnitAnimation("Malik", "move");
@@ -372,7 +373,7 @@ bool COrgUnitInfo::init()
         0.1, 0.1, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10,
         CUnitInfo::ARR_ATTACK_ANI(6, kAct1, kAct2, kAct3, kAct4, kAct5, kAct6),
         40,
-        2, 0.25, 0, 30, 150, CGameUnit::kWTClosely,
+        2, 0.15, 0, 30, 150, CGameUnit::kWTClosely,
         0, 0, 0, 0, 41, 29,
         CAttackValue(1, CAttackValue::kPhysical, 10.0),
         0.150,

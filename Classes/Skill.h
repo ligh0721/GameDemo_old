@@ -371,8 +371,8 @@ public:
 class CThumpPas : public CPassiveSkill
 {
 public:
-    virtual bool init(int iProbability, const CExtraCoeff& roCoeff, float fDuration);
-    M_CREATE_FUNC_PARAM(CThumpPas, (int iProbability, const CExtraCoeff& roCoeff, float fDuration), iProbability, roCoeff, fDuration);
+    virtual bool init(int iProbability, const CExtraCoeff& roCoeff, int iBuffKey, int iBuffLevel);
+    M_CREATE_FUNC_PARAM(CThumpPas, (int iProbability, const CExtraCoeff& roCoeff, int iBuffKey, int iBuffLevel), iProbability, roCoeff, iBuffKey, iBuffLevel);
     virtual CCObject* copyWithZone(CCZone* pZone);
     
 protected:
@@ -384,7 +384,8 @@ protected:
 public:
     int m_iProbability;
     CExtraCoeff m_oCoeff;
-    float m_fDuration;
+    int m_iBuffKey;
+    int m_iBuffLevel;
     
 };
 
@@ -1071,3 +1072,37 @@ public:
     virtual void onSkillDel();
     virtual void onSkillCast();
 };
+
+class CHeroBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration, float fInterval, float fHpChange, bool bPercent, float fAttackSpeedEx, float fAttackValueEx);
+    M_CREATE_FUNC_PARAM(CHeroBuff, (float fDuration, float fInterval, float fHpChange, bool bPercent, float fAttackSpeedEx, float fAttackValueEx), fDuration, fInterval, fHpChange, bPercent, fAttackSpeedEx, fAttackValueEx);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    M_GET_TYPE_KEY;
+
+    M_SYNTHESIZE(float, m_fInterval, Interval);
+    M_SYNTHESIZE(float, m_fIntervalPass, IntervalPass);
+    M_SYNTHESIZE(float, m_fHpChange, HpChange);
+    M_SYNTHESIZE(bool, m_bPercent, Percent);
+    M_SYNTHESIZE(float, m_fAttackSpeedEx, AttackSpeedEx);
+    M_SYNTHESIZE(float, m_fHpEx, HpEx);
+    M_SYNTHESIZE(float, m_fAttackValueEx, AttackValueEx);
+
+protected:
+    virtual void onUnitTick(float fDt);
+    virtual void onUnitInterval();
+
+    void onStateInterval();
+    void updateState(int iLvlChange);
+
+    virtual void onBuffAdd();
+    virtual void onBuffDel(bool bCover);
+
+public:
+    int m_iOldLvl;
+    float m_fStateInterval;
+    float m_fStatePass;
+
+};
+

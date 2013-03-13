@@ -13,14 +13,15 @@ void CHeroUpdate::updateMaxExp( CLevelExp* pLevel )
 
 void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
 {
+    return;
     M_DEF_OS(pOs);
     CGameUnit* pU = dynamic_cast<CGameUnit*>(pLevel);
     if (!pU)
     {
         return;
     }
-
-    pU->setMaxHp(100 + pLevel->getLevel() * 50);
+    
+    //pU->setMaxHp(100 + pLevel->getLevel() * 50);
 
     CAttackValue oAv;
     for (int i = 0; i < CAttackValue::CONST_MAX_ATTACK_TYPE; ++i)
@@ -32,7 +33,6 @@ void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
         }
     }
     pU->setBaseAttackValue(oAv);
-    pU->setExAttackSpeed(CExtraCoeff(1 + 0.2 * pLevel->getLevel(), 0));
 
     return;
 

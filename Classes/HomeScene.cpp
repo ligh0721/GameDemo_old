@@ -190,7 +190,7 @@ void CCHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
     case 1:
         u = pUm->unitByInfo(COrgUnitInfo::kPaladin);
 
-        u->addSkill(CThumpPas::create(20, CExtraCoeff(2, 0), 0));
+        u->addSkill(CThumpPas::create(20, CExtraCoeff(2, 0), 0, 1));
         break;
 
     case 2:

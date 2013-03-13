@@ -30,8 +30,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //CCFileUtils::sharedFileUtils()->setResourceDirectory(largeResource.directory);
 
     //pEGLView->setFrameSize(512, 384);
-    pEGLView->setFrameZoomFactor(0.5);
-
+#ifdef WIN32
+    pEGLView->setFrameZoomFactor(1);
+#endif
+    
     pEGLView->setDesignResolutionSize(1024, 768, kResolutionNoBorder);
     pDirector->setContentScaleFactor(1.0);
     

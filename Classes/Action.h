@@ -1,7 +1,6 @@
 #pragma once
 
 
-
 class CCCoverAct : public CCAction
 {
 public:
@@ -156,4 +155,14 @@ public:
 
     void onActEnd(CCNode* pNode);
 
+};
+
+class CCReleaseAfter : public CCSequence
+{
+public:
+    virtual bool initWithAction(CCFiniteTimeAction* fAct);
+    CREATE_INITWITH_FUNC_PARAM(Action, CCReleaseAfter, (CCFiniteTimeAction* fAct), fAct);
+
+    void onActEnd(CCNode* pNode);
+    
 };

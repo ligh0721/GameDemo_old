@@ -442,3 +442,12 @@ void CCDelayRelease::onActEnd( CCNode* pNode )
     pNode->removeFromParentAndCleanup(true);
 }
 
+bool CCReleaseAfter::initWithAction( CCFiniteTimeAction* fAct )
+{
+    return initWithTwoActions(fAct, CCCallFuncN::create(this, callfuncN_selector(CCReleaseAfter::onActEnd)));
+}
+
+void CCReleaseAfter::onActEnd( CCNode* pNode )
+{
+    pNode->removeFromParentAndCleanup(true);
+}

@@ -104,6 +104,7 @@ bool CCWHomeSceneLayer::init()
     heroUnit->setForceByIndex(2);
     heroUnit->setAlly(1<<2);
     heroUnit->addSkill(CStatusShowPas::create());
+    heroUnit->addSkill(pOs->skill(COrgSkillInfo::kHero1));
     
     heroUnit->setLevelUpdate(&g_oDemoUpdate);
     heroUnit->setMaxLevel(100);
@@ -168,15 +169,15 @@ bool CCWHomeSceneLayer::init()
 
     m_oBuildBtn.init(M_SKILL_PATH("build"), M_SKILL_DOWN_PATH("build"), M_SKILL_DIS_PATH("build"), M_SKILL_PATH("white"), "mask/mask.png", 15, this, callfuncN_selector(CCWHomeSceneLayer::onBtnBuildClick), NULL);
     m_bCanBuild = false;
-    m_oSkillPanel.pushAddButtonExAction(&m_oBuildBtn, CCButtonPanel::kTopToBottom);
+    //m_oSkillPanel.pushAddButtonExAction(&m_oBuildBtn, CCButtonPanel::kTopToBottom);
     //m_oSkillPanel.pushAddButtonAction(&m_oBuildBtn, 1);
 
     // for test
-    m_oSkillPanel.pushDelButtonAction(0, CCButtonPanel::kTopToBottom, CCButtonPanel::kLeftToRight, false);
-    m_oSkillPanel.pushDelButtonAction(1, CCButtonPanel::kTopToBottom, CCButtonPanel::kLeftToRight, false);
-    m_oSkillPanel.pushDelButtonAction(2, CCButtonPanel::kTopToBottom, CCButtonPanel::kLeftToRight, false);
-    m_oSkillPanel.pushDelButtonAction(3, CCButtonPanel::kTopToBottom, CCButtonPanel::kLeftToRight, false);
-    m_oSkillPanel.pushClearUpSlotAction();
+    //m_oSkillPanel.pushDelButtonAction(0, CCButtonPanel::kTopToBottom, CCButtonPanel::kLeftToRight, false);
+    //m_oSkillPanel.pushDelButtonAction(1, CCButtonPanel::kTopToBottom, CCButtonPanel::kLeftToRight, false);
+    //m_oSkillPanel.pushDelButtonAction(2, CCButtonPanel::kTopToBottom, CCButtonPanel::kLeftToRight, false);
+    //m_oSkillPanel.pushDelButtonAction(3, CCButtonPanel::kTopToBottom, CCButtonPanel::kLeftToRight, false);
+    //m_oSkillPanel.pushClearUpSlotAction();
 
     //curMission=this->DemoRound();
     m_pCurMission = g_oDemoMission.mission01();
@@ -558,7 +559,6 @@ void CCWHomeSceneLayer::onGetBuff( CCNode* pNode )
     {
         return;
     }
-    CCLOG("%d/%d", m_oSkillPanel.getCount() + m_iBuffGetting, m_oSkillPanel.getMaxCount());
     ++m_iBuffGetting;
     CCCommmButton* pBtn = dynamic_cast<CCCommmButton*>(pNode);
     CGameUnit* pHero = getHeroUnit();

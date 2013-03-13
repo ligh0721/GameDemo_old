@@ -19,7 +19,7 @@ public:
         kDoubleAttack1,
         kSplash1,
         kThunderClap1,
-        kHpChange3,
+        kHero1,
         kThump1,
         kThrowHit1,
         kSpeedUp1,
@@ -30,7 +30,8 @@ public:
         kThunderBoltBuff1,
         kHealing1,
         kShockWave1,
-        kFastStrikeBack1
+        kFastStrikeBack1,
+        kKnockBack1
     };
 
     struct SKILL_INFO

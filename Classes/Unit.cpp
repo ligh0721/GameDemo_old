@@ -2229,7 +2229,7 @@ void CGameUnit::onDie()
     
     CCMenu* pM = dynamic_cast<CCMenu*>(getUnitLayer()->getChildByTag(5131115));
     CGameUnit* pHero;
-    if (pM && getRewardExp() && M_RAND_HIT(100) && isEnemyOf(dynamic_cast<CUnitForce*>(pHero = dynamic_cast<CCWHomeSceneLayer*>(getUnitLayer())->getHeroUnit())))
+    if (pM && getRewardExp() && M_RAND_HIT(10) && isEnemyOf(dynamic_cast<CUnitForce*>(pHero = dynamic_cast<CCWHomeSceneLayer*>(getUnitLayer())->getHeroUnit())))
     {
         // Spawn skills
         CCCommmButton* pBtn = CCCommmButton::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, getUnitLayer(), callfuncN_selector(CCWHomeSceneLayer::onGetBuff), NULL, COrgSkillInfo::kThunderBoltBuff1);

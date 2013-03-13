@@ -373,13 +373,13 @@ public:
         ACTION_CMD eAct;
         union
         {
-            struct ACT_ADD // ADD
+            struct // ADD
             {
                 CCSkillButtonBase* pBtn;
                 int iIndex;
             } stAdd;
 
-            struct ACT_DEL // DEL
+            struct // DEL
             {
                 CCSkillButtonBase* pBtn;
                 int iIndex;
@@ -388,21 +388,21 @@ public:
                 bool bClearUp;
             } stDel;
 
-            struct ACT_MOVE // MOVE
+            struct // MOVE
             {
                 CCSkillButtonBase* pBtn;
                 int iIndexSrc;
                 int iIndexDst;
             } stMove;
 
-            struct ACT_ADDEX // ADDEX
+            struct // ADDEX
             {
                 CCSkillButtonBase* pBtn;
                 ADD_VERTICAL eVer;
                 ADD_HORIZONTAL eHor;
             } stAddEx;
 
-            struct ACT_CLEARUP // CLEARUP
+            struct // CLEARUP
             {
                 ADD_VERTICAL eVer;
                 ADD_HORIZONTAL eHor;

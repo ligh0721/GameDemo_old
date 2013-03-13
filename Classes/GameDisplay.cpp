@@ -1157,11 +1157,6 @@ void CCButtonPanel::pushAction( const ACTION_NODE& roAct )
 
 void CCButtonPanel::onPrevActEnd( CCNode* pNode )
 {
-    CCLOG("left:> %d", m_lstActs.size());
-    if (m_lstActs.size() == 23)
-    {
-        CCLOG("left:> %d", m_lstActs.size());
-    }
     // 动作前半段，上一个动作即将结束，进行一些收尾工作
     CCAssert(!m_lstActs.empty(), "cannot be empty");
     
