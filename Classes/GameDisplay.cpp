@@ -1157,6 +1157,11 @@ void CCButtonPanel::pushAction( const ACTION_NODE& roAct )
 
 void CCButtonPanel::onPrevActEnd( CCNode* pNode )
 {
+    CCLOG("left:> %d", m_lstActs.size());
+    if (m_lstActs.size() == 23)
+    {
+        CCLOG("left:> %d", m_lstActs.size());
+    }
     // 动作前半段，上一个动作即将结束，进行一些收尾工作
     CCAssert(!m_lstActs.empty(), "cannot be empty");
     
@@ -1171,14 +1176,18 @@ void CCButtonPanel::onPrevActEnd( CCNode* pNode )
 
         case kDel:
             //m_pSkillMenu->removeChild(m_ppBtnPos[rNode.stDel.iIndex], true);
-            delButton(rNode.stDel.iIndex);
-            m_lstActs.pop_front();
-            m_lstActs.push_front(ACTION_NODE(rNode.stDel.eVer, rNode.stDel.eHor));
-            m_lstActs.push_front(rNode);
+            delButton(rNode.stDel.pBtn);
+            if (rNode.stDel.bClearUp)
+            {
+                m_lstActs.pop_front();
+                m_lstActs.push_front(ACTION_NODE(rNode.stDel.eVer, rNode.stDel.eHor));
+                m_lstActs.push_front(rNode);
+            }
+            
             break;
 
         case kMove:
-            moveButton(rNode.stMove.iIndexSrc, rNode.stMove.iIndexDst);
+            moveButton(getButtonIndex(rNode.stMove.pBtn), rNode.stMove.iIndexDst);
             break;
 
         case kAddEx:
@@ -1201,7 +1210,6 @@ void CCButtonPanel::onPrevActEnd( CCNode* pNode )
 
     // 动作后半段，上一个动作彻底执行结束，并且已弹出，新的动作开始运行
     ACTION_NODE rNode = m_lstActs.front();
-    CCSkillButtonBase* pBtn;
     switch (rNode.eAct)
     {
     case kAdd:
@@ -1213,14 +1221,12 @@ void CCButtonPanel::onPrevActEnd( CCNode* pNode )
         break;
 
     case kDel:
-        pBtn = getButton(rNode.stDel.iIndex);
-        pBtn->stopAllActions();
-        pBtn->runAction(CCSequence::create(CCFadeOut::create(CONST_ACTION_DURATION), CCCallFuncN::create(this, callfuncN_selector(CCButtonPanel::onPrevActEnd)), NULL));
+        rNode.stDel.pBtn->stopAllActions();
+        rNode.stDel.pBtn->runAction(CCSequence::create(CCFadeOut::create(CONST_ACTION_DURATION), CCCallFuncN::create(this, callfuncN_selector(CCButtonPanel::onPrevActEnd)), NULL));
         break;
 
     case kMove:
-        pBtn = getButton(rNode.stMove.iIndexSrc);
-        pBtn->runAction(CCSequence::create(CCMoveTo::create(CONST_ACTION_DURATION, index2Point(rNode.stMove.iIndexDst)), CCCallFuncN::create(this, callfuncN_selector(CCButtonPanel::onPrevActEnd)), NULL));
+        rNode.stMove.pBtn->runAction(CCSequence::create(CCMoveTo::create(CONST_ACTION_DURATION, index2Point(rNode.stMove.iIndexDst)), CCCallFuncN::create(this, callfuncN_selector(CCButtonPanel::onPrevActEnd)), NULL));
         break;
 
     case kAddEx:
@@ -1285,7 +1291,10 @@ void CCButtonPanel::onPrevActEnd( CCNode* pNode )
                 }
             }
 
-            //if (!iMove) onPrevActEnd((CCNode*)(1));
+            if (!iMove && !m_lstActs.empty())
+            {
+                    onPrevActEnd((CCNode*)(1));
+            }
         }
         
         break;
@@ -1301,14 +1310,18 @@ void CCButtonPanel::pushAddButtonAction( CCSkillButtonBase* pButton, int iIndex 
     pushAction(ACTION_NODE(pButton, iIndex));
 }
 
-void CCButtonPanel::pushDelButtonAction( int iIndex, ADD_VERTICAL eVer /*= kBottomToTop*/, ADD_HORIZONTAL eHor /*= kLeftToRight*/ )
+void CCButtonPanel::pushDelButtonAction( int iIndex, ADD_VERTICAL eVer /*= kBottomToTop*/, ADD_HORIZONTAL eHor /*= kLeftToRight*/, bool bClearUp /*= true*/ )
 {
-    pushAction(ACTION_NODE(iIndex, eVer, eHor));
+    ACTION_NODE stNode(iIndex, eVer, eHor, bClearUp);
+    stNode.stDel.pBtn = getButton(iIndex);
+    pushAction(stNode);
 }
 
 void CCButtonPanel::pushMoveButtonAction( int iIndexSrc, int iIndexDst )
 {
-    pushAction(ACTION_NODE(iIndexSrc, iIndexDst));
+    ACTION_NODE stNode(iIndexSrc, iIndexDst);
+    stNode.stMove.pBtn = getButton(iIndexSrc);
+    pushAction(stNode);
 }
 
 void CCButtonPanel::pushAddButtonExAction( CCSkillButtonBase* pButton, ADD_VERTICAL eVer /*= kBottomToTop*/, ADD_HORIZONTAL eHor /*= kLeftToRight*/ )

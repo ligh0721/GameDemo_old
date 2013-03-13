@@ -364,8 +364,8 @@ public:
     {
         ACTION_NODE() { memset(this, 0, sizeof(ACTION_NODE)); }
         ACTION_NODE(CCSkillButtonBase* pBtn, int iIndex): eAct(kAdd) { stAdd.pBtn = pBtn; stAdd.iIndex = iIndex; }
-        ACTION_NODE(int iIndex, ADD_VERTICAL eVer, ADD_HORIZONTAL eHor): eAct(kDel) { stDel.iIndex = iIndex; stDel.eVer = eVer; stDel.eHor = eHor; }
-        ACTION_NODE(int iIndexSrc, int iIndexDst): eAct(kMove) { stMove.iIndexSrc = iIndexSrc; stMove.iIndexDst = iIndexDst; }
+        ACTION_NODE(int iIndex, ADD_VERTICAL eVer, ADD_HORIZONTAL eHor, bool bClearUp): eAct(kDel) { stDel.pBtn = NULL; stDel.iIndex = iIndex; stDel.eVer = eVer; stDel.eHor = eHor; stDel.bClearUp = bClearUp; }
+        ACTION_NODE(int iIndexSrc, int iIndexDst): eAct(kMove) { stMove.pBtn = NULL; stMove.iIndexSrc = iIndexSrc; stMove.iIndexDst = iIndexDst; }
         ACTION_NODE(CCSkillButtonBase* pBtn, ADD_VERTICAL eVer, ADD_HORIZONTAL eHor): eAct(kAddEx) { stAddEx.pBtn = pBtn; stAddEx.eVer = eVer; stAddEx.eHor = eHor; }
         ACTION_NODE(ADD_VERTICAL eVer, ADD_HORIZONTAL eHor): eAct(kClearUp) { stClearUp.eVer = eVer; stClearUp.eHor = eHor; }
         //~ACTION_NODE() { if (eAct == kAdd) {CC_SAFE_RELEASE(stAdd.pBtn); } else if (eAct == kAddEx) {CCLOG("release");CC_SAFE_RELEASE(stAddEx.pBtn);} }
@@ -381,13 +381,16 @@ public:
 
             struct ACT_DEL // DEL
             {
+                CCSkillButtonBase* pBtn;
                 int iIndex;
                 ADD_VERTICAL eVer;
                 ADD_HORIZONTAL eHor;
+                bool bClearUp;
             } stDel;
 
             struct ACT_MOVE // MOVE
             {
+                CCSkillButtonBase* pBtn;
                 int iIndexSrc;
                 int iIndexDst;
             } stMove;
@@ -450,7 +453,7 @@ public:
     void onPrevActEnd(CCNode* pNode);
 
     void pushAddButtonAction(CCSkillButtonBase* pButton, int iIndex);
-    void pushDelButtonAction(int iIndex, ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight);
+    void pushDelButtonAction(int iIndex, ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight, bool bClearUp = true);
     void pushMoveButtonAction(int iIndexSrc, int iIndexDst);
     void pushAddButtonExAction(CCSkillButtonBase* pButton, ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight);
     void pushClearUpSlotAction(ADD_VERTICAL eVer = kBottomToTop, ADD_HORIZONTAL eHor = kLeftToRight);

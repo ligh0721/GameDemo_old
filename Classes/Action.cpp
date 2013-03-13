@@ -433,18 +433,8 @@ const float CCDelayRelease::CONST_EX_DURATION = 1.0;
 
 bool CCDelayRelease::initWithDuration( float fDelay )
 {
-    m_fDelay = fDelay;
-    CCActionInterval::initWithDuration(m_fDelay + CONST_EX_DURATION);
+    CCSequence::initWithTwoActions(CCSequence::createWithTwoActions(CCDelayTime::create(fDelay), CCFadeOut::create(CONST_EX_DURATION)), CCCallFuncN::create(this, callfuncN_selector(CCDelayRelease::onActEnd)));
     return true;
-}
-
-void CCDelayRelease::startWithTarget( CCNode *pTarget )
-{
-    CCActionInterval::startWithTarget(pTarget);
-    if (m_pTarget)
-    {
-        m_pTarget->runAction(CCSequence::create(CCDelayTime::create(m_fDelay), CCFadeOut::create(CONST_EX_DURATION), CCCallFuncN::create(this, callfuncN_selector(CCDelayRelease::onActEnd)), NULL));
-    }
 }
 
 void CCDelayRelease::onActEnd( CCNode* pNode )

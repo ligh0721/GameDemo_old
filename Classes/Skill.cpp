@@ -61,8 +61,8 @@ void CSkill::onSkillDel()
     {
         return;
     }
-    //pPanel->pushDelButtonAction(pPanel->getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())));
-    pPanel->delButton(pPanel->getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())));
+    pPanel->pushDelButtonAction(pPanel->getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())));
+    //pPanel->delButton(pPanel->getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())));
     pPanel->clearUpSlot();
 }
 
@@ -2732,8 +2732,8 @@ void CThunderBolt2Buff::onBuffAdd()
     onUnitInterval();
     CCSkillButtonBase* pBtn = CCSkillButtonNormal::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0.0, NULL, NULL, NULL);
     setDisplayBody(pBtn);
-    //dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.pushAddButtonExAction(pBtn);
-    dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.addButtonEx(pBtn);
+    dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.pushAddButtonExAction(pBtn);
+    //dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.addButtonEx(pBtn);
 }
 
 void CThunderBolt2Buff::onBuffDel(bool bCover)

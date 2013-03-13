@@ -42,10 +42,12 @@ CCGameChapterSceneLayer::CCGameChapterSceneLayer()
 
 bool CCGameChapterSceneLayer::init()
 {
+    M_DEF_FC(pFc);
 	M_DEF_OU(pOu);
 	CGameLevelManager* pLevelManage = CGameLevelManager::sharedGameLevelManager();
 
-    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("game_chapter.plist");
+    pFc->addSpriteFramesWithFile("game_chapter.plist");
+    pFc->addSpriteFramesWithFile("skill.plist");
     CCLayerColor::initWithColor(ccc4(204, 232, 207, 64));
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
 
@@ -55,10 +57,13 @@ bool CCGameChapterSceneLayer::init()
 	unsigned int maxLine = m_oSp.getLine() - 1;
 
 	unsigned int iGameLevelSize = pLevelManage->getGameSimpleLeveInfoSize();
+    //iGameLevelSize = 18;
 	unsigned int rowCount = iGameLevelSize%(maxLine+1) > 0 ? iGameLevelSize/(maxLine+1) + 1 : iGameLevelSize/(maxLine+1);
+    //unsigned int rowCount = 3;
 	for (unsigned int row = 0; row < rowCount; row++)
 	{
 		unsigned int lineCount = (row + 1 == rowCount) ?  ((iGameLevelSize % (maxLine + 1)) == 0 ? maxLine + 1 : iGameLevelSize % (maxLine + 1)) : maxLine + 1;
+        //unsigned int lineCount = 6;
 		for (unsigned int line = 0; line < lineCount; line++)
 		{
 			CGameSimpleLeveInfo* pLevelInfo = pLevelManage->getGameSimpleLeveInfoByLevel(maxLine * (row) + line + 1);
@@ -92,7 +97,8 @@ bool CCGameChapterSceneLayer::init()
 					NULL, 
 					pLevelInfo->m_iLevel);
 			}
-			m_oSp.addButton(pSb, line, rowCount - row - 1);
+			//m_oSp.addButton(pSb, line, rowCount - row - 1);
+            m_oSp.pushAddButtonExAction(pSb, CCButtonPanel::kTopToBottom);
 		}
 	}
     
@@ -104,10 +110,46 @@ bool CCGameChapterSceneLayer::init()
     //m_oSp.clearUpSlot(CCButtonPanel::kBottomToTop);
     //m_oSp.clearUpSlot(CCButtonPanel::kTopToBottom);
     
-    
-    m_oSp.pushDelButtonAction(9);
+    char* szTmp[] = {M_SKILL_PATH("skill1"), M_SKILL_PATH("skill2"), M_SKILL_PATH("skill3"), M_SKILL_PATH("skill4")};
+    for (int i = 0; i < 5; ++i)
+    {
+        m_oSp.pushDelButtonAction(rand() % 12 + 6, CCButtonPanel::kTopToBottom);
+        m_oSp.pushAddButtonExAction(CCSkillButtonNormal::create(szTmp[rand() % 4], szTmp[rand() % 4], NULL, NULL, NULL, 0, NULL, NULL, NULL), CCButtonPanel::kTopToBottom);
+        
+        //m_oSp.pushClearUpSlotAction(CCButtonPanel::kBottomToTop, CCButtonPanel::kRightToLeft);
+        //m_oSp.pushClearUpSlotAction(CCButtonPanel::kTopToBottom);
+    }
+
     m_oSp.pushClearUpSlotAction(CCButtonPanel::kBottomToTop, CCButtonPanel::kRightToLeft);
-    m_oSp.pushClearUpSlotAction(CCButtonPanel::kTopToBottom);
+    for (int i = 0; i < 5; ++i)
+    {
+        m_oSp.pushDelButtonAction(rand() % 12, CCButtonPanel::kBottomToTop, CCButtonPanel::kRightToLeft);
+        m_oSp.pushAddButtonExAction(CCSkillButtonNormal::create(szTmp[rand() % 4], szTmp[rand() % 4], NULL, NULL, NULL, 0, NULL, NULL, NULL), CCButtonPanel::kBottomToTop, CCButtonPanel::kRightToLeft);
+
+        //m_oSp.pushClearUpSlotAction(CCButtonPanel::kBottomToTop, CCButtonPanel::kRightToLeft);
+        //m_oSp.pushClearUpSlotAction(CCButtonPanel::kTopToBottom);
+    }
+
+    
+    m_oSp.pushClearUpSlotAction(CCButtonPanel::kBottomToTop, CCButtonPanel::kLeftToRight);
+    for (int i = 0; i < 5; ++i)
+    {
+        m_oSp.pushDelButtonAction(rand() % 12, CCButtonPanel::kBottomToTop, CCButtonPanel::kLeftToRight);
+        m_oSp.pushAddButtonExAction(CCSkillButtonNormal::create(szTmp[rand() % 4], szTmp[rand() % 4], NULL, NULL, NULL, 0, NULL, NULL, NULL), CCButtonPanel::kBottomToTop, CCButtonPanel::kLeftToRight);
+
+        //m_oSp.pushClearUpSlotAction(CCButtonPanel::kBottomToTop, CCButtonPanel::kRightToLeft);
+        //m_oSp.pushClearUpSlotAction(CCButtonPanel::kTopToBottom);
+    }
+    
+    m_oSp.pushClearUpSlotAction(CCButtonPanel::kTopToBottom, CCButtonPanel::kRightToLeft);
+    for (int i = 0; i < 5; ++i)
+    {
+        m_oSp.pushDelButtonAction(rand() % 12 + 6, CCButtonPanel::kTopToBottom, CCButtonPanel::kRightToLeft);
+        m_oSp.pushAddButtonExAction(CCSkillButtonNormal::create(szTmp[rand() % 4], szTmp[rand() % 4], NULL, NULL, NULL, 0, NULL, NULL, NULL), CCButtonPanel::kTopToBottom, CCButtonPanel::kRightToLeft);
+
+        //m_oSp.pushClearUpSlotAction(CCButtonPanel::kBottomToTop, CCButtonPanel::kRightToLeft);
+        //m_oSp.pushClearUpSlotAction(CCButtonPanel::kTopToBottom);
+    }
     
 
 	m_oMenu.init();
