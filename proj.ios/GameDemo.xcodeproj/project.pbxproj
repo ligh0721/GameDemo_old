@@ -191,6 +191,7 @@
 		8B11D8C916C56A8200C54706 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781C33B31547F06B00633F88 /* AudioToolbox.framework */; };
 		8B11D8CE16C56C2800C54706 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B11D8CD16C56C2800C54706 /* libcurl.a */; };
 		8B1D4A2816E7CE770092EEE9 /* Home.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B1D4A2716E7CE770092EEE9 /* Home.png */; };
+		8BEADF7F16F1C05100E034EF /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BEADF7C16F1C05100E034EF /* AppDelegate.cpp */; };
 		8BEB234016F0C9EE00DDBD40 /* effect.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8BEB233E16F0C9EE00DDBD40 /* effect.plist */; };
 		8BEB234116F0C9EE00DDBD40 /* effect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BEB233F16F0C9EE00DDBD40 /* effect.png */; };
 		8BEBFCE716C580DF002BB5A3 /* Icon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EF94E715BD319200D803EB /* Icon-57.png */; };
@@ -203,7 +204,6 @@
 		BF1373F0128A899500D9F789 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF492C21128924A800A09262 /* libxml2.dylib */; };
 		BF1373F1128A899E00D9F789 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF492B6912891AC600A09262 /* libz.dylib */; };
 		BF13742F128A8E6A00D9F789 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF137426128A8E4600D9F789 /* QuartzCore.framework */; };
-		BF23D4E7143315EB00657E08 /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF23D4E3143315EB00657E08 /* AppDelegate.cpp */; };
 		BF365AA812A103F70050DCF4 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BF365AA712A103F70050DCF4 /* AppController.mm */; };
 		BF4DE6AD138BB89600CF907D /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BF4DE6AC138BB89600CF907D /* RootViewController.mm */; };
 		D4ABB4B313B4395300552E6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D4ABB4B213B4395300552E6E /* main.m */; };
@@ -229,7 +229,6 @@
 /* Begin PBXFileReference section */
 		15003FA215D2601D00B6775A /* iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iphone; sourceTree = "<group>"; };
 		154269C815B5644500712A7F /* cocos2dx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2dx.xcodeproj; path = ../../cocos2dx/proj.ios/cocos2dx.xcodeproj; sourceTree = "<group>"; };
-		1A1CF3661626CB6000AFC938 /* AppMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppMacros.h; sourceTree = "<group>"; };
 		1A1CF3671626CEFF00AFC938 /* ipad */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ipad; sourceTree = "<group>"; };
 		1A1CF3681626CEFF00AFC938 /* ipadhd */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ipadhd; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -244,7 +243,7 @@
 		8B09160216C55464004C5566 /* BattleGroundScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleGroundScene.cpp; sourceTree = "<group>"; };
 		8B09160316C55464004C5566 /* BattleGroundScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleGroundScene.h; sourceTree = "<group>"; };
 		8B09160416C55464004C5566 /* BattleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScene.cpp; sourceTree = "<group>"; };
-		8B09160516C55464004C5566 /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScene.h; sourceTree = "<group>"; };
+		8B09160516C55464004C5566 /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; path = BattleScene.h; sourceTree = "<group>"; };
 		8B09160616C55464004C5566 /* Box2DEx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Box2DEx.cpp; sourceTree = "<group>"; };
 		8B09160716C55464004C5566 /* Box2DEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2DEx.h; sourceTree = "<group>"; };
 		8B09160816C55464004C5566 /* BulletSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BulletSprite.cpp; sourceTree = "<group>"; };
@@ -562,13 +561,14 @@
 		8B11D7B716C566CE00C54706 /* HttpResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpResponse.h; sourceTree = "<group>"; };
 		8B11D8CD16C56C2800C54706 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
 		8B1D4A2716E7CE770092EEE9 /* Home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Home.png; sourceTree = "<group>"; };
+		8BEADF7C16F1C05100E034EF /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppDelegate.cpp; sourceTree = "<group>"; };
+		8BEADF7D16F1C05100E034EF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		8BEADF7E16F1C05100E034EF /* AppMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppMacros.h; sourceTree = "<group>"; };
 		8BEB233E16F0C9EE00DDBD40 /* effect.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = effect.plist; sourceTree = "<group>"; };
 		8BEB233F16F0C9EE00DDBD40 /* effect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = effect.png; sourceTree = "<group>"; };
 		8BEBFCEB16C5815E002BB5A3 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		8BEBFCED16C5817C002BB5A3 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		BF137426128A8E4600D9F789 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		BF23D4E3143315EB00657E08 /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppDelegate.cpp; sourceTree = "<group>"; };
-		BF23D4E4143315EB00657E08 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		BF365AA612A103F70050DCF4 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		BF365AA712A103F70050DCF4 /* AppController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppController.mm; sourceTree = "<group>"; };
 		BF492B6912891AC600A09262 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -647,16 +647,16 @@
 			isa = PBXGroup;
 			children = (
 				8B11D8CD16C56C2800C54706 /* libcurl.a */,
-				BF492B6912891AC600A09262 /* libz.dylib */,
-				BF137426128A8E4600D9F789 /* QuartzCore.framework */,
-				BF492D4B1289302400A09262 /* OpenGLES.framework */,
 				BF492C21128924A800A09262 /* libxml2.dylib */,
-				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
-				1D30AB110D05D00D00671497 /* Foundation.framework */,
-				288765A40DF7441C002DB57D /* CoreGraphics.framework */,
-				781C33B11547F06B00633F88 /* OpenAL.framework */,
+				BF492B6912891AC600A09262 /* libz.dylib */,
 				781C33B31547F06B00633F88 /* AudioToolbox.framework */,
 				781C33B51547F06B00633F88 /* AVFoundation.framework */,
+				288765A40DF7441C002DB57D /* CoreGraphics.framework */,
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				781C33B11547F06B00633F88 /* OpenAL.framework */,
+				BF492D4B1289302400A09262 /* OpenGLES.framework */,
+				BF137426128A8E4600D9F789 /* QuartzCore.framework */,
+				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1073,8 +1073,11 @@
 		BF23D4E2143315EB00657E08 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				8B09160016C55464004C5566 /* Action.cpp */,
 				8B09160116C55464004C5566 /* Action.h */,
+				8B09160016C55464004C5566 /* Action.cpp */,
+				8BEADF7C16F1C05100E034EF /* AppDelegate.cpp */,
+				8BEADF7D16F1C05100E034EF /* AppDelegate.h */,
+				8BEADF7E16F1C05100E034EF /* AppMacros.h */,
 				8B09160216C55464004C5566 /* BattleGroundScene.cpp */,
 				8B09160316C55464004C5566 /* BattleGroundScene.h */,
 				8B09160416C55464004C5566 /* BattleScene.cpp */,
@@ -1150,9 +1153,6 @@
 				8B09164A16C55465004C5566 /* UnitShowScene.h */,
 				8B09164B16C55465004C5566 /* WHomeScene.cpp */,
 				8B09164C16C55465004C5566 /* WHomeScene.h */,
-				1A1CF3661626CB6000AFC938 /* AppMacros.h */,
-				BF23D4E3143315EB00657E08 /* AppDelegate.cpp */,
-				BF23D4E4143315EB00657E08 /* AppDelegate.h */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -1304,7 +1304,6 @@
 				BF365AA812A103F70050DCF4 /* AppController.mm in Sources */,
 				BF4DE6AD138BB89600CF907D /* RootViewController.mm in Sources */,
 				D4ABB4B313B4395300552E6E /* main.m in Sources */,
-				BF23D4E7143315EB00657E08 /* AppDelegate.cpp in Sources */,
 				8B09164D16C55465004C5566 /* Action.cpp in Sources */,
 				8B09164E16C55465004C5566 /* BattleGroundScene.cpp in Sources */,
 				8B09164F16C55465004C5566 /* BattleScene.cpp in Sources */,
@@ -1437,6 +1436,7 @@
 				8B11D85516C566D000C54706 /* CCTableView.cpp in Sources */,
 				8B11D85616C566D000C54706 /* CCTableViewCell.cpp in Sources */,
 				8B11D85716C566D000C54706 /* HttpClient.cpp in Sources */,
+				8BEADF7F16F1C05100E034EF /* AppDelegate.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

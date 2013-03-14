@@ -32,6 +32,8 @@ public:
 
     static void updateHeroMaxExp(CLevelExp* pLevel);
 
+    virtual void draw();
+
 public:
     CCMenu m_oMenu;
     CCMenuItemImage m_oStart;

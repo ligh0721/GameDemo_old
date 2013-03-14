@@ -7,13 +7,13 @@
             <key>Critical.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{128,80}}</string>
+                <string>{{2,2},{112,66}}</string>
                 <key>offset</key>
-                <string>{0,2}</string>
+                <string>{2,1}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,22},{128,80}}</string>
+                <string>{{10,30},{112,66}}</string>
                 <key>sourceSize</key>
                 <string>{128,128}</string>
             </dict>
@@ -25,9 +25,9 @@
             <key>realTextureFileName</key>
             <string>effect.png</string>
             <key>size</key>
-            <string>{128,256}</string>
+            <string>{128,128}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:0447a23f7eb3bc344f611242c529ab54$</string>
+            <string>$TexturePacker:SmartUpdate:42e569b2e438decf326fba352d5bd52d$</string>
             <key>textureFileName</key>
             <string>effect.png</string>
         </dict>
