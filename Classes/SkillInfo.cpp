@@ -261,6 +261,15 @@ bool COrgSkillInfo::init()
     m_mapSkills[kAddDamage1].sName = "怒火";
     m_mapSkills[kAddDamage1].sDesc = "在一定时间内攻击力加强";
 
+    pSkill = CRushBuff::create(5, false, 0, CAttackValue(1, CAttackValue::kPhysical, 50.0), 400, CExtraCoeff(2, 0), 3, 0);
+    iKey = pSm->addSkill(pSkill);
+    
+    pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kRunBuff1].iIndex = iKey;
+    m_mapSkills[kRunBuff1].sName = "怒火";
+    m_mapSkills[kRunBuff1].sDesc = "在一定时间内攻击力加强";
+
     return true;
 }
 

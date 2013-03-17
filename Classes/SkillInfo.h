@@ -31,7 +31,8 @@ public:
         kHealing1,
         kShockWave1,
         kFastStrikeBack1,
-		kAddDamage1
+		kAddDamage1,
+        kRunBuff1
     };
 
     struct SKILL_INFO

@@ -1085,6 +1085,33 @@ private:
     CExtraCoeff m_oAddDamageFormula;
     int m_iBuffKey;
     int m_iBuffLevel;
+};
 
+class CRushBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKeyl, const CAttackValue& roDamage, float fMaxRushRange, const CExtraCoeff& roRunSpeedCoeff, int iBuffKey, int iBuffLevel);
+    M_CREATE_FUNC_PARAM(CRushBuff, (float fDuration, bool bCanBePlural, int iSrcKey,const CAttackValue& roDamage, float fMaxRushRange, const CExtraCoeff& roRunSpeedCoeff, int iBuffKey, int iBuffLevel), fDuration, bCanBePlural, iSrcKey, roDamage, fMaxRushRange, roRunSpeedCoeff, iBuffKey, iBuffLevel);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    
+    virtual void onBuffAdd();
+    virtual void onBuffDel(bool bCover);
+    virtual void onUnitTick(float fDt);
+    static bool checkConditions( CGameUnit* pUnit, CRushBuff* pBuff);
+    void addBuff(CBuffSkill* pBuff, int iProbability);
+protected:
+    virtual void rushing();
+private:
+    int m_iTargetUnit;
+    map<int, bool> m_mapEffected;
+    
+    M_SYNTHESIZE(float, m_fMaxRushRange, MaxRushRange);
+    M_SYNTHESIZE(float, m_fRunSpeed, RunSpeed);
+    M_SYNTHESIZE_PASS_BY_REF(CAttackValue, m_oDamage, Damage);
+    M_SYNTHESIZE_PASS_BY_REF(CExtraCoeff, m_oRunSpeedCoeff, RunSpeedCoeff);
+public:
+    CCArray m_oArrSkill;
+    int m_iBuffLevel;
+    int m_iBuffKey;
 };
 
