@@ -8,6 +8,7 @@
 #include "AppMacros.h"
 #include "BattleScene.h"
 #include "GameChapterScene.h"
+#include "StartScene.h"
 
 
 AppDelegate::AppDelegate()
@@ -25,9 +26,25 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     pDirector->setOpenGLView(pEGLView);
 #if 1
-    pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
+    //pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
     //CCFileUtils::sharedFileUtils()->setResourceDirectory(largeResource.directory);
-    pDirector->setContentScaleFactor(1.0);
+    //pDirector->setContentScaleFactor(1.0);
+    CCSize screenSize = CCEGLView::sharedOpenGLView()->getFrameSize();
+    
+    CCSize designSize = CCSizeMake(480, 320);
+    //CCFileUtils* pFileUtils = CCFileUtils::sharedFileUtils();
+    
+    if (screenSize.height > 320)
+    {
+        CCSize resourceSize = CCSizeMake(960, 640);
+        std::vector<std::string> searchPaths;
+        searchPaths.push_back("hd");
+        //pFileUtils->setSearchPaths(searchPaths);
+        pDirector->setContentScaleFactor(resourceSize.height/designSize.height);
+    }
+    
+    CCEGLView::sharedOpenGLView()->setDesignResolutionSize(designSize.width, designSize.height, kResolutionNoBorder);
+
 #else
     // Set the design resolution
     pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
@@ -74,7 +91,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     CCScene *pScene = CCUnitEditorScene::create();
 #else
     //CCScene *pScene = CCHomeScene::create();
-    CCScene *pScene = CCWHomeScene::create();
+    CCScene * pScene = CStartLayer::scene();
+    //CCScene *pScene = CCWHomeScene::create();
     //CCScene *pScene = CCUnitEditorScene::create();
 	//CCScene *pScene = CCBattleScene::create();
 	//CCScene* pScene = CCGameChapterScene::create();
