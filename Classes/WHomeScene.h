@@ -23,6 +23,18 @@ public:
 class CCWHomeSceneLayer : public CCWinUnitLayer
 {
 public:
+    struct REVIVE_INFO
+    {
+        float fReviveTimeLeft;
+        CCPoint oPos;
+        uint32_t dwLevel;
+        uint32_t dwMaxLevel;
+        uint32_t dwExp;
+        uint32_t dwMaxExp;
+        
+    };
+
+public:
     CCWHomeSceneLayer();
 
     virtual bool init();
@@ -48,6 +60,10 @@ public:
 
     void onGetBuff(CCNode* pNode);
     void onGetBuffEnd(CCNode* pNode);
+
+    virtual void onUnitDie(CGameUnit* pUnit);
+
+    void onHeroSoulTick(float fDt);
 
 public:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     
@@ -75,6 +91,11 @@ public:
 
     CUnitInfoPatchManager m_oUipm;
     int m_iBuffGetting;
+
+    CForceResouce m_oFr;
+
+    REVIVE_INFO m_stReviveInfo;
+    CCLabelTTF m_oLeftToRevive;
 };
 
 

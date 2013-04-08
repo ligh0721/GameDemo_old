@@ -60,7 +60,7 @@ bool CCWHomeSceneLayer::init()
     m_iTouchActionFlag = 0;
     m_iHero = 0;
 
-    CForceResouce* pFr = CForceResouce::createWithChangeCallback(this, callfuncO_selector(CCWHomeSceneLayer::onGoldChange)); // 势力资源
+    m_oFr.initWithChangeCallback(this, callfuncO_selector(CCWHomeSceneLayer::onGoldChange)); // 势力资源
 
     m_oCfg.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnCfgClick));
     m_oMenu.addChild(&m_oCfg);
@@ -84,7 +84,7 @@ bool CCWHomeSceneLayer::init()
     midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
     midTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
     midTower->addSkill(pOs->skill(COrgSkillInfo::kSpeedAura1));
-    midTower->setForceResource(pFr);
+    midTower->setForceResource(&m_oFr);
 
     midTower= pUm->unitByInfo(COrgUnitInfo::kTesla);
     addUnit(midTower);
@@ -94,7 +94,7 @@ bool CCWHomeSceneLayer::init()
     midTower->addSkill(CStatusShowPas::create());
     midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
     midTower->addSkill(pOs->skill(COrgSkillInfo::kImmo1));
-    midTower->setForceResource(pFr);
+    midTower->setForceResource(&m_oFr);
 
 
     CGameUnit* heroUnit=getHeroUnit();
@@ -108,7 +108,7 @@ bool CCWHomeSceneLayer::init()
     
     heroUnit->setLevelUpdate(&g_oDemoUpdate);
     heroUnit->setMaxLevel(100);
-    heroUnit->setForceResource(pFr);
+    heroUnit->setForceResource(&m_oFr);
 
     m_oGameCtrlLayer.initWithColor(ccc4(0,0,0,0));
     m_oMenuCtrl.init();
@@ -187,13 +187,18 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oGold);
     m_oGold.setPosition(ccp(oSz.width - 50, oSz.height - 30));
     m_oGold.setColor(ccYELLOW);
-    pFr->onGoldChange(0);
+    m_oFr.onGoldChange(0);
     //m_oGold.setString(UTEXT("我们"));
 
     onBtnCfgClick(&m_oCfg);
 
     pGm->setVoice(false);
     m_iBuffGetting = 0;
+
+    m_oLeftToRevive.initWithString("Revive time: 0s", "", 24);
+    m_oGameCtrlLayer.addChild(&m_oLeftToRevive);
+    m_oLeftToRevive.setPosition(ccp(oSz.width * 0.8, oSz.height * 0.9));
+    m_oLeftToRevive.setVisible(false);
 
     return true;
 }
@@ -291,8 +296,8 @@ bool CCWHomeSceneLayer::ccTouchBegan( CCTouch *pTouch, CCEvent *pEvent )
 {
     CCWinUnitLayer::ccTouchBegan(pTouch,pEvent);
     M_DEF_GM(pGm);
-    CGameUnit* heroUnit=getHeroUnit();
-    CCPoint touchPoint=ccpSub(pTouch->getLocation(), getPosition());
+    CGameUnit* heroUnit = getHeroUnit();
+    CCPoint touchPoint = ccpSub(pTouch->getLocation(), getPosition());
 #if 0
     if (heroUnit!=NULL&&!heroUnit->isDead())//incomplete
     {
@@ -413,7 +418,7 @@ void CCWHomeSceneLayer::onBtnHeroClick( CCObject* pObject )
 CGameUnit* CCWHomeSceneLayer::getHeroUnit()
 {
     CGameUnit* pHero = getUnitByKey(m_iHero);
-    if (pHero)
+    if (pHero || m_iHero)
     {
         return pHero;
     }
@@ -578,4 +583,100 @@ void CCWHomeSceneLayer::onGetBuffEnd( CCNode* pNode )
     pBuff->setSrcKey(pHero->getKey());
     pHero->addBuff(pBuff);
     pNode->removeFromParentAndCleanup(true);
+}
+
+void CCWHomeSceneLayer::onHeroSoulTick( float fDt )
+{
+    m_stReviveInfo.fReviveTimeLeft -= fDt;
+    int iLeft = ::ceil(m_stReviveInfo.fReviveTimeLeft);
+    if (iLeft > 0)
+    {
+        char sz[32];
+        sprintf(sz, "Revive time %ds", iLeft);
+        m_oLeftToRevive.setString(sz);
+    }
+    else
+    {
+        M_DEF_OS(pOs);
+        m_oLeftToRevive.setVisible(false);
+        unschedule(schedule_selector(CCWHomeSceneLayer::onHeroSoulTick));
+
+        CGameUnit* pHero = m_oUipm.unitByIndex(3);
+        m_iHero = pHero->getKey();
+        addUnit(pHero);
+        pHero->setPosition(m_stReviveInfo.oPos);
+
+        pHero->setForceByIndex(2);
+        pHero->setAlly(1<<2);
+        pHero->addSkill(CStatusShowPas::create());
+        pHero->addSkill(pOs->skill(COrgSkillInfo::kHero1));
+
+        pHero->setLevelUpdate(&g_oDemoUpdate);
+        pHero->setMaxLevel(m_stReviveInfo.dwMaxLevel);
+        pHero->setLevel(m_stReviveInfo.dwLevel);
+        pHero->setForceResource(&m_oFr);
+
+        pHero->addExp(m_stReviveInfo.dwExp);
+    }
+}
+
+void CCWHomeSceneLayer::onUnitDie( CGameUnit* pUnit )
+{
+    CGameUnit* pHero;
+    if (pUnit->getKey() == m_iHero)
+    {
+        // hero die
+        m_stReviveInfo.fReviveTimeLeft = 5;
+        m_stReviveInfo.oPos = pUnit->getPosition();
+        m_stReviveInfo.dwExp = pUnit->getExp();
+        m_stReviveInfo.dwLevel = pUnit->getLevel();
+        m_stReviveInfo.dwMaxLevel = pUnit->getMaxLevel();
+        m_oLeftToRevive.setVisible(true);
+        schedule(schedule_selector(CCWHomeSceneLayer::onHeroSoulTick), 0.2);
+        onHeroSoulTick(0);
+    }
+    else if (pUnit->getRewardExp() && M_RAND_HIT(10) && pUnit->isEnemyOf(dynamic_cast<CUnitForce*>(pHero = getHeroUnit())))
+    {
+        // Spawn skills
+        CCCommmButton* pBtn = CCCommmButton::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, this, callfuncN_selector(CCWHomeSceneLayer::onGetBuff), NULL, COrgSkillInfo::kThunderBoltBuff1);
+        m_oMenu.addChild(pBtn);
+        pBtn->setScale(0);
+        pBtn->setPosition(getPosition());
+        pBtn->runAction(CCScaleTo::create(0.5, 0.5, 0.5));
+        pBtn->runAction(CCJumpBy::create(0.5, ccp(0, 0), 100, 1));
+        pBtn->runAction(CCSequence::create(CCScaleTo::create(0.25, 1.0, 1.0), CCScaleTo::create(0.25, 0.75, 0.75), NULL));
+        pBtn->runAction(CCDelayRelease::create(5.0));
+        pBtn->runAction(CCRepeatForever::create(dynamic_cast<CCActionInterval*>(CCSequence::create(CCOrbitCamera::create(1, 10000, 0, 0, 360, 0, 0), CCDelayTime::create(1.5), NULL))));
+    }
+    // TODO: Reward
+    CGameUnit* u;
+    CCObject* pObj;
+    M_DEF_GM(pGm);
+    CCArray* pArr = getUnits()->getUnitsArray();
+    vector<CGameUnit*> vec;
+
+    CCARRAY_FOREACH(pArr, pObj)
+    {
+        u = dynamic_cast<CGameUnit*>(pObj);
+        if (!u->isDead() && u->getMaxLevel() && pUnit->isEnemyOf(u) && pUnit->getDistance(u) < CGameUnit::CONST_MAX_REWARD_RANGE)
+        {
+            vec.push_back(u);
+        }
+    }
+    int n = vec.size();
+    if (n)
+    {
+        int iG = pUnit->getRewardGold() / n;
+        int iE = pUnit->getRewardExp() / n;
+        CForceResouce* pRes;
+        for (int i = 0; i < n; ++i)
+        {
+            vec[i]->addExp(iE);
+            pRes = vec[i]->getForceResource();
+            if (pRes)
+            {
+                pRes->changeGold(iG);
+            }
+        }
+    }
 }

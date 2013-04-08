@@ -39,6 +39,7 @@ static CUnitPath g_oPath;
 bool CCHomeSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
+    return true;
     //setUnitTickInterval(0.1);
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
 
@@ -250,63 +251,7 @@ void CCHomeSceneLayer::onBtnAchievementsClick( CCNode* pNode )
 
 }
 
-float* genSquareVertexWithWidthandHeight(float width, float height)
-{
-    int square_indexes[6] =
-    {
-        //front
-        0, 1, 2,
-        0, 2, 3,
-    };
-
-    float square_points[4][3];
-
-    square_points[0][0] = -width/2;
-    square_points[0][1] = -height/2;
-    square_points[0][2] = 10;
-
-    square_points[1][0] = +width/2;
-    square_points[1][1] = -height/2;
-    square_points[1][2] = 10;
-
-    square_points[2][0] = +width/2;
-    square_points[2][1] = +height/2;
-    square_points[2][2] = 10;
-
-    square_points[3][0] = -width/2;
-    square_points[3][1] = +height/2;
-    square_points[3][2] = 10;
-
-    float* square_vertexes = (float*)malloc(sizeof(float) * 6 * 3);
-
-    for(int i=0; i<6; i++)
-    {
-        int index = square_indexes[i];
-
-        square_vertexes[i*3 + 0] = square_points[index][0];
-        square_vertexes[i*3 + 1] = square_points[index][1];
-        square_vertexes[i*3 + 2] = square_points[index][2];
-    }
-
-    return square_vertexes;
-}
-
 void CCHomeSceneLayer::draw()
 {
-    //CCWinUnitLayer::draw();
-    //glPushMatrix();
-    glLineWidth( 5.0f );
-    ccDrawColor4B(255,0,0,255);
-    ccDrawLine(ccp(0, 0), ccp(100, 100));
-    
-    static float* pFlt = NULL;
-    if (!pFlt)
-    {
-        pFlt = genSquareVertexWithWidthandHeight(1.0, 1.0);
-    }
-    //glEnableClientState(GL_VERTEX_ARRAY);
-    //glVertexPointer(3, GL_FLOAT, 0, pFlt);
-    //glDrawArrays(GL_LINE_LOOP, 0, 12);
-    //glPopMatrix();
-    
+    CCWinUnitLayer::draw();
 }

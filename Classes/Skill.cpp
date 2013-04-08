@@ -1643,7 +1643,7 @@ void CSplashAct::onSkillCast()
             }
         }
     }
-    pO->getUnitLayer()->runAction(CCShakeAct::create(0.2, 0.02, 5));
+    pO->getUnitLayer()->runAction(CCShakeAct::create(0.2, 3, 5));
 }
 
 CThrowBuff::CThrowBuff()
@@ -1769,7 +1769,7 @@ void CThrowBuff::onThrowEnd( CCNode* pNode )
         u->getUnitLayer()->getUnits()->getUnitsInRange(u->getPosition(), m_fDamageRange, -1, CONDITION(CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(pS))->damagedAdv(pAd, pS);
     }
     
-    u->getUnitLayer()->runAction(CCShakeAct::create(0.3, 0.02, 5));
+    u->getUnitLayer()->runAction(CCShakeAct::create(0.3, 4, 5));
 }
 
 CTransmitBuff::CTransmitBuff()

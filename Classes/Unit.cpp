@@ -57,14 +57,14 @@ void CLevelExp::addLevel(uint32_t dwLvl)
 
 void CLevelExp::addExp(uint32_t dwExp)
 {
-    float fOldMaxExp;
+    uint32_t dwOldMaxExp;
     m_dwExp += dwExp;
     while (m_dwExp >= m_dwMaxExp)
     {
         ++m_dwLvl;
-        fOldMaxExp = m_dwMaxExp;
+        dwOldMaxExp = m_dwMaxExp;
         updateMaxExp();
-        m_dwExp -= fOldMaxExp;
+        m_dwExp -= dwOldMaxExp;
         onLevelChange(1);
     }
 }
@@ -2226,54 +2226,8 @@ void CGameUnit::onTick( float fDt )
 void CGameUnit::onDie()
 {
     getSprite()->stopAllActions();
+    getUnitLayer()->onUnitDie(this);
     
-    CCMenu* pM = dynamic_cast<CCMenu*>(getUnitLayer()->getChildByTag(5131115));
-    CGameUnit* pHero;
-    if (pM && getRewardExp() && M_RAND_HIT(10) && isEnemyOf(dynamic_cast<CUnitForce*>(pHero = dynamic_cast<CCWHomeSceneLayer*>(getUnitLayer())->getHeroUnit())))
-    {
-        // Spawn skills
-        CCCommmButton* pBtn = CCCommmButton::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, getUnitLayer(), callfuncN_selector(CCWHomeSceneLayer::onGetBuff), NULL, COrgSkillInfo::kThunderBoltBuff1);
-        pM->addChild(pBtn);
-        pBtn->setScale(0);
-        pBtn->setPosition(getPosition());
-        pBtn->runAction(CCScaleTo::create(0.5, 0.5, 0.5));
-        pBtn->runAction(CCJumpBy::create(0.5, ccp(0, 0), 100, 1));
-        pBtn->runAction(CCSequence::create(CCScaleTo::create(0.25, 1.0, 1.0), CCScaleTo::create(0.25, 0.75, 0.75), NULL));
-        pBtn->runAction(CCDelayRelease::create(5.0));
-        pBtn->runAction(CCRepeatForever::create(dynamic_cast<CCActionInterval*>(CCSequence::create(CCOrbitCamera::create(1, 10000, 0, 0, 360, 0, 0), CCDelayTime::create(1.5), NULL))));
-    }
-    // TODO: Reward
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    M_DEF_GM(pGm);
-    CCArray* pArr = getUnitLayer()->getUnits()->getUnitsArray();
-    vector<CGameUnit*> vec;
-    
-    CCARRAY_FOREACH(pArr, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        if (!pUnit->isDead() && pUnit->getMaxLevel() && isEnemyOf(pUnit) && getDistance(pUnit) < CONST_MAX_REWARD_RANGE)
-        {
-            vec.push_back(pUnit);
-        }
-    }
-    int n = vec.size();
-    if (n)
-    {
-        int iG = getRewardGold() / n;
-        int iE = getRewardExp() / n;
-        CForceResouce* pRes;
-        for (int i = 0; i < n; ++i)
-        {
-            vec[i]->addExp(iE);
-            pRes = vec[i]->getForceResource();
-            if (pRes)
-            {
-                pRes->changeGold(iG);
-            }
-        }
-    }
-
     setForceResource(NULL);
     stopMove();
     stopAttack();
@@ -2641,6 +2595,11 @@ void CGameUnit::stopSpin()
     {
         setDefaultFrame();
     }
+}
+
+void CGameUnit::say( const char* pMsg )
+{
+
 }
 
 CProjectile::CProjectile()
@@ -3530,6 +3489,11 @@ void CCUnitLayer::orderUnitToCast( CGameUnit* pTargetUnit )
     pSkill->setTargetPoint(pTargetUnit->getPosition());
     pUnit->cast();
     m_iPendingSkillOwner = 0;
+}
+
+void CCUnitLayer::onUnitDie( CGameUnit* pUnit )
+{
+
 }
 
 const float CCWinUnitLayer::CONST_MIN_MOVE_DELTA = 10.0;

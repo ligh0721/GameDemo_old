@@ -690,6 +690,9 @@ protected:
 
 public:
     virtual void stopSpin();
+
+public:
+    virtual void say(const char* pMsg);
     
 protected:
     CCGameUnitSprite m_oSprite;
@@ -881,6 +884,8 @@ public:
     void endOrderUnitToCast();
     void orderUnitToCast(const CCPoint& roTargetPos);
     void orderUnitToCast(CGameUnit* pTargetUnit); // 以确定存在，且立即执行，无后续逻辑，可以使用指针
+
+    virtual void onUnitDie(CGameUnit* pUnit);
     
 protected:
     CUnitGroup m_oArrUnit;

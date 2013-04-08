@@ -319,7 +319,7 @@ void CCHomingMissileSprite::explode()
     CCGameManager* pGm = CCGameManager::sharedGameManager();
     pGm->playEffectSound("sound/Fire_Napalm.wav");
 
-    pGm->m_pBattleGroundLayer->runAction(CCShakeAct::create(0.7, 0.02, 10));
+    pGm->m_pBattleGroundLayer->runAction(CCShakeAct::create(0.7, 9, 10));
 
     if (m_pEmitter)
     {
