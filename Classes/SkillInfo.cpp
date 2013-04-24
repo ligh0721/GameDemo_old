@@ -14,6 +14,7 @@ COrgSkillInfo::COrgSkillInfo()
 {
 }
 
+
 bool COrgSkillInfo::init()
 {
     M_DEF_GM(pGm);
@@ -292,5 +293,7 @@ COrgSkillInfo* COrgSkillInfo::sharedOrgSkillInfo()
 CSkill* COrgSkillInfo::skill( int iSkillIndex )
 {
     M_DEF_SM(pSm);
-    return pSm->copySkill(m_mapSkills[iSkillIndex].iIndex);
+    CSkill* pSkill = pSm->copySkill(m_mapSkills[iSkillIndex].iIndex);
+    pSkill->setInfoKey(iSkillIndex);
+    return pSkill;
 }

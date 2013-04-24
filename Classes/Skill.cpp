@@ -2757,9 +2757,15 @@ void CThunderBolt2Buff::onBuffAdd()
 {
     CBuffSkill::onBuffAdd();
     onUnitInterval();
+    CCWHomeSceneLayer* pLayer = dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer());
+    if (pLayer->getHeroUnit() != getOwner())
+    {
+        return;
+    }
+
     CCSkillButtonBase* pBtn = CCSkillButtonNormal::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0.0, NULL, NULL, NULL);
     setDisplayBody(pBtn);
-    dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.pushAddButtonExAction(pBtn);
+    pLayer->m_oSkillPanel.pushAddButtonExAction(pBtn);
     //dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.addButtonEx(pBtn);
 }
 

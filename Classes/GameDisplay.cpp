@@ -1288,7 +1288,7 @@ void CCButtonPanel::onPrevActEnd( CCNode* pNode )
 
             if (!iMove && !m_lstActs.empty())
             {
-                    onPrevActEnd((CCNode*)(1));
+                onPrevActEnd((CCNode*)(1));
             }
         }
         
@@ -1356,6 +1356,10 @@ bool CCProgressBar::init( const CCSize& roSize, CCSprite* pFill, CCSprite* pBord
     CCSize oFillSz(roSize.width - fVertBorderWidth * 2, roSize.height - fHorizBorderWidth * 2);
 
     m_oPt.initWithSprite(pFill);
+    if (m_oPt.getParent())
+    {
+        m_oPt.removeFromParentAndCleanup(true);
+    }
     addChild(&m_oPt, bFillOnTop);
     CCSize oSz = m_oPt.getContentSize();
     m_oPt.setPosition(getAnchorPointInPoints());

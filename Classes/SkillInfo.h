@@ -39,6 +39,7 @@ public:
         int iIndex; // index in sm
         string sName;
         string sDesc;
+        string sBtn;
     };
 
     typedef map<int, SKILL_INFO> MAP_SKILL_INFO;

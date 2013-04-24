@@ -31,7 +31,8 @@ public:
         uint32_t dwMaxLevel;
         uint32_t dwExp;
         uint32_t dwMaxExp;
-        
+        CCArray oArrSkill;
+        CCArray oArrSkillBtn;
     };
 
 public:
@@ -97,8 +98,4 @@ public:
     REVIVE_INFO m_stReviveInfo;
     CCLabelTTF m_oLeftToRevive;
 };
-
-
-
-
 

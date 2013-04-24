@@ -271,7 +271,7 @@ CGameUnit* CCBattleSceneLayer::randomSoldiers(int iForce)
 	u->setForceByIndex(iForce);
 	u->setAlly(1<<iForce);
 	u->addSkill(CStatusShowPas::create());
-	u->prepareAttackAnimation(1,CGameUnit::kAnimationAct1,"act1",0.1);
+	//u->prepareAttackAnimation(1,CGameUnit::kAnimationAct1,"act1",0.1);
 	u->setBaseAttackInterval(2.0);
 	u->setMaxHp(1000);
 	u->setBaseMoveSpeed(50);
@@ -353,7 +353,7 @@ void CCBattleSceneLayer::onBtnUpgradeClick( CCObject* pObject )
 	tower->setForceByIndex(1);
 	tower->setAlly(1<<1);
 	tower->addSkill(CStatusShowPas::create());
-	tower->prepareAttackAnimation(1,CGameUnit::kAnimationAct1,"act1",0.1);
+	//tower->prepareAttackAnimation(1,CGameUnit::kAnimationAct1,"act1", 0.1, );
 	tower->addSkill(pOs->skill(COrgSkillInfo::kHpChangeAura1));
 }
 

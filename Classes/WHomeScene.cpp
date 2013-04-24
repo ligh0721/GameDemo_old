@@ -81,7 +81,7 @@ bool CCWHomeSceneLayer::init()
     midTower->setForceByIndex(2);
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
-    midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
+    //midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
     midTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
     midTower->addSkill(pOs->skill(COrgSkillInfo::kSpeedAura1));
     midTower->setForceResource(&m_oFr);
@@ -92,7 +92,7 @@ bool CCWHomeSceneLayer::init()
     midTower->setForceByIndex(2);
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
-    midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
+    //midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
     midTower->addSkill(pOs->skill(COrgSkillInfo::kImmo1));
     midTower->setForceResource(&m_oFr);
 
@@ -104,7 +104,7 @@ bool CCWHomeSceneLayer::init()
     heroUnit->setForceByIndex(2);
     heroUnit->setAlly(1<<2);
     heroUnit->addSkill(CStatusShowPas::create());
-    heroUnit->addSkill(pOs->skill(COrgSkillInfo::kHero1));
+    //heroUnit->addSkill(pOs->skill(COrgSkillInfo::kHero1));
     
     heroUnit->setLevelUpdate(&g_oDemoUpdate);
     heroUnit->setMaxLevel(100);
@@ -199,6 +199,8 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oLeftToRevive);
     m_oLeftToRevive.setPosition(ccp(oSz.width * 0.8, oSz.height * 0.9));
     m_oLeftToRevive.setVisible(false);
+
+    heroUnit->setHp(1);
 
     return true;
 }
@@ -597,6 +599,7 @@ void CCWHomeSceneLayer::onHeroSoulTick( float fDt )
     }
     else
     {
+        // hero revive
         M_DEF_OS(pOs);
         m_oLeftToRevive.setVisible(false);
         unschedule(schedule_selector(CCWHomeSceneLayer::onHeroSoulTick));
@@ -608,8 +611,8 @@ void CCWHomeSceneLayer::onHeroSoulTick( float fDt )
 
         pHero->setForceByIndex(2);
         pHero->setAlly(1<<2);
-        pHero->addSkill(CStatusShowPas::create());
-        pHero->addSkill(pOs->skill(COrgSkillInfo::kHero1));
+        //pHero->addSkill(CStatusShowPas::create());
+        //pHero->addSkill(pOs->skill(COrgSkillInfo::kHero1));
 
         pHero->setLevelUpdate(&g_oDemoUpdate);
         pHero->setMaxLevel(m_stReviveInfo.dwMaxLevel);
@@ -617,6 +620,32 @@ void CCWHomeSceneLayer::onHeroSoulTick( float fDt )
         pHero->setForceResource(&m_oFr);
 
         pHero->addExp(m_stReviveInfo.dwExp);
+
+        CSkill* pSkill = NULL;
+        CCObject* pObj = NULL;
+        CCSkillButtonBase* pBtn = NULL;
+        CCARRAY_FOREACH(&m_stReviveInfo.oArrSkill, pObj)
+        {
+            pSkill = dynamic_cast<CSkill*>(pObj);
+            pHero->addSkill(pSkill);
+            pBtn = dynamic_cast<CCSkillButtonBase*>(pSkill->getDisplayBody());
+            if (pBtn)
+            {
+                m_oSkillPanel.pushAddButtonExAction(pBtn);
+            }
+        }
+
+        //CCSkillButtonBase* pBtn = NULL;
+        m_stReviveInfo.oArrSkill.removeAllObjects();
+
+        /*
+        CCARRAY_FOREACH(&m_stReviveInfo.oArrSkillBtn, pObj)
+        {
+            pBtn = dynamic_cast<CCSkillButtonBase*>(pObj);
+            m_oSkillPanel.pushAddButtonExAction(pBtn);
+        }
+        m_stReviveInfo.oArrSkillBtn.removeAllObjects();
+        */
     }
 }
 
@@ -631,7 +660,10 @@ void CCWHomeSceneLayer::onUnitDie( CGameUnit* pUnit )
         m_stReviveInfo.dwExp = pUnit->getExp();
         m_stReviveInfo.dwLevel = pUnit->getLevel();
         m_stReviveInfo.dwMaxLevel = pUnit->getMaxLevel();
+        m_stReviveInfo.oArrSkill.initWithArray(&pUnit->m_oArrSkill);
+        m_stReviveInfo.oArrSkillBtn.initWithArray(m_oSkillPanel.getSkillMenu()->getChildren());
         m_oLeftToRevive.setVisible(true);
+        
         schedule(schedule_selector(CCWHomeSceneLayer::onHeroSoulTick), 0.2);
         onHeroSoulTick(0);
     }
