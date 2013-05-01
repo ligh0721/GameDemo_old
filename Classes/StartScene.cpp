@@ -27,7 +27,7 @@ CCScene* CCStartLayer::scene()
     if (node!=NULL)
     {
         scene->addChild(node); //将node 添加到scene中
-        node->setScale(2.0);
+        node->setScale(1.0);
     }
     
     return scene;
