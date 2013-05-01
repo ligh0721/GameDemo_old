@@ -42,15 +42,6 @@
     <ClCompile Include="..\Classes\GameDisplay.cpp">
       <Filter>Classes\Display\source</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\GameLogic.cpp">
-      <Filter>Classes\Logic\source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BulletSprite.cpp">
-      <Filter>Classes\Display\source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\TankSprite.cpp">
-      <Filter>Classes\Display\source</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Skill.cpp">
       <Filter>Classes\Logic\source</Filter>
     </ClCompile>
@@ -76,9 +67,6 @@
       <Filter>Classes\Logic\source</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SkillUI.cpp">
-      <Filter>Classes\Display\source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BattleGroundScene.cpp">
       <Filter>Classes\Display\source</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\MainScene.cpp">
@@ -164,17 +152,8 @@
     <ClInclude Include="..\Classes\GameDisplay.h">
       <Filter>Classes\Display\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\GameLogic.h">
-      <Filter>Classes\Logic\include</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\TankSprite.h">
-      <Filter>Classes\Display\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BulletSprite.h">
-      <Filter>Classes\Display\include</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Skill.h">
       <Filter>Classes\Logic\include</Filter>
@@ -204,9 +183,6 @@
       <Filter>Classes\Logic\include</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SkillUI.h">
-      <Filter>Classes\Display\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BattleGroundScene.h">
       <Filter>Classes\Display\include</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MainScene.h">

@@ -1,52 +1,18 @@
 #pragma once
 
-#include "GameLogic.h"
 
-class CEventInterface;
-class CGameLogicObject;
 class CGameControl;
-class CBullet;
 
 class CSkillInfo;
 class CActiveSkill;
 class CAttackData;
 
-class CCGameManager;
-class CCBulletSprite;
-class CCTankSprite;
-class CCNormalTankSprite;
 
-class CCBattleGroundLayer;
 class CCCtrlLayer;
-class CCBackGroundLayer;
 
-class CCBattleGroundScene;
 class CCSkillUpdateScene;
 
-class CCShadowNode;
-
 class CProp;
-class CCEventTriggerInterface
-{
-public:
-    virtual ~CCEventTriggerInterface() = 0;
-
-    virtual CEventInterface* getEventInterface() const = 0;
-    virtual bool isTriggerOn() const = 0;
-};
-
-class CCLogicInfoInterface
-{
-public:
-    CCLogicInfoInterface();
-    virtual ~CCLogicInfoInterface() = 0;
-
-    virtual CGameLogicObject* getLogicBody() const;
-    virtual void setLogicBody(CGameLogicObject* pLogicBody);
-
-public:
-    CGameLogicObject* m_pLogicBody;
-};
 
 class CCProjectileWithAttackData
 {
@@ -63,124 +29,7 @@ public:
     CAttackData* m_pAttackData;
 };
 
-class CCGameSprite : public CCSprite
-{
-public:
-    CCGameSprite();
-    virtual ~CCGameSprite();
-
-    virtual void setPosition(const CCPoint& roPos);
-
-    static float reviseRotation(float fDegree);
-
-    CCShadowNode* getShadowNode();
-    void setShadowNode(CCShadowNode* pShadowNode);
-    void delShadowNode();
-
-    CC_SYNTHESIZE(float, m_fLineVelocity, LineVelocity);
-    CC_SYNTHESIZE(float, m_fAngularVelocity, AngularVelocity);
-
-    virtual void startDoing(uint32_t dwMask);
-    virtual void endDoing(uint32_t dwMask);
-    virtual bool isDoingOr(uint32_t dwMask) const;
-    virtual bool isDoingAnd(uint32_t dwMask) const;
-    virtual bool isDoingNothing() const;
-
-public:
-    uint32_t m_dwDoingFlags;
-private:
-    CCShadowNode* m_pShadowNode;
-};
-
-class CCShadowNode : public CCNode
-{
-public:
-    virtual ~CCShadowNode();
-
-    virtual bool init(CCNode* pParent);
-    CREATE_FUNC_PARAM(CCShadowNode, (CCNode* pParent), pParent);
-
-    virtual CCGameSprite* getOwner();
-    virtual void setOwner(CCGameSprite* pOwner);
-
-public:
-    CCGameSprite* m_pOwner;
-};
-
-class CCRadarStreak : public CCMotionStreak
-{
-public:
-    CCRadarStreak();
-
-    static CCRadarStreak* create(float fade, float minSeg, float stroke, ccColor3B color, const char* path, CCSprite* pSprite);
-    virtual void updateStreak(float dt);
-
-private:
-    CCSprite* m_pSprite;
-    float m_fRadius;
-    float m_fAngle;
-};
-
-class CCGameManager : public CCObject
-{
-protected:
-    CCGameManager();
-
-public:
-    virtual ~CCGameManager();
-
-    virtual bool init();
-    CREATE_FUNC_PARAM(CCGameManager, ());
-    static CCGameManager* sharedGameManager();
-
-    void addBattleGroundLayer(CCScene* pTargetSence);
-    void addCtrlLayer(CCScene* pTargetSence);
-    void addBackGroundLayer(CCScene* pTargetSence);
-
-    void addTank(CCTankSprite* pTank, const CCPoint& oPos, float fRotate);
-    void addBullet(CCBulletSprite* pBullet, CCTankSprite* pTank);
-    int getBulletCount() const;
-    int getTankCount() const;
-    //int getAllyCount() const;
-    //int getEnemyCount() const;
-    CCBulletSprite* getBulletByIndex(int iIndex);
-    CCTankSprite* getTankByIndex(int iIndex);
-    CCTankSprite* getTankByKey(int iKey);
-    CSkill* getSkillByKey(int iOwner, int iKey);
-    CBuffSkill* getBuffByKey(int iOwner, int iKey);
-
-    virtual CGameControl* getLogicBody() const;
-
-    void setVoice(bool bTurnOn);
-    bool isVoiceEnabled() const;
-    void preloadEffectSound(const char* pEffect);
-    void preloadBackgroundSound(const char* pBackground);
-    void playEffectSound(const char* pEffect, bool bLoop = false);
-    void playBackgroundSound(const char* pBackground, bool bLoop = true);
-
-	void setPackage(CUnitPackage* pPackage);
-
-	void pushScene(CCScene* pScene);
-	void popSceneWithTrans(float duration);
-public:
-    static CCGameManager* m_pInst;
-    CGameControl* m_pLogicBody;
-    CCBattleGroundLayer* m_pBattleGroundLayer;
-    CCCtrlLayer* m_pCtrlLayer;
-    CCBackGroundLayer* m_pBackGroundLayer;
-    CCSpriteBatchNode* m_pTankBatch;
-    CCSpriteBatchNode* m_pBulletBatch;
-    CCParticleBatchNode* m_pParticleBatch;
-    b2World* m_pPhyWorld;
-    SimpleAudioEngine* m_pAudio;
-    int m_iPlayerKey;
-    bool m_bTurnOnVoice;
-    float m_fMaxBonusDist;
-	CUnitPackage* m_pPackage;
-	CCArray m_oArrScene;
-	int m_iTotalChapter;
-	int m_iCompletedChapter;
-};
+class CSkill;
 
 class CCSkillManager : public CCObject
 {
@@ -228,14 +77,6 @@ template <typename LOGIC>
 inline LOGIC* CreateLogicObject()
 {
     return new LOGIC();
-}
-
-template <typename BULLETSPRITE>
-inline BULLETSPRITE* CreateBulletSprite(const char* pFrameName, CBullet* pBulletLogic, CCTankSprite* pOwnerSprite)
-{
-    BULLETSPRITE* pBulletSprite = BULLETSPRITE::createWithSpriteFrameNameAndLogic(pFrameName, pBulletLogic);
-    CCGameManager::sharedGameManager()->addBullet(pBulletSprite, pOwnerSprite);
-    return pBulletSprite;
 }
 
 class CCSkillButtonBase : public CCMenuItemImage
@@ -309,6 +150,8 @@ public:
     CREATE_FUNC_PARAM(CCSkillButtonNormalWithInfo, (const char* pBlinkImage, const char* pMaskImage, float fCoolDown, CCObject* pTarget, SEL_CallFuncN pOnClick, SEL_CallFuncN pOnFinished, int iInfoKey), pBlinkImage, pMaskImage, fCoolDown, pTarget, pOnClick, pOnFinished, iInfoKey);
     CC_SYNTHESIZE(int, m_iInfoKey, InfoKey);
 };
+
+class CCUnitLayer;
 
 class CCSkillButtonAdvance : public CCSkillButtonBase
 {

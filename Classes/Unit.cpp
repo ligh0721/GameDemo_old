@@ -1,8 +1,6 @@
 #include "CommInc.h"
 
 #include "GameDisplay.h"
-#include "GameLogic.h"
-#include "TankSprite.h"
 #include "Skill.h"
 #include "Unit.h"
 #include "Package.h"

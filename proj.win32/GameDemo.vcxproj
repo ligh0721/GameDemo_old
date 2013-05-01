@@ -130,7 +130,6 @@
     <ClInclude Include="..\Classes\AppMacros.h" />
     <ClInclude Include="..\Classes\BattleScene.h" />
     <ClInclude Include="..\Classes\Box2DEx.h" />
-    <ClInclude Include="..\Classes\BulletSprite.h" />
     <ClInclude Include="..\Classes\ChildOfGameUnit.h" />
     <ClInclude Include="..\Classes\CommInc.h" />
     <ClInclude Include="..\Classes\CommDef.h" />
@@ -142,10 +141,8 @@
     <ClInclude Include="..\Classes\GameDisplay.h" />
     <ClInclude Include="..\Classes\GameFile.h" />
     <ClInclude Include="..\Classes\GameLevel.h" />
-    <ClInclude Include="..\Classes\GameLogic.h" />
     <ClInclude Include="..\Classes\GameResControl.h" />
     <ClInclude Include="..\Classes\GLES-Render.h" />
-    <ClInclude Include="..\Classes\BattleGroundScene.h" />
     <ClInclude Include="..\Classes\HomeScene.h" />
     <ClInclude Include="..\Classes\MainScene.h" />
     <ClInclude Include="..\Classes\MissionInfo.h" />
@@ -157,7 +154,6 @@
     <ClInclude Include="..\Classes\SkillInfo.h" />
     <ClInclude Include="..\Classes\SkillUI.h" />
     <ClInclude Include="..\Classes\SomeScene.h" />
-    <ClInclude Include="..\Classes\TankSprite.h" />
     <ClInclude Include="..\Classes\TechTreeScene.h" />
     <ClInclude Include="..\Classes\testScene.h" />
     <ClInclude Include="..\Classes\Tower.h" />
@@ -172,10 +168,8 @@
   <ItemGroup>
     <ClCompile Include="..\Classes\Action.cpp" />
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
-    <ClCompile Include="..\Classes\BattleGroundScene.cpp" />
     <ClCompile Include="..\Classes\BattleScene.cpp" />
     <ClCompile Include="..\Classes\Box2DEx.cpp" />
-    <ClCompile Include="..\Classes\BulletSprite.cpp" />
     <ClCompile Include="..\Classes\ChildOfGameUnit.cpp" />
     <ClCompile Include="..\Classes\CommDef.cpp" />
     <ClCompile Include="..\Classes\ComplexUnit.cpp" />
@@ -186,7 +180,6 @@
     <ClCompile Include="..\Classes\GameDisplay.cpp" />
     <ClCompile Include="..\Classes\GameFile.cpp" />
     <ClCompile Include="..\Classes\GameLevel.cpp" />
-    <ClCompile Include="..\Classes\GameLogic.cpp" />
     <ClCompile Include="..\Classes\GameResControl.cpp" />
     <ClCompile Include="..\Classes\GLES-Render.cpp" />
     <ClCompile Include="..\Classes\HomeScene.cpp" />
@@ -200,7 +193,6 @@
     <ClCompile Include="..\Classes\SkillInfo.cpp" />
     <ClCompile Include="..\Classes\SkillUI.cpp" />
     <ClCompile Include="..\Classes\SomeScene.cpp" />
-    <ClCompile Include="..\Classes\TankSprite.cpp" />
     <ClCompile Include="..\Classes\TechTreeScene.cpp" />
     <ClCompile Include="..\Classes\testScene.cpp" />
     <ClCompile Include="..\Classes\Tower.cpp" />

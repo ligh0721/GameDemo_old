@@ -1,12 +1,9 @@
 #include "CommInc.h"
 
-#include "GameLogic.h"
 #include "GameDisplay.h"
-#include "TankSprite.h"
 #include "Unit.h"
 #include "Skill.h"
 #include "Box2DEx.h"
-#include "BattleGroundScene.h"
 #include "SomeScene.h"
 #include "WHomeScene.h"
 #include "MissionInfo.h"

@@ -1,12 +1,8 @@
 #include "CommInc.h"
 
 #include "GameDisplay.h"
-#include "GameLogic.h"
-#include "BulletSprite.h"
-#include "TankSprite.h"
 #include "Action.h"
 #include "Unit.h"
-#include "BattleGroundScene.h"
 #include "Skill.h"
 #include "GameCtrl.h"
 #include "UnitInfo.h"
@@ -14,7 +10,7 @@
 
 
 CSkill::CSkill()
-    : m_iKey(CCGameManager::sharedGameManager()->getLogicBody()->keygen())
+    : m_iKey(CGameManager::sharedGameManager()->keygen())
     , m_pOwner(NULL)
     , m_fCoolDown(0)
     , m_fCDLeft(0)
@@ -931,7 +927,7 @@ void CCommboPas::onSkillAdd()
     registerOnDamagedInnerTrigger();
     registerOnTickTrigger();
     m_pLabel = CCLabelTTF::create("          ", "Arial", 32);
-    CCGameManager::sharedGameManager()->m_pCtrlLayer->addChild(m_pLabel, 1);
+    //CCGameManager::sharedGameManager()->m_pCtrlLayer->addChild(m_pLabel, 1);
     CPassiveSkill::onSkillAdd();
 }
 
@@ -1015,7 +1011,7 @@ void CAttackTextPas::onSkillDel()
 
 void CAttackTextPas::onUnitDamageTarget( float fDamage, CUnit* pTarget )
 {
-    
+    /*
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
     CCShadowNode* pSn = dynamic_cast<CTank*>(getOwner())->getDisplayBody()->getShadowNode();
     if (!m_pLabel)
@@ -1031,6 +1027,7 @@ void CAttackTextPas::onUnitDamageTarget( float fDamage, CUnit* pTarget )
     m_pLabel->setFontSize(16 + MIN(m_fValue, 200) * 24 / 200.0);
     //int nG = MAX(0, 200 - 30 * m_iCombo);
     m_pLabel->runAction(CCJumpByEx::create(pSn->getAnchorPointInPoints(), ccp(0, 60), ccc3(0, 130, 200)));
+    */
 }
 
 void CAttackTextPas::onUnitDamaged( CAttackData* pAttack, CUnit* pSource )
@@ -1072,6 +1069,7 @@ CCObject* CScatterFireAct::copyWithZone( CCZone* pZone )
 
 void CScatterFireAct::onSkillCast()
 {
+    /*
     CTank* pTankL = dynamic_cast<CTank*>(getOwner());
     CCTankSprite* pTank = dynamic_cast<CCTankSprite*>(pTankL->getDisplayBody());
     CCGameManager* pGm = CCGameManager::sharedGameManager();
@@ -1099,7 +1097,7 @@ void CScatterFireAct::onSkillCast()
         pBullet->fire(m_fPower, m_fVel, m_fRange, m_fScaleX, m_fScaleY);
     }
     pGm->playEffectSound("sound/Fire_Disease.wav");
-    
+    */
 }
 
 bool CShrapnelPas::init( float fPower, int iCount, float fDelta, float fRange, float fVel, float fScaleX, float fScaleY, int iProbability, int iMaxGeneration )
@@ -1135,6 +1133,7 @@ void CShrapnelPas::onSkillDel()
 
 void CShrapnelPas::onUnitDestroyProjectile( CCProjectileWithAttackData* pProjectile )
 {
+    /*
     int iGeneration = pProjectile->getGeneration();
     if (iGeneration > m_iMaxGeneration || !M_RAND_HIT(m_iProbability))
     {
@@ -1176,6 +1175,7 @@ void CShrapnelPas::onUnitDestroyProjectile( CCProjectileWithAttackData* pProject
     }
     pGm->playEffectSound("sound/explo0.wav");
     pGm->playEffectSound("sound/Fire_Disease.wav");
+    */
 }
 
 bool CHomingMissileAct::init( float fCoolDown, float fPower, float fInitDuration, int iBuffTemplateKey, int iBuffLevel )
@@ -1195,6 +1195,7 @@ CCObject* CHomingMissileAct::copyWithZone( CCZone* pZone )
 
 void CHomingMissileAct::onSkillCast()
 {
+    /*
     CCGameManager* pGm = CCGameManager::sharedGameManager();
     CCSkillManager* pSm = CCSkillManager::sharedSkillManager();
     CUnit* pOwner = getOwner();
@@ -1246,6 +1247,7 @@ void CHomingMissileAct::onSkillCast()
 
     pBullet->fire(m_fPower, iTargetKey, m_fInitDuration);
     pGm->playEffectSound("sound/Fire_Missiles.wav");
+    */
 }
 
 bool CStatusShowPas::init()
@@ -1353,7 +1355,7 @@ void CHpChangePas::onSkillDel()
 }
 
 CSkillInfo::CSkillInfo()
-    : m_iKey(CCGameManager::sharedGameManager()->getLogicBody()->keygen())
+    : m_iKey(CGameManager::sharedGameManager()->keygen())
     , m_ppValue(NULL)
 {
 }
