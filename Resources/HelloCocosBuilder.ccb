@@ -5,7 +5,7 @@
 	<key>centeredOrigin</key>
 	<false/>
 	<key>currentResolution</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>currentSequenceId</key>
 	<integer>0</integer>
 	<key>fileType</key>
@@ -13,7 +13,14 @@
 	<key>fileVersion</key>
 	<integer>4</integer>
 	<key>guides</key>
-	<array/>
+	<array>
+		<dict>
+			<key>orientation</key>
+			<integer>0</integer>
+			<key>position</key>
+			<real>41</real>
+		</dict>
+	</array>
 	<key>nodeGraph</key>
 	<dict>
 		<key>baseClass</key>
@@ -37,14 +44,26 @@
 				<array>
 					<dict>
 						<key>name</key>
+						<string>position</string>
+						<key>type</key>
+						<string>Position</string>
+						<key>value</key>
+						<array>
+							<real>-18</real>
+							<real>316</real>
+							<integer>1</integer>
+						</array>
+					</dict>
+					<dict>
+						<key>name</key>
 						<string>contentSize</string>
 						<key>type</key>
 						<string>Size</string>
 						<key>value</key>
 						<array>
-							<real>100</real>
-							<real>100</real>
-							<integer>1</integer>
+							<real>1024</real>
+							<real>768</real>
+							<integer>0</integer>
 						</array>
 					</dict>
 					<dict>
@@ -68,7 +87,7 @@
 							<real>1</real>
 							<real>1</real>
 							<false/>
-							<integer>0</integer>
+							<integer>1</integer>
 						</array>
 					</dict>
 					<dict>
@@ -155,6 +174,8 @@
 						</array>
 					</dict>
 				</array>
+				<key>selected</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>animatedProperties</key>
@@ -237,6 +258,22 @@
 										<real>272</real>
 									</array>
 								</dict>
+								<dict>
+									<key>easing</key>
+									<dict>
+										<key>type</key>
+										<integer>1</integer>
+									</dict>
+									<key>time</key>
+									<real>10</real>
+									<key>type</key>
+									<integer>3</integer>
+									<key>value</key>
+									<array>
+										<real>509</real>
+										<real>589</real>
+									</array>
+								</dict>
 							</array>
 							<key>name</key>
 							<string>position</string>
@@ -271,8 +308,8 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>240</real>
-							<real>272</real>
+							<real>509</real>
+							<real>589</real>
 							<integer>0</integer>
 						</array>
 					</dict>
@@ -297,7 +334,7 @@
 							<real>1.8010907173156738</real>
 							<real>1.4416066408157349</real>
 							<false/>
-							<integer>0</integer>
+							<integer>1</integer>
 						</array>
 					</dict>
 					<dict>
@@ -429,8 +466,8 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>231</real>
-							<real>217</real>
+							<real>459</real>
+							<real>461</real>
 							<integer>0</integer>
 						</array>
 					</dict>
@@ -732,8 +769,8 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>231</real>
-							<real>160</real>
+							<real>459</real>
+							<real>404</real>
 							<integer>0</integer>
 						</array>
 					</dict>
@@ -1035,8 +1072,8 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>231</real>
-							<real>101</real>
+							<real>459</real>
+							<real>345</real>
 							<integer>0</integer>
 						</array>
 					</dict>
@@ -1338,8 +1375,8 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>231</real>
-							<real>43</real>
+							<real>459</real>
+							<real>287</real>
 							<integer>0</integer>
 						</array>
 					</dict>
