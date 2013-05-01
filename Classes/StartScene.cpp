@@ -9,7 +9,13 @@
 #include "StartScene.h"
 #include "WHomeScene.h"
 
+CStartLayer::CStartLayer():m_pLabelText(NULL)
+{}
 
+CStartLayer::~CStartLayer()
+{
+    CC_SAFE_DELETE(m_pLabelText);
+}
 CCScene* CStartLayer::scene()
 {
     CCScene *scene = CCScene::create();
@@ -45,6 +51,17 @@ SEL_MenuHandler CStartLayer::onResolveCCBCCMenuItemSelector(CCObject * pTarget, 
 {
     return NULL;
 }
+bool CStartLayer::onAssignCCBMemberVariable(CCObject * pTarget, CCString * pMemberVariableName, CCNode * pNode)
+{
+    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "LabelText", CCLabelBMFont*, this->m_pLabelText);
+    return true;
+
+}
+void CStartLayer::onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader)
+{
+    m_pLabelText->setString("hello world");
+}
+
 void CStartLayer::onStart(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent)
 {
     CCLOG("onStart");
@@ -54,6 +71,7 @@ void CStartLayer::onStart(cocos2d::CCObject *pSender, cocos2d::extension::CCCont
 void CStartLayer::onOption(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent)
 {
     CCLOG("onOption");
+    m_pLabelText->setString("click option");
 }
 void CStartLayer::onQuit(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent)
 {
