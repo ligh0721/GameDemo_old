@@ -141,6 +141,9 @@
     <ClCompile Include="..\Classes\GameResControl.cpp">
       <Filter>Classes\Logic\source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\StartScene.cpp">
+      <Filter>Classes\Display\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -259,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\GameResControl.h">
       <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StartScene.h">
+      <Filter>Classes\Display\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

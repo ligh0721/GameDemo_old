@@ -2298,7 +2298,7 @@ void CSwordStormSkill::onActEndPerAnim(CCObject* pObj)
         if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
             && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
         {
-            //给范围内的敌人受到持续伤害
+            //Χ????
             CAttackData* pAttack = CAttackData::create();
             pAttack->setAttack(m_oMaxDamage);
             pUnit->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
@@ -2894,7 +2894,7 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
     float fDis = 0.0;
     
     
-    //给范围内的敌人受到持续伤害
+    //Χ????
     CAttackData* pAttack = CAttackData::create();
     pAttack->setAttack(m_oMaxDamage);
     
@@ -2912,7 +2912,7 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
         if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
             && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
         {
-            //给范围内的敌人受到持续伤害
+            //Χ????
             CAttackData* pAttack = CAttackData::create();
             pAttack->setAttack(m_oMaxDamage);
             pUnit->damagedAdv(pAttack,  pOwn, CUnit::kMaskActiveTrigger);
@@ -3403,3 +3403,128 @@ void CHeroBuff::updateState( int iLvlChange )
     }
     o->setBaseAttackValue(oAv);
 }
+
+
+bool CAddDamageBuff::init(float fDuration, bool bCanBePlural, int iSrcKey, const CExtraCoeff &roAddDamageFormula, int iBuffKey, int iBuffLevel)
+{
+    CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+    m_oAddDamageFormula = roAddDamageFormula;
+    return true;
+    
+}
+
+CCObject* CAddDamageBuff::copyWithZone(cocos2d::CCZone *pZone)
+{
+    return create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_oAddDamageFormula, m_iBuffKey, m_iBuffLevel);
+
+}
+
+void CAddDamageBuff::onBuffAdd()
+{
+    CBuffSkill::onBuffAdd();
+    registerOnAttackTargetTrigger();
+}
+
+void CAddDamageBuff::onBuffDel( bool bCover )
+{
+    CBuffSkill::onBuffDel(bCover);
+    unregisterOnAttackTargetTrigger();
+
+}
+
+void CAddDamageBuff::onUnitAttackTarget(CAttackData *pAttack, CUnit *pTarget)
+{
+    for (int i = 0; i < CAttackValue::CONST_MAX_ATTACK_TYPE; i++)
+    {
+        float base =  pAttack->getAttack((CAttackValue::ATTACK_TYPE)i);
+        pAttack->setAttack((CAttackValue::ATTACK_TYPE)i, m_oAddDamageFormula.getValue(base));
+    }
+}
+bool CRushBuff::init(float fDuration, bool bCanBePlural, int iSrcKeyl, const CAttackValue& roDamage, float fMaxRushRange, const CExtraCoeff& roRunSpeedCoeff, int iBuffKey, int iBuffLevel)
+{
+    CBuffSkill::init(fDuration, bCanBePlural, iSrcKeyl);
+    m_iBuffKey = iBuffKey;
+    m_iBuffLevel = iBuffLevel;
+    m_fMaxRushRange = fMaxRushRange;
+    m_iTargetUnit = 0;
+    m_oDamage = roDamage;
+    m_oRunSpeedCoeff = roRunSpeedCoeff;
+    return true;
+}
+CCObject* CRushBuff::copyWithZone(cocos2d::CCZone *pZone)
+{
+    CRushBuff* b =  dynamic_cast<CRushBuff*>(CRushBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_oDamage, m_fMaxRushRange, m_oRunSpeedCoeff, m_iBuffKey, m_iBuffLevel));
+    b->m_oArrSkill.addObjectsFromArray(&m_oArrSkill);
+    return b;
+
+}
+void CRushBuff::addBuff(CBuffSkill *pBuff, int iProbability)
+{
+    CAttackBuff* b = CAttackBuff::create(pBuff, iProbability);
+    m_oArrSkill.addObject(b);
+}
+void CRushBuff::onBuffAdd()
+{
+    CBuffSkill::onBuffAdd();
+    CGameUnit* pOwn = getOwner();
+    if (!pOwn || pOwn->isDead())
+    {
+        return;
+    }
+    pOwn->setExMoveSpeed(m_oRunSpeedCoeff);
+}
+
+void CRushBuff::onBuffDel( bool bCover )
+{
+    CBuffSkill::onBuffDel(bCover);
+    CGameUnit* pOwn = getOwner();
+    //pOwn->stopSpin();
+    //pOwn->resume();
+}
+
+void CRushBuff::onUnitTick(float fDt)
+{
+    timeStep(fDt);
+    rushing();
+    delBuffIfTimeout();
+}
+
+void CRushBuff::rushing()
+{
+    CGameUnit* o = dynamic_cast<CGameUnit*>(getOwner());
+    if (!o || o->isDead())
+    {
+        return;
+    }
+    CCUnitLayer* l = o->getUnitLayer();
+    CGameUnit* pTarget = l->getUnitByKey(m_iTargetUnit);
+    if (pTarget != NULL && ccpDistance(pTarget->getPosition(), o->getPosition()) < 10)
+    {
+        uint32_t dwTriggerMask = CUnit::kNoMasked;
+        CAttackData* pAtk =  CAttackData::create();
+        pAtk->setAttack(m_oDamage);
+        pAtk->m_oArrBuff.addObjectsFromArray(&m_oArrSkill);
+        pTarget->damagedAdv(pAtk, o, dwTriggerMask);
+    }
+    else if(pTarget)
+    {
+        return;
+    }
+    if (!(pTarget = l->getUnits()->getUnitsInRange(o->getPosition(), m_fMaxRushRange, INFINITE, CONDITION(CRushBuff::checkConditions), this)->getRandomUnit()))
+    {
+        return;
+    }
+    m_mapEffected[pTarget->getKey()] = true;
+    m_iTargetUnit = pTarget->getKey();
+    o->moveTo(pTarget->getPosition());
+}
+
+bool CRushBuff::checkConditions( CGameUnit* pUnit, CRushBuff* pBuff )
+{
+    if (!CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pBuff->getOwner())) || pUnit == pBuff->getOwner() || pBuff->m_mapEffected[pUnit->getKey()])
+    {
+        return false;
+    }
+    return true;
+}
+

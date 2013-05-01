@@ -154,6 +154,7 @@
     <ClInclude Include="..\Classes\SkillInfo.h" />
     <ClInclude Include="..\Classes\SkillUI.h" />
     <ClInclude Include="..\Classes\SomeScene.h" />
+    <ClInclude Include="..\Classes\StartScene.h" />
     <ClInclude Include="..\Classes\TechTreeScene.h" />
     <ClInclude Include="..\Classes\testScene.h" />
     <ClInclude Include="..\Classes\Tower.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="..\Classes\SkillInfo.cpp" />
     <ClCompile Include="..\Classes\SkillUI.cpp" />
     <ClCompile Include="..\Classes\SomeScene.cpp" />
+    <ClCompile Include="..\Classes\StartScene.cpp" />
     <ClCompile Include="..\Classes\TechTreeScene.cpp" />
     <ClCompile Include="..\Classes\testScene.cpp" />
     <ClCompile Include="..\Classes\Tower.cpp" />

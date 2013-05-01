@@ -4,6 +4,7 @@
 #include "UnitEditorScene.h"
 #include "WHomeScene.h"
 #include "HomeScene.h"
+#include "StartScene.h"
 #include "MainScene.h"
 #include "AppMacros.h"
 #include "BattleScene.h"
@@ -84,7 +85,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     CCScene *pScene = CCUnitEditorScene::create();
 #else
     //CCScene *pScene = CCHomeScene::create();
-    CCScene *pScene = CCWHomeScene::create();
+    //CCScene *pScene = CCWHomeScene::create();
+    CCScene *pScene = CCStartLayer::scene();
     //CCScene *pScene = CCUnitEditorScene::create();
 	//CCScene *pScene = CCBattleScene::create();
 	//CCScene* pScene = CCGameChapterScene::create();
