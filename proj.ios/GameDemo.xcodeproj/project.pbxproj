@@ -12,10 +12,8 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
 		8B09164D16C55465004C5566 /* Action.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09160016C55464004C5566 /* Action.cpp */; };
-		8B09164E16C55465004C5566 /* BattleGroundScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09160216C55464004C5566 /* BattleGroundScene.cpp */; };
 		8B09164F16C55465004C5566 /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09160416C55464004C5566 /* BattleScene.cpp */; };
 		8B09165016C55465004C5566 /* Box2DEx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09160616C55464004C5566 /* Box2DEx.cpp */; };
-		8B09165116C55465004C5566 /* BulletSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09160816C55464004C5566 /* BulletSprite.cpp */; };
 		8B09165216C55465004C5566 /* ChildOfGameUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09160A16C55464004C5566 /* ChildOfGameUnit.cpp */; };
 		8B09165316C55465004C5566 /* CommDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09160C16C55464004C5566 /* CommDef.cpp */; };
 		8B09165416C55465004C5566 /* ComplexUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09160F16C55464004C5566 /* ComplexUnit.cpp */; };
@@ -26,7 +24,6 @@
 		8B09165916C55465004C5566 /* GameDisplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09161916C55465004C5566 /* GameDisplay.cpp */; };
 		8B09165A16C55465004C5566 /* GameFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09161B16C55465004C5566 /* GameFile.cpp */; };
 		8B09165B16C55465004C5566 /* GameLevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09161D16C55465004C5566 /* GameLevel.cpp */; };
-		8B09165C16C55465004C5566 /* GameLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09161F16C55465004C5566 /* GameLogic.cpp */; };
 		8B09165D16C55465004C5566 /* GameResControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09162116C55465004C5566 /* GameResControl.cpp */; };
 		8B09165E16C55465004C5566 /* GLES-Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09162316C55465004C5566 /* GLES-Render.cpp */; };
 		8B09165F16C55465004C5566 /* HomeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09162516C55465004C5566 /* HomeScene.cpp */; };
@@ -40,7 +37,6 @@
 		8B09166716C55465004C5566 /* SkillInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09163516C55465004C5566 /* SkillInfo.cpp */; };
 		8B09166816C55465004C5566 /* SkillUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09163716C55465004C5566 /* SkillUI.cpp */; };
 		8B09166916C55465004C5566 /* SomeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09163916C55465004C5566 /* SomeScene.cpp */; };
-		8B09166A16C55465004C5566 /* TankSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09163B16C55465004C5566 /* TankSprite.cpp */; };
 		8B09166B16C55465004C5566 /* TechTreeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09163D16C55465004C5566 /* TechTreeScene.cpp */; };
 		8B09166C16C55465004C5566 /* TestScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09163F16C55465004C5566 /* TestScene.cpp */; };
 		8B09166D16C55465004C5566 /* Tower.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B09164116C55465004C5566 /* Tower.cpp */; };
@@ -207,6 +203,8 @@
 		BF365AA812A103F70050DCF4 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BF365AA712A103F70050DCF4 /* AppController.mm */; };
 		BF4DE6AD138BB89600CF907D /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BF4DE6AC138BB89600CF907D /* RootViewController.mm */; };
 		D4ABB4B313B4395300552E6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D4ABB4B213B4395300552E6E /* main.m */; };
+		FEBD44601733946F00AF3743 /* UnitAI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEBD445F1733946F00AF3743 /* UnitAI.cpp */; };
+		FEBD44631733BD7A00AF3743 /* StartScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEBD44611733BD7900AF3743 /* StartScene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -240,14 +238,10 @@
 		781C33B51547F06B00633F88 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		8B09160016C55464004C5566 /* Action.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Action.cpp; sourceTree = "<group>"; usesTabs = 0; };
 		8B09160116C55464004C5566 /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Action.h; sourceTree = "<group>"; };
-		8B09160216C55464004C5566 /* BattleGroundScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleGroundScene.cpp; sourceTree = "<group>"; };
-		8B09160316C55464004C5566 /* BattleGroundScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleGroundScene.h; sourceTree = "<group>"; };
 		8B09160416C55464004C5566 /* BattleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScene.cpp; sourceTree = "<group>"; };
 		8B09160516C55464004C5566 /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; path = BattleScene.h; sourceTree = "<group>"; };
 		8B09160616C55464004C5566 /* Box2DEx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Box2DEx.cpp; sourceTree = "<group>"; };
 		8B09160716C55464004C5566 /* Box2DEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2DEx.h; sourceTree = "<group>"; };
-		8B09160816C55464004C5566 /* BulletSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BulletSprite.cpp; sourceTree = "<group>"; };
-		8B09160916C55464004C5566 /* BulletSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BulletSprite.h; sourceTree = "<group>"; };
 		8B09160A16C55464004C5566 /* ChildOfGameUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ChildOfGameUnit.cpp; sourceTree = "<group>"; };
 		8B09160B16C55464004C5566 /* ChildOfGameUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildOfGameUnit.h; sourceTree = "<group>"; };
 		8B09160C16C55464004C5566 /* CommDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommDef.cpp; sourceTree = "<group>"; };
@@ -269,7 +263,6 @@
 		8B09161C16C55465004C5566 /* GameFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameFile.h; sourceTree = "<group>"; };
 		8B09161D16C55465004C5566 /* GameLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameLevel.cpp; sourceTree = "<group>"; };
 		8B09161E16C55465004C5566 /* GameLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLevel.h; sourceTree = "<group>"; };
-		8B09161F16C55465004C5566 /* GameLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameLogic.cpp; sourceTree = "<group>"; };
 		8B09162016C55465004C5566 /* GameLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLogic.h; sourceTree = "<group>"; };
 		8B09162116C55465004C5566 /* GameResControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameResControl.cpp; sourceTree = "<group>"; };
 		8B09162216C55465004C5566 /* GameResControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameResControl.h; sourceTree = "<group>"; };
@@ -297,8 +290,6 @@
 		8B09163816C55465004C5566 /* SkillUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkillUI.h; sourceTree = "<group>"; };
 		8B09163916C55465004C5566 /* SomeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SomeScene.cpp; sourceTree = "<group>"; };
 		8B09163A16C55465004C5566 /* SomeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SomeScene.h; sourceTree = "<group>"; };
-		8B09163B16C55465004C5566 /* TankSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TankSprite.cpp; sourceTree = "<group>"; };
-		8B09163C16C55465004C5566 /* TankSprite.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = TankSprite.h; sourceTree = "<group>"; };
 		8B09163D16C55465004C5566 /* TechTreeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TechTreeScene.cpp; sourceTree = "<group>"; };
 		8B09163E16C55465004C5566 /* TechTreeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TechTreeScene.h; sourceTree = "<group>"; };
 		8B09163F16C55465004C5566 /* TestScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestScene.cpp; sourceTree = "<group>"; };
@@ -307,9 +298,9 @@
 		8B09164216C55465004C5566 /* Tower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tower.h; sourceTree = "<group>"; };
 		8B09164316C55465004C5566 /* Unit.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = Unit.cpp; sourceTree = "<group>"; };
 		8B09164416C55465004C5566 /* Unit.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Unit.h; sourceTree = "<group>"; };
-		8B09164516C55465004C5566 /* UnitEditorScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitEditorScene.cpp; sourceTree = "<group>"; };
-		8B09164616C55465004C5566 /* UnitEditorScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitEditorScene.h; sourceTree = "<group>"; };
-		8B09164716C55465004C5566 /* UnitInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = UnitInfo.cpp; sourceTree = "<group>"; };
+		8B09164516C55465004C5566 /* UnitEditorScene.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; path = UnitEditorScene.cpp; sourceTree = "<group>"; };
+		8B09164616C55465004C5566 /* UnitEditorScene.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; path = UnitEditorScene.h; sourceTree = "<group>"; };
+		8B09164716C55465004C5566 /* UnitInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = UnitInfo.cpp; sourceTree = "<group>"; };
 		8B09164816C55465004C5566 /* UnitInfo.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = UnitInfo.h; sourceTree = "<group>"; };
 		8B09164916C55465004C5566 /* UnitShowScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitShowScene.cpp; sourceTree = "<group>"; };
 		8B09164A16C55465004C5566 /* UnitShowScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitShowScene.h; sourceTree = "<group>"; };
@@ -584,6 +575,10 @@
 		D4EF94E915BD319500D803EB /* Icon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-114.png"; path = "../proj.ios/Icon-114.png"; sourceTree = "<group>"; };
 		D4EF94EB15BD319B00D803EB /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../proj.ios/Icon-72.png"; sourceTree = "<group>"; };
 		D4EF94ED15BD319D00D803EB /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-144.png"; path = "../proj.ios/Icon-144.png"; sourceTree = "<group>"; };
+		FEBD445E1733944400AF3743 /* UnitAI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnitAI.h; sourceTree = "<group>"; };
+		FEBD445F1733946F00AF3743 /* UnitAI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitAI.cpp; sourceTree = "<group>"; };
+		FEBD44611733BD7900AF3743 /* StartScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StartScene.cpp; sourceTree = "<group>"; };
+		FEBD44621733BD7A00AF3743 /* StartScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartScene.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1073,19 +1068,17 @@
 		BF23D4E2143315EB00657E08 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				FEBD44611733BD7900AF3743 /* StartScene.cpp */,
+				FEBD44621733BD7A00AF3743 /* StartScene.h */,
 				8B09160116C55464004C5566 /* Action.h */,
 				8B09160016C55464004C5566 /* Action.cpp */,
 				8BEADF7C16F1C05100E034EF /* AppDelegate.cpp */,
 				8BEADF7D16F1C05100E034EF /* AppDelegate.h */,
 				8BEADF7E16F1C05100E034EF /* AppMacros.h */,
-				8B09160216C55464004C5566 /* BattleGroundScene.cpp */,
-				8B09160316C55464004C5566 /* BattleGroundScene.h */,
 				8B09160416C55464004C5566 /* BattleScene.cpp */,
 				8B09160516C55464004C5566 /* BattleScene.h */,
 				8B09160616C55464004C5566 /* Box2DEx.cpp */,
 				8B09160716C55464004C5566 /* Box2DEx.h */,
-				8B09160816C55464004C5566 /* BulletSprite.cpp */,
-				8B09160916C55464004C5566 /* BulletSprite.h */,
 				8B09160A16C55464004C5566 /* ChildOfGameUnit.cpp */,
 				8B09160B16C55464004C5566 /* ChildOfGameUnit.h */,
 				8B09160C16C55464004C5566 /* CommDef.cpp */,
@@ -1107,7 +1100,6 @@
 				8B09161C16C55465004C5566 /* GameFile.h */,
 				8B09161D16C55465004C5566 /* GameLevel.cpp */,
 				8B09161E16C55465004C5566 /* GameLevel.h */,
-				8B09161F16C55465004C5566 /* GameLogic.cpp */,
 				8B09162016C55465004C5566 /* GameLogic.h */,
 				8B09162116C55465004C5566 /* GameResControl.cpp */,
 				8B09162216C55465004C5566 /* GameResControl.h */,
@@ -1135,8 +1127,7 @@
 				8B09163816C55465004C5566 /* SkillUI.h */,
 				8B09163916C55465004C5566 /* SomeScene.cpp */,
 				8B09163A16C55465004C5566 /* SomeScene.h */,
-				8B09163B16C55465004C5566 /* TankSprite.cpp */,
-				8B09163C16C55465004C5566 /* TankSprite.h */,
+				8B09164416C55465004C5566 /* Unit.h */,
 				8B09163D16C55465004C5566 /* TechTreeScene.cpp */,
 				8B09163E16C55465004C5566 /* TechTreeScene.h */,
 				8B09163F16C55465004C5566 /* TestScene.cpp */,
@@ -1144,7 +1135,6 @@
 				8B09164116C55465004C5566 /* Tower.cpp */,
 				8B09164216C55465004C5566 /* Tower.h */,
 				8B09164316C55465004C5566 /* Unit.cpp */,
-				8B09164416C55465004C5566 /* Unit.h */,
 				8B09164516C55465004C5566 /* UnitEditorScene.cpp */,
 				8B09164616C55465004C5566 /* UnitEditorScene.h */,
 				8B09164716C55465004C5566 /* UnitInfo.cpp */,
@@ -1153,6 +1143,8 @@
 				8B09164A16C55465004C5566 /* UnitShowScene.h */,
 				8B09164B16C55465004C5566 /* WHomeScene.cpp */,
 				8B09164C16C55465004C5566 /* WHomeScene.h */,
+				FEBD445E1733944400AF3743 /* UnitAI.h */,
+				FEBD445F1733946F00AF3743 /* UnitAI.cpp */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -1305,10 +1297,8 @@
 				BF4DE6AD138BB89600CF907D /* RootViewController.mm in Sources */,
 				D4ABB4B313B4395300552E6E /* main.m in Sources */,
 				8B09164D16C55465004C5566 /* Action.cpp in Sources */,
-				8B09164E16C55465004C5566 /* BattleGroundScene.cpp in Sources */,
 				8B09164F16C55465004C5566 /* BattleScene.cpp in Sources */,
 				8B09165016C55465004C5566 /* Box2DEx.cpp in Sources */,
-				8B09165116C55465004C5566 /* BulletSprite.cpp in Sources */,
 				8B09165216C55465004C5566 /* ChildOfGameUnit.cpp in Sources */,
 				8B09165316C55465004C5566 /* CommDef.cpp in Sources */,
 				8B09165416C55465004C5566 /* ComplexUnit.cpp in Sources */,
@@ -1319,7 +1309,6 @@
 				8B09165916C55465004C5566 /* GameDisplay.cpp in Sources */,
 				8B09165A16C55465004C5566 /* GameFile.cpp in Sources */,
 				8B09165B16C55465004C5566 /* GameLevel.cpp in Sources */,
-				8B09165C16C55465004C5566 /* GameLogic.cpp in Sources */,
 				8B09165D16C55465004C5566 /* GameResControl.cpp in Sources */,
 				8B09165E16C55465004C5566 /* GLES-Render.cpp in Sources */,
 				8B09165F16C55465004C5566 /* HomeScene.cpp in Sources */,
@@ -1333,7 +1322,6 @@
 				8B09166716C55465004C5566 /* SkillInfo.cpp in Sources */,
 				8B09166816C55465004C5566 /* SkillUI.cpp in Sources */,
 				8B09166916C55465004C5566 /* SomeScene.cpp in Sources */,
-				8B09166A16C55465004C5566 /* TankSprite.cpp in Sources */,
 				8B09166B16C55465004C5566 /* TechTreeScene.cpp in Sources */,
 				8B09166C16C55465004C5566 /* TestScene.cpp in Sources */,
 				8B09166D16C55465004C5566 /* Tower.cpp in Sources */,
@@ -1437,6 +1425,8 @@
 				8B11D85616C566D000C54706 /* CCTableViewCell.cpp in Sources */,
 				8B11D85716C566D000C54706 /* HttpClient.cpp in Sources */,
 				8BEADF7F16F1C05100E034EF /* AppDelegate.cpp in Sources */,
+				FEBD44601733946F00AF3743 /* UnitAI.cpp in Sources */,
+				FEBD44631733BD7A00AF3743 /* StartScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

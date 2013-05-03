@@ -141,7 +141,8 @@ public:
     virtual bool init();
 
     int curRound() const;
-    void nextRound();
+    bool nextRound();
+    int roundCount() const;
     int rushCount() const;
     int rush(int iRushIndex, float fDt);
     CUnitPath* pathOfRush(int iRushIndex);

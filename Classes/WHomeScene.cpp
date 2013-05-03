@@ -135,26 +135,26 @@ bool CCWHomeSceneLayer::init()
     m_oSkillPanel.setPosition(ccp(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50));
 
     CActiveSkill* pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSpeedUp1));
-    pSkill->setCastAniInfo(CGameUnit::kAnimationAct3, 0.4);
+    pSkill->setCastAniIndex(CGameUnit::kAnimationAct3);
     heroUnit->addSkill(pSkill);
     CCSkillButtonAdvance* pBtn;
     pBtn = M_CREATE_SKILL("skill2", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kThunderClap1));
-    pSkill->setCastAniInfo(CGameUnit::kAnimationAct5, 0.7);
+    pSkill->setCastAniIndex(CGameUnit::kAnimationAct5);
     heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill1", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
     
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kFastStrikeBack1));
-    pSkill->setCastAniInfo(CGameUnit::kAnimationAct3, 0.4);
+    pSkill->setCastAniIndex(CGameUnit::kAnimationAct3);
     heroUnit->addSkill(pSkill);
     pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kShockWave1));
-    pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
+    pSkill->setCastAniIndex(CGameUnit::kAnimationAct2);
     dynamic_cast<CProjectileWaveAct*>(pSkill)->setProjectileBirthOffset(ccp(0, 25));
     
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kJumpChop1));
@@ -199,7 +199,7 @@ bool CCWHomeSceneLayer::init()
     m_oLeftToRevive.setPosition(ccp(oSz.width * 0.8, oSz.height * 0.9));
     m_oLeftToRevive.setVisible(false);
 
-    heroUnit->setHp(1);
+    heroUnit->setHp(heroUnit->getMaxHp());
 
     return true;
 }
@@ -221,9 +221,8 @@ void CCWHomeSceneLayer::onTick( float fDt )
     enum
     {
         kMalik,
-        kPaladin,
         kMagnus,
-        kMatchstick
+        kJt
     };
     M_DEF_GM(pGm);
     pGm->cmdRecv(0);
@@ -252,11 +251,6 @@ void CCWHomeSceneLayer::onTick( float fDt )
                 u->setPosition(*pPos);
                 u->moveAlongPath(p, false);
                 u->addSkill(CStatusShowPas::create());
-                if (iRes == kPaladin)
-                {
-                    u->setArmorType(CArmorValue::kHoly);
-                    u->setBaseAttackValue(CAttackValue(1, CAttackValue::kHoly, MAX(u->getBaseAttackValue(CAttackValue::kPhysical), u->getBaseAttackValue(CAttackValue::kMagical))));
-                }
                 //u->setMaxHp(u->getMaxHp() + r * 10);
                 //u->setExAttackValue(CAttackValue::kPhysical, CExtraCoeff(1 + r / 10.0, 0));
                 //u->setExAttackValue(CAttackValue::kMagical, CExtraCoeff(1 + r / 10.0, 0));
@@ -289,7 +283,15 @@ void CCWHomeSceneLayer::onTick( float fDt )
     if (bAllRushEnd)
     {
         // TODO: curRoundEnd
-        m_pCurMission->nextRound();
+        if (m_pCurMission->nextRound())
+        {
+            CGameUnit* u = NULL;
+            if((u = getHeroUnit()) != NULL)
+            {
+                u->setHp(u->getHp() + (u->getMaxHp()-u->getHp()) * 0.5);
+            }
+        }
+        
     }
 }
 

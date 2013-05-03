@@ -2440,15 +2440,16 @@ bool CGameUnit::cast()
     }
     
     setCastingSkill(getToCastSkill());
-    if (pSkill->getCastAniIndex() < 0)
+    ANIMATION_INDEX eAni = pSkill->getCastAniIndex();
+    if (eAni < 0)
     {
         onActCastEnd(getSprite());
         onActCastEffect(getSprite());
     }
     else
     {
-        setAnimation(pSkill->getCastAniIndex(), 0, 1, kActCast, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEnd)));
-        CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(pSkill->getCastEffectDelay()), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEffect)));
+        setAnimation(eAni, 0, 1, kActCast, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEnd)));
+        CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(m_vecAniInfo[eAni].fEffect), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEffect)));
         pAct->setTag(kActCastEffect);
         m_oSprite.runAction(pAct);
     }

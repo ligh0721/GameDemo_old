@@ -313,5 +313,10 @@ CSkill* COrgSkillInfo::skill( int iSkillIndex )
     M_DEF_SM(pSm);
     CSkill* pSkill = pSm->copySkill(m_mapSkills[iSkillIndex].iIndex);
     pSkill->setInfoKey(iSkillIndex);
+    CActiveSkill* pActSkill = dynamic_cast<CActiveSkill*>(pSkill);
+    if (pActSkill)
+    {
+        pActSkill->setCastAniIndex(pActSkill->getCastAniIndex());
+    }
     return pSkill;
 }

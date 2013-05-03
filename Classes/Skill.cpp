@@ -324,26 +324,19 @@ CCSkillButtonAdvance* CActiveSkill::getSkillButton()
     return dynamic_cast<CCSkillButtonAdvance*>(getDisplayBody());
 }
 
-void CActiveSkill::setCastAniInfo( CGameUnit::ANIMATION_INDEX eAniIndex, float fCastEffectDelay )
+void CActiveSkill::setCastAniIndex( CGameUnit::ANIMATION_INDEX eAniIndex )
 {
     m_eAniIndex = eAniIndex;
-    m_fCastEffectDelay = fCastEffectDelay;
 }
 
 void CActiveSkill::setNoCastAni()
 {
     m_eAniIndex = (CGameUnit::ANIMATION_INDEX)-1;
-    m_fCastEffectDelay = 0.0;
 }
 
 CGameUnit::ANIMATION_INDEX CActiveSkill::getCastAniIndex() const
 {
     return m_eAniIndex;
-}
-
-float CActiveSkill::getCastEffectDelay() const
-{
-    return m_fCastEffectDelay;
 }
 
 // CLevelLimitSkill

@@ -194,14 +194,12 @@ public:
     M_SYNTHESIZE(CGameUnit::WEAPON_TYPE, m_eWeaponType, WeaponType);
     const CCPoint& updateTargetUnitPoint();
     virtual CCSkillButtonAdvance* getSkillButton();
-    virtual void setCastAniInfo(CGameUnit::ANIMATION_INDEX eAniIndex, float fCastEffectDelay);
+    virtual void setCastAniIndex(CGameUnit::ANIMATION_INDEX eAniIndex);
     virtual void setNoCastAni();
     virtual CGameUnit::ANIMATION_INDEX getCastAniIndex() const;
-    virtual float getCastEffectDelay() const;
     
 public:
     CGameUnit::ANIMATION_INDEX m_eAniIndex;
-    float m_fCastEffectDelay;
 };
 
 // 被动技能，触发时机由被动技能所注册的触发器所决定
