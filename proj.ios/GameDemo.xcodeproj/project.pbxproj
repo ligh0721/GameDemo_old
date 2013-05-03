@@ -204,6 +204,7 @@
 		BF4DE6AD138BB89600CF907D /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BF4DE6AC138BB89600CF907D /* RootViewController.mm */; };
 		D4ABB4B313B4395300552E6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D4ABB4B213B4395300552E6E /* main.m */; };
 		FEBD44601733946F00AF3743 /* UnitAI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEBD445F1733946F00AF3743 /* UnitAI.cpp */; };
+		FEBD44631733BD7A00AF3743 /* StartScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEBD44611733BD7900AF3743 /* StartScene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -576,6 +577,8 @@
 		D4EF94ED15BD319D00D803EB /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-144.png"; path = "../proj.ios/Icon-144.png"; sourceTree = "<group>"; };
 		FEBD445E1733944400AF3743 /* UnitAI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnitAI.h; sourceTree = "<group>"; };
 		FEBD445F1733946F00AF3743 /* UnitAI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitAI.cpp; sourceTree = "<group>"; };
+		FEBD44611733BD7900AF3743 /* StartScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StartScene.cpp; sourceTree = "<group>"; };
+		FEBD44621733BD7A00AF3743 /* StartScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartScene.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1065,6 +1068,8 @@
 		BF23D4E2143315EB00657E08 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				FEBD44611733BD7900AF3743 /* StartScene.cpp */,
+				FEBD44621733BD7A00AF3743 /* StartScene.h */,
 				8B09160116C55464004C5566 /* Action.h */,
 				8B09160016C55464004C5566 /* Action.cpp */,
 				8BEADF7C16F1C05100E034EF /* AppDelegate.cpp */,
@@ -1421,6 +1426,7 @@
 				8B11D85716C566D000C54706 /* HttpClient.cpp in Sources */,
 				8BEADF7F16F1C05100E034EF /* AppDelegate.cpp in Sources */,
 				FEBD44601733946F00AF3743 /* UnitAI.cpp in Sources */,
+				FEBD44631733BD7A00AF3743 /* StartScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

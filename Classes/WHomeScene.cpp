@@ -221,9 +221,8 @@ void CCWHomeSceneLayer::onTick( float fDt )
     enum
     {
         kMalik,
-        kPaladin,
         kMagnus,
-        kMatchstick
+        kJt
     };
     M_DEF_GM(pGm);
     pGm->cmdRecv(0);
@@ -252,11 +251,6 @@ void CCWHomeSceneLayer::onTick( float fDt )
                 u->setPosition(*pPos);
                 u->moveAlongPath(p, false);
                 u->addSkill(CStatusShowPas::create());
-                if (iRes == kPaladin)
-                {
-                    u->setArmorType(CArmorValue::kHoly);
-                    u->setBaseAttackValue(CAttackValue(1, CAttackValue::kHoly, MAX(u->getBaseAttackValue(CAttackValue::kPhysical), u->getBaseAttackValue(CAttackValue::kMagical))));
-                }
                 //u->setMaxHp(u->getMaxHp() + r * 10);
                 //u->setExAttackValue(CAttackValue::kPhysical, CExtraCoeff(1 + r / 10.0, 0));
                 //u->setExAttackValue(CAttackValue::kMagical, CExtraCoeff(1 + r / 10.0, 0));
@@ -290,6 +284,11 @@ void CCWHomeSceneLayer::onTick( float fDt )
     {
         // TODO: curRoundEnd
         m_pCurMission->nextRound();
+        CGameUnit* u = NULL;
+        if((u = getHeroUnit()) != NULL)
+        {
+            u->setHp(u->getHp() + (u->getMaxHp()-u->getHp()) * 0.5);
+        }
     }
 }
 

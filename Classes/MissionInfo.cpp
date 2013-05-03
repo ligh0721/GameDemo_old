@@ -391,8 +391,13 @@ CGameMission* CDemoMission::mission01()
         oRush.init(aiPath[rand() % CONST_MAX_PATH]);
         oRush.addUnit(kMalik, 3, 1);
         oRush.addUnit(kMagnus, 1, 4);
-        oRush.addUnit(kJt, 1, 6);
         oMission.addRush(iRound, oRush);
+        
+        oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+        oRush.addUnit(kJt, 1, 6);
+        
+        oMission.addRush(iRound, oRush);
+        
 
     }
 
