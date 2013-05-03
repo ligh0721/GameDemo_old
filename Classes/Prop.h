@@ -8,6 +8,8 @@
 class CLevelExp;
 class CSkill; 
 
+#include "Unit.h"
+
 class CProp : public CLevelExp, public CCObject
 {
 	friend class CUnit;

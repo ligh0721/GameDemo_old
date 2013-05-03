@@ -19,7 +19,7 @@ public:
         kDoubleAttack1,
         kSplash1,
         kThunderClap1,
-        kHpChange3,
+        kHero1,
         kThump1,
         kThrowHit1,
         kSpeedUp1,
@@ -31,6 +31,7 @@ public:
         kHealing1,
         kShockWave1,
         kFastStrikeBack1,
+        kKnockBack1,
 		kAddDamage1,
         kRunBuff1
     };
@@ -40,6 +41,7 @@ public:
         int iIndex; // index in sm
         string sName;
         string sDesc;
+        string sBtn;
     };
 
     typedef map<int, SKILL_INFO> MAP_SKILL_INFO;

@@ -1,7 +1,6 @@
 #pragma once
 
 
-
 class CCCoverAct : public CCAction
 {
 public:
@@ -18,18 +17,20 @@ public:
     CCSprite* m_pSprite;
 };
 
-class CCShakeAct : public CCAction
+class CCShakeAct : public CCActionInterval
 {
 public:
-    virtual bool init(float fDuration, float fInterval, float fRange);
-    CREATE_FUNC_PARAM(CCShakeAct, (float fDuration, float fInterval, float fRange), fDuration, fInterval, fRange);
+    virtual bool init(float fDuration, int iTimes, float fRange);
+    CREATE_FUNC_PARAM(CCShakeAct, (float fDuration, int iTimes, float fRange), fDuration, iTimes, fRange);
 
     virtual void startWithTarget(CCNode *pTarget);
+    virtual void update(float time);
+
     virtual void effectEnd(CCNode* pNode);
 
+
 public:
-    float m_fDuration;
-    float m_fInterval;
+    int m_iTimes;
     float m_fRange;
     CCPoint m_oLoc;
 };
@@ -145,7 +146,7 @@ protected:
     bool m_bFixRotation;
 };
 
-class CCDelayRelease : public CCActionInterval
+class CCDelayRelease : public CCSequence
 {
 public:
     static const float CONST_EX_DURATION;
@@ -154,10 +155,16 @@ public:
     virtual bool initWithDuration(float fDelay);
     CREATE_INITWITH_FUNC_PARAM(Duration, CCDelayRelease, (float fDelay), fDelay);
 
-    virtual void startWithTarget(CCNode *pTarget);
-
     void onActEnd(CCNode* pNode);
 
+};
+
+class CCReleaseAfter : public CCSequence
+{
 public:
-    float m_fDelay;
+    virtual bool initWithAction(CCFiniteTimeAction* fAct);
+    CREATE_INITWITH_FUNC_PARAM(Action, CCReleaseAfter, (CCFiniteTimeAction* fAct), fAct);
+
+    void onActEnd(CCNode* pNode);
+    
 };

@@ -1,8 +1,6 @@
 #include "CommInc.h"
 
 #include "GameDisplay.h"
-#include "GameLogic.h"
-#include "TankSprite.h"
 #include "Skill.h"
 #include "Unit.h"
 #include "Package.h"
@@ -57,14 +55,14 @@ void CLevelExp::addLevel(uint32_t dwLvl)
 
 void CLevelExp::addExp(uint32_t dwExp)
 {
-    float fOldMaxExp;
+    uint32_t dwOldMaxExp;
     m_dwExp += dwExp;
     while (m_dwExp >= m_dwMaxExp)
     {
         ++m_dwLvl;
-        fOldMaxExp = m_dwMaxExp;
+        dwOldMaxExp = m_dwMaxExp;
         updateMaxExp();
-        m_dwExp -= fOldMaxExp;
+        m_dwExp -= dwOldMaxExp;
         onLevelChange(1);
     }
 }
@@ -702,6 +700,26 @@ void CUnit::onRevive()
 void CUnit::onDie()
 {
     triggerOnDie();
+
+    CCArray oArrCopy;
+    oArrCopy.initWithArray(&m_oArrBuff);
+
+    CCObject* pObj = NULL;
+    CCARRAY_FOREACH(&oArrCopy, pObj)
+    {
+        delBuff(dynamic_cast<CBuffSkill*>(pObj), false);
+    }
+
+    oArrCopy.initWithArray(&m_oArrSkill);
+    CCARRAY_FOREACH(&oArrCopy, pObj)
+    {
+        delSkill(dynamic_cast<CSkill*>(pObj));
+    }
+
+    oArrCopy.removeAllObjects();
+
+    m_oArrBuff.removeAllObjects();
+    m_oArrSkill.removeAllObjects();
 }
 
 void CUnit::onHpChange( float fChanged )
@@ -1064,24 +1082,6 @@ CBuffSkill* CUnit::getBuffByType( int iTypeKey )
 
 void CUnit::cleanUpTriggers()
 {
-    CCArray oArrCopy;
-    oArrCopy.initWithArray(&m_oArrBuff);
-    
-    CCObject* pObj = NULL;
-    CCARRAY_FOREACH(&oArrCopy, pObj)
-    {
-        delBuff(dynamic_cast<CBuffSkill*>(pObj), false);
-    }
-    
-    oArrCopy.initWithArray(&m_oArrSkill);
-    CCARRAY_FOREACH(&oArrCopy, pObj)
-    {
-        delSkill(dynamic_cast<CSkill*>(pObj));
-    }
-    
-    oArrCopy.removeAllObjects();
-    m_oArrBuff.removeAllObjects();
-    m_oArrSkill.removeAllObjects();
     m_oArrOnAttackTargetChain.removeAllObjects();
     m_oArrOnAttackedChain.removeAllObjects();
     m_oArrOnDamagedSurfaceChain.removeAllObjects();
@@ -1258,7 +1258,6 @@ bool CGameUnit::init()
     setProjectileMoveSpeed(0);
     setProjectileScale(1);
     setProjectileMaxOffsetY(0);
-    setAttackEffectDelay(0);
     setFixed(false);
     setHostilityRange(0);
     setRewardGold(0);
@@ -1296,7 +1295,6 @@ bool CGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor )
     setProjectileMoveSpeed(0);
     setProjectileScale(1);
     setProjectileMaxOffsetY(0);
-    setAttackEffectDelay(0);
     setFixed(false);
     setHostilityRange(0);
     setRewardGold(0);
@@ -1322,43 +1320,11 @@ bool CGameUnit::initWithInfo( const CUnitInfo& roUnitInfo )
     setHalfOfWidth(roUnitInfo.m_fHalfOfWidth);
     setHalfOfHeight(roUnitInfo.m_fHalfOfHeight);
     m_oSprite.setScale(roUnitInfo.m_fScale);
-    if (roUnitInfo.m_fActMoveDelay)
-    {
-        prepareMoveAnimation("move", roUnitInfo.m_fActMoveDelay);
-    }
-    if (roUnitInfo.m_fActDieDelay)
-    {
-        prepareDieAnimation("die", roUnitInfo.m_fActDieDelay);
-    }
-    if (roUnitInfo.m_fAct1Delay)
-    {
-        prepareAnimation(kAnimationAct1, "act1", roUnitInfo.m_fAct1Delay);
-    }
-    if (roUnitInfo.m_fAct2Delay)
-    {
-        prepareAnimation(kAnimationAct2, "act2", roUnitInfo.m_fAct2Delay);
-    }
-    if (roUnitInfo.m_fAct3Delay)
-    {
-        prepareAnimation(kAnimationAct3, "act3", roUnitInfo.m_fAct3Delay);
-    }
-    if (roUnitInfo.m_fAct4Delay)
-    {
-        prepareAnimation(kAnimationAct4, "act4", roUnitInfo.m_fAct4Delay);
-    }
-    if (roUnitInfo.m_fAct5Delay)
-    {
-        prepareAnimation(kAnimationAct5, "act5", roUnitInfo.m_fAct5Delay);
-    }
-    if (roUnitInfo.m_fAct6Delay)
-    {
-        prepareAnimation(kAnimationAct6, "act6", roUnitInfo.m_fAct6Delay);
-    }
+    m_vecAniInfo = roUnitInfo.m_vecAniInfo;
     m_vecAttackAniIndex = roUnitInfo.m_vecAttackAni;
     
     setBaseMoveSpeed(roUnitInfo.m_fBaseMoveSpeed);
     setBaseAttackInterval(roUnitInfo.m_fBaseAttackInterval);
-    setAttackEffectDelay(roUnitInfo.m_fAttackEffectDelay);
     setAttackMinRange(roUnitInfo.m_fAttackMinRange);
     setAttackRange(roUnitInfo.m_fAttackRange);
     setHostilityRange(roUnitInfo.m_fHostilityRange);
@@ -1411,14 +1377,14 @@ void CGameUnit::setDefaultFrame()
 
 void CGameUnit::prepareMoveAnimation( const char* pAnimation, float fDelay )
 {
-    prepareAnimation(kAnimationMove, pAnimation, fDelay);
+    prepareAnimation(kAnimationMove, pAnimation, fDelay, 0.0);
 }
 
-void CGameUnit::prepareAttackAnimation( int iAttackAniCount, ANIMATION_INDEX eAnimation1, const char* pAnimation1, float fDelay1, ... )
+void CGameUnit::prepareAttackAnimation( int iAttackAniCount, ANIMATION_INDEX eAnimation1, const char* pAnimation1, float fDelay1, float fEffect1, ... )
 {
     m_vecAttackAniIndex.resize(iAttackAniCount);
     
-    prepareAnimation(eAnimation1, pAnimation1, fDelay1);
+    prepareAnimation(eAnimation1, pAnimation1, fDelay1, fEffect1);
     m_vecAttackAniIndex[0] = eAnimation1;
     
     va_list argv;
@@ -1428,7 +1394,8 @@ void CGameUnit::prepareAttackAnimation( int iAttackAniCount, ANIMATION_INDEX eAn
         eAnimation1 = (ANIMATION_INDEX)va_arg(argv, int);
         pAnimation1 = (const char*)va_arg(argv, int);
         fDelay1 = (float)va_arg(argv, double);
-        prepareAnimation(eAnimation1, pAnimation1, fDelay1);
+        fEffect1 = (float)va_arg(argv, double);
+        prepareAnimation(eAnimation1, pAnimation1, fDelay1, fEffect1);
         m_vecAttackAniIndex[i] = eAnimation1;
     }
     
@@ -1437,14 +1404,20 @@ void CGameUnit::prepareAttackAnimation( int iAttackAniCount, ANIMATION_INDEX eAn
 
 void CGameUnit::prepareDieAnimation( const char* pAnimation, float fDelay )
 {
-    prepareAnimation(kAnimationDie, pAnimation, fDelay);
+    prepareAnimation(kAnimationDie, pAnimation, fDelay, 0.0);
 }
 
-void CGameUnit::prepareAnimation( ANIMATION_INDEX eAnimation, const char* pAnimation, float fDelay )
+void CGameUnit::prepareAnimation( ANIMATION_INDEX eAnimation, const char* pAnimation, float fDelay, float fEffect )
 {
-    ARR_ANIMATION_INFO& rAni = m_astAniInfo[eAnimation];
+    int iIndex = (int)eAnimation;
+    if (iIndex >= (int)m_vecAniInfo.size())
+    {
+        m_vecAniInfo.resize(iIndex + 1);
+    }
+    ANIMATION_INFO& rAni = m_vecAniInfo[eAnimation];
     rAni.sAnimation = pAnimation;
     rAni.fDelay = fDelay;
+    rAni.fEffect = fEffect;
 }
 
 void CGameUnit::setAnimation( const char* pAnimation, float fDelay, int iRepeat, float fSpeed, ACTION_TAG eTag, CCFiniteTimeAction* pEndAction )
@@ -1455,6 +1428,11 @@ void CGameUnit::setAnimation( const char* pAnimation, float fDelay, int iRepeat,
     }
     M_DEF_GM(pGm);
     CCAnimation* pAni = pGm->getUnitAnimation(getName(), pAnimation);
+    if (!pAni)
+    {
+        CCLOG("%s/%s NOT FOUND", getName(), pAnimation);
+        return;
+    }
     pAni->setDelayPerUnit(fDelay);
     CCAction* pAct = CCAnimate::create(pAni);
     
@@ -1480,7 +1458,7 @@ void CGameUnit::setAnimation( const char* pAnimation, float fDelay, int iRepeat,
 
 void CGameUnit::setAnimation( ANIMATION_INDEX eAnimation, int iRepeat, float fSpeed, ACTION_TAG eTag, CCFiniteTimeAction* pEndAction )
 {
-    ARR_ANIMATION_INFO& rAni = m_astAniInfo[eAnimation];
+    ANIMATION_INFO& rAni = m_vecAniInfo[eAnimation];
     setAnimation(rAni.sAnimation.c_str(), rAni.fDelay, iRepeat, fSpeed, eTag, pEndAction);
 }
 
@@ -1809,7 +1787,7 @@ void CGameUnit::updateAttackAnimationSpeed( float fRealAttackInterval )
     {
         return;
     }
-    float fDur = getAttackEffectDelay() / fDelta;
+    float fDur = pActSeq->getDuration() / fDelta;
     pActSeq->setDuration(fDur);
     dynamic_cast<CCDelayTime*>(pActSeq->getActionOne())->setDuration(fDur);
 }
@@ -1892,8 +1870,10 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
         // 发动攻击动作
         m_fAttackCD = fRealAttackInterval;
         float fDelta = getBaseAttackInterval() / fRealAttackInterval;
-        setAnimation(m_vecAttackAniIndex[rand() % m_vecAttackAniIndex.size()], 0, fDelta, kActAttack, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEnd)));
-        CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(getAttackEffectDelay() / fDelta), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEffect)));
+        ANIMATION_INDEX eAni = m_vecAttackAniIndex[rand() % m_vecAttackAniIndex.size()];
+        ANIMATION_INFO& rAni = m_vecAniInfo[eAni];
+        setAnimation(eAni, 0, fDelta, kActAttack, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEnd)));
+        CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(rAni.fEffect / fDelta), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEffect)));
         pAct->setTag(kActAttackEffect);
         m_oSprite.runAction(pAct);
         return;
@@ -2221,54 +2201,8 @@ void CGameUnit::onTick( float fDt )
 void CGameUnit::onDie()
 {
     getSprite()->stopAllActions();
+    getUnitLayer()->onUnitDie(this);
     
-    CCMenu* pM = dynamic_cast<CCMenu*>(getUnitLayer()->getChildByTag(5131115));
-    CGameUnit* pHero;
-    if (pM && getRewardExp() && M_RAND_HIT(10) && isEnemyOf(dynamic_cast<CUnitForce*>(pHero = dynamic_cast<CCWHomeSceneLayer*>(getUnitLayer())->getHeroUnit())))
-    {
-        // Spawn skills
-        CCCommmButton* pBtn = CCCommmButton::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, getUnitLayer(), callfuncN_selector(CCWHomeSceneLayer::onGetBuff), NULL, COrgSkillInfo::kThunderBoltBuff1);
-        pM->addChild(pBtn);
-        pBtn->setScale(0);
-        pBtn->setPosition(getPosition());
-        pBtn->runAction(CCScaleTo::create(0.5, 0.5, 0.5));
-        pBtn->runAction(CCJumpBy::create(0.5, ccp(0, 0), 100, 1));
-        pBtn->runAction(CCSequence::create(CCScaleTo::create(0.25, 1.0, 1.0), CCScaleTo::create(0.25, 0.75, 0.75), NULL));
-        pBtn->runAction(CCDelayRelease::create(5.0));
-        pBtn->runAction(CCRepeatForever::create(dynamic_cast<CCActionInterval*>(CCSequence::create(CCOrbitCamera::create(1, 10000, 0, 0, 360, 0, 0), CCDelayTime::create(1.5), NULL))));
-    }
-    // TODO: Reward
-    CGameUnit* pUnit;
-    CCObject* pObj;
-    M_DEF_GM(pGm);
-    CCArray* pArr = getUnitLayer()->getUnits()->getUnitsArray();
-    vector<CGameUnit*> vec;
-    
-    CCARRAY_FOREACH(pArr, pObj)
-    {
-        pUnit = dynamic_cast<CGameUnit*>(pObj);
-        if (!pUnit->isDead() && pUnit->getMaxLevel() && isEnemyOf(pUnit) && getDistance(pUnit) < CONST_MAX_REWARD_RANGE)
-        {
-            vec.push_back(pUnit);
-        }
-    }
-    int n = vec.size();
-    if (n)
-    {
-        int iG = getRewardGold() / n;
-        int iE = getRewardExp() / n;
-        CForceResouce* pRes;
-        for (int i = 0; i < n; ++i)
-        {
-            vec[i]->addExp(iE);
-            pRes = vec[i]->getForceResource();
-            if (pRes)
-            {
-                pRes->changeGold(iG);
-            }
-        }
-    }
-
     setForceResource(NULL);
     stopMove();
     stopAttack();
@@ -2638,6 +2572,11 @@ void CGameUnit::stopSpin()
     }
 }
 
+void CGameUnit::say( const char* pMsg )
+{
+
+}
+
 CProjectile::CProjectile()
 {
 }
@@ -2723,8 +2662,8 @@ void CProjectile::onDie()
             break;
             
         case kLightning:
-            pAni = pGm->getUnitAnimation(getName(), m_astAniInfo[kAnimationDie].sAnimation.c_str());
-            pAni->setDelayPerUnit(m_astAniInfo[kAnimationDie].fDelay);
+            pAni = pGm->getUnitAnimation(getName(), m_vecAniInfo[kAnimationDie].sAnimation.c_str());
+            pAni->setDelayPerUnit(m_vecAniInfo[kAnimationDie].fDelay);
             pLigh = CCLightning::create(pAni, pStart->getSprite(), pTarget->getSprite(), getProjectileBirthOffset(), pTarget->getHalfOfHeight());
             pLigh->fixTargetPosition(&m_oSprite);
             pAct = CCSequence::createWithTwoActions(pLigh, CCCallFuncN::create(this, callfuncN_selector(CProjectile::onActDieEnd)));
@@ -2755,11 +2694,7 @@ void CProjectile::onActDieEnd( CCNode* pNode )
 CCObject* CProjectile::copyWithZone( CCZone* pZone )
 {
     CProjectile* pProj = CProjectile::createWithName(getName());
-    for (int i = 0; i < CONST_MAX_ANIMATION; ++i)
-    {
-        ARR_ANIMATION_INFO& roAni = m_astAniInfo[i];
-        pProj->prepareAnimation((ANIMATION_INDEX)i, roAni.sAnimation.c_str(), roAni.fDelay);
-    }
+    pProj->m_vecAniInfo = m_vecAniInfo;
     pProj->setProjectileType(getProjectileType());
     pProj->setBaseMoveSpeed(getBaseMoveSpeed());
     return pProj;
@@ -2928,6 +2863,10 @@ bool CUnitGroup::init()
 bool CUnitGroup::initWithUnitsInRange( CUnitGroup* pSource, const CCPoint& roPos, float fRadius, int iMaxCount /*= INFINITE*/, CONDITIONFUNC pBoolFunc /*= NULL*/, void* pParam /*= NULL*/ )
 {
     m_oArrUnits.init();
+    if (fRadius < FLT_EPSILON)
+    {
+        return true;
+    }
     int i = 0;
     CGameUnit* pUnit;
     CCObject* pObj;
@@ -3523,6 +3462,11 @@ void CCUnitLayer::orderUnitToCast( CGameUnit* pTargetUnit )
     m_iPendingSkillOwner = 0;
 }
 
+void CCUnitLayer::onUnitDie( CGameUnit* pUnit )
+{
+
+}
+
 const float CCWinUnitLayer::CONST_MIN_MOVE_DELTA = 10.0;
 const float CCWinUnitLayer::CONST_MAX_CAN_MOVE_DURATION = 0.15;
 
@@ -3736,23 +3680,14 @@ int CCWinUnitLayer::touchActionIndex() const
     return CCUnitLayer::touchActionIndex();
 }
 
-CUnitInfo::CUnitInfo( const char* pName, const CCPoint& roAnchor, float fHalfOfWidth, float fHalfOfHeight, float fScale, float fActMoveDelay, float fActDieDelay, float fAct1Delay, float fAct2Delay, float fAct3Delay, float fAct4Delay, float fAct5Delay, float fAct6Delay, const ARR_ATTACK_ANI& roArrAttackAnis, float fBaseMoveSpeed, float fBaseAttackInterval, float fAttackEffectDelay, float fAttackMinRange, float fAttackRange, float fHostilityRange, CGameUnit::WEAPON_TYPE eWeaponType, int iProjectileKey, float fProjectileMoveSpeed, float fProjectileScale, float fProjectileMaxOffsetY, float fProjectileBirthOffsetX, float fProjectileBirthOffsetY, const CAttackValue& roBaseAttackValue, float fExAttackRandomRange, CArmorValue::ARMOR_TYPE eArmorType, float fBaseArmorValue, int iForceIndex, uint32_t dwForceAlly, float fMaxHp, bool bIsFixed, int iRewardGold, int iRewardExp )
+CUnitInfo::CUnitInfo( const char* pName, const CCPoint& roAnchor, float fHalfOfWidth, float fHalfOfHeight, float fScale, const ARR_ANI_INFO_NAME& roArrAniInfoNames, const ARR_ANI_INFO_DELAY& roArrAniInfoDelays, const ARR_ANI_INFO_EFFECT& roArrAniInfoEffects, const ARR_ATTACK_ANI& roArrAttackAnis, float fBaseMoveSpeed, float fBaseAttackInterval, float fAttackMinRange, float fAttackRange, float fHostilityRange, CGameUnit::WEAPON_TYPE eWeaponType, int iProjectileKey, float fProjectileMoveSpeed, float fProjectileScale, float fProjectileMaxOffsetY, float fProjectileBirthOffsetX, float fProjectileBirthOffsetY, const CAttackValue& roBaseAttackValue, float fExAttackRandomRange, CArmorValue::ARMOR_TYPE eArmorType, float fBaseArmorValue, int iForceIndex, uint32_t dwForceAlly, float fMaxHp, bool bIsFixed, int iRewardGold, int iRewardExp )
 : m_sName(pName)
 , m_oAnchor(roAnchor)
 , m_fHalfOfWidth(fHalfOfWidth)
 , m_fHalfOfHeight(fHalfOfHeight)
 , m_fScale(fScale)
-, m_fActMoveDelay(fActMoveDelay)
-, m_fActDieDelay(fActDieDelay)
-, m_fAct1Delay(fAct1Delay)
-, m_fAct2Delay(fAct2Delay)
-, m_fAct3Delay(fAct3Delay)
-, m_fAct4Delay(fAct4Delay)
-, m_fAct5Delay(fAct5Delay)
-, m_fAct6Delay(fAct6Delay)
 , m_fBaseMoveSpeed(fBaseMoveSpeed)
 , m_fBaseAttackInterval(fBaseAttackInterval)
-, m_fAttackEffectDelay(fAttackEffectDelay)
 , m_fAttackMinRange(fAttackMinRange)
 , m_fAttackRange(fAttackRange)
 , m_fHostilityRange(fHostilityRange)
@@ -3779,6 +3714,17 @@ CUnitInfo::CUnitInfo( const char* pName, const CCPoint& roAnchor, float fHalfOfW
     for (int i = 0; i < n; ++i)
     {
         m_vecAttackAni.push_back(pAnis[i]);
+    }
+
+    n = roArrAniInfoNames.count();
+    typedef const char* PCSTR;
+    const PCSTR* pAniInfoNames = roArrAniInfoNames;
+    const double* pAniInfoDelays = roArrAniInfoDelays;
+    const double* pAniInfoEffects = roArrAniInfoEffects;
+    for (int i = 0; i < n; ++i)
+    {
+        CGameUnit::ANIMATION_INFO stAni(roArrAniInfoNames[i], roArrAniInfoDelays[i], roArrAniInfoEffects[i]);
+        m_vecAniInfo.push_back(stAni);
     }
 }
 

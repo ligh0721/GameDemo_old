@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     Ui::MainWindow* pUi = w.getUi();
     QWidget* pDisplay = pUi->wndCocos2dxDisplay;
     HWND hWnd = (HWND)(pDisplay->winId());
-    CCocos2dxThread oThrd(hWnd, 800, 480, 1);
+    CCocos2dxThread oThrd(hWnd, 1024, 768, 1);
     oThrd.start();
     
     return a.exec();

@@ -1,11 +1,7 @@
 #include "CommInc.h"
 
-#include "GameLogic.h"
 #include "GameDisplay.h"
-#include "BulletSprite.h"
-#include "TankSprite.h"
 #include "Skill.h"
-#include "BattleGroundScene.h"
 #include "Action.h"
 #include "GameCtrl.h"
 #include "MainScene.h"

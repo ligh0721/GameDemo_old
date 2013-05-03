@@ -4,11 +4,11 @@
 #include "UnitEditorScene.h"
 #include "WHomeScene.h"
 #include "HomeScene.h"
+#include "StartScene.h"
 #include "MainScene.h"
 #include "AppMacros.h"
 #include "BattleScene.h"
 #include "GameChapterScene.h"
-#include "StartScene.h"
 
 
 AppDelegate::AppDelegate()
@@ -27,24 +27,18 @@ bool AppDelegate::applicationDidFinishLaunching() {
     pDirector->setOpenGLView(pEGLView);
 #if 1
     //pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
-    //CCFileUtils::sharedFileUtils()->setResourceDirectory(largeResource.directory);
     //pDirector->setContentScaleFactor(1.0);
-    CCSize screenSize = CCEGLView::sharedOpenGLView()->getFrameSize();
-    
-    CCSize designSize = CCSizeMake(480, 320);
-    //CCFileUtils* pFileUtils = CCFileUtils::sharedFileUtils();
-    
-    if (screenSize.height > 320)
-    {
-        CCSize resourceSize = CCSizeMake(960, 640);
-        std::vector<std::string> searchPaths;
-        searchPaths.push_back("hd");
-        //pFileUtils->setSearchPaths(searchPaths);
-        pDirector->setContentScaleFactor(resourceSize.height/designSize.height);
-    }
-    
-    CCEGLView::sharedOpenGLView()->setDesignResolutionSize(designSize.width, designSize.height, kResolutionNoBorder);
+    //CCFileUtils::sharedFileUtils()->setResourceDirectory(largeResource.directory);
 
+    //pEGLView->setFrameSize(512, 384);
+#ifdef WIN32
+    pEGLView->setFrameZoomFactor(0.5);
+#endif
+    
+    //pEGLView->setDesignResolutionSize(1024, 768, kResolutionNoBorder);
+    //pEGLView->setDesignResolutionSize(1136, 640, kResolutionNoBorder);
+    pDirector->setContentScaleFactor(1.0);
+    
 #else
     // Set the design resolution
     pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
@@ -81,7 +75,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
 
     // turn on display FPS
-    pDirector->setDisplayStats(true);
+    //pDirector->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
@@ -91,8 +85,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     CCScene *pScene = CCUnitEditorScene::create();
 #else
     //CCScene *pScene = CCHomeScene::create();
-    CCScene * pScene = CStartLayer::scene();
     //CCScene *pScene = CCWHomeScene::create();
+    CCScene *pScene = CCStartLayer::scene();
     //CCScene *pScene = CCUnitEditorScene::create();
 	//CCScene *pScene = CCBattleScene::create();
 	//CCScene* pScene = CCGameChapterScene::create();

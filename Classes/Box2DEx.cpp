@@ -1,7 +1,6 @@
 #include "CommInc.h"
 #include "Box2DEx.h"
 #include "GameDisplay.h"
-#include "BattleGroundScene.h"
 
 #define DEBUG_DRAW true
 
@@ -22,6 +21,7 @@ void CCB2dScene::onEnter()
 
 void CCB2dScene::draw()
 {
+    /*
 	if(DEBUG_DRAW)
 	{
 		if(CCGameManager::sharedGameManager()->m_pBattleGroundLayer)
@@ -35,6 +35,7 @@ void CCB2dScene::draw()
 		CCB2dWorld::sharedB2dWorld()->drawDebugData();
 		kmGLPopMatrix();	
 	}
+    */
 }
 
 CCB2dWorld* CCB2dWorld::m_pInst = NULL;

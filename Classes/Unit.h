@@ -504,18 +504,19 @@ public:
         kAnimationAct3 = 4,
         kAnimationAct4 = 5,
         kAnimationAct5 = 6,
-        kAnimationAct6 = 7,
+        kAnimationAct6 = 7
     };
     typedef vector<ANIMATION_INDEX> VEC_ANI;
     
-    struct ARR_ANIMATION_INFO
+    struct ANIMATION_INFO
     {
-        ARR_ANIMATION_INFO() : fDelay(0.0) {}
-        ARR_ANIMATION_INFO(const char* pAnimation_, float fDelay_) : sAnimation(pAnimation_), fDelay(fDelay_) {}
+        ANIMATION_INFO() : fDelay(0.0), fEffect(0.0) {}
+        ANIMATION_INFO(const char* pAnimation_, float fDelay_, float fEffect_) : sAnimation(pAnimation_), fDelay(fDelay_), fEffect(fEffect_) {}
         string sAnimation;
         float fDelay;
+        float fEffect;
     };
-    typedef struct ARR_ANIMATION_INFO UNIT_ANI_INFOS[CONST_MAX_ANIMATION];
+    typedef vector<ANIMATION_INFO> VEC_ANI_INFOS;
     
     enum WEAPON_TYPE
     {
@@ -606,7 +607,6 @@ public: // Attack
     virtual CExtraCoeff getExAttackValue(CAttackValue::ATTACK_TYPE eAttackType) const;
     virtual int getLastAttackTarget() const;
     M_SYNTHESIZE(float, m_fExAttackRandomRange, ExAttackRandomRange);
-    M_SYNTHESIZE(float, m_fAttackEffectDelay, AttackEffectDelay);
     M_SYNTHESIZE(WEAPON_TYPE, m_eWeaponType, WeaponType);
     M_SYNTHESIZE(float, m_fHalfOfWidth, HalfOfWidth);
     M_SYNTHESIZE(float, m_fHalfOfHeight, HalfOfHeight);
@@ -631,9 +631,9 @@ public:
     virtual void setFrame(const char* pFrame);
     virtual void setDefaultFrame();
     virtual void prepareMoveAnimation(const char* pAnimation, float fDelay);
-    virtual void prepareAttackAnimation(int iAttackAniCount, ANIMATION_INDEX eAnimation1, const char* pAnimation1, float fDelay1, ...);
+    virtual void prepareAttackAnimation(int iAttackAniCount, ANIMATION_INDEX eAnimation1, const char* pAnimation1, float fDelay1, float fEffect1, ...);
     virtual void prepareDieAnimation(const char* pAnimation, float fDelay);
-    virtual void prepareAnimation(ANIMATION_INDEX eAnimation, const char* pAnimation, float fDelay);
+    virtual void prepareAnimation(ANIMATION_INDEX eAnimation, const char* pAnimation, float fDelay, float fEffect);
     virtual void setAnimation(const char* pAnimation, float fDelay, int iRepeat, float fSpeed, ACTION_TAG eTag, CCFiniteTimeAction* pEndAction = NULL);
     virtual void setAnimation(ANIMATION_INDEX eAnimation, int iRepeat, float fSpeed, ACTION_TAG eTag, CCFiniteTimeAction* pEndAction = NULL);
     
@@ -690,12 +690,15 @@ protected:
 
 public:
     virtual void stopSpin();
+
+public:
+    virtual void say(const char* pMsg);
     
 protected:
     CCGameUnitSprite m_oSprite;
     string m_sUnit;
     uint32_t m_dwDoingFlags;
-    UNIT_ANI_INFOS m_astAniInfo;
+    VEC_ANI_INFOS m_vecAniInfo;
     
     float m_fBaseMoveSpeed;
     CExtraCoeff m_oExMoveSpeed;
@@ -881,6 +884,8 @@ public:
     void endOrderUnitToCast();
     void orderUnitToCast(const CCPoint& roTargetPos);
     void orderUnitToCast(CGameUnit* pTargetUnit); // 以确定存在，且立即执行，无后续逻辑，可以使用指针
+
+    virtual void onUnitDie(CGameUnit* pUnit);
     
 protected:
     CUnitGroup m_oArrUnit;
@@ -978,6 +983,9 @@ class CUnitInfo
 {
 public:
     typedef CInitArray<CGameUnit::ANIMATION_INDEX> ARR_ATTACK_ANI;
+    typedef CInitArray<const char*> ARR_ANI_INFO_NAME;
+    typedef CInitArray<double> ARR_ANI_INFO_DELAY;
+    typedef CInitArray<double> ARR_ANI_INFO_EFFECT;
     
 public:
     CUnitInfo(
@@ -986,18 +994,12 @@ public:
               float fHalfOfWidth,
               float fHalfOfHeight,
               float fScale,
-              float fActMoveDelay,
-              float fActDieDelay,
-              float fAct1Delay,
-              float fAct2Delay,
-              float fAct3Delay,
-              float fAct4Delay,
-              float fAct5Delay,
-              float fAct6Delay,
+              const ARR_ANI_INFO_NAME& roArrAniInfoNames,
+              const ARR_ANI_INFO_DELAY& roArrAniInfoDelays,
+              const ARR_ANI_INFO_EFFECT& roArrAniInfoEffects,
               const ARR_ATTACK_ANI& roArrAttackAnis,
               float fBaseMoveSpeed,
               float fBaseAttackInterval,
-              float fAttackEffectDelay,
               float fAttackMinRange,
               float fAttackRange,
               float fHostilityRange,
@@ -1028,18 +1030,10 @@ public:
     float m_fHalfOfWidth;
     float m_fHalfOfHeight;
     float m_fScale;
-    float m_fActMoveDelay;
-    float m_fActDieDelay;
-    float m_fAct1Delay;
-    float m_fAct2Delay;
-    float m_fAct3Delay;
-    float m_fAct4Delay;
-    float m_fAct5Delay;
-    float m_fAct6Delay;
+    CGameUnit::VEC_ANI_INFOS m_vecAniInfo;
     CGameUnit::VEC_ANI m_vecAttackAni;
     float m_fBaseMoveSpeed;
     float m_fBaseAttackInterval;
-    float m_fAttackEffectDelay;
     float m_fAttackMinRange;
     float m_fAttackRange;
     float m_fHostilityRange;

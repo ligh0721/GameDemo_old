@@ -1,11 +1,7 @@
 #include "CommInc.h"
 
-#include "GameLogic.h"
 #include "GameDisplay.h"
-#include "BulletSprite.h"
-#include "TankSprite.h"
 #include "Skill.h"
-#include "BattleGroundScene.h"
 #include "PropUI.h"
 #include "Package.h"
 
@@ -33,7 +29,8 @@ bool CCPropUpdateLayer::init()
 	m_pHpLable->setOpacity( 32 );
 
 	//¼ÓÔØÎïÆ·
-	CCGameManager* pGm = CCGameManager::sharedGameManager();
+    /*
+	CGameManager* pGm = CGameManager::sharedGameManager();
 	CCTankSprite* pTank = pGm->getTankByKey(pGm->m_iPlayerKey);
 	CCAssert(pTank, "pTank is must be not null");
 	CUnit* pGameUnit = dynamic_cast<CUnit*>(pTank->getLogicBody());
@@ -52,5 +49,6 @@ bool CCPropUpdateLayer::init()
 		
 		         
 	}
+    */
 	return true;
 }

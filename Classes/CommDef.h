@@ -195,7 +195,7 @@ public:
         va_start(argv, iCount);
         for (int i = 0; i < iCount; ++i)
         {
-            m_pData[i] = (TYPE)va_arg(argv, int);
+            m_pData[i] = (TYPE)va_arg(argv, TYPE);
         }
         va_end(argv);
     }

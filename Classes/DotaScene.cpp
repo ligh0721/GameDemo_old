@@ -1,6 +1,5 @@
 #include "CommInc.h"
 
-#include "GameLogic.h"
 #include "GameDisplay.h"
 #include "Unit.h"
 #include "Skill.h"
@@ -97,11 +96,10 @@ bool CCDotaSceneLayer::init()
     u->prepareMoveAnimation("move", 0.1);
     u->prepareDieAnimation("die", 0.1);
     u->prepareAttackAnimation(1,
-        CGameUnit::kAnimationAct1, "act1", 0.1
+        CGameUnit::kAnimationAct1, "act1", 0.1, 0.7
         );
 
     u->setBaseAttackInterval(5);
-    u->setAttackEffectDelay(0.7);
     u->setAttackMinRange(1);
     u->setAttackRange(20);
     u->setWeaponType(CGameUnit::kWTClosely);
@@ -203,16 +201,15 @@ void CCDotaSceneLayer::setSoldierDataByIndex( CSimpleGameUnit* u,int index )
         u->prepareMoveAnimation("move", 0.05);
         u->prepareDieAnimation("die", 0.1);
         u->prepareAttackAnimation(4,
-            CGameUnit::kAnimationAct1, "act1", 0.1,
-            CGameUnit::kAnimationAct2, "act2", 0.1,
-            CGameUnit::kAnimationAct3, "act3", 0.1,
-            CGameUnit::kAnimationAct4, "act4", 0.1
+            CGameUnit::kAnimationAct1, "act1", 0.1, 0.2,
+            CGameUnit::kAnimationAct2, "act2", 0.1, 0.2,
+            CGameUnit::kAnimationAct3, "act3", 0.1, 0.2,
+            CGameUnit::kAnimationAct4, "act4", 0.1, 0.2
             );
         u->setHostilityRange(100);
         u->setBaseMoveSpeed(50);
         u->getSprite()->setAnchorPoint(ccp(0.5,0.25));
         u->setBaseAttackInterval(0.5);
-        u->setAttackEffectDelay(0.2);
         u->setAttackMinRange(0);
         u->setAttackRange(13);
         u->setWeaponType(CGameUnit::kWTClosely);
@@ -227,10 +224,10 @@ void CCDotaSceneLayer::setSoldierDataByIndex( CSimpleGameUnit* u,int index )
         u->prepareMoveAnimation("move", 0.05);
         u->prepareDieAnimation("die", 0.1);
         u->prepareAttackAnimation(4,
-            CGameUnit::kAnimationAct1, "act1", 0.1,
-            CGameUnit::kAnimationAct2, "act2", 0.1,
-            CGameUnit::kAnimationAct3, "act3", 0.1,
-            CGameUnit::kAnimationAct4, "act4", 0.1
+            CGameUnit::kAnimationAct1, "act1", 0.1, 0.4,
+            CGameUnit::kAnimationAct2, "act2", 0.1, 0.4,
+            CGameUnit::kAnimationAct3, "act3", 0.1, 0.4,
+            CGameUnit::kAnimationAct4, "act4", 0.1, 0.4
             );
 
         u->setHostilityRange(100);
@@ -241,7 +238,6 @@ void CCDotaSceneLayer::setSoldierDataByIndex( CSimpleGameUnit* u,int index )
         u->setBaseMoveSpeed(50);
         u->setBaseAttackInterval(2);
 
-        u->setAttackEffectDelay(0.4); // 攻击前摇延迟
         //u->setExAttackSpeed(CExtraCoeff(2, 0)); // 攻击多项式系数 ax+b
         u->setAttackMinRange(0); // 攻击最短距离，小于该距离不可立即攻击，参考投石车
         u->setAttackRange(15); // 攻击距离，大于该距离不可立即攻击

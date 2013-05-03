@@ -2,13 +2,12 @@
 
 #include "GameDisplay.h"
 #include "Prop.h"
-#include "GameLogic.h"
 #include "Unit.h"
 #include "Skill.h"
 
 
 CProp::CProp()
-	: m_iKey(CCGameManager::sharedGameManager()->getLogicBody()->keygen())
+	: m_iKey(CGameManager::sharedGameManager()->keygen())
 	, m_pOwner(NULL)
 	, m_iPrice(0)
 	, m_iSellPrice(0)

@@ -1,8 +1,5 @@
 #include "CommInc.h"
-#include "GameLogic.h"
 #include "GameDisplay.h"
-#include "BulletSprite.h"
-#include "TankSprite.h"
 #include "Skill.h"
 #include "Action.h"
 
@@ -61,30 +58,36 @@ void CCCoverAct::endEffect( CCNode* pNode )
     }
 }
 
-bool CCShakeAct::init( float fDuration, float fInterval, float fRange )
+bool CCShakeAct::init( float fDuration, int iTimes, float fRange )
 {
-    m_fDuration = fDuration;
-    m_fInterval = fInterval;
+    CCActionInterval::initWithDuration(fDuration);
+    m_iTimes = iTimes;
     m_fRange = fRange;
     return true;
 }
 
 void CCShakeAct::startWithTarget(CCNode *pTarget)
 {
-    CCAction::startWithTarget(pTarget);
+    CCActionInterval::startWithTarget(pTarget);
 
     m_oLoc = m_pTarget->getPosition();
+    float fDur = m_fDuration / m_iTimes / 4;
     CCFiniteTimeAction* pActShake = CCSequence::create(
-        CCMoveTo::create(m_fInterval, ccp(m_oLoc.x + m_fRange, m_oLoc.y)),
-        CCMoveTo::create(m_fInterval, ccp(m_oLoc.x, m_oLoc.y - m_fRange)),
-        CCMoveTo::create(m_fInterval, ccp(m_oLoc.x - m_fRange, m_oLoc.y)),
-        CCMoveTo::create(m_fInterval, ccp(m_oLoc.x, m_oLoc.y + m_fRange)),
+        CCMoveTo::create(fDur, ccp(m_oLoc.x + m_fRange, m_oLoc.y)),
+        CCMoveTo::create(fDur, ccp(m_oLoc.x, m_oLoc.y - m_fRange)),
+        CCMoveTo::create(fDur, ccp(m_oLoc.x - m_fRange, m_oLoc.y)),
+        CCMoveTo::create(fDur, ccp(m_oLoc.x, m_oLoc.y + m_fRange)),
         //CCMoveBy::create(m_fInterval, ccp(m_fRange, 0)),
         //CCMoveBy::create(m_fInterval, ccp(0, -m_fRange)),
         //CCMoveBy::create(m_fInterval, ccp(-m_fRange, 0)),
         //CCMoveBy::create(m_fInterval, ccp(0, m_fRange)),
         NULL);
-    m_pTarget->runAction(CCSequence::create(CCRepeat::create(pActShake, ceil(m_fDuration / m_fInterval / 4)), CCCallFuncN::create(this, callfuncN_selector(CCShakeAct::effectEnd)), NULL));
+    m_pTarget->runAction(CCSequence::create(CCRepeat::create(pActShake, m_iTimes), CCCallFuncN::create(this, callfuncN_selector(CCShakeAct::effectEnd)), NULL));
+}
+
+void CCShakeAct::update( float time )
+{
+
 }
 
 void CCShakeAct::effectEnd( CCNode* pNode )
@@ -433,18 +436,8 @@ const float CCDelayRelease::CONST_EX_DURATION = 1.0;
 
 bool CCDelayRelease::initWithDuration( float fDelay )
 {
-    m_fDelay = fDelay;
-    CCActionInterval::initWithDuration(m_fDelay + CONST_EX_DURATION);
+    CCSequence::initWithTwoActions(CCSequence::createWithTwoActions(CCDelayTime::create(fDelay), CCFadeOut::create(CONST_EX_DURATION)), CCCallFuncN::create(this, callfuncN_selector(CCDelayRelease::onActEnd)));
     return true;
-}
-
-void CCDelayRelease::startWithTarget( CCNode *pTarget )
-{
-    CCActionInterval::startWithTarget(pTarget);
-    if (m_pTarget)
-    {
-        m_pTarget->runAction(CCSequence::create(CCDelayTime::create(m_fDelay), CCFadeOut::create(CONST_EX_DURATION), CCCallFuncN::create(this, callfuncN_selector(CCDelayRelease::onActEnd)), NULL));
-    }
 }
 
 void CCDelayRelease::onActEnd( CCNode* pNode )
@@ -452,3 +445,12 @@ void CCDelayRelease::onActEnd( CCNode* pNode )
     pNode->removeFromParentAndCleanup(true);
 }
 
+bool CCReleaseAfter::initWithAction( CCFiniteTimeAction* fAct )
+{
+    return initWithTwoActions(fAct, CCCallFuncN::create(this, callfuncN_selector(CCReleaseAfter::onActEnd)));
+}
+
+void CCReleaseAfter::onActEnd( CCNode* pNode )
+{
+    pNode->removeFromParentAndCleanup(true);
+}

@@ -1,11 +1,7 @@
 #include "CommInc.h"
 
-#include "GameLogic.h"
 #include "GameDisplay.h"
-#include "BulletSprite.h"
-#include "TankSprite.h"
 #include "Skill.h"
-#include "BattleGroundScene.h"
 #include "Action.h"
 #include "MainScene.h"
 #include "HomeScene.h"
@@ -39,6 +35,7 @@ static CUnitPath g_oPath;
 bool CCHomeSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
+    return true;
     //setUnitTickInterval(0.1);
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
 
@@ -52,7 +49,7 @@ bool CCHomeSceneLayer::init()
     //CCSprite* pSprite = CCSprite::createWithSpriteFrameName("kr/LevelDemo.png");
     CCSprite* pSprite = CCSprite::create("Home.png");
     //pSprite->setScale(0.5);
-    setBackGroundSprite(pSprite);
+    //setBackGroundSprite(pSprite);
     //setBufferEffectParam(0.9, 50, 0.1);
     setBufferEffectParam(0, 0, 0);
 
@@ -161,6 +158,7 @@ bool CCHomeSceneLayer::init()
     g_oPath.addPoint(getAnchorPointInPoints());
 
     */
+
     return true;
 }
 
@@ -190,7 +188,7 @@ void CCHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
     case 1:
         u = pUm->unitByInfo(COrgUnitInfo::kPaladin);
 
-        u->addSkill(CThumpPas::create(20, CExtraCoeff(2, 0), 0));
+        u->addSkill(CThumpPas::create(20, CExtraCoeff(2, 0), 0, 1));
         break;
 
     case 2:
@@ -247,4 +245,9 @@ void CCHomeSceneLayer::onBtnUpgradesClick( CCNode* pNode )
 void CCHomeSceneLayer::onBtnAchievementsClick( CCNode* pNode )
 {
 
+}
+
+void CCHomeSceneLayer::draw()
+{
+    CCWinUnitLayer::draw();
 }
