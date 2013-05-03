@@ -17,6 +17,13 @@ public:
     virtual void onLevelChange(CLevelExp* pLevel, int32_t iChanged) = 0; // @override
 };
 
+//AI
+class CUnitAI
+{
+public:
+    virtual void onTick(float fDt) = 0;//@override
+};
+
 // 等级经验值，赋予对象等级经验值特性
 // 需要覆盖 updateMaxExp，提供等级变化时的最大经验值变更公式
 // 等级变化后触发 onLevelChange

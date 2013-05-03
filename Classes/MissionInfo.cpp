@@ -357,9 +357,8 @@ CGameMission* CDemoMission::mission01()
     enum
     {
         kMalik,
-        kPaladin,
         kMagnus,
-        kMatchstick
+        kJt
     };
 
     CUnitPath* pPath;
@@ -386,31 +385,20 @@ CGameMission* CDemoMission::mission01()
     oMission.addRush(iRound, oRush);
     */
     // add a rush
-    for (int i = 1; i < 30; ++i)
+    for (int i = 0; i < 1; ++i)
     {
         iRound = oMission.addNewRound();
         oRush.init(aiPath[rand() % CONST_MAX_PATH]);
         oRush.addUnit(kMalik, 1, 0);
-        oRush.addUnit(kMalik, 10, 4);
+        oRush.addUnit(kMalik, 1, 1);
+        oRush.addUnit(kMalik, 1, 2);
+        oRush.addUnit(kMagnus, 1, 3);
+        oRush.addUnit(kMagnus, 1, 4);
+        oRush.addUnit(kJt, 1, 6);
         oMission.addRush(iRound, oRush);
 
-        oRush.init(aiPath[rand() % CONST_MAX_PATH]);
-        oRush.addUnit(kPaladin, 1, 10);
-        //oRush.addUnit(kPaladin, 5, 4);
-        oMission.addRush(iRound, oRush);
-
-        oRush.init(aiPath[rand() % CONST_MAX_PATH]);
-        oRush.addUnit(kMagnus, 1, 10);
-        oRush.addUnit(kMagnus, 5, 4);
-        oMission.addRush(iRound, oRush);
     }
 
-    iRound = oMission.addNewRound();
-    oRush.init(aiPath[rand() % CONST_MAX_PATH]);
-    oRush.addUnit(kMalik, 1, 10);
-    oRush.addUnit(kMalik, 2, 5);
-    oMission.addRush(iRound, oRush);
-    
     return &oMission;
 }
 
