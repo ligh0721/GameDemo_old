@@ -14,19 +14,19 @@ CCScene* CCStartLayer::scene()
 {
     CCScene *scene = CCScene::create();
     
-    CCNodeLoaderLibrary *lib = CCNodeLoaderLibrary::newDefaultCCNodeLoaderLibrary(); //ç”Ÿæˆä¸€ä¸ªé»˜è®¤çš„Node Loader
+    CCNodeLoaderLibrary *lib = CCNodeLoaderLibrary::newDefaultCCNodeLoaderLibrary(); //Éú³ÉÒ»¸öÄ¬ÈÏµÄNode Loader
     
     lib->registerCCNodeLoader("CStartLayer", CCStartLayerLoader::loader());
 
-    CCBReader *reader = new CCBReader(lib); //ç”¨node load lib åˆå§‹åŒ–ä¸€ä¸ªccb reader
+    CCBReader *reader = new CCBReader(lib); //ÓÃnode load lib ³õÊ¼»¯Ò»¸öccb reader
     
-    CCNode *node = reader->readNodeGraphFromFile("HelloCocosBuilder.ccbi", scene); //ä»Žccbiæ–‡ä»¶ä¸­åŠ è½½node
+    CCNode *node = reader->readNodeGraphFromFile("HelloCocosBuilder.ccbi", scene); //´ÓccbiÎÄ¼þÖÐ¼ÓÔØnode
     
-    reader->release(); //æ³¨æ„æ‰‹åŠ¨é‡Šæ”¾å†…å­˜
+    reader->release(); //×¢ÒâÊÖ¶¯ÊÍ·ÅÄÚ´æ
     
     if (node!=NULL)
     {
-        scene->addChild(node); //å°†node æ·»åŠ åˆ°sceneä¸­
+        scene->addChild(node); //½«node Ìí¼Óµ½sceneÖÐ
         node->setScale(1.0);
     }
     

@@ -17,10 +17,8 @@ SOURCES += main.cpp\
         Cocos2dxThread.cpp \
         ../Classes/Action.cpp \
         ../Classes/AppDelegate.cpp \
-        ../Classes/BattleGroundScene.cpp \
         ../Classes/BattleScene.cpp \
         ../Classes/Box2DEx.cpp \
-        ../Classes/BulletSprite.cpp \
         ../Classes/ChildOfGameUnit.cpp \
         ../Classes/DemoScene.cpp \
         ../Classes/DotaScene.cpp \
@@ -29,7 +27,6 @@ SOURCES += main.cpp\
         ../Classes/GameDisplay.cpp \
         ../Classes/GameFile.cpp \
         ../Classes/GameLevel.cpp \
-        ../Classes/GameLogic.cpp \
         ../Classes/GameResControl.cpp \
         ../Classes/GLES-Render.cpp \
         ../Classes/HomeScene.cpp \
@@ -43,7 +40,6 @@ SOURCES += main.cpp\
         ../Classes/SkillInfo.cpp \
         ../Classes/SkillUI.cpp \
         ../Classes/SomeScene.cpp \
-        ../Classes/TankSprite.cpp \
         ../Classes/TechTreeScene.cpp \
         ../Classes/TestScene.cpp \
         ../Classes/Tower.cpp \
@@ -64,10 +60,8 @@ HEADERS += mainwindow.h \
         ../Classes/AppMacros.h \
         ../Classes/Action.h \
         ../Classes/AppDelegate.h \
-        ../Classes/BattleGroundScene.h \
         ../Classes/BattleScene.h \
         ../Classes/Box2DEx.h \
-        ../Classes/BulletSprite.h \
         ../Classes/ChildOfGameUnit.h \
         ../Classes/DemoScene.h \
         ../Classes/DotaScene.h \
@@ -76,7 +70,6 @@ HEADERS += mainwindow.h \
         ../Classes/GameDisplay.h \
         ../Classes/GameFile.h \
         ../Classes/GameLevel.h \
-        ../Classes/GameLogic.h \
         ../Classes/GameResControl.h \
         ../Classes/GLES-Render.h \
         ../Classes/HomeScene.h \
@@ -90,7 +83,6 @@ HEADERS += mainwindow.h \
         ../Classes/SkillInfo.h \
         ../Classes/SkillUI.h \
         ../Classes/SomeScene.h \
-        ../Classes/TankSprite.h \
         ../Classes/TechTreeScene.h \
         ../Classes/TestScene.h \
         ../Classes/Tower.h \

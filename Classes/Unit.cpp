@@ -542,8 +542,8 @@ CUnit::CUnit()
 , m_fSpirit(0)
 , m_eArmorType((CArmorValue::ARMOR_TYPE)0)
 , m_iTriggering(0)
+, m_pOnTick(NULL)
 {
-    
 }
 
 
@@ -730,6 +730,10 @@ void CUnit::onHpChange( float fChanged )
 void CUnit::onTick(float fDt)
 {
     triggerOnTick(fDt);
+    if (m_pOnTick)
+    {
+        m_pOnTick->onTick(this, fDt);
+    }
 }
 
 void CUnit::onDestroyProjectile( CCProjectileWithAttackData* pProjectile )

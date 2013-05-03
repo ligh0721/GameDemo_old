@@ -17,6 +17,13 @@ public:
     virtual void onLevelChange(CLevelExp* pLevel, int32_t iChanged) = 0; // @override
 };
 
+class COnTickCallback
+{
+public:
+    virtual void onTick(CUnit* pUnit, float fDt) = 0; // @override
+
+};
+
 // 等级经验值，赋予对象等级经验值特性
 // 需要覆盖 updateMaxExp，提供等级变化时的最大经验值变更公式
 // 等级变化后触发 onLevelChange
@@ -343,6 +350,8 @@ public:
     virtual void onHpChange(float fChanged);
     virtual void onTick(float fDt);
     virtual void onDestroyProjectile(CCProjectileWithAttackData* pProjectile); // 攻击数据消除时会触发，通常由投射物携带攻击数据，二者生存期一致
+
+    void setOnTick(COnTickCallback* pOnTick);
     
     int getKey() const;
     
@@ -433,6 +442,8 @@ public:
     int m_iTriggering;
     
 	CUnitPackage* m_pUnitPackage;
+
+    COnTickCallback* m_pOnTick;
 };
 
 class CGameUnit;
