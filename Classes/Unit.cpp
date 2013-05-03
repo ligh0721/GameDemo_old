@@ -1277,6 +1277,7 @@ bool CGameUnit::init()
     setToCastSkill(NULL);
     setCastingSkill(NULL);
     m_iSuspendRef = 0;
+    setStatus(kNormal);
     
     return true;
 }
@@ -1313,6 +1314,7 @@ bool CGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor )
     setToCastSkill(NULL);
     setCastingSkill(NULL);
     m_iSuspendRef = 0;
+    setStatus(kNormal);
     
     return true;
 }
