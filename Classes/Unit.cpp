@@ -1277,7 +1277,6 @@ bool CGameUnit::init()
     setToCastSkill(NULL);
     setCastingSkill(NULL);
     m_iSuspendRef = 0;
-    setStatus(kNormal);
     
     return true;
 }
@@ -1305,6 +1304,7 @@ bool CGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor )
     setRewardGold(0);
     setRewardExp(0);
     setExAttackRandomRange(0.000);
+    setStatus(kNormal);
     m_pRes = NULL;
     setUnitLayer(NULL);
     m_pMovePath = NULL;
@@ -1314,7 +1314,6 @@ bool CGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor )
     setToCastSkill(NULL);
     setCastingSkill(NULL);
     m_iSuspendRef = 0;
-    setStatus(kNormal);
     
     return true;
 }
