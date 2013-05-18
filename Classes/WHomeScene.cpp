@@ -14,7 +14,7 @@
 #include "TechTreeScene.h"
 #include "SkillInfo.h"
 #include "Tower.h"
-
+#include "Achieve.h"
 
 bool CCWHomeScene::init()
 {
@@ -201,6 +201,8 @@ bool CCWHomeSceneLayer::init()
 
     heroUnit->setHp(heroUnit->getMaxHp());
 
+    //成就管理器初始化
+    CAchieveManager::sharedAchieveManager();
     return true;
 }
 
