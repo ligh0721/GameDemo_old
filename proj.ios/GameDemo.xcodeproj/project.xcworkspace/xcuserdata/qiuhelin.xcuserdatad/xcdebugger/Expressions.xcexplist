@@ -71,6 +71,14 @@
          contextName = "CCBattleSceneLayer::randomSoldiers(int):BattleScene.cpp">
       </ContextState>
       <ContextState
+         contextName = "CEntryFile::init(char const*):Achieve.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "(std::string)key">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "CJumpChopBuff::getAttackPoint(CUnit*):Skill.cpp">
       </ContextState>
       <ContextState
@@ -78,6 +86,14 @@
       </ContextState>
       <ContextState
          contextName = "CJumpChopBuff::onJumpChopEnd(cocos2d::CCObject*):Skill.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "CAchieve::fromEntry(std::string, std::map&lt;std::string, std::string, std::less&lt;std::string&gt;, std::allocator&lt;std::pair&lt;std::string const, std::string&gt; &gt; &gt; const&amp;):Achieve.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "title">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
    </ContextStates>
 </VariablesViewState>

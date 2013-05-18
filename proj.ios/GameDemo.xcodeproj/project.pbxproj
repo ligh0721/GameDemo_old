@@ -205,6 +205,9 @@
 		D4ABB4B313B4395300552E6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D4ABB4B213B4395300552E6E /* main.m */; };
 		FEBD44601733946F00AF3743 /* UnitAI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEBD445F1733946F00AF3743 /* UnitAI.cpp */; };
 		FEBD44631733BD7A00AF3743 /* StartScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEBD44611733BD7900AF3743 /* StartScene.cpp */; };
+		FEC7E167173E6C3D00004E74 /* Achieve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEC7E166173E6C3D00004E74 /* Achieve.cpp */; };
+		FEC7E16A173EB08200004E74 /* StringUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEC7E169173EB08200004E74 /* StringUtil.cpp */; };
+		FEC7E16D1743E2AF00004E74 /* achieve.ini in Resources */ = {isa = PBXBuildFile; fileRef = FEC7E16C1743E2AF00004E74 /* achieve.ini */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -304,7 +307,7 @@
 		8B09164816C55465004C5566 /* UnitInfo.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = UnitInfo.h; sourceTree = "<group>"; };
 		8B09164916C55465004C5566 /* UnitShowScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitShowScene.cpp; sourceTree = "<group>"; };
 		8B09164A16C55465004C5566 /* UnitShowScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitShowScene.h; sourceTree = "<group>"; };
-		8B09164B16C55465004C5566 /* WHomeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WHomeScene.cpp; sourceTree = "<group>"; };
+		8B09164B16C55465004C5566 /* WHomeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; path = WHomeScene.cpp; sourceTree = "<group>"; };
 		8B09164C16C55465004C5566 /* WHomeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHomeScene.h; sourceTree = "<group>"; };
 		8B11D38116C5613700C54706 /* background.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = background.plist; sourceTree = "<group>"; };
 		8B11D38216C5613700C54706 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
@@ -579,6 +582,12 @@
 		FEBD445F1733946F00AF3743 /* UnitAI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitAI.cpp; sourceTree = "<group>"; };
 		FEBD44611733BD7900AF3743 /* StartScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StartScene.cpp; sourceTree = "<group>"; };
 		FEBD44621733BD7A00AF3743 /* StartScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartScene.h; sourceTree = "<group>"; };
+		FEC7E165173E640C00004E74 /* Achieve.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; path = Achieve.h; sourceTree = "<group>"; };
+		FEC7E166173E6C3D00004E74 /* Achieve.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; path = Achieve.cpp; sourceTree = "<group>"; };
+		FEC7E168173EB06E00004E74 /* StringUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringUtil.h; sourceTree = "<group>"; };
+		FEC7E169173EB08200004E74 /* StringUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StringUtil.cpp; sourceTree = "<group>"; };
+		FEC7E16C1743E2AF00004E74 /* achieve.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = achieve.ini; sourceTree = "<group>"; };
+		FEC7E16E17472A3800004E74 /* Displayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Displayer.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -660,6 +669,7 @@
 			isa = PBXGroup;
 			children = (
 				8BEB233E16F0C9EE00DDBD40 /* effect.plist */,
+				FEC7E16C1743E2AF00004E74 /* achieve.ini */,
 				8BEB233F16F0C9EE00DDBD40 /* effect.png */,
 				8B1D4A2716E7CE770092EEE9 /* Home.png */,
 				8B11D38116C5613700C54706 /* background.plist */,
@@ -1145,6 +1155,11 @@
 				8B09164C16C55465004C5566 /* WHomeScene.h */,
 				FEBD445E1733944400AF3743 /* UnitAI.h */,
 				FEBD445F1733946F00AF3743 /* UnitAI.cpp */,
+				FEC7E165173E640C00004E74 /* Achieve.h */,
+				FEC7E166173E6C3D00004E74 /* Achieve.cpp */,
+				FEC7E168173EB06E00004E74 /* StringUtil.h */,
+				FEC7E169173EB08200004E74 /* StringUtil.cpp */,
+				FEC7E16E17472A3800004E74 /* Displayer.h */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -1283,6 +1298,7 @@
 				8B1D4A2816E7CE770092EEE9 /* Home.png in Resources */,
 				8BEB234016F0C9EE00DDBD40 /* effect.plist in Resources */,
 				8BEB234116F0C9EE00DDBD40 /* effect.png in Resources */,
+				FEC7E16D1743E2AF00004E74 /* achieve.ini in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1427,6 +1443,8 @@
 				8BEADF7F16F1C05100E034EF /* AppDelegate.cpp in Sources */,
 				FEBD44601733946F00AF3743 /* UnitAI.cpp in Sources */,
 				FEBD44631733BD7A00AF3743 /* StartScene.cpp in Sources */,
+				FEC7E167173E6C3D00004E74 /* Achieve.cpp in Sources */,
+				FEC7E16A173EB08200004E74 /* StringUtil.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
