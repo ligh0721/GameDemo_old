@@ -14,17 +14,17 @@
 #include <strstream>
 #include <cctype>
 #include <algorithm>
-#include "Displayer.h"
+
 
 #define MAX_BUFF_LENGTH 1024
-//成就完成逻辑类型
-enum ACHIEVE_LOGIC_TYPE
+
+void CAchieveEvent::display(std::ostream &os, int iLevel) const
 {
-    LOGIC_TYPE_OR = 1, //即时成就
-    LOGIC_TYPE_MIX,    //累积成就
-    LOGIC_TYPE_ORDER,  //累积成就，有先后顺序
-    LOGIC_TYPE_SEQ,    //累积成就，严格的序列方式
-};
+    Displayer dis(os, iLevel);
+    dis.display(m_ulID, "m_ulID");
+    dis.display(m_iEvent, "m_iEvent");
+    dis.display(m_bFinsh, "m_bFinsh");
+}
 CAchieve::CAchieve()
 {
     m_bReach = false;
@@ -122,8 +122,9 @@ void CAchieve::fromEntry(const string title, const map<string, string>& entries)
                 size_t num = atoi(item[1].c_str());
                 for (size_t j = 0; j < num;  j++)
                 {
-                    m_vecEvent.push_back(atoi(item[0].c_str()));
-                    m_vecFinish.push_back(false);
+                    CAchieveEvent a;
+                    a.m_iEvent = atoi(item[0].c_str());
+                    m_vecEvent.push_back(a);
                 }
             }
         }
@@ -131,7 +132,7 @@ void CAchieve::fromEntry(const string title, const map<string, string>& entries)
     }
     
 }
-void CAchieve::display(ostream &os, int level)
+void CAchieve::display(ostream &os, int level) const
 {
     Displayer dis(os,level);
     dis.display(m_sType, "m_sType");
@@ -140,7 +141,6 @@ void CAchieve::display(ostream &os, int level)
     dis.display(m_sPic, "m_sPic");
     dis.display(m_wLogicType, "m_wLogicType");
     dis.display(m_vecEvent, "m_vecEvent");
-    dis.display(m_vecFinish, "m_vecFinish");
     dis.display(m_mapReward, "m_mapReward");
     dis.display(m_bReach, "m_bReach");
 }
@@ -149,6 +149,9 @@ CAchieveManager::~CAchieveManager()
 
 bool CAchieveManager::init()
 {
+    m_oContiner.setHandle(&m_oNow);
+    m_oNow.setHandle(&m_oMix);
+    m_oMix.setHandle(&m_oSeq);
     CEntryFile file;
     if(! file.init("achieve.ini"))
     {
@@ -179,7 +182,23 @@ CAchieveManager* CAchieveManager::sharedAchieveManager()
     pInst->retain();
     return pInst;
 }
-
+CAchieve* CAchieveManager::push(int iEvent)
+{
+    CAchieveEvent event(++m_ulID, iEvent);
+    for (size_t i = 0; i <  m_vecAchieve.size() && !m_vecAchieve[i]->m_bReach; i++)
+    {
+        if(m_oContiner.handle(m_vecAchieve[i], event))
+        {
+            if (m_vecAchieve[i]->m_bReach)
+            {
+                return m_vecAchieve[i];
+            }
+            return NULL;
+        }
+        
+    }
+    return NULL;
+}
 CEntryFile::CEntryFile()
 {
 }
@@ -232,5 +251,174 @@ bool CEntryFile::init(const char *pFileName)
     rfile.close();
     return true;
 }
+CAchieveHandle::CAchieveHandle(CAchieveHandle* pNext, short wType)
+    :m_pNextHandle(pNext)
+    ,m_wType(wType)
+{
+    
+}
+bool CAchieveHandle::hasHandle(CAchieve *pAchieve)
+{
+    return pAchieve?(pAchieve->m_wLogicType == m_wType):false;
+}
+void CAchieveHandle::setHandle(CAchieveHandle *pNext)
+{
+    m_pNextHandle = pNext;
+}
+void CAchieveHandle::setType(short wType)
+{
+    m_wType = wType;
+}
+bool CAchieveHandle::handle(CAchieve *pAchieve, const CAchieveEvent& event)
+{
+    if(m_pNextHandle != NULL)
+    {
+        return m_pNextHandle->handle(pAchieve, event);
+    }
+    return false;
+}
 
+CNowAchieveHandle::CNowAchieveHandle(CAchieveHandle* pNext, short wType)
+{
+    setHandle(pNext);
+    setType(wType);
+}
 
+bool CNowAchieveHandle::handle(CAchieve *pAchieve, const CAchieveEvent &event)
+{
+    bool handle = false;
+    if(hasHandle(pAchieve))
+    {
+        for (size_t i = 0; i < pAchieve->m_vecEvent.size(); i++)
+        {
+            if (pAchieve->m_vecEvent[i].m_iEvent == event.m_iEvent)
+            {
+                pAchieve->m_vecEvent[i].m_bFinsh = true;
+                pAchieve->m_vecEvent[i].m_ulID = event.m_ulID;
+                pAchieve->m_bReach = true;
+                handle = true;
+                break;
+            }
+        }
+    }
+    else
+    {
+        handle = CAchieveHandle::handle(pAchieve, event);
+    }
+    return handle;
+}
+
+CMIXAchieveHandle::CMIXAchieveHandle(CAchieveHandle* pNext, short wType)
+{
+    setHandle(pNext);
+    setType(wType);
+}
+
+bool CMIXAchieveHandle::handle(CAchieve *pAchieve, const CAchieveEvent &event)
+{
+    bool handle = false;
+    if(hasHandle(pAchieve))
+    {
+        int total = 0;
+        bool find = false;
+        for (size_t i = 0; i < pAchieve->m_vecEvent.size(); i++)
+        {
+            if (pAchieve->m_vecEvent[i].m_bFinsh)
+            {
+                total++;
+            }
+            else if (!find && pAchieve->m_vecEvent[i].m_iEvent == event.m_iEvent)
+            {
+                pAchieve->m_vecEvent[i].m_bFinsh = true;
+                pAchieve->m_vecEvent[i].m_ulID = event.m_ulID;
+                total++;
+                find = true;
+                handle = true;
+            }
+        }
+        if (total == pAchieve->m_vecEvent.size())
+        {
+            pAchieve->m_bReach = true;
+        }
+    }
+    else
+    {
+      handle =  CAchieveHandle::handle(pAchieve, event);
+    }
+    return handle;
+}
+COrderAchieveHandle::COrderAchieveHandle(CAchieveHandle* pNext, short wType)
+{
+    setHandle(pNext);
+    setType(wType);
+}
+bool COrderAchieveHandle::handle(CAchieve *pAchieve, const CAchieveEvent &event)
+{
+    bool handle = false;
+    if(hasHandle(pAchieve))
+    {
+        size_t i = 0;
+        
+        for (; i < pAchieve->m_vecEvent.size(); i++)
+        {
+            if (pAchieve->m_vecEvent[i].m_bFinsh)
+            {
+                continue;
+            }
+            else if (pAchieve->m_vecEvent[i].m_iEvent == event.m_iEvent
+                     && (i == 0 || pAchieve->m_vecEvent[i].m_ulID > pAchieve->m_vecEvent[i-1].m_ulID))
+            {
+                pAchieve->m_vecEvent[i].m_ulID = event.m_ulID;
+                pAchieve->m_vecEvent[i].m_bFinsh = true;
+                handle = true;
+            }
+            break;
+        }
+        if (i == pAchieve->m_vecEvent.size() - 1)
+        {
+            pAchieve->m_bReach = true;
+        }
+    }
+    else
+    {
+        handle  = CAchieveHandle::handle(pAchieve, event);
+    }
+    return handle;
+}
+CSeqAchieveHandle::CSeqAchieveHandle(CAchieveHandle* pNext, short wType)
+{
+    setHandle(pNext);
+    setType(wType);
+}
+bool CSeqAchieveHandle::handle(CAchieve *pAchieve, const CAchieveEvent &event)
+{
+    bool handle = false;
+    if(hasHandle(pAchieve))
+    {
+        size_t i = 0;
+        for (; i < pAchieve->m_vecEvent.size(); i++)
+        {
+            if (pAchieve->m_vecEvent[i].m_bFinsh)
+            {
+                continue;
+            }
+            else if (pAchieve->m_vecEvent[i].m_iEvent == event.m_iEvent
+                     && (i == 0 || pAchieve->m_vecEvent[i].m_ulID == pAchieve->m_vecEvent[i-1].m_ulID + 1))
+            {
+                pAchieve->m_vecEvent[i].m_ulID = event.m_ulID;
+                pAchieve->m_vecEvent[i].m_bFinsh = true;
+                handle = true;
+            }
+            break;
+        }
+        if (i == pAchieve->m_vecEvent.size() - 1)
+        {
+            pAchieve->m_bReach = true;
+        }
+    }
+    else
+    {
+        handle = CAchieveHandle::handle(pAchieve, event);
+    }
+    return handle;
+}
