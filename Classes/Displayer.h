@@ -144,9 +144,10 @@ public:
     Displayer& display(const CDisplayObj& obj, const char * fieldName)
     {
         ps(fieldName);
-        _os << " {" << std::endl;
+        _os << '{' << std::endl;
+        Displayer jd(_os, _level);
         obj.display(_os, _level + 1);
-        _os << " }" << std::endl;
+        jd.display('}', NULL);
         return *this;
     }
     

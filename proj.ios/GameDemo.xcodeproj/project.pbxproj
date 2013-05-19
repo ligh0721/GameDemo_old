@@ -208,6 +208,7 @@
 		FEC7E167173E6C3D00004E74 /* Achieve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEC7E166173E6C3D00004E74 /* Achieve.cpp */; };
 		FEC7E16A173EB08200004E74 /* StringUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEC7E169173EB08200004E74 /* StringUtil.cpp */; };
 		FEC7E16D1743E2AF00004E74 /* achieve.ini in Resources */ = {isa = PBXBuildFile; fileRef = FEC7E16C1743E2AF00004E74 /* achieve.ini */; };
+		FEC7E1711749156C00004E74 /* AchieveScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEC7E1701749156B00004E74 /* AchieveScene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -588,6 +589,8 @@
 		FEC7E169173EB08200004E74 /* StringUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StringUtil.cpp; sourceTree = "<group>"; };
 		FEC7E16C1743E2AF00004E74 /* achieve.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = achieve.ini; sourceTree = "<group>"; };
 		FEC7E16E17472A3800004E74 /* Displayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Displayer.h; sourceTree = "<group>"; };
+		FEC7E16F1749150B00004E74 /* AchieveScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AchieveScene.h; sourceTree = "<group>"; };
+		FEC7E1701749156B00004E74 /* AchieveScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AchieveScene.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1160,6 +1163,8 @@
 				FEC7E168173EB06E00004E74 /* StringUtil.h */,
 				FEC7E169173EB08200004E74 /* StringUtil.cpp */,
 				FEC7E16E17472A3800004E74 /* Displayer.h */,
+				FEC7E16F1749150B00004E74 /* AchieveScene.h */,
+				FEC7E1701749156B00004E74 /* AchieveScene.cpp */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -1445,6 +1450,7 @@
 				FEBD44631733BD7A00AF3743 /* StartScene.cpp in Sources */,
 				FEC7E167173E6C3D00004E74 /* Achieve.cpp in Sources */,
 				FEC7E16A173EB08200004E74 /* StringUtil.cpp in Sources */,
+				FEC7E1711749156C00004E74 /* AchieveScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
