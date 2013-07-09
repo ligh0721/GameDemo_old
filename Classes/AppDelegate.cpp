@@ -9,6 +9,7 @@
 #include "AppMacros.h"
 #include "BattleScene.h"
 #include "GameChapterScene.h"
+#include "UnitShowScene.h"
 
 
 AppDelegate::AppDelegate()
@@ -85,11 +86,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
     CCScene *pScene = CCUnitEditorScene::create();
 #else
     //CCScene *pScene = CCHomeScene::create();
-    CCScene *pScene = CCWHomeScene::create();
+    //CCScene *pScene = CCWHomeScene::create();
     //CCScene *pScene = CCStartLayer::scene();
     //CCScene *pScene = CCUnitEditorScene::create();
 	//CCScene *pScene = CCBattleScene::create();
 	//CCScene* pScene = CCGameChapterScene::create();
+    CCScene* pScene = CCUnitShowScene::create();
 #endif
 	 
     // run
