@@ -20,7 +20,9 @@ public:
 class COnTickCallback
 {
 public:
-    virtual void onTick(CUnit* pUnit, float fDt) = 0; // @override
+    virtual void onDamaged(CUnit* pUnit, CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);               // 攻击命中时，受害者触发， @override
+    virtual void onDie(CUnit* pUnit); // @override
+    virtual void onTick(CUnit* pUnit, float fDt); // @override
 
 };
 

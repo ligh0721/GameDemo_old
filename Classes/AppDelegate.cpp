@@ -32,7 +32,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     //pEGLView->setFrameSize(512, 384);
 #ifdef WIN32
-    pEGLView->setFrameZoomFactor(0.5);
+    pEGLView->setFrameZoomFactor(1.0);
 #endif
     
     //pEGLView->setDesignResolutionSize(1024, 768, kResolutionNoBorder);
