@@ -15,6 +15,7 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
         Cocos2dxThread.cpp \
+        ../Classes/Achieve.cpp \
         ../Classes/Action.cpp \
         ../Classes/AppDelegate.cpp \
         ../Classes/BattleScene.cpp \
@@ -40,6 +41,7 @@ SOURCES += main.cpp\
         ../Classes/SkillInfo.cpp \
         ../Classes/SkillUI.cpp \
         ../Classes/SomeScene.cpp \
+        ../Classes/StringUtil.cpp \
         ../Classes/TechTreeScene.cpp \
         ../Classes/TestScene.cpp \
         ../Classes/Tower.cpp \
@@ -58,6 +60,7 @@ HEADERS += mainwindow.h \
         ../Classes/CommInc.h \
         ../Classes/CommDef.h \
         ../Classes/AppMacros.h \
+        ../Classes/Achieve.h \
         ../Classes/Action.h \
         ../Classes/AppDelegate.h \
         ../Classes/BattleScene.h \
@@ -83,6 +86,7 @@ HEADERS += mainwindow.h \
         ../Classes/SkillInfo.h \
         ../Classes/SkillUI.h \
         ../Classes/SomeScene.h \
+        ../Classes/StringUtil.h \
         ../Classes/TechTreeScene.h \
         ../Classes/TestScene.h \
         ../Classes/Tower.h \

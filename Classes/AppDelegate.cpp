@@ -84,6 +84,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // create a scene. it's an autorelease object
 #if defined QTPROJ
     CCScene *pScene = CCUnitEditorScene::create();
+    //CCScene* pScene = CCMainScene::create();
 #else
     //CCScene *pScene = CCHomeScene::create();
     //CCScene *pScene = CCWHomeScene::create();
@@ -91,7 +92,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //CCScene *pScene = CCUnitEditorScene::create();
 	//CCScene *pScene = CCBattleScene::create();
 	//CCScene* pScene = CCGameChapterScene::create();
-    CCScene* pScene = CCUnitShowScene::create();
+    //CCScene* pScene = CCUnitShowScene::create();
+    CCScene* pScene = CCMainScene::create();
 #endif
 	 
     // run

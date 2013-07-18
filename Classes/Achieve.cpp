@@ -107,7 +107,7 @@ void CAchieve::fromEntry(const string title, const map<string, string>& entries)
             }
             else
             {
-                m_wLogicType = LOGIC_TYPE_OR;
+                m_sType = LOGIC_TYPE_OR;
                 events = it->second;
             }
            
