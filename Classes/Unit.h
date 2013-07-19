@@ -17,7 +17,7 @@ public:
     virtual void onLevelChange(CLevelExp* pLevel, int32_t iChanged) = 0; // @override
 };
 
-class COnTickCallback
+class CUnitAi
 {
 public:
     virtual void onDamaged(CUnit* pUnit, CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);               // 攻击命中时，受害者触发， @override
@@ -353,7 +353,7 @@ public:
     virtual void onTick(float fDt);
     virtual void onDestroyProjectile(CCProjectileWithAttackData* pProjectile); // 攻击数据消除时会触发，通常由投射物携带攻击数据，二者生存期一致
 
-    void setOnTick(COnTickCallback* pOnTick);
+    void setAi(CUnitAi* pAi);
     
     int getKey() const;
     
@@ -445,7 +445,7 @@ public:
     
 	CUnitPackage* m_pUnitPackage;
 
-    COnTickCallback* m_pOnTick;
+    CUnitAi* m_pAi;
 };
 
 class CGameUnit;

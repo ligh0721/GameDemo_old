@@ -33,7 +33,7 @@
             <key>Achievements.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{308,700},{172,150}}</string>
+                <string>{{308,786},{172,150}}</string>
                 <key>offset</key>
                 <string>{-2,-13}</string>
                 <key>rotated</key>
@@ -124,7 +124,7 @@
             <key>Start.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{874,308},{134,202}}</string>
+                <string>{{874,394},{134,202}}</string>
                 <key>offset</key>
                 <string>{-4,3}</string>
                 <key>rotated</key>
@@ -147,10 +147,23 @@
                 <key>sourceSize</key>
                 <string>{256,256}</string>
             </dict>
+            <key>TalkBubble.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{874,268},{122,124}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{122,124}}</string>
+                <key>sourceSize</key>
+                <string>{122,124}</string>
+            </dict>
             <key>Upgrades.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{872,512},{150,186}}</string>
+                <string>{{872,598},{150,186}}</string>
                 <key>offset</key>
                 <string>{-3,-18}</string>
                 <key>rotated</key>
@@ -248,7 +261,7 @@
             <key>size</key>
             <string>{1024,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:c28d895300f30a0f1ee97b181b362c0c$</string>
+            <string>$TexturePacker:SmartUpdate:50ad5798f7c282657b1020376a031c1e$</string>
             <key>textureFileName</key>
             <string>UI.png</string>
         </dict>

@@ -14,15 +14,15 @@
 #include "SkillInfo.h"
 
 
-void COnTickCallback::onDamaged(CUnit *pUnit, CAttackData *pAttack, CUnit *pSource, uint32_t dwTriggerMask)
+void CUnitAi::onDamaged(CUnit *pUnit, CAttackData *pAttack, CUnit *pSource, uint32_t dwTriggerMask)
 {
 }
 
-void COnTickCallback::onDie(CUnit *pUnit)
+void CUnitAi::onDie(CUnit *pUnit)
 {
 }
 
-void COnTickCallback::onTick(CUnit *pUnit, float fDt)
+void CUnitAi::onTick(CUnit *pUnit, float fDt)
 {
 }
 
@@ -555,7 +555,7 @@ CUnit::CUnit()
 , m_fSpirit(0)
 , m_eArmorType((CArmorValue::ARMOR_TYPE)0)
 , m_iTriggering(0)
-, m_pOnTick(NULL)
+, m_pAi(NULL)
 {
 }
 
@@ -694,6 +694,11 @@ void CUnit::onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMa
         return;
     }
     triggerOnDamagedInnerTrigger(pAttack, pSource);
+
+    if (m_pAi)
+    {
+        m_pAi->onDamaged(this, pAttack, pSource, dwTriggerMask);
+    }
 }
 
 void CUnit::onDamageTarget( float fDamage, CUnit* pTarget, uint32_t dwTriggerMask )
@@ -713,6 +718,11 @@ void CUnit::onRevive()
 void CUnit::onDie()
 {
     triggerOnDie();
+
+    if (m_pAi)
+    {
+        m_pAi->onDie(this);
+    }
 
     CCArray oArrCopy;
     oArrCopy.initWithArray(&m_oArrBuff);
@@ -743,9 +753,9 @@ void CUnit::onHpChange( float fChanged )
 void CUnit::onTick(float fDt)
 {
     triggerOnTick(fDt);
-    if (m_pOnTick)
+    if (m_pAi)
     {
-        m_pOnTick->onTick(this, fDt);
+        m_pAi->onTick(this, fDt);
     }
 }
 
@@ -1130,6 +1140,11 @@ void CUnit::endTrigger()
 bool CUnit::isTriggerFree() const
 {
     return m_iTriggering == 0;
+}
+
+void CUnit::setAi(CUnitAi* pAi)
+{
+    m_pAi = pAi;
 }
 
 int CUnit::getKey() const

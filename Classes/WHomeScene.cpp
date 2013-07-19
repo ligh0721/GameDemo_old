@@ -210,6 +210,8 @@ bool CCWHomeSceneLayer::init()
         pAchieve->display(out);
         CCLog("reach global : %s\n", out.str().c_str());
     }
+
+    CCScale9Sprite oS;
     return true;
 }
 

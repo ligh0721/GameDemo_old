@@ -144,6 +144,12 @@
     <ClCompile Include="..\Classes\StartScene.cpp">
       <Filter>Classes\Display\source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Achieve.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\StringUtil.cpp">
+      <Filter>Classes\Logic\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -265,6 +271,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\StartScene.h">
       <Filter>Classes\Display\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Achieve.h">
+      <Filter>Classes\Logic\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StringUtil.h">
+      <Filter>Classes\Logic\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

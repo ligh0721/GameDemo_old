@@ -70,6 +70,15 @@ bool CCMainSceneLayer::init()
 	m_oMenu.addChild(&m_oBattle);
 	m_oBattle.setPosition(ccp(oSz.width * 0.1 + m_oBattle.getContentSize().width * 0.5, oSz.height * 0.2));
 
+    CCSprite* pBubble = CCSprite::create("TalkBubble.png");
+    CCSize oTbSz = pBubble->getContentSize();
+    CCRect oFull(0, 0, oTbSz.width, oTbSz.height);
+    CCRect oInset(57, 26, 39, 42);
+    CCScale9Sprite* pTb = CCScale9Sprite::create("TalkBubble.png", oFull, oInset);
+    addChild(pTb);
+    pTb->setContentSize(CCSizeMake(160, 80));
+    pTb->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.5));
+
     return true;
 }
 
