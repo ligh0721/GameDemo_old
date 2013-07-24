@@ -462,6 +462,7 @@ bool CCFadeInOutScale4::init( float fScaleStart, float fScaleMid, float fScaleEn
     CCActionInterval* pAct1 = CCScaleTo::create(fDurToNormal, 1.0);
     CCActionInterval* pAct2 = CCScaleBy::create(fDurKeep, 1.0);
     CCActionInterval* pAct3 = CCSpawn::createWithTwoActions(CCFadeOut::create(fDurToEnd), CCScaleTo::create(fDurToEnd, fScaleEnd));
+    
     return CCSequence::initWithTwoActions(CCSequence::create(pAct0, pAct1, pAct2, NULL), pAct3);
 }
 

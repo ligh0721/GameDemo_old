@@ -76,9 +76,11 @@ bool CCMainSceneLayer::init()
     CCRect oInset(57, 26, 39, 42);
     CCScale9Sprite* pTb = CCScale9Sprite::create("TalkBubble.png", oFull, oInset);
     addChild(pTb);
-    pTb->setContentSize(CCSizeMake(160, 80));
+    pTb->setContentSize(CCSizeMake(460, 280));
     pTb->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.5));
     pTb->setVisible(false);
+
+
 
     return true;
 }
@@ -112,6 +114,37 @@ void CCMainSceneLayer::onBtnTroopsClick( CCObject* pObject )
 
 void CCMainSceneLayer::onBtnAchievementClick( CCObject* pObject )
 {
+    CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+    CCSprite* pNode = CCSprite::create("test/Matchstick/Matchstick.png");
+    addChild(pNode);
+    pNode->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.5));
+
+    CCFiniteTimeAction* pAct = CCMoveTo::create(2, ccp(oSz.width * 0.9, oSz.height * 0.5));
+    
+    //pAct = CCSequence::create(pAct, CCCallFuncN::create(this, callfuncN_selector(CCMainSceneLayer::onActEnd)), NULL);
+    //pAct = CCReleaseAfter::create(pAct);
+
+    
+    CCAnimation* pAniMove = CCAnimation::create();
+    pAniMove->addSpriteFrameWithFileName("test/Matchstick/move/move_00.png");
+    pAniMove->addSpriteFrameWithFileName("test/Matchstick/move/move_01.png");
+    pAniMove->addSpriteFrameWithFileName("test/Matchstick/move/move_02.png");
+    pAniMove->addSpriteFrameWithFileName("test/Matchstick/move/move_03.png");
+    pAniMove->addSpriteFrameWithFileName("test/Matchstick/move/move_04.png");
+    pAniMove->addSpriteFrameWithFileName("test/Matchstick/move/move_05.png");
+    pAniMove->setDelayPerUnit(0.1);
+
+
+    CCAnimate* pActMove = CCAnimate::create(pAniMove);
+    
+    CCActionInterval* pAct2 = CCRepeatForever::create(pActMove);
+
+    pAct = CCSpawn::createWithTwoActions(pAct, pAct2);
+
+
+   
+    pNode->runAction(pAct);
+    pNode->runAction(pAct2);
 
 }
 
@@ -127,12 +160,15 @@ void CCMainSceneLayer::onBtnDemoClick( CCObject* pObject )
 
     char szNum[16];
     sprintf(szNum, "%d", s_iDemoNum);
+
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+
     CCLabelTTF* pNode = CCLabelTTF::create(szNum, "fonts/Comic Book.ttf", 128);
     addChild(pNode);
     pNode->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.5));
 
     CCActionInterval* pAct = CCReleaseAfter::create(CCFadeInOutScale4::create(0.5, 1.2, 0.8,     0.10, 0.1, 1.0, 0.2));
+
 
     pNode->runAction(pAct);
 
@@ -141,5 +177,10 @@ void CCMainSceneLayer::onBtnDemoClick( CCObject* pObject )
 void CCMainSceneLayer::onBtnBattleClick( CCObject* pObject )
 {
 	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5, CCBattleScene::create()));
+}
+
+void CCMainSceneLayer::onActEnd( CCNode* pNode )
+{
+    pNode->removeFromParentAndCleanup(true);
 }
 

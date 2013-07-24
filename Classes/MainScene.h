@@ -29,6 +29,8 @@ public:
     void onBtnAchievementClick(CCObject* pObject);
     void onBtnDemoClick(CCObject* pObject);
 	void onBtnBattleClick(CCObject* pObject);
+
+    void onActEnd(CCNode* pNode);
 public:
     CCMenu m_oMenu;
 
