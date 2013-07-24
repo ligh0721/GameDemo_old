@@ -454,3 +454,24 @@ void CCReleaseAfter::onActEnd( CCNode* pNode )
 {
     pNode->removeFromParentAndCleanup(true);
 }
+
+bool CCFadeInOutScale4::init( float fScaleStart, float fScaleMid, float fScaleEnd, float fDurToMid, float fDurToNormal, float fDurKeep, float fDurToEnd )
+{
+    m_fScaleStart = fScaleStart;
+    CCActionInterval* pAct0 = CCSpawn::createWithTwoActions(CCFadeIn::create(fDurToMid), CCScaleTo::create(fDurToMid, fScaleMid));
+    CCActionInterval* pAct1 = CCScaleTo::create(fDurToNormal, 1.0);
+    CCActionInterval* pAct2 = CCScaleBy::create(fDurKeep, 1.0);
+    CCActionInterval* pAct3 = CCSpawn::createWithTwoActions(CCFadeOut::create(fDurToEnd), CCScaleTo::create(fDurToEnd, fScaleEnd));
+    return CCSequence::initWithTwoActions(CCSequence::create(pAct0, pAct1, pAct2, NULL), pAct3);
+}
+
+void CCFadeInOutScale4::startWithTarget( CCNode *pTarget )
+{
+    CCSequence::startWithTarget(pTarget);
+    m_pTarget->setScale(m_fScaleStart);
+    CCRGBAProtocol* p = dynamic_cast<CCRGBAProtocol*>(m_pTarget);
+    if (p)
+    {
+        p->setOpacity(0);
+    }
+}

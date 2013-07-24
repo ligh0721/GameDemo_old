@@ -78,6 +78,7 @@ bool CCMainSceneLayer::init()
     addChild(pTb);
     pTb->setContentSize(CCSizeMake(160, 80));
     pTb->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.5));
+    pTb->setVisible(false);
 
     return true;
 }
@@ -116,10 +117,29 @@ void CCMainSceneLayer::onBtnAchievementClick( CCObject* pObject )
 
 void CCMainSceneLayer::onBtnDemoClick( CCObject* pObject )
 {
-    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5, CCDemoScene::create()));
+    //CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5, CCDemoScene::create()));
+    static int s_iDemoNum = 10;
+    --s_iDemoNum;
+    if (!s_iDemoNum)
+    {
+        s_iDemoNum = 9;
+    }
+
+    char szNum[16];
+    sprintf(szNum, "%d", s_iDemoNum);
+    CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+    CCLabelTTF* pNode = CCLabelTTF::create(szNum, "fonts/Comic Book.ttf", 128);
+    addChild(pNode);
+    pNode->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.5));
+
+    CCActionInterval* pAct = CCReleaseAfter::create(CCFadeInOutScale4::create(0.5, 1.2, 0.8,     0.10, 0.1, 1.0, 0.2));
+
+    pNode->runAction(pAct);
+
 }
 
 void CCMainSceneLayer::onBtnBattleClick( CCObject* pObject )
 {
 	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5, CCBattleScene::create()));
 }
+
