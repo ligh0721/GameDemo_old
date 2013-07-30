@@ -65,6 +65,8 @@ public:
     virtual void onUnitDie(CGameUnit* pUnit);
 
     void onHeroSoulTick(float fDt);
+    void onNextRoundTick(float fDt);
+
 
 public:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     
@@ -97,5 +99,8 @@ public:
 
     REVIVE_INFO m_stReviveInfo;
     CCLabelTTF m_oLeftToRevive;
+
+    float m_fWaitingNextRound;
+    int m_iLastNum;
 };
 

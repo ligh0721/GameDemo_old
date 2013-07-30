@@ -211,7 +211,10 @@ bool CCWHomeSceneLayer::init()
         CCLog("reach global : %s\n", out.str().c_str());
     }
 
-    CCScale9Sprite oS;
+    m_fWaitingNextRound = 0.0;
+    
+    m_iLastNum = -1;
+
     return true;
 }
 
@@ -239,6 +242,33 @@ void CCWHomeSceneLayer::onTick( float fDt )
     pGm->cmdRecv(0);
     M_DEF_UM(pUm);
 
+    if (m_fWaitingNextRound >= FLT_EPSILON)
+    {
+        m_fWaitingNextRound -= fDt;
+
+        if (m_fWaitingNextRound < 8.0 && m_iLastNum == -1)
+        {
+            m_iLastNum = 3;
+            schedule(schedule_selector(CCWHomeSceneLayer::onNextRoundTick), 2.0);
+            CCLOG("!!!!!!!!!!!!!!!!!!!!!");
+        }
+
+        if (m_fWaitingNextRound < FLT_EPSILON)
+        {
+            m_iLastNum = 0;
+            // new round start
+            if (m_pCurMission->nextRound())
+            {
+                CGameUnit* u = NULL;
+                if((u = getHeroUnit()) != NULL)
+                {
+                    u->setHp(u->getHp() + (u->getMaxHp() - u->getHp()) * 0.5);
+                }
+            }
+        }
+        return;
+    }
+
     //DemoMission
     int r = m_pCurMission->curRound();
     int n = m_pCurMission->rushCount();
@@ -258,7 +288,7 @@ void CCWHomeSceneLayer::onTick( float fDt )
                 CGameUnit* u = m_pCurMission->m_oUipm.unitByIndex(iRes);
                 addUnit(u);
                 u->setForceByIndex(3);
-                u->setAlly(1<<3);
+                u->setAlly(1 << 3);
                 u->setPosition(*pPos);
                 u->moveAlongPath(p, false);
                 u->addSkill(CStatusShowPas::create());
@@ -281,7 +311,7 @@ void CCWHomeSceneLayer::onTick( float fDt )
         else if (iRes == CGameMission::kWaiting)
         {
             // TODO: waitNextUnit
-            bAllRushEnd=false;
+            bAllRushEnd = false;
             continue;
         }
         else
@@ -293,15 +323,10 @@ void CCWHomeSceneLayer::onTick( float fDt )
 
     if (bAllRushEnd)
     {
+        m_fWaitingNextRound = 10.0;
+        m_iLastNum = -1;
         // TODO: curRoundEnd
-        if (m_pCurMission->nextRound())
-        {
-            CGameUnit* u = NULL;
-            if((u = getHeroUnit()) != NULL)
-            {
-                u->setHp(u->getHp() + (u->getMaxHp()-u->getHp()) * 0.5);
-            }
-        }
+        
         
     }
 }
@@ -722,5 +747,25 @@ void CCWHomeSceneLayer::onUnitDie( CGameUnit* pUnit )
                 pRes->changeGold(iG);
             }
         }
+    }
+}
+
+void CCWHomeSceneLayer::onNextRoundTick( float fDt )
+{
+    CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+    char szNum[16];
+    sprintf(szNum, "%d", m_iLastNum);
+    CCSprite* pNode = CCLabelTTF::create(szNum, "fonts/Comic Book.ttf", 128);
+    m_oGameCtrlLayer.addChild(pNode);
+    pNode->setPosition(ccp(oSz.width * 0.8, oSz.height * 0.5));
+    pNode->setOpacity(0);
+    CCActionInterval* pAct = CCReleaseAfter::create(CCFadeInOutScale4::create(0.5, 1.2, 0.8,     0.10, 0.1, 1.0, 0.2));
+    pNode->runAction(pAct);
+    
+    --m_iLastNum;
+    if (!m_iLastNum)
+    {
+        unschedule(schedule_selector(CCWHomeSceneLayer::onNextRoundTick));
+        CCLOG("---------------");
     }
 }

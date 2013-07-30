@@ -142,7 +142,7 @@ void CCMainSceneLayer::onBtnAchievementClick( CCObject* pObject )
     pAct = CCSpawn::createWithTwoActions(pAct, pAct2);
 
 
-   
+
     pNode->runAction(pAct);
     pNode->runAction(pAct2);
 

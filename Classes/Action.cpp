@@ -470,9 +470,4 @@ void CCFadeInOutScale4::startWithTarget( CCNode *pTarget )
 {
     CCSequence::startWithTarget(pTarget);
     m_pTarget->setScale(m_fScaleStart);
-    CCRGBAProtocol* p = dynamic_cast<CCRGBAProtocol*>(m_pTarget);
-    if (p)
-    {
-        p->setOpacity(0);
-    }
 }

@@ -33,7 +33,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     //pEGLView->setFrameSize(512, 384);
 #ifdef WIN32
-    pEGLView->setFrameZoomFactor(1.0);
+    pEGLView->setFrameZoomFactor(0.5);
 #endif
     
     //pEGLView->setDesignResolutionSize(1024, 768, kResolutionNoBorder);
@@ -87,13 +87,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //CCScene* pScene = CCMainScene::create();
 #else
     //CCScene *pScene = CCHomeScene::create();
-    //CCScene *pScene = CCWHomeScene::create();
+    CCScene *pScene = CCWHomeScene::create();
     //CCScene *pScene = CCStartLayer::scene();
     //CCScene *pScene = CCUnitEditorScene::create();
 	//CCScene *pScene = CCBattleScene::create();
 	//CCScene* pScene = CCGameChapterScene::create();
     //CCScene* pScene = CCUnitShowScene::create();
-    CCScene* pScene = CCMainScene::create();
+    //CCScene* pScene = CCMainScene::create();
 #endif
 	 
     // run
