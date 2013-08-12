@@ -93,7 +93,8 @@ public:
     void setLabel(const char* pLabel);
     CC_SYNTHESIZE(int, m_iClickRetCode, ClickRetCode);
 
-    virtual void coolDown();
+    virtual void coolDown(float fFromPercent = 0);
+    float getPercentage() const;
 
 private:
     void onClick(CCObject* pObject);

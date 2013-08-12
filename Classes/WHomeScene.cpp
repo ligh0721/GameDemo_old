@@ -673,6 +673,12 @@ void CCWHomeSceneLayer::onHeroSoulTick( float fDt )
             if (pBtn)
             {
                 dynamic_cast<CCSkillButtonAdvance*>(pBtn)->m_iUnitKey = m_iHero;
+                if (pSkill->getCoolDown())
+                {
+                    CCLOG("CD [%f]", (pSkill->getCoolDown() - skillCoolDownLeft(pSkill->getKey())) / pSkill->getCoolDown() * 100.0);
+                    pBtn->coolDown((pSkill->getCoolDown() - skillCoolDownLeft(pSkill->getKey())) / pSkill->getCoolDown() * 100.0);
+                }
+                
                 m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
             }
         }
@@ -703,19 +709,42 @@ void CCWHomeSceneLayer::onUnitDie( CGameUnit* pUnit )
         m_stReviveInfo.dwLevel = pUnit->getLevel();
         m_stReviveInfo.dwMaxLevel = pUnit->getMaxLevel();
         m_stReviveInfo.oArrSkill.initWithArray(&pUnit->m_oArrSkill);
-        m_stReviveInfo.oArrSkillBtn.initWithArray(m_oSkillPanel.getSkillMenu()->getChildren());
+        CCObject* pObj = NULL;
+        m_stReviveInfo.oArrSkillBtn.init();
+        CCARRAY_FOREACH(&m_stReviveInfo.oArrSkill, pObj)
+        {
+            CSkill* pSkill = dynamic_cast<CSkill*>(pObj);
+            CActiveSkill* pActSkill = dynamic_cast<CActiveSkill*>(pSkill);
+            if (pActSkill)
+            {
+                //addSkillCoolDown(pActSkill);  // 如果是主动技能，挂到cd管理器
+            }
+
+            // 如果技能有UI，保持UI
+            CCSkillButtonBase* pBtn = dynamic_cast<CCSkillButtonBase*>(pSkill->getDisplayBody());
+            if (pBtn)
+            {
+                m_stReviveInfo.oArrSkillBtn.addObject(pBtn);
+                if (pActSkill)
+                {
+                    //pActSkill->setCoolDownLeft((100.0 - pBtn->getPercentage()) / 100.0 * pActSkill->getCoolDown());
+                    //CCLOG("[CD: %f] input", skillCoolDownLeft(pActSkill->getKey()));
+                }
+            }
+        }
+        //m_stReviveInfo.oArrSkillBtn.initWithArray(m_oSkillPanel.getSkillMenu()->getChildren());
         m_oLeftToRevive.setVisible(true);
         
         schedule(schedule_selector(CCWHomeSceneLayer::onHeroSoulTick), 0.2);
         onHeroSoulTick(0);
     }
-    else if (pUnit->getRewardExp() && M_RAND_HIT(10) && pUnit->isEnemyOf(dynamic_cast<CUnitForce*>(pHero = getHeroUnit())))
+    else if (pUnit->getRewardExp() && M_RAND_HIT(100) && pUnit->isEnemyOf(dynamic_cast<CUnitForce*>(pHero = getHeroUnit())))
     {
         // Spawn skills
         CCCommmButton* pBtn = CCCommmButton::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, this, callfuncN_selector(CCWHomeSceneLayer::onGetBuff), NULL, COrgSkillInfo::kThunderBoltBuff1);
         m_oMenu.addChild(pBtn);
         pBtn->setScale(0);
-        pBtn->setPosition(getPosition());
+        pBtn->setPosition(pUnit->getPosition());
         pBtn->runAction(CCScaleTo::create(0.5, 0.5, 0.5));
         pBtn->runAction(CCJumpBy::create(0.5, ccp(0, 0), 100, 1));
         pBtn->runAction(CCSequence::create(CCScaleTo::create(0.25, 1.0, 1.0), CCScaleTo::create(0.25, 0.75, 0.75), NULL));

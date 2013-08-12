@@ -233,7 +233,7 @@ CActiveSkill::~CActiveSkill()
 
 bool CActiveSkill::isCoolingDown() const
 {
-    return abs(m_fCDLeft) >= FLT_EPSILON;
+    return m_fCDLeft >= FLT_EPSILON;
 }
 
 void CActiveSkill::resetCD()
@@ -270,6 +270,7 @@ void CActiveSkill::cast()
         pBtn->coolDown();
     }
     m_fCDLeft = m_fCoolDown;
+    getOwner()->getUnitLayer()->addSkillCoolDown(this);
     onSkillCast();
 }
 

@@ -273,7 +273,7 @@ void CCSkillButtonBase::onCoolDownDone(CCNode* pNode)
     }
 }
 
-void CCSkillButtonBase::coolDown()
+void CCSkillButtonBase::coolDown(float fFromPercent)
 {
     if (getCoolDown())
     {
@@ -283,13 +283,18 @@ void CCSkillButtonBase::coolDown()
         dynamic_cast<CCSprite*>(m_pDisabledImage)->setOpacity(0x50);
         m_pDisabledImage->runAction(CCFadeTo::create(getCoolDown(), 0xFF));
         //this->getDisabledImage()->runAction()
-
-        m_pPt->runAction(CCSequence::create(CCProgressFromTo::create(getCoolDown(), 0.0f, 100.0f), CCCallFuncN::create(this, callfuncN_selector(CCSkillButtonBase::onCoolDownDone)), NULL));
+        CCProgressFromTo* pPro = CCProgressFromTo::create(getCoolDown() * (100.0 - fFromPercent) / 100.0, fFromPercent, 100.0f);
+        m_pPt->runAction(CCSequence::create(pPro, CCCallFuncN::create(this, callfuncN_selector(CCSkillButtonBase::onCoolDownDone)), NULL));
     }
     else
     {
         onCoolDownDone(this);
     }
+}
+
+float CCSkillButtonBase::getPercentage() const
+{
+    return m_pPt->getPercentage();
 }
 
 bool CCSkillButtonNormalWithInfo::init( const char* pBlinkImage, const char* pMaskImage, float fCoolDown, CCObject* pTarget, SEL_CallFuncN pOnClick, SEL_CallFuncN pOnFinished, int iInfoKey )

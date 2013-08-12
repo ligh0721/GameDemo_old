@@ -854,6 +854,8 @@ protected:
 
 class CActiveSkill;
 
+#include <cocoa/CCDictionary.h>
+
 class CCUnitLayer : public CCLayerColor
 {
 public:
@@ -899,6 +901,10 @@ public:
     void orderUnitToCast(CGameUnit* pTargetUnit); // 以确定存在，且立即执行，无后续逻辑，可以使用指针
 
     virtual void onUnitDie(CGameUnit* pUnit);
+
+    void addSkillCoolDown(CActiveSkill* pActSkill);
+    void skillCoolDownTick(float fDt);
+    float skillCoolDownLeft(int iSkillKey);
     
 protected:
     CUnitGroup m_oArrUnit;
@@ -909,6 +915,7 @@ protected:
     float m_fUnitTickInterval;
     
     int m_iPendingSkillOwner;
+    CCDictionary m_oSkillCD;
     
 };
 

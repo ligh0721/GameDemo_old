@@ -3277,6 +3277,8 @@ void CCUnitLayer::onExit()
 
 void CCUnitLayer::onTickEvent( float fDt )
 {
+    skillCoolDownTick(fDt);
+
     CCArray* pArrUnit = getUnits()->getUnitsArray();
     CCArray* pArrProj = getProjectiles()->getUnitsArray();
     CCArray oArr;
@@ -3498,7 +3500,43 @@ void CCUnitLayer::orderUnitToCast( CGameUnit* pTargetUnit )
 
 void CCUnitLayer::onUnitDie( CGameUnit* pUnit )
 {
+}
 
+void CCUnitLayer::addSkillCoolDown( CActiveSkill* pActSkill )
+{
+    if (!pActSkill->isCoolingDown())
+    {
+        // 如果技能没在CD中，则不接受
+        return;
+    }
+    m_oSkillCD.setObject(pActSkill, pActSkill->getKey());
+}
+
+void CCUnitLayer::skillCoolDownTick( float fDt )
+{
+    CCDictionary* pDict = &m_oSkillCD;
+    CCDictElement* pEl = NULL;
+    CCDICT_FOREACH(pDict, pEl)
+    {
+        CActiveSkill* pAct = dynamic_cast<CActiveSkill*>(pEl->getObject());
+
+        pAct->setCoolDownLeft(pAct->getCoolDownLeft() - fDt);
+        if (!pAct->isCoolingDown())
+        {
+            // 如果技能已经就绪，从字典中删除
+            pDict->removeObjectForElememt(pEl);
+        }
+    }
+}
+
+float CCUnitLayer::skillCoolDownLeft( int iSkillKey )
+{
+    CActiveSkill* pActSkill = dynamic_cast<CActiveSkill*>(m_oSkillCD.objectForKey(iSkillKey));
+    if (!pActSkill)
+    {
+        return 0.0;
+    }
+    return pActSkill->getCoolDownLeft();
 }
 
 const float CCWinUnitLayer::CONST_MIN_MOVE_DELTA = 10.0;
