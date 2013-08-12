@@ -734,7 +734,7 @@ void CUnit::onDie()
     }
 
     oArrCopy.initWithArray(&m_oArrSkill);
-    CCARRAY_FOREACH(&oArrCopy, pObj)
+    CCARRAY_FOREACH_REVERSE(&oArrCopy, pObj)  // 反向删除，为了更好的删除按钮体验
     {
         delSkill(dynamic_cast<CSkill*>(pObj));
     }

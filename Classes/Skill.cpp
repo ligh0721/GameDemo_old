@@ -57,9 +57,9 @@ void CSkill::onSkillDel()
     {
         return;
     }
-    pPanel->pushDelButtonAction(pPanel->getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())));
+    pPanel->pushDelButtonAction(pPanel->getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())), CCButtonPanel::kTopToBottom);
     //pPanel->delButton(pPanel->getButtonIndex(dynamic_cast<CCSkillButtonBase*>(getDisplayBody())));
-    pPanel->clearUpSlot();
+    pPanel->clearUpSlot(CCButtonPanel::kTopToBottom);
 }
 
 void CSkill::onSkillReady()

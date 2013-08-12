@@ -215,6 +215,10 @@ bool CCWHomeSceneLayer::init()
     
     m_iLastNum = -1;
 
+    heroUnit->setMaxHp(5);
+
+    //CCDirector::sharedDirector()->setAnimationInterval(0.1);
+
     return true;
 }
 
@@ -668,7 +672,8 @@ void CCWHomeSceneLayer::onHeroSoulTick( float fDt )
             pBtn = dynamic_cast<CCSkillButtonBase*>(pSkill->getDisplayBody());
             if (pBtn)
             {
-                m_oSkillPanel.pushAddButtonExAction(pBtn);
+                dynamic_cast<CCSkillButtonAdvance*>(pBtn)->m_iUnitKey = m_iHero;
+                m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
             }
         }
 

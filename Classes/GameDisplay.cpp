@@ -753,6 +753,7 @@ void CCButtonPanel::onPrevActEnd( CCNode* pNode )
             delButton(rNode.stDel.pBtn);
             if (rNode.stDel.bClearUp)
             {
+                // 队列前面插入clearUp动作节点
                 m_lstActs.pop_front();
                 m_lstActs.push_front(ACTION_NODE(rNode.stDel.eVer, rNode.stDel.eHor));
                 m_lstActs.push_front(rNode);
