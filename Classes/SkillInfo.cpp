@@ -164,7 +164,7 @@ bool COrgSkillInfo::init()
     //dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
     //iKey = pSm->addSkill(pSkill);
     
-	pSkill = CAttackBuffMakerPas::create(10, iKey, 1, CExtraCoeff(1.5, 0));
+	pSkill = CAttackBuffMakerPas::create(20, iKey, 1, CExtraCoeff(1.5, 0));
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThrowHit1].iIndex = iKey;
     m_mapSkills[kThrowHit1].sName = "击飞";
@@ -250,7 +250,7 @@ bool COrgSkillInfo::init()
     dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
     iKey = pSm->addSkill(pSkill);
 
-    pSkill = CProjectileWaveAct::create(20.0, 500, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kWave1), 600, iKey, 1);
+    pSkill = CProjectileWaveAct::create(20.0, 500, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kWave1), 600, 0, 1);
     dynamic_cast<CProjectileWaveAct*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kShockWave1].iIndex = iKey;
@@ -292,6 +292,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kRunBuff1].iIndex = iKey;
     m_mapSkills[kRunBuff1].sName = "怒火";
     m_mapSkills[kRunBuff1].sDesc = "在一定时间内攻击力加强";
+
 
     return true;
 }

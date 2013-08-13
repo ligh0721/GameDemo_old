@@ -33,7 +33,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     //pEGLView->setFrameSize(512, 384);
 #ifdef WIN32
-    pEGLView->setFrameZoomFactor(0.5);
+    //pEGLView->setFrameZoomFactor(0.5);
+    pEGLView->setFrameZoomFactor(1.0);
 #endif
     
     //pEGLView->setDesignResolutionSize(1024, 768, kResolutionNoBorder);
@@ -76,7 +77,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
 
     // turn on display FPS
-    //pDirector->setDisplayStats(true);
+    pDirector->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);

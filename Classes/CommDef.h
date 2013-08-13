@@ -147,10 +147,12 @@ public: inline virtual void set##funName(const varType& var){ varName = var; }
 #define PTM_RATIO 32
 
 #define M_SKILL_PATH(name)                                      name"/BTN"name".png"
+#define M_SKILL_PAS_PATH(name)                                  name"/PASBTN"name".png"
 #define M_SKILL_DOWN_PATH(name)                                 name"/BTN"name"DOWN.png"
 #define M_SKILL_DIS_PATH(name)                                  name"/DISBTN"name".png"
 #define M_SKILL_ON_PATH(name)                                   name"/BTN"name"ON.png"
-#define M_CREATE_SKILL(name, unit, skill, layer)                       CCSkillButtonAdvance::create(M_SKILL_PATH(name), M_SKILL_DOWN_PATH(name), M_SKILL_DIS_PATH(name), M_SKILL_PATH("white"), "mask/mask.png", (unit), (skill), (layer))
+#define M_CREATE_SKILL(name, unit, skill, layer)                CCSkillButtonAdvance::create(M_SKILL_PATH(name), M_SKILL_DOWN_PATH(name), M_SKILL_DIS_PATH(name), M_SKILL_PATH("white"), "mask/mask.png", (unit), (skill), (layer))
+#define M_CREATE_SKILL_PAS(name, unit, skill, layer)            CCSkillButtonAdvance::create(M_SKILL_PAS_PATH(name), M_SKILL_PAS_PATH(name), M_SKILL_DIS_PATH(name), NULL, NULL, (unit), (skill), (layer))
 
 #define M_RAND_HIT(probability) (rand() % 100 < (probability))
 

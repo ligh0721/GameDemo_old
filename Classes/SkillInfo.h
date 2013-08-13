@@ -33,7 +33,7 @@ public:
         kFastStrikeBack1,
         kKnockBack1,
 		kAddDamage1,
-        kRunBuff1
+        kRunBuff1,
     };
 
     struct SKILL_INFO

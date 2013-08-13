@@ -9,14 +9,11 @@ def bmp2png(dir, test):
     fs.sort()
     c = 0
     for f in fs:
-        f = f.lower()
-        if f[-4:] != '.bmp':
+        if f[-4:].lower() != '.bmp':
             continue
-            
-        fr = f.replace('.bmp', '.png')
     
         old = '%s/%s' % (dir, f)
-        new = '%s/%s' % (dir, fr)
+        new = old[0:-4] + '.png'
         
         if test:
             print '%s -> %s' % (old, new)

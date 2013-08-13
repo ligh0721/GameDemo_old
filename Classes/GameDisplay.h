@@ -171,6 +171,8 @@ public:
     virtual void setPressed(CCSpriteFrame* pFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(M_SKILL_PATH("cancel")));
     virtual bool isPressed() const;
 
+    virtual void onExit();
+
 public:
     int m_iUnitKey;
     int m_iSkillKey;

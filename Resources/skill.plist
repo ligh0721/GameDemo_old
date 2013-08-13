@@ -4,7 +4,189 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>build/BTNbuild.png</key>
+            <key>Critical/BTNCritical.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,464},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>Critical/BTNCriticalDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{324,882},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>Critical/BTNCriticalON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,398},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>Critical/Critical.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,332},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>Critical/DISBTNCritical.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,266},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>Critical/PASBTNCritical.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,200},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>FastStrikeBack/BTNFastStrikeBack.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{926,134},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>FastStrikeBack/BTNFastStrikeBackDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{324,820},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>FastStrikeBack/BTNFastStrikeBackON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{860,134},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>FastStrikeBack/DISBTNFastStrikeBack.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{794,134},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>FastStrikeBack/FastStrikeBack.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{728,134},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>FastStrikeBack/PASBTNFastStrikeBack.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{662,134},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>JumpChop/BTNJumpChop.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{398,134},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>JumpChop/BTNJumpChopDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{324,696},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>JumpChop/BTNJumpChopON.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{332,134},{64,64}}</string>
@@ -17,20 +199,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>build/BTNbuildDOWN.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{324,262},{60,60}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{60,60}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>build/BTNbuildON.png</key>
+            <key>JumpChop/DISBTNJumpChop.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{266,134},{64,64}}</string>
@@ -43,7 +212,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>build/DISBTNbuild.png</key>
+            <key>JumpChop/JumpChop.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{200,134},{64,64}}</string>
@@ -56,7 +225,137 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>cancel/BTNcancel.png</key>
+            <key>JumpChop/PASBTNJumpChop.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,926},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>KnockBack/BTNKnockBack.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,860},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>KnockBack/BTNKnockBackDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{266,634},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>KnockBack/BTNKnockBackON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,794},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>KnockBack/DISBTNKnockBack.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,728},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>KnockBack/KnockBack.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,662},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>KnockBack/PASBTNKnockBack.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,596},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>LightningChain/BTNLightningChain.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,530},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>LightningChain/BTNLightningChainDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{266,572},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>LightningChain/BTNLightningChainON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,464},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>LightningChain/DISBTNLightningChain.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{134,398},{64,64}}</string>
@@ -69,20 +368,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>cancel/BTNcancelDOWN.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{262,262},{60,60}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{60,60}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>cancel/BTNcancelON.png</key>
+            <key>LightningChain/LightningChain.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{134,332},{64,64}}</string>
@@ -95,7 +381,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>cancel/DISBTNcancel.png</key>
+            <key>LightningChain/PASBTNLightningChain.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{134,266},{64,64}}</string>
@@ -108,33 +394,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>jt/BTNjt.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{134,200},{64,64}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{64,64}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>jt/BTNjtDOWN.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{200,262},{60,60}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{60,60}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>jt/BTNjtON.png</key>
+            <key>ShockWave/BTNShockWave.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{134,134},{64,64}}</string>
@@ -147,49 +407,10 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>jt/DISBTNjt.png</key>
+            <key>ShockWave/BTNShockWaveDOWN.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{398,68},{64,64}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{64,64}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>mask/mask.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{332,68},{64,64}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{64,64}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>skill1/BTNskill1.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{266,68},{64,64}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{64,64}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>skill1/BTNskill1DOWN.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{448,258},{60,60}}</string>
+                <string>{{266,510},{60,60}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -199,10 +420,10 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill1/BTNskill1ON.png</key>
+            <key>ShockWave/BTNShockWaveON.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{200,68},{64,64}}</string>
+                <string>{{926,68},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -212,10 +433,10 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill1/DISBTNskill1.png</key>
+            <key>ShockWave/DISBTNShockWave.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{134,68},{64,64}}</string>
+                <string>{{860,68},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -225,7 +446,111 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill2/BTNskill2.png</key>
+            <key>ShockWave/PASBTNShockWave.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{794,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>ShockWave/ShockWave.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{728,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SlowDown/BTNSlowDown.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,728},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SlowDown/BTNSlowDownDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{266,200},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SlowDown/BTNSlowDownON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,662},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SlowDown/DISBTNSlowDown.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,596},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SlowDown/SlowDown.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,464},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SlowDown/pasbtnslowdown.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,530},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SpeedUp/BTNSpeedUp.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{68,398},{64,64}}</string>
@@ -238,10 +563,10 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill2/BTNskill2DOWN.png</key>
+            <key>SpeedUp/BTNSpeedUpDOWN.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{386,258},{60,60}}</string>
+                <string>{{262,914},{60,60}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -251,7 +576,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill2/BTNskill2ON.png</key>
+            <key>SpeedUp/BTNSpeedUpON.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{68,332},{64,64}}</string>
@@ -264,7 +589,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill2/DISBTNskill2.png</key>
+            <key>SpeedUp/DISBTNSpeedUp.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{68,266},{64,64}}</string>
@@ -277,7 +602,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill3/BTNskill3.png</key>
+            <key>SpeedUp/PASBTNSpeedUp.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{68,200},{64,64}}</string>
@@ -290,20 +615,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill3/BTNskill3DOWN.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{324,200},{60,60}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{60,60}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>skill3/BTNskill3ON.png</key>
+            <key>SpeedUp/SpeedUp.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{68,134},{64,64}}</string>
@@ -316,10 +628,10 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill3/DISBTNskill3.png</key>
+            <key>SwordStorm/BTNSwordStorm.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{68,68},{64,64}}</string>
+                <string>{{794,2},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -329,7 +641,98 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill4/BTNskill4.png</key>
+            <key>SwordStorm/BTNSwordStormDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{262,790},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SwordStorm/BTNSwordStormON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{728,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SwordStorm/DISBTNSwordStorm.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{662,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SwordStorm/PASBTNSwordStorm.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{596,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>SwordStorm/SwordStorm.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{530,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>ThrowHit/BTNThrowHit.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{464,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>ThrowHit/BTNThrowHitDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{262,728},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>ThrowHit/BTNThrowHitON.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{398,2},{64,64}}</string>
@@ -342,20 +745,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill4/BTNskill4DOWN.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{262,200},{60,60}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{60,60}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>skill4/BTNskill4ON.png</key>
+            <key>ThrowHit/DISBTNThrowHit.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{332,2},{64,64}}</string>
@@ -368,7 +758,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>skill4/DISBTNskill4.png</key>
+            <key>ThrowHit/PASBTNThrowHit.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{266,2},{64,64}}</string>
@@ -381,7 +771,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>study/BTNstudy.png</key>
+            <key>ThrowHit/ThrowHit.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{200,2},{64,64}}</string>
@@ -394,20 +784,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>study/BTNstudyDOWN.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{200,200},{60,60}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{60,60}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>study/BTNstudyON.png</key>
+            <key>ThunderClap/BTNThunderClap.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{134,2},{64,64}}</string>
@@ -420,7 +797,20 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>study/DISBTNstudy.png</key>
+            <key>ThunderClap/BTNThunderClapDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,914},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>ThunderClap/BTNThunderClapON.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{68,2},{64,64}}</string>
@@ -433,7 +823,85 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>transp/BTNtransp.png</key>
+            <key>ThunderClap/DISBTNThunderClap.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,926},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>ThunderClap/PASBTNThunderClap.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,860},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>ThunderClap/ThunderClap.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,794},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>Vamprie/BTNVamprie.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,530},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>Vamprie/BTNVamprieDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,790},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>Vamprie/BTNVamprieON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,464},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>Vamprie/DISBTNVamprie.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,398},{64,64}}</string>
@@ -446,20 +914,7 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>transp/BTNtranspDOWN.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{398,196},{60,60}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{60,60}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>transp/BTNtranspON.png</key>
+            <key>Vamprie/PASBTNVamprie.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,332},{64,64}}</string>
@@ -472,10 +927,439 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>transp/DISBTNtransp.png</key>
+            <key>Vamprie/Vamprie.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,266},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>cancel/BTNcancel.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,662},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>cancel/BTNcancelDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{324,944},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>cancel/BTNcancelON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,596},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>cancel/DISBTNcancel.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,530},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>jt/BTNjt.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{596,134},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>jt/BTNjtDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{324,758},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>jt/BTNjtON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{530,134},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>jt/DISBTNjt.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{464,134},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>mask/mask.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,200},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill1/BTNskill1.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{662,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill1/BTNskill1DOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{266,448},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill1/BTNskill1ON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{596,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill1/DISBTNskill1.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{530,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill2/BTNskill2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{464,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill2/BTNskill2DOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{266,386},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill2/BTNskill2ON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{398,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill2/DISBTNskill2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{332,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill3/BTNskill3.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{266,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill3/BTNskill3DOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{266,324},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill3/BTNskill3ON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill3/DISBTNskill3.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill4/BTNskill4.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,926},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill4/BTNskill4DOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{266,262},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill4/BTNskill4ON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,860},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>skill4/DISBTNskill4.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,794},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>study/BTNstudy.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>study/BTNstudyDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{262,852},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>study/BTNstudyON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{926,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>study/DISBTNstudy.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{860,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>transp/BTNtransp.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,728},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>transp/BTNtranspDOWN.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{200,852},{60,60}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,2},{60,60}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>transp/BTNtranspON.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,662},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>transp/DISBTNtransp.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,596},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -514,7 +1398,7 @@
             <key>white/BTNwhiteDOWN.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{398,134},{60,60}}</string>
+                <string>{{200,728},{60,60}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -558,9 +1442,9 @@
             <key>realTextureFileName</key>
             <string>skill.png</string>
             <key>size</key>
-            <string>{512,512}</string>
+            <string>{1024,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:04936001b3dca5456b4aebc56e2519b4$</string>
+            <string>$TexturePacker:SmartUpdate:6a22a80d135aa4811da694c597095145$</string>
             <key>textureFileName</key>
             <string>skill.png</string>
         </dict>

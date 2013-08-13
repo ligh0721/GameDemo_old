@@ -134,39 +134,52 @@ bool CCWHomeSceneLayer::init()
     m_oGameCtrlLayer.addChild(&m_oSkillPanel);
     m_oSkillPanel.setPosition(ccp(m_oHeroHead.getPositionX(), m_oHeroHead.getPositionY() - m_oSkillPanel.getContentSize().height * 0.5 - 50));
 
-    CActiveSkill* pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSpeedUp1));
-    pSkill->setCastAniIndex(CGameUnit::kAnimationAct3);
+    CActiveSkill* pSkill = NULL;
+    CPassiveSkill* pSkillPas = NULL;
+
+    // 初始化技能1
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSwordStorm1));
+    //pSkill->setCastAniIndex(CGameUnit::kAnimationAct3);
     heroUnit->addSkill(pSkill);
-    CCSkillButtonAdvance* pBtn;
-    pBtn = M_CREATE_SKILL("skill2", heroUnit->getKey(), pSkill->getKey(), this);
+    CCSkillButtonBase* pBtn;
+    pBtn = M_CREATE_SKILL("SwordStorm", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
+    // 初始化技能2
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kThunderClap1));
     pSkill->setCastAniIndex(CGameUnit::kAnimationAct5);
     heroUnit->addSkill(pSkill);
-    pBtn = M_CREATE_SKILL("skill1", heroUnit->getKey(), pSkill->getKey(), this);
+    pBtn = M_CREATE_SKILL("ThunderClap", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
     
+    // 初始化技能3
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kFastStrikeBack1));
     pSkill->setCastAniIndex(CGameUnit::kAnimationAct3);
     heroUnit->addSkill(pSkill);
-    pBtn = M_CREATE_SKILL("skill3", heroUnit->getKey(), pSkill->getKey(), this);
+    pBtn = M_CREATE_SKILL("FastStrikeBack", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
+    // 初始化技能4
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kShockWave1));
     pSkill->setCastAniIndex(CGameUnit::kAnimationAct2);
     dynamic_cast<CProjectileWaveAct*>(pSkill)->setProjectileBirthOffset(ccp(0, 25));
     
-    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kJumpChop1));
+    //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kJumpChop1));
 	//pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kAddDamage1));
     
     //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kRunBuff1));
     //pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
     heroUnit->addSkill(pSkill);
-    pBtn = M_CREATE_SKILL("skill4", heroUnit->getKey(), pSkill->getKey(), this);
+    pBtn = M_CREATE_SKILL("ShockWave", heroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
-    m_oBuildBtn.init(M_SKILL_PATH("build"), M_SKILL_DOWN_PATH("build"), M_SKILL_DIS_PATH("build"), M_SKILL_PATH("white"), "mask/mask.png", 15, this, callfuncN_selector(CCWHomeSceneLayer::onBtnBuildClick), NULL);
+    // 初始化技能5
+    pSkillPas = dynamic_cast<CPassiveSkill*>(pOs->skill(COrgSkillInfo::kThrowHit1));
+    heroUnit->addSkill(pSkillPas);
+    pBtn = M_CREATE_SKILL_PAS("ThrowHit", heroUnit->getKey(), pSkillPas->getKey(), this);
+    m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
+
+    //m_oBuildBtn.init(M_SKILL_PATH("build"), M_SKILL_DOWN_PATH("build"), M_SKILL_DIS_PATH("build"), M_SKILL_PATH("white"), "mask/mask.png", 15, this, callfuncN_selector(CCWHomeSceneLayer::onBtnBuildClick), NULL);
     m_bCanBuild = false;
     //m_oSkillPanel.pushAddButtonExAction(&m_oBuildBtn, CCButtonPanel::kTopToBottom);
     //m_oSkillPanel.pushAddButtonAction(&m_oBuildBtn, 1);

@@ -277,14 +277,23 @@ void CCSkillButtonBase::coolDown(float fFromPercent)
 {
     if (getCoolDown())
     {
+        float fCoolDownReal = getCoolDown() * (100.0 - fFromPercent) / 100.0;
         m_pMask->setVisible(true);
         m_pPt->setVisible(true);
         this->setEnabled(false);
-        dynamic_cast<CCSprite*>(m_pDisabledImage)->setOpacity(0x50);
-        m_pDisabledImage->runAction(CCFadeTo::create(getCoolDown(), 0xFF));
-        //this->getDisabledImage()->runAction()
-        CCProgressFromTo* pPro = CCProgressFromTo::create(getCoolDown() * (100.0 - fFromPercent) / 100.0, fFromPercent, 100.0f);
-        m_pPt->runAction(CCSequence::create(pPro, CCCallFuncN::create(this, callfuncN_selector(CCSkillButtonBase::onCoolDownDone)), NULL));
+        dynamic_cast<CCSprite*>(m_pDisabledImage)->setOpacity(0x50 + (0xFF - 0x50) * fFromPercent / 100.0);
+        m_pDisabledImage->runAction(CCFadeTo::create(fCoolDownReal, 0xFF));
+        
+        m_pPt->setOpacity(0x7F + (0xFF - 0x7F) * fFromPercent / 100.0);
+        CCProgressFromTo* pPro = CCProgressFromTo::create(fCoolDownReal, fFromPercent, 100.0f);
+        
+        //m_pPt->runAction();
+
+        
+        m_pPt->runAction(CCSpawn::createWithTwoActions(
+            CCFadeTo::create(fCoolDownReal, 0xFF),
+            CCSequence::create(pPro, CCCallFuncN::create(this, callfuncN_selector(CCSkillButtonBase::onCoolDownDone)), NULL)
+            ));
     }
     else
     {
@@ -397,6 +406,20 @@ void CCSkillButtonAdvance::onSkillClick( CCNode* pNode )
         return;
     }
     M_DEF_FC(pFc);
+
+    // 检查其他按钮，如果有按下状态，需进行复位
+    CCArray* pBtns = getParent()->getChildren();
+    CCObject* pObj = NULL;
+    CCSkillButtonAdvance* pBtnAdv = NULL;
+    CCARRAY_FOREACH(pBtns, pObj)
+    {
+        pBtnAdv = dynamic_cast<CCSkillButtonAdvance*>(pObj);
+        if (pBtnAdv && pBtnAdv->isPressed() && pBtnAdv != this)
+        {
+            pBtnAdv->setPressed(NULL);
+        }
+    }
+
     switch (pAct->getCastTargetType())
     {
     case CActiveSkill::kPointTarget:
@@ -404,11 +427,11 @@ void CCSkillButtonAdvance::onSkillClick( CCNode* pNode )
         if (isPressed())
         {
             // 此次为取消操作
-            pUnit->getUnitLayer()->endOrderUnitToCast();
+            getUnitLayer()->endOrderUnitToCast();
         }
         else
         {
-            pUnit->getUnitLayer()->preOrderUnitToCast(m_iUnitKey, m_iSkillKey);
+            getUnitLayer()->preOrderUnitToCast(m_iUnitKey, m_iSkillKey);
             setPressed();
         }
         
@@ -461,6 +484,15 @@ void CCSkillButtonAdvance::setPressed( CCSpriteFrame* pFrame )
 bool CCSkillButtonAdvance::isPressed() const
 {
     return m_bPressed;
+}
+
+void CCSkillButtonAdvance::onExit()
+{
+    if (isPressed())
+    {
+        getUnitLayer()->endOrderUnitToCast();
+    }
+    CCSkillButtonBase::onExit();
 }
 
 CCButtonPanel::CCButtonPanel()
