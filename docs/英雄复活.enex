@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE en-export SYSTEM "http://xml.evernote.com/pub/evernote-export2.dtd">
+<en-export export-date="20130813T212742Z" application="Evernote/Windows" version="4.x">
+<note><title>英雄复活</title><content><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+
+<en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
+英雄死亡时onDie由Layer的onUnitDie代理。首先保存英雄的当前状态，当英雄读秒结束复活时，将之前的状态复原。
+<div>英雄死亡时会析构英雄对象，尽管英雄以后是要复活的。</div><div>复活的英雄实质上是全新创建的对象，只是属性状态跟以前一样而已。</div><div>虽然英雄死亡会触发析构，但是由于在onDie环节已经将skill列表做了备份，每个技能的引用计数变为了2。所以英雄以及skill了列表在析构的时候，列表中的技能不会被析构。同理，技能按钮也是如此。</div><div>所以复活之后技能cd会不会重新计算的问题，可以较为方便的解决。</div><div><br/></div></en-note>]]></content><created>20130812T091753Z</created><updated>20130812T092502Z</updated></note></en-export>

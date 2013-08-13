@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE en-export SYSTEM "http://xml.evernote.com/pub/evernote-export2.dtd">
+<en-export export-date="20130813T212741Z" application="Evernote/Windows" version="4.x">
+<note><title>ButtonPanel</title><content><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+
+<en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
+按钮的Index是从左下角开始向右上编号的，这是固定不变的。
+<div>pushDelButtonAction()传入的Index是删除之前的索引，函数内部会根据索引确定按钮的指针，传入的对齐参数是针对clearUp(重排按钮)参数而言的。</div><div>如果按照从外向内删除按钮，每次删除将无需整理，隐刺这样删除按钮整体速度会很快。</div><div><br/></div></en-note>]]></content><created>20130812T070031Z</created><updated>20130812T073507Z</updated></note></en-export>
