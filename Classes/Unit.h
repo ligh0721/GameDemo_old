@@ -470,7 +470,7 @@ class CGameUnit;
 class CUnitEventAdapter
 {
 public:
-    virtual ~CUnitEventAdapter() = 0 {}
+    virtual ~CUnitEventAdapter() {};
 
     inline virtual void onUnitAttackTarget(CGameUnit* pUnit, CAttackData* pAttack, CUnit* pTarget) {}
     inline virtual CAttackData* onUnitAttacked(CGameUnit* pUnit, CAttackData* pAttack, CUnit* pSource) { return pAttack; }
