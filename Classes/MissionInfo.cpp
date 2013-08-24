@@ -345,6 +345,16 @@ int CGameMission::roundCount() const
     return (int)m_vecRounds.size();
 }
 
+bool CGameMission::isRoundEnd() const
+{
+    return m_iRoundPos >= (int)m_vecRounds.size();
+}
+
+bool CGameMission::isLastRound() const
+{
+    return m_iRoundPos == (int)m_vecRounds.size() - 1;
+}
+
 bool CDemoMission::init()
 {
     
@@ -395,14 +405,20 @@ CGameMission* CDemoMission::mission01()
     iRound = oMission.addNewRound();
     oRush.init(aiPath[rand() % CONST_MAX_PATH]);
     oRush.addUnit(kMalik, 1, 0);
-    //oRush.addUnit(kMalik, 4, 2);
+    oRush.addUnit(kMalik, 10, 3);
     //oRush.addUnit(kMagnus, 1, 3);
     oMission.addRush(iRound, oRush);
 
     iRound = oMission.addNewRound();
     oRush.init(aiPath[rand() % CONST_MAX_PATH]);
     oRush.addUnit(kMagnus, 1, 0);
-    oRush.addUnit(kMagnus, 4, 2);
+    oRush.addUnit(kMagnus, 5, 3);
+    oMission.addRush(iRound, oRush);
+
+    iRound = oMission.addNewRound();
+    oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+    oRush.addUnit(kJt, 1, 0);
+    //oRush.addUnit(kJt, 4, 8);
     oMission.addRush(iRound, oRush);
     
     /*

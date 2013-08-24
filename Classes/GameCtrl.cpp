@@ -4,8 +4,8 @@
 #include "UnitInfo.h"
 #include "SkillInfo.h"
 #include "WHomeScene.h"
-#include "UnitEditorScene.h"
 #include "DemoScene.h"
+#include "UnitEditorScene.h"
 
 
 CGameManager::CGameManager()
@@ -26,7 +26,9 @@ bool CGameManager::init()
 
     m_eCmdRecv = kCmdNoting;
     M_DEF_DR(pDr);
+#if defined QTPROJ
     pDr->getScheduler()->scheduleSelector(schedule_selector(CGameManager::cmdRecv), this, 0.1, false);
+#endif
 
     return true;
 }

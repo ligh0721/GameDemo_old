@@ -35,7 +35,7 @@ static CUnitPath g_oPath;
 bool CCHomeSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
-    return true;
+
     //setUnitTickInterval(0.1);
     CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
 
@@ -44,8 +44,10 @@ bool CCHomeSceneLayer::init()
     M_DEF_SM(pSm); // 定义技能管理器
     M_DEF_GM(pGm); // 定义游戏管理器
     M_DEF_OS(pOs);
+	
     pFc->addSpriteFramesWithFile("background.plist");
     pFc->addSpriteFramesWithFile("UI.plist");
+
     //CCSprite* pSprite = CCSprite::createWithSpriteFrameName("kr/LevelDemo.png");
     CCSprite* pSprite = CCSprite::create("Home.png");
     //pSprite->setScale(0.5);

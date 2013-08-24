@@ -17,14 +17,6 @@ public:
     virtual void onLevelChange(CLevelExp* pLevel, int32_t iChanged) = 0; // @override
 };
 
-class CUnitAi
-{
-public:
-    virtual void onDamaged(CUnit* pUnit, CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);               // 攻击命中时，受害者触发， @override
-    virtual void onDie(CUnit* pUnit); // @override
-    virtual void onTick(CUnit* pUnit, float fDt); // @override
-
-};
 
 // 等级经验值，赋予对象等级经验值特性
 // 需要覆盖 updateMaxExp，提供等级变化时的最大经验值变更公式
@@ -352,8 +344,6 @@ public:
     virtual void onHpChange(float fChanged);
     virtual void onTick(float fDt);
     virtual void onDestroyProjectile(CCProjectileWithAttackData* pProjectile); // 攻击数据消除时会触发，通常由投射物携带攻击数据，二者生存期一致
-
-    void setAi(CUnitAi* pAi);
     
     int getKey() const;
     
@@ -445,7 +435,6 @@ public:
     
 	CUnitPackage* m_pUnitPackage;
 
-    CUnitAi* m_pAi;
 };
 
 class CGameUnit;
@@ -476,6 +465,25 @@ class CUnitInfo;
 class CCUnitLayer;
 class CUnitPath;
 class CActiveSkill;
+class CGameUnit;
+
+class CUnitEventAdapter
+{
+public:
+    virtual ~CUnitEventAdapter() = 0 {}
+
+    inline virtual void onUnitAttackTarget(CGameUnit* pUnit, CAttackData* pAttack, CUnit* pTarget) {}
+    inline virtual CAttackData* onUnitAttacked(CGameUnit* pUnit, CAttackData* pAttack, CUnit* pSource) { return pAttack; }
+    inline virtual void onUnitDamaged(CGameUnit* pUnit, CAttackData* pAttack, CUnit* pSource) {}
+    inline virtual void onUnitDamageTarget(CGameUnit* pUnit, float fDamage, CUnit* pTarget) {}
+    inline virtual void onUnitHpChange(CGameUnit* pUnit, float fChanged) {}
+    inline virtual void onUnitRevive(CGameUnit* pUnit) {}
+    inline virtual void onUnitDie(CGameUnit* pUnit) {}
+    inline virtual void onUnitTick(CGameUnit* pUnit, float fDt) {}
+    inline virtual void onUnitDestroyProjectile(CGameUnit* pUnit, CCProjectileWithAttackData* pProjectile) {}
+    inline virtual void onUnitLevelChange(CGameUnit* pUnit, int iChanged) {}
+
+};
 
 class CGameUnit : public CUnit, public CUnitForce, public CLevelExp
 {
@@ -659,9 +667,16 @@ public:
     virtual bool isDoingAnd(uint32_t dwMask) const;
     virtual bool isDoingNothing() const;
     
-    virtual void onTick(float fDt);
+    virtual void onAttackTarget(CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask);          // 攻击发出时，攻击者触发
+    virtual CAttackData* onAttacked(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);      // 攻击抵达时，受害者触发
+    virtual void onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);               // 攻击命中时，受害者触发
+    virtual void onDamageTarget(float fDamage, CUnit* pTarget, uint32_t dwTriggerMask);                 // 攻击命中时，攻击者触发
+    virtual void onRevive();
     virtual void onDie();
-    virtual void onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask);
+    virtual void onHpChange(float fChanged);
+    virtual void onTick(float fDt);
+    virtual void onDestroyProjectile(CCProjectileWithAttackData* pProjectile); // 攻击数据消除时会触发，通常由投射物携带攻击数据，二者生存期一致
+    virtual void onLevelChange(int32_t iChanged);
     
     virtual CCGameUnitSprite* getSprite();
     virtual void setPosition(const CCPoint& roPos);
@@ -680,7 +695,10 @@ public:
     M_SYNTHESIZE(int, m_iRewardExp, RewardExp);
     virtual void setForceResource(CForceResouce* pRes);
     virtual CForceResouce* getForceResource();
-    M_SYNTHESIZE(CCUnitLayer*, m_pUnitLayer, UnitLayer);
+    virtual CCUnitLayer* getUnitLayer() const;
+    virtual void setUnitLayer(CCUnitLayer* pUnitLayer);
+    M_SYNTHESIZE(CUnitEventAdapter*, m_pAi, Ai);
+    M_SYNTHESIZE(CUnitEventAdapter*, m_pEventAdapter, EventAdapter);
 	M_SYNTHESIZE(uint32_t, m_dwStatus, Status);
 	CUnitPath* getMovePath();
 	const CCPoint& getLastMoveToTarget();
@@ -732,6 +750,8 @@ protected:
     float m_fPathBufArrive;
 
     int m_iSuspendRef;
+
+    CCUnitLayer* m_pUnitLayer;
 };
 
 class CProjectile : public CGameUnit
@@ -856,7 +876,7 @@ class CActiveSkill;
 
 #include <cocoa/CCDictionary.h>
 
-class CCUnitLayer : public CCLayerColor
+class CCUnitLayer : public CCLayerColor, public CUnitEventAdapter
 {
 public:
     enum TOUCH_ACTION_INDEX
@@ -899,8 +919,6 @@ public:
     void endOrderUnitToCast();
     void orderUnitToCast(const CCPoint& roTargetPos);
     void orderUnitToCast(CGameUnit* pTargetUnit); // 以确定存在，且立即执行，无后续逻辑，可以使用指针
-
-    virtual void onUnitDie(CGameUnit* pUnit);
 
     void addSkillCoolDown(CActiveSkill* pActSkill);
     void skillCoolDownTick(float fDt);
@@ -1002,10 +1020,10 @@ public:
 class CUnitInfo
 {
 public:
-    typedef CInitArray<CGameUnit::ANIMATION_INDEX> ARR_ATTACK_ANI;
+    typedef CInitArray<CGameUnit::ANIMATION_INDEX, int> ARR_ATTACK_ANI;
     typedef CInitArray<const char*> ARR_ANI_INFO_NAME;
-    typedef CInitArray<double> ARR_ANI_INFO_DELAY;
-    typedef CInitArray<double> ARR_ANI_INFO_EFFECT;
+    typedef CInitArray<float, double> ARR_ANI_INFO_DELAY;
+    typedef CInitArray<float, double> ARR_ANI_INFO_EFFECT;
     
 public:
     CUnitInfo(

@@ -71,7 +71,7 @@ bool CCWHomeSceneLayer::init()
     m_oUipm.initWithFile("heroes.uip");
     // demo code
     M_DEF_UM(pUm);
-    CGameUnit* midTower= pUm->unitByInfo(COrgUnitInfo::kArcane);
+    CGameUnit* midTower = pUm->unitByInfo(COrgUnitInfo::kArcane);
     addUnit(midTower);
     midTower->setPosition(ccp(1804,793));
     midTower->setForceByIndex(2);
@@ -82,7 +82,7 @@ bool CCWHomeSceneLayer::init()
     midTower->addSkill(pOs->skill(COrgSkillInfo::kSpeedAura1));
     midTower->setForceResource(&m_oFr);
 
-    midTower= pUm->unitByInfo(COrgUnitInfo::kTesla);
+    midTower = pUm->unitByInfo(COrgUnitInfo::kTesla);
     addUnit(midTower);
     midTower->setPosition(ccp(1704, 793));
     midTower->setForceByIndex(2);
@@ -93,20 +93,20 @@ bool CCWHomeSceneLayer::init()
     midTower->setForceResource(&m_oFr);
 
 
-    CGameUnit* heroUnit=getHeroUnit();
+    CGameUnit* pHeroUnit = getHeroUnit();
 
-    //addUnit(heroUnit);
-    heroUnit->setPosition(ccp(804,793));
-    heroUnit->setForceByIndex(2);
-    heroUnit->setAlly(1<<2);
-    heroUnit->addSkill(CStatusShowPas::create());
-    //heroUnit->addSkill(pOs->skill(COrgSkillInfo::kHero1));
-    
-    heroUnit->setLevelUpdate(&g_oDemoUpdate);
-    heroUnit->setMaxLevel(100);
-    heroUnit->setForceResource(&m_oFr);
+    //addUnit(pHeroUnit);
+    pHeroUnit->setPosition(ccp(804,793));
+    pHeroUnit->setForceByIndex(2);
+    pHeroUnit->setAlly(1<<2);
+    pHeroUnit->addSkill(CStatusShowPas::create());
+    //pHeroUnit->addSkill(pOs->skill(COrgSkillInfo::kHero1));
 
-    m_oGameCtrlLayer.initWithColor(ccc4(0,0,0,0));
+    pHeroUnit->setLevelUpdate(&g_oDemoUpdate);
+    pHeroUnit->setMaxLevel(100);
+    pHeroUnit->setForceResource(&m_oFr);
+
+    m_oGameCtrlLayer.initWithColor(ccc4(0, 0, 0, 0));
     m_oMenuCtrl.init();
     m_oGameCtrlLayer.addChild(&m_oMenuCtrl);
     m_oMenuCtrl.setPosition(CCPointZero);
@@ -140,49 +140,64 @@ bool CCWHomeSceneLayer::init()
     // 初始化技能1
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSwordStorm1));
     //pSkill->setCastAniIndex(CGameUnit::kAnimationAct3);
-    heroUnit->addSkill(pSkill);
+    pHeroUnit->addSkill(pSkill);
     CCSkillButtonBase* pBtn;
-    pBtn = M_CREATE_SKILL("SwordStorm", heroUnit->getKey(), pSkill->getKey(), this);
+    pBtn = M_CREATE_SKILL("SwordStorm", pHeroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
     // 初始化技能2
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kThunderClap1));
     pSkill->setCastAniIndex(CGameUnit::kAnimationAct5);
-    heroUnit->addSkill(pSkill);
-    pBtn = M_CREATE_SKILL("ThunderClap", heroUnit->getKey(), pSkill->getKey(), this);
+    pHeroUnit->addSkill(pSkill);
+    pBtn = M_CREATE_SKILL("ThunderClap", pHeroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
-    
+
     // 初始化技能3
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kFastStrikeBack1));
     pSkill->setCastAniIndex(CGameUnit::kAnimationAct3);
-    heroUnit->addSkill(pSkill);
-    pBtn = M_CREATE_SKILL("FastStrikeBack", heroUnit->getKey(), pSkill->getKey(), this);
+    pHeroUnit->addSkill(pSkill);
+    pBtn = M_CREATE_SKILL("FastStrikeBack", pHeroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
     // 初始化技能4
     pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kShockWave1));
     pSkill->setCastAniIndex(CGameUnit::kAnimationAct2);
     dynamic_cast<CProjectileWaveAct*>(pSkill)->setProjectileBirthOffset(ccp(0, 25));
-    
+
     //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kJumpChop1));
-	//pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kAddDamage1));
-    
+    //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kAddDamage1));
+
     //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kRunBuff1));
     //pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
-    heroUnit->addSkill(pSkill);
-    pBtn = M_CREATE_SKILL("ShockWave", heroUnit->getKey(), pSkill->getKey(), this);
+    pHeroUnit->addSkill(pSkill);
+    pBtn = M_CREATE_SKILL("ShockWave", pHeroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
+    /*
     // 初始化技能5
     pSkillPas = dynamic_cast<CPassiveSkill*>(pOs->skill(COrgSkillInfo::kThrowHit1));
-    heroUnit->addSkill(pSkillPas);
-    pBtn = M_CREATE_SKILL_PAS("ThrowHit", heroUnit->getKey(), pSkillPas->getKey(), this);
+    pHeroUnit->addSkill(pSkillPas);
+    pBtn = M_CREATE_SKILL_PAS("ThrowHit", pHeroUnit->getKey(), pSkillPas->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
+    */
+
+    pSkillPas = dynamic_cast<CPassiveSkill*>(pOs->skill(COrgSkillInfo::kCritical2));
+    pHeroUnit->addSkill(pSkillPas);
+
+    pSkillPas = dynamic_cast<CPassiveSkill*>(pOs->skill(COrgSkillInfo::kKnockBack1));
+    pHeroUnit->addSkill(pSkillPas);
+
+    pSkillPas = dynamic_cast<CPassiveSkill*>(pOs->skill(COrgSkillInfo::kDoubleAttack1));
+    pHeroUnit->addSkill(pSkillPas);
+
+    pSkillPas = dynamic_cast<CPassiveSkill*>(pOs->skill(COrgSkillInfo::kHero1));
+    pHeroUnit->addSkill(pSkillPas);
 
     //m_oBuildBtn.init(M_SKILL_PATH("build"), M_SKILL_DOWN_PATH("build"), M_SKILL_DIS_PATH("build"), M_SKILL_PATH("white"), "mask/mask.png", 15, this, callfuncN_selector(CCWHomeSceneLayer::onBtnBuildClick), NULL);
     m_bCanBuild = false;
     //m_oSkillPanel.pushAddButtonExAction(&m_oBuildBtn, CCButtonPanel::kTopToBottom);
     //m_oSkillPanel.pushAddButtonAction(&m_oBuildBtn, 1);
+
 
     // for test
     //m_oSkillPanel.pushDelButtonAction(0, CCButtonPanel::kTopToBottom, CCButtonPanel::kLeftToRight, false);
@@ -212,8 +227,127 @@ bool CCWHomeSceneLayer::init()
     m_oLeftToRevive.setPosition(ccp(oSz.width * 0.8, oSz.height * 0.9));
     m_oLeftToRevive.setVisible(false);
 
-    heroUnit->setHp(heroUnit->getMaxHp());
+    pHeroUnit->setHp(pHeroUnit->getMaxHp());
 
+
+    // 初始化目标信息面板
+    m_oTargetInfoLayer.initWithColor(ccc4(140, 70, 35, 255));
+    m_oGameCtrlLayer.addChild(&m_oTargetInfoLayer);
+    m_oTargetInfoLayer.setContentSize(CCSizeMake(700, 48));
+    m_oTargetInfoLayer.setPosition(ccp(5, 5));
+
+    CCSprite* pSprite = CCSprite::createWithSpriteFrameName("pos.png");
+    m_oGameCtrlLayer.addChild(pSprite);
+    pSprite->setPosition(ccp(5, 5));
+
+    // 等级
+    float fW0 = 0;
+    float fW1 = 32;
+    float fBaseX = M_FIX_BASE_X(fW0, fW1, 10);
+    pSprite = CCSprite::createWithSpriteFrameName("ph32.png");
+    m_oTargetInfoLayer.addChild(pSprite);
+    pSprite->setPosition(ccp(fBaseX, 24));
+    pSprite->setColor(ccc3(240, 160, 120));
+
+    fW0 = fW1;
+    fW1 = 64;
+    fBaseX += M_FIX_BASE_X(fW0, fW1, 10);
+    m_oTargetLv.initWithString("12", "Hobo Std", 24, CCSizeMake(fW1, 32), kCCTextAlignmentLeft);
+    m_oTargetInfoLayer.addChild(&m_oTargetLv);
+    m_oTargetLv.setPosition(ccp(fBaseX, 24));
+    m_oTargetLv.setColor(ccc3(250, 190, 100));
+
+    // hp
+    fW0 = fW1;
+    fW1 = 32;
+    fBaseX += M_FIX_BASE_X(fW0, fW1, 4);
+    pSprite = CCSprite::createWithSpriteFrameName("ph32.png");
+    m_oTargetInfoLayer.addChild(pSprite);
+    pSprite->setPosition(ccp(fBaseX, 24));
+    pSprite->setColor(ccc3(100, 185, 75));
+
+    fW0 = fW1;
+    fW1 = 160;
+    fBaseX += M_FIX_BASE_X(fW0, fW1, 10);
+    m_oTargetHp.initWithString("1320/3208", "Hobo Std", 24, CCSizeMake(fW1, 32), kCCTextAlignmentLeft);
+    m_oTargetInfoLayer.addChild(&m_oTargetHp);
+    m_oTargetHp.setPosition(ccp(fBaseX, 24));
+    m_oTargetHp.setColor(ccc3(250, 190, 100));
+
+    // 攻击
+    fW0 = fW1;
+    fW1 = 32;
+    fBaseX += M_FIX_BASE_X(fW0, fW1, 4);
+    pSprite = CCSprite::createWithSpriteFrameName("ph32.png");
+    m_oTargetInfoLayer.addChild(pSprite);
+    pSprite->setPosition(ccp(fBaseX, 24));
+    pSprite->setColor(ccc3(230, 40, 30));
+
+    /*
+    pSprite = CCSprite::createWithSpriteFrameName("pos.png");
+    m_oTargetInfoLayer.addChild(pSprite);
+    pSprite->setPosition(ccp(fBaseX, 24));
+    */
+
+    fW0 = fW1;
+    fW1 = 0; // 锚点在最左处
+    fBaseX += M_FIX_BASE_X(fW0, fW1, 10);
+    m_oTargetAtk.initWithString("", "Hobo Std", 24);
+    m_oTargetAtk.setAnchorPoint(ccp(0.0, 0.5));
+    m_oTargetInfoLayer.addChild(&m_oTargetAtk);
+    m_oTargetAtk.setHorizontalAlignment(kCCTextAlignmentLeft);
+    m_oTargetAtk.setString("105 - 110");
+    //m_oTargetAtk.setDimensions(CCSizeMake(m_oTargetAtk.getTextureRect().size.width, 32));
+    m_oTargetAtk.setPosition(ccp(fBaseX, 24));
+    m_oTargetAtk.setColor(ccc3(250, 190, 100));
+    m_oTargetAtk.setString("150 - 110");
+
+    /*
+    pSprite = CCSprite::createWithSpriteFrameName("pos.png");
+    m_oTargetInfoLayer.addChild(pSprite);
+    pSprite->setTag(100);
+    pSprite->setPosition(ccp(fBaseX, 24));
+    */
+
+    fBaseX += m_oTargetAtk.getTextureRect().size.width;
+    m_oTargetAtkEx.initWithString("", "Hobo Std", 24);
+    m_oTargetAtkEx.setAnchorPoint(ccp(0.0, 0.5));
+    m_oTargetInfoLayer.addChild(&m_oTargetAtkEx);
+    m_oTargetAtkEx.setHorizontalAlignment(kCCTextAlignmentLeft);
+    m_oTargetAtkEx.setString(" +15000");
+    //m_oTargetAtkEx.setDimensions(CCSizeMake(m_oTargetAtkEx.getTextureRect().size.width, 32));
+    m_oTargetAtkEx.setPosition(ccp(fBaseX, 24));
+    m_oTargetAtk.setString("151 - 167");
+    m_oTargetAtkEx.setColor(ccc3(40, 220, 40));
+
+    /*
+    pSprite = CCSprite::createWithSpriteFrameName("pos.png");
+    m_oTargetInfoLayer.addChild(pSprite);
+    pSprite->setTag(101);
+    pSprite->setPosition(ccp(fBaseX, 24));
+    */
+    // 护甲
+    fW1 = 32;
+    fBaseX += 240 - m_oTargetAtk.getTextureRect().size.width + fW1 * 0.5;
+    pSprite = CCSprite::createWithSpriteFrameName("ph32.png");
+    m_oTargetInfoLayer.addChild(pSprite);
+    pSprite->setPosition(ccp(fBaseX, 24));
+    pSprite->setColor(ccc3(0, 110, 155));
+
+    fW0 = fW1;
+    fW1 = 64;
+    fBaseX += M_FIX_BASE_X(fW0, fW1, 10);
+    m_oTargetDef.initWithString("32", "Hobo Std", 24, CCSizeMake(fW1, 32), kCCTextAlignmentLeft);
+    m_oTargetInfoLayer.addChild(&m_oTargetDef);
+    m_oTargetDef.setPosition(ccp(fBaseX, 24));
+    m_oTargetDef.setColor(ccc3(250, 190, 100));
+
+    m_pLastTarget = NULL;
+
+    updateTargetInfo(pHeroUnit);
+
+
+#if 0
     //成就管理器初始化
     CAchieveManager::sharedAchieveManager();
     CAchieve* pAchieve =  CAchieveManager::sharedAchieveManager()->push(1);
@@ -223,14 +357,16 @@ bool CCWHomeSceneLayer::init()
         pAchieve->display(out);
         CCLog("reach global : %s\n", out.str().c_str());
     }
+#endif
 
     m_fWaitingNextRound = 0.0;
-    
+
     m_iLastNum = -1;
 
-    heroUnit->setMaxHp(5);
+    //pHeroUnit->setMaxHp(5);
 
     //CCDirector::sharedDirector()->setAnimationInterval(0.1);
+    m_bMissionEnd = false;
 
     return true;
 }
@@ -249,6 +385,8 @@ void CCWHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
 
 void CCWHomeSceneLayer::onTick( float fDt )
 {
+    updateTargetInfo(m_pLastTarget);
+
     enum
     {
         kMalik,
@@ -256,8 +394,13 @@ void CCWHomeSceneLayer::onTick( float fDt )
         kJt
     };
     M_DEF_GM(pGm);
-    pGm->cmdRecv(0);
+
     M_DEF_UM(pUm);
+
+    if (m_bMissionEnd)
+    {
+        return;
+    }
 
     if (m_fWaitingNextRound >= FLT_EPSILON)
     {
@@ -290,14 +433,14 @@ void CCWHomeSceneLayer::onTick( float fDt )
     int r = m_pCurMission->curRound();
     int n = m_pCurMission->rushCount();
     // static int rushFinishedNumber=0;
-    bool bAllRushEnd = true;
+    bool bRoundEnd = true;
     for (int i = 0; i < n; ++i)
     {
         int iRes = m_pCurMission->rush(i, fDt);
         if (iRes >= 0)
         {
             // TODO: createUnitHere;
-            bAllRushEnd = false;
+            bRoundEnd = false;
             CUnitPath* p = m_pCurMission->pathOfRush(i);
             const CCPoint* pPos = p->getCurTargetPoint(0);
             if (pPos)
@@ -318,17 +461,22 @@ void CCWHomeSceneLayer::onTick( float fDt )
         else if (iRes == CGameMission::kNoRound)
         {
             // TODO: roundEnd
+            m_bMissionEnd = true;
             break;
         }
         else if (iRes == CGameMission::kNoUnit)
         {
             // TODO: curRushEnd
+            if (m_pCurMission->isLastRound())
+            {
+                m_bMissionEnd = true;
+            }
             continue;
         }
         else if (iRes == CGameMission::kWaiting)
         {
             // TODO: waitNextUnit
-            bAllRushEnd = false;
+            bRoundEnd = false;
             continue;
         }
         else
@@ -338,13 +486,13 @@ void CCWHomeSceneLayer::onTick( float fDt )
 
     }
 
-    if (bAllRushEnd)
+    if (bRoundEnd)
     {
         m_fWaitingNextRound = 10.0;
         m_iLastNum = -1;
         // TODO: curRoundEnd
-        
-        
+
+
     }
 }
 
@@ -352,12 +500,12 @@ bool CCWHomeSceneLayer::ccTouchBegan( CCTouch *pTouch, CCEvent *pEvent )
 {
     CCWinUnitLayer::ccTouchBegan(pTouch,pEvent);
     M_DEF_GM(pGm);
-    CGameUnit* heroUnit = getHeroUnit();
+    CGameUnit* pHeroUnit = getHeroUnit();
     CCPoint touchPoint = ccpSub(pTouch->getLocation(), getPosition());
 #if 0
-    if (heroUnit!=NULL&&!heroUnit->isDead())//incomplete
+    if (pHeroUnit!=NULL&&!pHeroUnit->isDead())//incomplete
     {
-        CCPoint heroPoint=heroUnit->getPosition();
+        CCPoint heroPoint=pHeroUnit->getPosition();
         CCPoint pointDistance=ccpSub(heroPoint,touchPoint);
         float fDistance=sqrtf(pointDistance.x*pointDistance.x+pointDistance.y*pointDistance.y);
         if (fDistance<50)
@@ -375,8 +523,8 @@ void CCWHomeSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
     CCWinUnitLayer::ccTouchEnded(pTouch,pEvent);
     M_DEF_GM(pGm);
 
-    CGameUnit* heroUnit = getHeroUnit();
-    if (!heroUnit || heroUnit->isDead())
+    CGameUnit* pHeroUnit = getHeroUnit();
+    if (!pHeroUnit || pHeroUnit->isDead())
     {
         return;
     }
@@ -388,25 +536,31 @@ void CCWHomeSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
 
     CCPoint oPos = ccpSub(pTouch->getLocation(), getPosition());
 
+    CGameUnit* pUnit = getUnits()->getNearestUnitInRange(oPos, 50);
+    updateTargetInfo(pUnit);
+
     if (touchActionIndex() == kUnitCastTarget)
     {
         CGameUnit* t = NULL;
-        CActiveSkill* pSkill = heroUnit->getToCastSkill();
+        CActiveSkill* pSkill = pHeroUnit->getToCastSkill();
         switch (pSkill->getCastTargetType())
         {
         case CActiveSkill::kPointTarget:
             pSkill->setTargetPoint(oPos);
-            heroUnit->cast();
+            pHeroUnit->cast();
             endOrderUnitToCast();
+            //hideTargetInfo();
             return;
 
         case CActiveSkill::kUnitTarget:
-            t = getUnits()->getNearestUnitInRange(oPos, 50, CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(heroUnit));
+            t = getUnits()->getNearestUnitInRange(oPos, 50, CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(pHeroUnit));
             if (t)
             {
+                
                 pSkill->setTargetUnit(t->getKey());
-                heroUnit->cast();
+                pHeroUnit->cast();
                 endOrderUnitToCast();
+                //updateTargetInfo(t);
             }
             return;
 
@@ -427,13 +581,14 @@ void CCWHomeSceneLayer::ccTouchEnded( CCTouch *pTouch, CCEvent *pEvent )
     }
     else
     {
-        CGameUnit* pUnit = getUnits()->getNearestUnitInRange(oPos, 50, CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(heroUnit));
+        CGameUnit* pUnit = getUnits()->getNearestUnitInRange(oPos, 50, CONDITION(&CUnitGroup::isLivingEnemyOf), dynamic_cast<CUnitForce*>(pHeroUnit));
+        //updateTargetInfo(pUnit);
         if (pUnit)
         {
-            heroUnit->attack(pUnit->getKey());
+            pHeroUnit->attack(pUnit->getKey());
             return;
         }
-        heroUnit->moveTo(oPos);
+        pHeroUnit->moveTo(oPos);
     }
 
 }
@@ -462,7 +617,7 @@ void CCWHomeSceneLayer::onExit()
 
 void CCWHomeSceneLayer::onBtnGoClick( CCObject* pObject )
 {
-    CCTechTreeScene* pScene=CCTechTreeScene::create();
+    CCTechTreeScene* pScene = CCTechTreeScene::create();
     CCDirector::sharedDirector()->pushScene(pScene);
 }
 
@@ -497,38 +652,41 @@ void CCWHomeSceneLayer::onBtnBuildClick( CCNode* pObject )
 void CCWHomeSceneLayer::onTickEvent( float fDt )
 {
     CCWinUnitLayer::onTickEvent(fDt);
-    CGameUnit* heroUnit = getHeroUnit();
-    if (!heroUnit)
+    CGameUnit* pHeroUnit = getHeroUnit();
+    if (!pHeroUnit)
     {
         return;
     }
+
+    //updateTargetInfo(pHeroUnit, 0);
+
     static CGameUnit* pMemHero = NULL;
 
     static uint32_t dwOldExp = 0;
-    if (pMemHero != heroUnit || heroUnit->getExp() != dwOldExp)
+    if (pMemHero != pHeroUnit || pHeroUnit->getExp() != dwOldExp)
     {
-        if (heroUnit!=NULL&&heroUnit->getMaxExp()!=0)
+        if (pHeroUnit!=NULL&&pHeroUnit->getMaxExp()!=0)
         {
-            dwOldExp = heroUnit->getExp();
-            float fPer = heroUnit->getExp() * 100 / heroUnit->getMaxExp();
+            dwOldExp = pHeroUnit->getExp();
+            float fPer = pHeroUnit->getExp() * 100 / pHeroUnit->getMaxExp();
             m_oExpBar.setPercentage(fPer, 0);
             m_oExpBar.setFillColor(ccc3(169, 147, 0));
         }
-        
+
     }
 
     static uint32_t dwOldHp = 0;
-    if (pMemHero != heroUnit || heroUnit->getHp() != dwOldHp)
+    if (pMemHero != pHeroUnit || pHeroUnit->getHp() != dwOldHp)
     {
-        dwOldHp = heroUnit->getHp();
-        float fPer = heroUnit->getHp() * 100 / heroUnit->getMaxHp();
+        dwOldHp = pHeroUnit->getHp();
+        float fPer = pHeroUnit->getHp() * 100 / pHeroUnit->getMaxHp();
         m_oHpBar.setPercentage(fPer, 0);
         m_oHpBar.setFillColor(ccc3(MIN(255, (100.0 - fPer) * 2.56 / 0.5), MIN(255, 2.56 / 0.5  * fPer), 0));
     }
 
-    if (pMemHero != heroUnit)
+    if (pMemHero != pHeroUnit)
     {
-        pMemHero = heroUnit;
+        pMemHero = pHeroUnit;
     }
 
 }
@@ -691,7 +849,7 @@ void CCWHomeSceneLayer::onHeroSoulTick( float fDt )
                     CCLOG("CD [%f]", (pSkill->getCoolDown() - skillCoolDownLeft(pSkill->getKey())) / pSkill->getCoolDown() * 100.0);
                     pBtn->coolDown((pSkill->getCoolDown() - skillCoolDownLeft(pSkill->getKey())) / pSkill->getCoolDown() * 100.0);
                 }
-                
+
                 m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
             }
         }
@@ -702,8 +860,8 @@ void CCWHomeSceneLayer::onHeroSoulTick( float fDt )
         /*
         CCARRAY_FOREACH(&m_stReviveInfo.oArrSkillBtn, pObj)
         {
-            pBtn = dynamic_cast<CCSkillButtonBase*>(pObj);
-            m_oSkillPanel.pushAddButtonExAction(pBtn);
+        pBtn = dynamic_cast<CCSkillButtonBase*>(pObj);
+        m_oSkillPanel.pushAddButtonExAction(pBtn);
         }
         m_stReviveInfo.oArrSkillBtn.removeAllObjects();
         */
@@ -712,6 +870,11 @@ void CCWHomeSceneLayer::onHeroSoulTick( float fDt )
 
 void CCWHomeSceneLayer::onUnitDie( CGameUnit* pUnit )
 {
+    if (m_pLastTarget == pUnit)
+    {
+        hideTargetInfo();
+    }
+
     CGameUnit* pHero;
     if (pUnit->getKey() == m_iHero)
     {
@@ -747,7 +910,7 @@ void CCWHomeSceneLayer::onUnitDie( CGameUnit* pUnit )
         }
         //m_stReviveInfo.oArrSkillBtn.initWithArray(m_oSkillPanel.getSkillMenu()->getChildren());
         m_oLeftToRevive.setVisible(true);
-        
+
         schedule(schedule_selector(CCWHomeSceneLayer::onHeroSoulTick), 0.2);
         onHeroSoulTick(0);
     }
@@ -808,11 +971,123 @@ void CCWHomeSceneLayer::onNextRoundTick( float fDt )
     pNode->setOpacity(0);
     CCActionInterval* pAct = CCReleaseAfter::create(CCFadeInOutScale4::create(0.5, 1.2, 0.8,     0.10, 0.1, 1.0, 0.2));
     pNode->runAction(pAct);
-    
+
     --m_iLastNum;
     if (!m_iLastNum)
     {
         unschedule(schedule_selector(CCWHomeSceneLayer::onNextRoundTick));
         CCLOG("---------------");
+    }
+}
+
+void CCWHomeSceneLayer::hideTargetInfo()
+{
+    m_oTargetInfoLayer.setVisible(false);
+    m_pLastTarget = NULL;
+}
+
+void CCWHomeSceneLayer::updateTargetInfo( CGameUnit* pUnit )
+{
+    if (!pUnit || pUnit->isDead())
+    {
+        return;
+    }
+
+    if (m_pLastTarget != pUnit)
+    {
+        m_pLastTarget = pUnit;
+    }
+
+    if (!m_oTargetInfoLayer.isVisible())
+    {
+        m_oTargetInfoLayer.setVisible(true);
+    }
+
+    //if (pUnit != m_pLastTarget)
+
+    char szBuf[64];
+
+    uint32_t dwLevel = pUnit->getLevel();
+    if (dwLevel != m_stTargetInfo.dwLevel)
+    {
+        sprintf(szBuf, "%u", pUnit->getLevel());
+        m_oTargetLv.setString(szBuf);
+        m_stTargetInfo.dwLevel = dwLevel;
+    }
+
+    uint32_t dwHp = pUnit->getHp();
+    uint32_t dwMaxHp = pUnit->getMaxHp();
+    if ((dwHp != m_stTargetInfo.dwHp) || (dwMaxHp != m_stTargetInfo.dwMaxHp))
+    {
+        sprintf(szBuf, "%u/%u", dwHp, dwMaxHp);
+        m_oTargetHp.setString(szBuf);
+        m_stTargetInfo.dwHp = dwHp;
+        m_stTargetInfo.dwMaxHp = dwMaxHp;
+    }
+
+    uint32_t dwAtk0 = 0;
+    uint32_t dwAtk1 = 0;
+    float fAtk = 0;
+    float fAtkRnd = 0;
+    uint32_t dwAtkEx = 0;
+    CAttackValue::ATTACK_TYPE eAtkType = (CAttackValue::ATTACK_TYPE)0;
+    for (int i = 0; i < CAttackValue::CONST_MAX_ATTACK_TYPE; ++i)
+    {
+        fAtk = pUnit->getBaseAttackValue((CAttackValue::ATTACK_TYPE)i);
+        fAtkRnd = pUnit->getExAttackRandomRange();
+        if (fAtk)
+        {
+            dwAtk0 = fAtk * (1 - fAtkRnd);
+            dwAtk1 = fAtk * (1 + fAtkRnd);
+            eAtkType = (CAttackValue::ATTACK_TYPE)i;
+            break;
+        }
+    }
+
+    if ((uint32_t)fAtk)
+    {
+        dwAtkEx = fAtk * (pUnit->getExAttackValue(eAtkType).getMulriple() - 1.0) + pUnit->getExAttackValue(eAtkType).getAddend();
+    }
+
+    if ((dwAtk0 != m_stTargetInfo.dwAtk0) || (dwAtk1 != m_stTargetInfo.dwAtk1) || (dwAtkEx != m_stTargetInfo.dwAtkEx))
+    {
+        sprintf(szBuf, "%u - %u", dwAtk0, dwAtk1);
+        m_oTargetAtk.setString(szBuf);
+        //m_oTargetAtkEx.setPosition();
+        m_stTargetInfo.dwAtk0 = dwAtk0;
+        m_stTargetInfo.dwAtk1 = dwAtk1;
+
+        //m_oTargetInfoLayer.getChildByTag(100)->setPosition(m_oTargetAtk.getPosition());
+
+        if (dwAtkEx)
+        {
+            sprintf(szBuf, " +%u", dwAtkEx);
+            m_oTargetAtkEx.setString(szBuf);
+            //m_oTargetAtkEx.setDimensions(CCSizeMake(m_oTargetAtkEx.getTextureRect().size.width, 32));
+            m_oTargetAtkEx.setPosition(ccpAdd(m_oTargetAtk.getPosition(), ccp(m_oTargetAtk.getTextureRect().size.width, 0)));
+            //m_oTargetInfoLayer.getChildByTag(101)->setPosition(m_oTargetAtkEx.getPosition());
+        }
+        else
+        {
+            m_oTargetAtkEx.setString("");
+        }
+        m_stTargetInfo.dwAtkEx = dwAtkEx;
+    }
+
+    uint32_t dwDef = pUnit->getBaseArmorValue();
+    if (dwDef != m_stTargetInfo.dwDef)
+    {
+        sprintf(szBuf, "%u", dwDef);
+        m_oTargetDef.setString(szBuf);
+        m_stTargetInfo.dwDef = dwDef;
+    }
+
+}
+
+void CCWHomeSceneLayer::onUnitHpChange( CGameUnit* pUnit, float fChanged )
+{
+    if (m_pLastTarget == pUnit)
+    {
+        updateTargetInfo(pUnit);
     }
 }

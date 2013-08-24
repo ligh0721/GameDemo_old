@@ -35,6 +35,28 @@ public:
         CCArray oArrSkillBtn;
     };
 
+    enum TARGET_INFO_UPDATE_BIT
+    {
+        kLevel = 0,
+        kHp = 1,
+        kAtk = 2,
+        kDef = 3
+    };
+
+    struct TARGET_INFO
+    {
+        uint32_t dwLevel;
+        uint32_t dwHp;
+        uint32_t dwMaxHp;
+        uint32_t dwAtk0;
+        uint32_t dwAtk1;
+        uint32_t dwAtkEx;
+        uint32_t dwDef;
+
+        TARGET_INFO() { memset(this, 0, sizeof(TARGET_INFO)); }
+    };
+
+
 public:
     CCWHomeSceneLayer();
 
@@ -42,14 +64,14 @@ public:
     CREATE_FUNC(CCWHomeSceneLayer);
     void onBtnStartClick(CCObject* pObject);
     void onBtnCfgClick(CCObject* pObject);
-	
+
     virtual void onTickEvent(float fDt);
     void onTick(float fDt);
     virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
     virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
     virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
-	virtual void onEnter();
-	virtual void onExit();
+    virtual void onEnter();
+    virtual void onExit();
     CGameUnit* getHeroUnit();
     void onBtnGoClick(CCObject* pObject);
     void onBtnHeroClick(CCObject* pObject);
@@ -63,20 +85,34 @@ public:
     void onGetBuffEnd(CCNode* pNode);
 
     virtual void onUnitDie(CGameUnit* pUnit);
+    virtual void onUnitHpChange(CGameUnit* pUnit, float fChanged);
 
     void onHeroSoulTick(float fDt);
     void onNextRoundTick(float fDt);
 
+    void hideTargetInfo();
+    void updateTargetInfo(CGameUnit* pUnit);
+
 
 public:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-    
+
     CCMenu m_oMenu;
     CCMenuItemImage m_oStart;
     CCMenuItemImage m_oCfg;
     int tickCount;
     //bool heroMove;
-	//int touchMoveTimes;
+    //int touchMoveTimes;
     CCLayerColor m_oGameCtrlLayer;
+
+    CCLayerColor m_oTargetInfoLayer;
+    CCLabelTTF m_oTargetLv;
+    CCLabelTTF m_oTargetHp;
+    CCLabelTTF m_oTargetAtk;
+    CCLabelTTF m_oTargetAtkEx;
+    CCLabelTTF m_oTargetDef;
+    CGameUnit* m_pLastTarget;
+    TARGET_INFO m_stTargetInfo;
+
     CCMenu m_oMenuCtrl;
     CCMenuItemImage m_oGoToTechTree;
     CCMenuItemImage m_oHeroHead;
@@ -102,5 +138,6 @@ public:
 
     float m_fWaitingNextRound;
     int m_iLastNum;
+    bool m_bMissionEnd;
 };
 

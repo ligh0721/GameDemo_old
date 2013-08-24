@@ -27,22 +27,23 @@ void CHeroUpdate::updateMaxExp( CLevelExp* pLevel )
 
 void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
 {
-    return;
     M_DEF_OS(pOs);
     CGameUnit* pU = dynamic_cast<CGameUnit*>(pLevel);
     if (!pU)
     {
         return;
     }
-    
+
     pU->setMaxHp(50 + pLevel->getLevel() * 50);
+    //pU->setMaxHp(1000 + pLevel->getLevel() * 500);
+    pU->setExAttackValue(CAttackValue::kPhysical, CExtraCoeff(1.0 + 0.1 * pLevel->getLevel(), 1.5 * pLevel->getLevel()));
 }
 
 CHeroUpdate g_oDemoUpdate;
 
 void CHeroUnit::onLevelChange( int32_t iChanged )
 {
-    
+
 }
 
 void CHeroUnit::updateMaxExp()
@@ -65,7 +66,7 @@ CHeroUnit* CHeroInfo::createHero()
     {
         pHero->addSkill(pOs->skill(*it));
     }
-    
+
     return pHero;
 }
 
@@ -78,11 +79,11 @@ uint16_t CHeroInfo::CONST_FILE_DATA_SIZE
     + sizeof(m_dwMaxLevel);
 #else
 uint16_t CHeroInfo::CONST_FILE_DATA_SIZE
-= sizeof(int)
-+ sizeof(uint32_t)
-+ sizeof(uint32_t)
-+ sizeof(uint32_t)
-+ sizeof(uint32_t);
+    = sizeof(int)
+    + sizeof(uint32_t)
+    + sizeof(uint32_t)
+    + sizeof(uint32_t)
+    + sizeof(uint32_t);
 #endif
 
 bool CHeroInfo::init()

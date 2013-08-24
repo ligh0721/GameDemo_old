@@ -70,7 +70,10 @@ bool CCUnitEditorSceneLayer::init()
     }
     //ccDrawColor4B(0xFF, 0x00, 0x00, 255);
     glLineWidth(3);
-    ccPointSize(10);
+    //ccPointSize(10);
+#if defined QTPROJ
+    glPointSize(10);
+#endif
 
     m_oUipm.initWithFile("level00/Level.uip");
     M_DEF_UM(pUm);

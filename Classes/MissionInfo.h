@@ -144,6 +144,8 @@ public:
     bool nextRound();
     int roundCount() const;
     int rushCount() const;
+    bool isRoundEnd() const;
+    bool isLastRound() const;
     int rush(int iRushIndex, float fDt);
     CUnitPath* pathOfRush(int iRushIndex);
 

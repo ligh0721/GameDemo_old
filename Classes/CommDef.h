@@ -185,7 +185,7 @@ public: inline virtual void set##funName(const varType& var){ varName = var; }
 
 #define CONDITION(func) ((CUnitGroup::CONDITIONFUNC)(func))
 
-template <typename TYPE, typename ASTYPE = int>
+template <typename TYPE, typename ASTYPE = TYPE>
 class CInitArray
 {
 public:
@@ -197,7 +197,7 @@ public:
         va_start(argv, iCount);
         for (int i = 0; i < iCount; ++i)
         {
-            m_pData[i] = (TYPE)va_arg(argv, TYPE);
+            m_pData[i] = (TYPE)va_arg(argv, ASTYPE);
         }
         va_end(argv);
     }
@@ -236,3 +236,7 @@ const char* GBKToUTF8(const char* pGBKStr);
 #define UTEXT(str) str
 #endif
 
+#define M_FIX_BASE_X(width0, width1, delta) ((width0 + width1) * 0.5 + delta)
+
+#define M_BIT_32U(index) ((uint32_t)(1 << index))
+#define M_IS_BIT_SET_32U(u32, index) ((uint32_t)(u32) & (uint32_t)(1 << (uint32_t)(index)))

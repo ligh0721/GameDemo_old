@@ -14,18 +14,6 @@
 #include "SkillInfo.h"
 
 
-void CUnitAi::onDamaged(CUnit *pUnit, CAttackData *pAttack, CUnit *pSource, uint32_t dwTriggerMask)
-{
-}
-
-void CUnitAi::onDie(CUnit *pUnit)
-{
-}
-
-void CUnitAi::onTick(CUnit *pUnit, float fDt)
-{
-}
-
 
 // CLevelExp
 CLevelExp::CLevelExp()
@@ -84,17 +72,17 @@ void CLevelExp::setLevel(uint32_t dwLvl)
 {
     uint32_t dwOldLvl = m_dwLvl;
 
-    if (m_dwLvl > m_dwMaxLvl)
-    {
-        m_dwLvl = m_dwMaxLvl;
-    }
-    else if (m_dwLvl == m_dwMaxLvl)
+    if (m_dwLvl >= m_dwMaxLvl)
     {
         m_dwLvl = m_dwMaxLvl;
     }
     else if (m_dwLvl < 1)
     {
         m_dwLvl = 1;
+    }
+    else
+    {
+        m_dwLvl = dwLvl;
     }
 
     int32_t iChanged = m_dwLvl - dwOldLvl;
@@ -555,7 +543,6 @@ CUnit::CUnit()
 , m_fSpirit(0)
 , m_eArmorType((CArmorValue::ARMOR_TYPE)0)
 , m_iTriggering(0)
-, m_pAi(NULL)
 {
 }
 
@@ -694,11 +681,6 @@ void CUnit::onDamaged(CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMa
         return;
     }
     triggerOnDamagedInnerTrigger(pAttack, pSource);
-
-    if (m_pAi)
-    {
-        m_pAi->onDamaged(this, pAttack, pSource, dwTriggerMask);
-    }
 }
 
 void CUnit::onDamageTarget( float fDamage, CUnit* pTarget, uint32_t dwTriggerMask )
@@ -719,10 +701,6 @@ void CUnit::onDie()
 {
     triggerOnDie();
 
-    if (m_pAi)
-    {
-        m_pAi->onDie(this);
-    }
 
     CCArray oArrCopy;
     oArrCopy.initWithArray(&m_oArrBuff);
@@ -753,10 +731,6 @@ void CUnit::onHpChange( float fChanged )
 void CUnit::onTick(float fDt)
 {
     triggerOnTick(fDt);
-    if (m_pAi)
-    {
-        m_pAi->onTick(this, fDt);
-    }
 }
 
 void CUnit::onDestroyProjectile( CCProjectileWithAttackData* pProjectile )
@@ -977,6 +951,12 @@ void CUnit::triggerOnTick(float fDt)
     oArrOnTick.initWithArray(&m_oArrOnTickChain);
     CCARRAY_FOREACH(&oArrOnTick, pObj)
     {
+        if (isDead())
+        {
+            // 如果单位死亡，则不需要继续遍历。每次技能的onUnitTick都有可能导致单位死亡
+            break;
+        }
+
         dynamic_cast<CSkill*>(pObj)->onUnitTick(fDt);
     }
     /*
@@ -1142,10 +1122,6 @@ bool CUnit::isTriggerFree() const
     return m_iTriggering == 0;
 }
 
-void CUnit::setAi(CUnitAi* pAi)
-{
-    m_pAi = pAi;
-}
 
 int CUnit::getKey() const
 {
@@ -1249,7 +1225,6 @@ void CCGameUnitSprite::draw()
     ccDrawColor4B(255, 0, 0, 255);
     ccDrawLine(ccp((oSz.width - w) * 0.5, oPos.y * oSz.height), ccp((oSz.width + w) * 0.5, oPos.y * oSz.height));
     ccDrawLine(ccp(oPos.x * oSz.width, oPos.y * oSz.height), ccp(oPos.x * oSz.width, oPos.y * oSz.height + h));
-
 }
 
 const float CGameUnit::CONST_MIN_MOVE_SPEED = 1.0;
@@ -1298,6 +1273,8 @@ bool CGameUnit::init()
     setStatus(kNormal);
     m_pRes = NULL;
     setUnitLayer(NULL);
+    setEventAdapter(NULL);
+    setAi(NULL);
     m_pMovePath = NULL;
     setPathCurPos(0);
     setPathIntended(false);
@@ -1335,6 +1312,8 @@ bool CGameUnit::initWithName( const char* pUnit, const CCPoint& roAnchor )
     setStatus(kNormal);
     m_pRes = NULL;
     setUnitLayer(NULL);
+    setEventAdapter(NULL);
+    setAi(NULL);
     m_pMovePath = NULL;
     setPathCurPos(0);
     setPathIntended(false);
@@ -2189,11 +2168,124 @@ bool CGameUnit::isDoingNothing() const
     return m_dwDoingFlags == 0;
 }
 
+void CGameUnit::onAttackTarget( CAttackData* pAttack, CUnit* pTarget, uint32_t dwTriggerMask )
+{
+    CUnit::onAttackTarget(pAttack, pTarget, dwTriggerMask);
+    
+    if (m_pAi)
+    {
+        m_pAi->onUnitAttackTarget(this, pAttack, pTarget);
+    }
+
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitAttackTarget(this, pAttack, pTarget);
+    }
+}
+
+CAttackData* CGameUnit::onAttacked( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
+{
+    pAttack = CUnit::onAttacked(pAttack, pSource, dwTriggerMask);
+    
+    if (m_pAi)
+    {
+        m_pAi->onUnitAttacked(this, pAttack, pSource);
+    }
+
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitAttacked(this, pAttack, pSource);
+    }
+
+    return pAttack;
+}
+
+void CGameUnit::onDamageTarget( float fDamage, CUnit* pTarget, uint32_t dwTriggerMask )
+{
+    CUnit::onDamageTarget(fDamage, pTarget, dwTriggerMask);
+
+    if (m_pAi)
+    {
+        m_pAi->onUnitDamageTarget(this, fDamage, pTarget);
+    }
+
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitDamageTarget(this, fDamage, pTarget);
+    }
+}
+
+void CGameUnit::onRevive()
+{
+    CUnit::onRevive();
+
+    if (m_pAi)
+    {
+        m_pAi->onUnitRevive(this);
+    }
+
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitRevive(this);
+    }
+}
+
+void CGameUnit::onHpChange( float fChanged )
+{
+    CUnit::onHpChange(fChanged);
+
+    if (m_pAi)
+    {
+        m_pAi->onUnitHpChange(this, fChanged);
+    }
+
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitHpChange(this, fChanged);
+    }
+}
+
+void CGameUnit::onDestroyProjectile( CCProjectileWithAttackData* pProjectile )
+{
+    CUnit::onDestroyProjectile(pProjectile);
+
+    if (m_pAi)
+    {
+        m_pAi->onUnitDestroyProjectile(this, pProjectile);
+    }
+
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitDestroyProjectile(this, pProjectile);
+    }
+}
+
+void CGameUnit::onLevelChange( int32_t iChanged )
+{
+    CLevelExp::onLevelChange(iChanged);
+
+    if (m_pAi)
+    {
+        m_pAi->onUnitLevelChange(this, iChanged);
+    }
+
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitLevelChange(this, iChanged);
+    }
+}
+
 void CGameUnit::onTick( float fDt )
 {
     CUnit::onTick(fDt);
     m_fAttackCD -= fDt;
     //CCLOG("%d %.2f/%.2f", m_iKey, m_fAttackPass, getRealAttackInterval());
+
+    if (m_pAi)
+    {
+        m_pAi->onUnitTick(this, fDt);
+    }
+
     // 基础AI
 
     if (isDoingOr(kCasting))
@@ -2229,24 +2321,44 @@ void CGameUnit::onTick( float fDt )
             attack(pUnit->getKey(), false);
         }
     }
+
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitTick(this, fDt);
+    }
 }
 
 void CGameUnit::onDie()
 {
     getSprite()->stopAllActions();
-    getUnitLayer()->onUnitDie(this);
-
+    
     setForceResource(NULL);
     stopMove();
     stopAttack();
     stopSpin();
     setAnimation(kAnimationDie, 1, 1, kActDie, CCSequence::create(CCDelayTime::create(5), CCFadeOut::create(1), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActDieEnd)), NULL));
+
+    if (m_pAi)
+    {
+        m_pAi->onUnitDie(this);
+    }
+    
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitDie(this);
+    }
+
     CUnit::onDie();
 }
 
 void CGameUnit::onDamaged( CAttackData* pAttack, CUnit* pSource, uint32_t dwTriggerMask )
 {
     CUnit::onDamaged(pAttack, pSource, dwTriggerMask);
+
+    if (m_pAi)
+    {
+        m_pAi->onUnitDamaged(this, pAttack, pSource);
+    }
 
     CGameUnit* pSrc = dynamic_cast<CGameUnit*>(pSource);
     //CCLOG("dis:%.2f %.2f", getDistance(pSrc), getHostilityRange());
@@ -2258,6 +2370,11 @@ void CGameUnit::onDamaged( CAttackData* pAttack, CUnit* pSource, uint32_t dwTrig
                                            ))
     {
         attack(pSrc->getKey(), false);
+    }
+
+    if (m_pEventAdapter)
+    {
+        m_pEventAdapter->onUnitDamaged(this, pAttack, pSource);
     }
 }
 
@@ -2609,6 +2726,17 @@ void CGameUnit::stopSpin()
 void CGameUnit::say( const char* pMsg )
 {
 
+}
+
+CCUnitLayer* CGameUnit::getUnitLayer() const
+{
+    return m_pUnitLayer;
+}
+
+void CGameUnit::setUnitLayer( CCUnitLayer* pUnitLayer )
+{
+    m_pUnitLayer = pUnitLayer;
+    m_pEventAdapter = pUnitLayer;
 }
 
 CProjectile::CProjectile()
@@ -3498,10 +3626,6 @@ void CCUnitLayer::orderUnitToCast( CGameUnit* pTargetUnit )
     m_iPendingSkillOwner = 0;
 }
 
-void CCUnitLayer::onUnitDie( CGameUnit* pUnit )
-{
-}
-
 void CCUnitLayer::addSkillCoolDown( CActiveSkill* pActSkill )
 {
     if (!pActSkill->isCoolingDown())
@@ -3791,8 +3915,8 @@ CUnitInfo::CUnitInfo( const char* pName, const CCPoint& roAnchor, float fHalfOfW
     n = roArrAniInfoNames.count();
     typedef const char* PCSTR;
     const PCSTR* pAniInfoNames = roArrAniInfoNames;
-    const double* pAniInfoDelays = roArrAniInfoDelays;
-    const double* pAniInfoEffects = roArrAniInfoEffects;
+    const float* pAniInfoDelays = roArrAniInfoDelays;
+    const float* pAniInfoEffects = roArrAniInfoEffects;
     for (int i = 0; i < n; ++i)
     {
         CGameUnit::ANIMATION_INFO stAni(roArrAniInfoNames[i], roArrAniInfoDelays[i], roArrAniInfoEffects[i]);

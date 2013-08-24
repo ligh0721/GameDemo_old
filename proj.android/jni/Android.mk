@@ -7,12 +7,13 @@ LOCAL_MODULE := gamedemo_shared
 LOCAL_MODULE_FILENAME := libgamedemo
 
 LOCAL_SRC_FILES := gamedemo/main.cpp \
+../../Classes/Achieve.cpp \
+../../Classes/Achieve.cpp.rej \
+../../Classes/AchieveScene.cpp \
 ../../Classes/Action.cpp \
 ../../Classes/AppDelegate.cpp \
-../../Classes/BattleGroundScene.cpp \
 ../../Classes/BattleScene.cpp \
 ../../Classes/Box2DEx.cpp \
-../../Classes/BulletSprite.cpp \
 ../../Classes/ChildOfGameUnit.cpp \
 ../../Classes/CommDef.cpp \
 ../../Classes/ComplexUnit.cpp \
@@ -23,8 +24,8 @@ LOCAL_SRC_FILES := gamedemo/main.cpp \
 ../../Classes/GameDisplay.cpp \
 ../../Classes/GameFile.cpp \
 ../../Classes/GameLevel.cpp \
-../../Classes/GameLogic.cpp \
 ../../Classes/GameResControl.cpp \
+../../Classes/GameState.cpp \
 ../../Classes/GLES-Render.cpp \
 ../../Classes/HomeScene.cpp \
 ../../Classes/MainScene.cpp \
@@ -37,11 +38,13 @@ LOCAL_SRC_FILES := gamedemo/main.cpp \
 ../../Classes/SkillInfo.cpp \
 ../../Classes/SkillUI.cpp \
 ../../Classes/SomeScene.cpp \
-../../Classes/TankSprite.cpp \
+../../Classes/StartScene.cpp \
+../../Classes/StringUtil.cpp \
 ../../Classes/TechTreeScene.cpp \
 ../../Classes/TestScene.cpp \
 ../../Classes/Tower.cpp \
 ../../Classes/Unit.cpp \
+../../Classes/UnitAI.cpp \
 ../../Classes/UnitEditorScene.cpp \
 ../../Classes/UnitInfo.cpp \
 ../../Classes/UnitShowScene.cpp \

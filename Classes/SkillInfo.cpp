@@ -65,14 +65,14 @@ bool COrgSkillInfo::init()
     m_mapSkills[kSpeedAura1].sName = "振奋光环";
     m_mapSkills[kSpeedAura1].sDesc = "为周围半径150范围内的友方单位(不含自身)提供50%移动速度和50%攻击速度的提升";
     
-    pSkill = CHpChangeBuff::create(20, true, 0, 0.1, -0.02, true, -1);
+    pSkill = CHpChangeBuff::create(20, true, 0, 0.1, -0.2, true, -1);
     iKey = pSm->addSkill(pSkill);
     
     pSkill = CAuraPas::create(150, CAuraPas::kEnemy, 0.5, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kImmo1].iIndex = iKey;
     m_mapSkills[kImmo1].sName = "凋零光环";
-    m_mapSkills[kImmo1].sDesc = "对周围半径150范围内的敌方单位造成最大生命0.2%的伤害，效果每0.5s叠加一次";
+    m_mapSkills[kImmo1].sDesc = "对周围半径150范围内的敌方单位每秒造成最大生命0.2%的伤害，效果每0.5s叠加一次";
     
     pSkill = CKnockBackBuff::create(0.3, false, 0, 50, 0.0, CAttackValue(1, CAttackValue::kPhysical, 50.0), iKey, 1);
     iKey = pSm->addSkill(pSkill);
@@ -208,7 +208,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThunderBoltBuff1].sName = "雷击";
     m_mapSkills[kThunderBoltBuff1].sDesc = "召唤圣雷对周围进行随机范围性打击";
 
-    pSkill = CChainBuff::create(0.5, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kChain1));
+    pSkill = CChainBuff::create(0.5, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 20.0), pPm->getProjectileByIndex(COrgUnitInfo::kChain1));
     dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
     iKey = pSm->addSkill(pSkill);
@@ -216,12 +216,12 @@ bool COrgSkillInfo::init()
     //pSkill = CSpeedBuff::create(1, true, CExtraCoeff(-0.5, 0), CExtraCoeff(-0.5, 0));
     //iKey = pSm->addSkill(pSkill);
     
-    pSkill = CProjectileAct::create(1.0, 300, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3), iKey, 1);
+    pSkill = CProjectileAct::create(1.0, 300, CAttackValue(1, CAttackValue::kMagical, 20.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning3), iKey, 1);
     dynamic_cast<CProjectileAct*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kThunderAttack1].iIndex = iKey;
     m_mapSkills[kThunderAttack1].sName = "雷霆一击";
-    m_mapSkills[kThunderAttack1].sDesc = "猛烈锤击地面，向目标射出一道电光，将造成50点魔法伤害";
+    m_mapSkills[kThunderAttack1].sDesc = "猛烈锤击地面，向目标射出一道电光，将造成20点魔法伤害";
 
     //pSkill = CSwordStormSkill::create(40, 3.0, 100, CAttackValue(1, CAttackValue::kPhysical, 5.0), CExtraCoeff(0.30, 0), "act4");
     //dynamic_cast<CSwordStormSkill*>(pSkill)->setDelayPerUnit(0.03);
@@ -250,12 +250,12 @@ bool COrgSkillInfo::init()
     dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
     iKey = pSm->addSkill(pSkill);
 
-    pSkill = CProjectileWaveAct::create(20.0, 500, CAttackValue(1, CAttackValue::kMagical, 50.0), pPm->getProjectileByIndex(COrgUnitInfo::kWave1), 600, 0, 1);
+    pSkill = CProjectileWaveAct::create(20.0, 500, CAttackValue(1, CAttackValue::kMagical, 20.0), pPm->getProjectileByIndex(COrgUnitInfo::kWave1), 600, 0, 1);
     dynamic_cast<CProjectileWaveAct*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kShockWave1].iIndex = iKey;
     m_mapSkills[kShockWave1].sName = "真空波";
-    m_mapSkills[kShockWave1].sDesc = "急速斩击形成真空冲击波，对直线上的敌人造成50点魔法伤害";
+    m_mapSkills[kShockWave1].sDesc = "急速斩击形成真空冲击波，对直线上的敌人造成20点魔法伤害";
     
     pSkill = CJumpChopBuff::create(20, false, 0, 200, 7, CAttackValue(1, CAttackValue::kPhysical, 50.0), "act5");
     iKey = pSm->addSkill(pSkill);

@@ -33,11 +33,24 @@
             <key>Achievements.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{308,786},{172,150}}</string>
+                <string>{{698,506},{172,150}}</string>
                 <key>offset</key>
                 <string>{-2,-13}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{40,66},{172,150}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>Achievements.psd</key>
+            <dict>
+                <key>frame</key>
+                <string>{{698,506},{172,150}}</string>
+                <key>offset</key>
+                <string>{-2,-13}</string>
+                <key>rotated</key>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{40,66},{172,150}}</string>
                 <key>sourceSize</key>
@@ -46,11 +59,11 @@
             <key>Achievements_ON.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{644,472},{226,200}}</string>
+                <string>{{308,632},{226,200}}</string>
                 <key>offset</key>
                 <string>{-2,-14}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{13,42},{226,200}}</string>
                 <key>sourceSize</key>
@@ -108,6 +121,19 @@
                 <key>sourceSize</key>
                 <string>{512,128}</string>
             </dict>
+            <key>Skill5_78x352_7_5.psd</key>
+            <dict>
+                <key>frame</key>
+                <string>{{644,2},{78,352}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{78,352}}</string>
+                <key>sourceSize</key>
+                <string>{78,352}</string>
+            </dict>
             <key>Skill5_78x352_7_5_black.png</key>
             <dict>
                 <key>frame</key>
@@ -124,7 +150,20 @@
             <key>Start.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{874,394},{134,202}}</string>
+                <string>{{874,428},{134,202}}</string>
+                <key>offset</key>
+                <string>{-4,3}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{57,24},{134,202}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>Start.psd</key>
+            <dict>
+                <key>frame</key>
+                <string>{{874,428},{134,202}}</string>
                 <key>offset</key>
                 <string>{-4,3}</string>
                 <key>rotated</key>
@@ -137,7 +176,7 @@
             <key>Start_ON.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{644,82},{184,256}}</string>
+                <string>{{644,116},{184,256}}</string>
                 <key>offset</key>
                 <string>{-5,0}</string>
                 <key>rotated</key>
@@ -150,7 +189,7 @@
             <key>TalkBubble.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{874,268},{122,124}}</string>
+                <string>{{874,302},{122,124}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -163,11 +202,24 @@
             <key>Upgrades.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{872,598},{150,186}}</string>
+                <string>{{510,506},{150,186}}</string>
                 <key>offset</key>
                 <string>{-3,-18}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{50,53},{150,186}}</string>
+                <key>sourceSize</key>
+                <string>{256,256}</string>
+            </dict>
+            <key>Upgrades.psd</key>
+            <dict>
+                <key>frame</key>
+                <string>{{510,506},{150,186}}</string>
+                <key>offset</key>
+                <string>{-3,-18}</string>
+                <key>rotated</key>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{50,53},{150,186}}</string>
                 <key>sourceSize</key>
@@ -176,7 +228,7 @@
             <key>Upgrades_ON.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{644,268},{202,228}}</string>
+                <string>{{644,302},{202,228}}</string>
                 <key>offset</key>
                 <string>{-4,-14}</string>
                 <key>rotated</key>
@@ -187,6 +239,19 @@
                 <string>{256,256}</string>
             </dict>
             <key>bar_320_32.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{644,82},{320,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{320,32}}</string>
+                <key>sourceSize</key>
+                <string>{320,32}</string>
+            </dict>
+            <key>bar_320_32.psd</key>
             <dict>
                 <key>frame</key>
                 <string>{{188,966},{320,32}}</string>
@@ -251,6 +316,45 @@
                 <key>sourceSize</key>
                 <string>{128,16}</string>
             </dict>
+            <key>ph32.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{282,928},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>ph32.psd</key>
+            <dict>
+                <key>frame</key>
+                <string>{{282,928},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>pos.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{282,894},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>
@@ -261,7 +365,7 @@
             <key>size</key>
             <string>{1024,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:50ad5798f7c282657b1020376a031c1e$</string>
+            <string>$TexturePacker:SmartUpdate:0b99bbebc4833074cc65cf0cc27f14f9$</string>
             <key>textureFileName</key>
             <string>UI.png</string>
         </dict>

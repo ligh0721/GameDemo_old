@@ -33,19 +33,19 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     //pEGLView->setFrameSize(512, 384);
 #ifdef WIN32
-    //pEGLView->setFrameZoomFactor(0.5);
-    pEGLView->setFrameZoomFactor(1.0);
+    pEGLView->setFrameZoomFactor(0.8);
+    //pEGLView->setFrameZoomFactor(1.0);
 #endif
-    
+
     //pEGLView->setDesignResolutionSize(1024, 768, kResolutionNoBorder);
     //pEGLView->setDesignResolutionSize(1136, 640, kResolutionNoBorder);
     pDirector->setContentScaleFactor(1.0);
-    
+
 #else
     // Set the design resolution
     pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
 
-	CCSize frameSize = pEGLView->getFrameSize();
+    CCSize frameSize = pEGLView->getFrameSize();
 
     // In this demo, we select resource according to the frame's height.
     // If the resource size is different from design resolution size, you need to set contentScaleFactor.
@@ -53,11 +53,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // this can make sure that the resource's height could fit for the height of design resolution.
 
     // if the frame's height is larger than the height of medium resource size, select large resource.
-	if (frameSize.height > mediumResource.size.height)
-	{ 
-		CCFileUtils::sharedFileUtils()->setResourceDirectory(largeResource.directory);
+    if (frameSize.height > mediumResource.size.height)
+    { 
+        CCFileUtils::sharedFileUtils()->setResourceDirectory(largeResource.directory);
         pDirector->setContentScaleFactor(largeResource.size.height/designResolutionSize.height);
-	}
+    }
     // if the frame's height is larger than the height of small resource size, select medium resource.
     else if (frameSize.height > smallResource.size.height)
     { 
@@ -65,9 +65,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
         pDirector->setContentScaleFactor(mediumResource.size.height/designResolutionSize.height);
     }
     // if the frame's height is smaller than the height of medium resource size, select small resource.
-	else
+    else
     { 
-		CCFileUtils::sharedFileUtils()->setResourceDirectory(smallResource.directory);
+        CCFileUtils::sharedFileUtils()->setResourceDirectory(smallResource.directory);
         pDirector->setContentScaleFactor(smallResource.size.height/designResolutionSize.height);
     }
 #endif
@@ -77,7 +77,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
 
     // turn on display FPS
-    pDirector->setDisplayStats(true);
+    //pDirector->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
@@ -91,12 +91,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
     CCScene *pScene = CCWHomeScene::create();
     //CCScene *pScene = CCStartLayer::scene();
     //CCScene *pScene = CCUnitEditorScene::create();
-	//CCScene *pScene = CCBattleScene::create();
-	//CCScene* pScene = CCGameChapterScene::create();
+    //CCScene *pScene = CCBattleScene::create();
+    //CCScene* pScene = CCGameChapterScene::create();
     //CCScene* pScene = CCUnitShowScene::create();
     //CCScene* pScene = CCMainScene::create();
 #endif
-	 
+
     // run
     pDirector->runWithScene(pScene);
 
