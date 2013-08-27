@@ -125,7 +125,7 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThunderClap1].sName = "震撼大地";
     m_mapSkills[kThunderClap1].sDesc = "对地面发出强有力的一击，对周围150半径的敌方单位同样造成20~80的物理伤害，并且5秒内降低目标50%移动速度和50%攻击速度";
     
-    pSkill = CHeroBuff::create(-1, 0.1, 0.05, true, 0.02, 1);
+    pSkill = CHeroBuff::create(-1, 0.1, 0.05, true, 0.02, 3);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kHero1].iIndex = iKey;
     m_mapSkills[kHero1].sName = "英雄资质";

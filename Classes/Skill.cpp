@@ -2888,11 +2888,11 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
     float fDis = 0.0;
 
 
-    //¦¶????
+    //
     CAttackData* pAttack = CAttackData::create();
     pAttack->setAttack(m_oMaxDamage);
 
-    //    pOwn->getUnitLayer()->getUnits()->getUnitsInRange(pOwn->getPosition(), m_fMaxDamageRange, -1, CONDITION(CUnitGroup::isLivingEnemyOf), //dynamic_cast<CUnitForce*>(pOwn))->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
+    //pOwn->getUnitLayer()->getUnits()->getUnitsInRange(pOwn->getPosition(), m_fMaxDamageRange, -1, CONDITION(CUnitGroup::isLivingEnemyOf), //dynamic_cast<CUnitForce*>(pOwn))->damagedAdv(pAttack,  pOwn, UNIT_TRIGGER_MASK(CUnit::kDamageTargetTrigger));
 
 
     CCARRAY_FOREACH(pOwn->getUnitLayer()->getUnits()->getUnitsArray(), pObjItem)
@@ -2906,9 +2906,11 @@ void CSwordStormBuff::onActEndPerAnim(CCObject* pObj)
         if ((fDis = ccpDistance(pUnit->getPosition(), pOwn->getPosition()))< m_fMaxDamageRange
             && CUnitGroup::isLivingEnemyOf(pUnit, dynamic_cast<CUnitForce*>(pOwn)))
         {
-            //¦¶????
+            //
             CAttackData* pAttack = CAttackData::create();
             pAttack->setAttack(m_oMaxDamage);
+
+            pAttack = pOwn->attackAdv(pAttack, pUnit);
             pUnit->damagedAdv(pAttack,  pOwn, CUnit::kMaskActiveTrigger);
         }
     }
@@ -3211,10 +3213,15 @@ CCObject* CKnockBackBuff::copyWithZone( CCZone* pZone )
 
 void CKnockBackBuff::onBuffAdd()
 {
-    CStunBuff::onBuffAdd();
     CGameUnit* o = getOwner();
-    CGameUnit* s = getSource();
+    if (o->isFixed())
+    {
+        CBuffSkill::onBuffAdd();
+        return;
+    }
 
+    CStunBuff::onBuffAdd();
+    CGameUnit* s = getSource();
     const CCPoint& roPos1 = s->getPosition();
     const CCPoint& roPos2 = o->getPosition();
     float fR = ccpToAngle(ccpSub(roPos2, roPos1));

@@ -375,7 +375,10 @@ CGameMission* CDemoMission::mission01()
     {
         kMalik,
         kMagnus,
-        kJt
+        kJt,
+        kPaladin,
+        kVeznan,
+        Kurokisi
     };
 
     CUnitPath* pPath;
@@ -418,7 +421,22 @@ CGameMission* CDemoMission::mission01()
     iRound = oMission.addNewRound();
     oRush.init(aiPath[rand() % CONST_MAX_PATH]);
     oRush.addUnit(kJt, 1, 0);
-    //oRush.addUnit(kJt, 4, 8);
+    oRush.addUnit(kJt, 1, 30);
+    oMission.addRush(iRound, oRush);
+
+    iRound = oMission.addNewRound();
+    oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+    oRush.addUnit(kPaladin, 1, 0);
+    oMission.addRush(iRound, oRush);
+
+    iRound = oMission.addNewRound();
+    oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+    oRush.addUnit(kVeznan, 1, 0);
+    oMission.addRush(iRound, oRush);
+
+    iRound = oMission.addNewRound();
+    oRush.init(aiPath[rand() % CONST_MAX_PATH]);
+    oRush.addUnit(Kurokisi, 1, 60);
     oMission.addRush(iRound, oRush);
     
     /*

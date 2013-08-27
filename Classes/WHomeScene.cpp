@@ -135,7 +135,7 @@ bool CCWHomeSceneLayer::init()
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
     //midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
-    midTower->addSkill(pOs->skill(COrgSkillInfo::kImmo1));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange1));
     midTower->setForceResource(&m_oFr);
 
 

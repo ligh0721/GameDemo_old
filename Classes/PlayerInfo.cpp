@@ -36,7 +36,7 @@ void CHeroUpdate::onLevelChange( CLevelExp* pLevel, int32_t iChanged )
 
     pU->setMaxHp(50 + pLevel->getLevel() * 50);
     //pU->setMaxHp(1000 + pLevel->getLevel() * 500);
-    pU->setExAttackValue(CAttackValue::kPhysical, CExtraCoeff(1.0 + 0.1 * pLevel->getLevel(), 1.5 * pLevel->getLevel()));
+    pU->setExAttackValue(CAttackValue::kPhysical, CExtraCoeff(1.0, 1.1 * pLevel->getLevel()));
 }
 
 CHeroUpdate g_oDemoUpdate;
