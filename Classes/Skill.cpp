@@ -2759,10 +2759,9 @@ void CThunderBolt2Buff::onBuffAdd()
         return;
     }
 
-    CCSkillButtonBase* pBtn = CCSkillButtonNormal::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0.0, NULL, NULL, NULL);
-    setDisplayBody(pBtn);
-    pLayer->m_oSkillPanel.pushAddButtonExAction(pBtn);
-    //dynamic_cast<CCWHomeSceneLayer*>(getOwner()->getUnitLayer())->m_oSkillPanel.addButtonEx(pBtn);
+    //CCSkillButtonBase* pBtn = CCSkillButtonNormal::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0.0, NULL, NULL, NULL);
+    //setDisplayBody(pBtn);
+    //pLayer->m_oSkillPanel.pushAddButtonExAction(pBtn);
 }
 
 void CThunderBolt2Buff::onBuffDel(bool bCover)
