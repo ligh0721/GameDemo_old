@@ -208,6 +208,18 @@ bool COrgSkillInfo::init()
     m_mapSkills[kThunderBoltBuff1].sName = "雷击";
     m_mapSkills[kThunderBoltBuff1].sDesc = "召唤圣雷对周围进行随机范围性打击";
 
+    pSkill = CHpChangeBuff::create(5, true, true, 0.1, 0.5, true, -1);
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kHealingBuff1].iIndex = iKey;
+    m_mapSkills[kHealingBuff1].sName = "圣愈";
+    m_mapSkills[kHealingBuff1].sDesc = "受到神圣祝福，每秒恢复5%生命，持续5秒";
+
+    pSkill = CSpeedBuff::create(5, true, CExtraCoeff(1.0, 0), CExtraCoeff(1.0, 0));
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kSpeedUpBuff1].iIndex = iKey;
+    m_mapSkills[kSpeedUpBuff1].sName = "嗜血";
+    m_mapSkills[kSpeedUpBuff1].sDesc = "血液激流，攻击和移动速度增加100%，持续5秒";
+
     pSkill = CChainBuff::create(0.5, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 20.0), pPm->getProjectileByIndex(COrgUnitInfo::kChain1));
     dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
     dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
@@ -292,6 +304,15 @@ bool COrgSkillInfo::init()
     m_mapSkills[kRunBuff1].iIndex = iKey;
     m_mapSkills[kRunBuff1].sName = "怒火";
     m_mapSkills[kRunBuff1].sDesc = "在一定时间内攻击力加强";
+
+    pSkill = CHpChangeBuff::create(5, true, 0, 0.1, -0.1, true, -1);
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CAttackBuffMakerPas::create(100, iKey, 1, CExtraCoeff(1, 0));
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kPoison1].iIndex = iKey;
+    m_mapSkills[kPoison1].sName = "剧毒";
+    m_mapSkills[kPoison1].sDesc = "攻击附带剧毒，使目标每秒受到2点伤害持续3秒，可叠加";
 
 
     return true;

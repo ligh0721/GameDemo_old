@@ -28,12 +28,15 @@ public:
         kSwordStorm1,
         kJumpChop1,
         kThunderBoltBuff1,
+        kHealingBuff1,
+        kSpeedUpBuff1,
         kHealing1,
         kShockWave1,
         kFastStrikeBack1,
         kKnockBack1,
 		kAddDamage1,
         kRunBuff1,
+        kPoison1,
     };
 
     struct SKILL_INFO

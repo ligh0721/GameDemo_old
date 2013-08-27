@@ -677,7 +677,8 @@ void CCWHomeSceneLayer::onBtnGoClick( CCObject* pObject )
 
 void CCWHomeSceneLayer::onBtnHeroClick( CCObject* pObject )
 {
-    m_oSkillPanel.setVisible(!m_oSkillPanel.isVisible());
+    //m_oSkillPanel.setVisible(!m_oSkillPanel.isVisible());
+    updateTargetInfo(getHeroUnit());
 }
 
 CGameUnit* CCWHomeSceneLayer::getHeroUnit()
@@ -719,7 +720,7 @@ void CCWHomeSceneLayer::onTickEvent( float fDt )
     static uint32_t dwOldExp = 0;
     if (pMemHero != pHeroUnit || pHeroUnit->getExp() != dwOldExp)
     {
-        if (pHeroUnit!=NULL&&pHeroUnit->getMaxExp()!=0)
+        if (pHeroUnit != NULL && pHeroUnit->getMaxExp()!=0)
         {
             dwOldExp = pHeroUnit->getExp();
             float fPer = pHeroUnit->getExp() * 100 / pHeroUnit->getMaxExp();
@@ -828,13 +829,14 @@ void CCWHomeSceneLayer::onGoldChange( CCObject* pObject )
 
 void CCWHomeSceneLayer::onGetBuff( CCNode* pNode )
 {
-    if (m_oSkillPanel.getCount() + m_iBuffGetting == m_oSkillPanel.getMaxCount())
+    CGameUnit* pHero = getHeroUnit();
+    if (!pHero || pHero->isDead() || m_oSkillPanel.getCount() + m_iBuffGetting == m_oSkillPanel.getMaxCount())
     {
         return;
     }
     ++m_iBuffGetting;
     CCCommmButton* pBtn = dynamic_cast<CCCommmButton*>(pNode);
-    CGameUnit* pHero = getHeroUnit();
+    
     pBtn->setEnabled(false);
     pBtn->stopAllActions();
     pBtn->setOpacity(0xFF);
@@ -971,7 +973,8 @@ void CCWHomeSceneLayer::onUnitDie( CGameUnit* pUnit )
     else if (pUnit->getRewardExp() && M_RAND_HIT(100) && pUnit->isEnemyOf(dynamic_cast<CUnitForce*>(pHero = getHeroUnit())))
     {
         // Spawn skills
-        CCCommmButton* pBtn = CCCommmButton::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, this, callfuncN_selector(CCWHomeSceneLayer::onGetBuff), NULL, COrgSkillInfo::kThunderBoltBuff1);
+        static const COrgSkillInfo::SKILL_INDEX aeTmp[] = {COrgSkillInfo::kThunderBoltBuff1, COrgSkillInfo::kHealingBuff1, COrgSkillInfo::kSpeedUpBuff1};
+        CCCommmButton* pBtn = CCCommmButton::create(M_SKILL_PATH("skill1"), M_SKILL_PATH("skill1"), NULL, NULL, NULL, 0, this, callfuncN_selector(CCWHomeSceneLayer::onGetBuff), NULL, aeTmp[rand() % (sizeof(aeTmp) / sizeof(aeTmp[0]))]);
         m_oMenu.addChild(pBtn);
         pBtn->setScale(0);
         pBtn->setPosition(pUnit->getPosition());
