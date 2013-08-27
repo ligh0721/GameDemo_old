@@ -10,17 +10,25 @@ class CGameUnit;
 class CHpChangeBuff;
 class CGameMission;
 
-class CCWHomeScene : public CCScene
+class CCWHomeScene : public CCScene, public CAsyncLoadingInterface
 {
 public:
     virtual bool init();
     CREATE_FUNC(CCWHomeScene);
 
+    virtual void onLoading(int iStage);
+    inline virtual void onLoadingEnd();
+
 public:
     CCWHomeSceneLayer* m_pHomeSceneLayer;
+
+protected:
+    CCLoadingLayer* m_pLl;
+    CCProgressBar* m_pPb;
+    CCLabelTTF* m_pLb;
 };
 
-class CCWHomeSceneLayer : public CCWinUnitLayer
+class CCWHomeSceneLayer : public CCWinUnitLayer, public CAsyncLoadingInterface
 {
 public:
     struct REVIVE_INFO
@@ -92,6 +100,9 @@ public:
 
     void hideTargetInfo();
     void updateTargetInfo(CGameUnit* pUnit);
+
+    virtual void onLoading(int iStage);
+    inline virtual void onLoadingEnd();
 
 
 public:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

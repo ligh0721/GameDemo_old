@@ -338,10 +338,11 @@ public:
 
     virtual void setPercentage(float fPercent);
     virtual void setPercentage(float fPercent, float fDuration, CCFiniteTimeAction* pEndAction = NULL);
+    virtual CCFiniteTimeAction* setPercentageAction(float fPercent, float fDuration, CCFiniteTimeAction* pEndAction = NULL);
     virtual void setFillColor(const ccColor3B& roColor);
 
 public:
-    CCProgressTimer m_oPt;
+    CCProgressTimer* m_pPt;
 };
 
 class CCPackagePanel : public CCNode
@@ -404,3 +405,35 @@ public:
 public:
 	int m_iPropKey;
 };
+
+class CAsyncLoadingInterface
+{
+public:
+    inline virtual ~CAsyncLoadingInterface() {}
+    virtual void onLoading(int iStage) = 0;
+    inline virtual void onLoadingEnd() {}
+};
+
+class CCLoadingLayer : public CCNode
+{
+public:
+    //typedef 
+public:
+    virtual bool init(CAsyncLoadingInterface* pLoader, int iStageCount, CCNode* pLoadingBackground, const CCSize& oTransf = CCSizeZero);
+    M_CREATE_FUNC_PARAM(CCLoadingLayer, (CAsyncLoadingInterface* pLoader, int iStageCount, CCNode* pLoadingBackground, const CCSize& oTransf), pLoader, iStageCount, pLoadingBackground, oTransf);
+
+    void startLoading();
+    void setProgressNodeAndAction(CCNode* pNode, CCFiniteTimeAction* pAction);
+
+    virtual void onLoadingOnceEnd();
+    float getPercentage() const;
+   
+protected:
+    int m_iLoadingStageCount;
+    int m_iLoadingStage;
+    CCNode* m_pLoadingProgressNode;
+    CCFiniteTimeAction* m_pLoadingProgressAction;
+    //CCNode* m_pLoadingBackground;
+    CAsyncLoadingInterface* m_pAsyncLoading;
+};
+

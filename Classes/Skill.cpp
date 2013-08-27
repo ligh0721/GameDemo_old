@@ -3142,8 +3142,18 @@ CAttackData* CFastStrikeBackBuff::onUnitAttacked( CAttackData* pAttack, CUnit* p
         o->getUnitLayer()->addChild(pGhost);
         pGhost->setPosition(o->getPosition());
         pGhost->setFlipX(o->getSprite()->isFlipX());
-        pGhost->runAction(CCSequence::create(CCFadeOut::create(0.5), CCCallFuncN::create(this, callfuncN_selector(CFastStrikeBackBuff::onFadeEnd)), NULL));
-        pGhost->runAction(CCSequence::create(CCDelayTime::create(0.2), CCScaleBy::create(0.3, 5, 1.5), NULL));
+        pGhost->runAction(
+            CCSequence::createWithTwoActions(
+                CCSpawn::createWithTwoActions(
+                    CCFadeOut::create(0.5),
+                    CCSequence::createWithTwoActions(
+                        CCDelayTime::create(0.2),
+                        CCScaleBy::create(0.3, 5, 1.5)
+                    )
+                ),
+                CCCallFuncN::create(this, callfuncN_selector(CFastStrikeBackBuff::onFadeEnd))
+            )
+        );
 
         M_DEF_SM(pSm);
         CBuffSkill* pBuff = dynamic_cast<CBuffSkill*>(pSm->copySkill(m_iBuffKey));

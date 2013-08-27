@@ -972,20 +972,20 @@ bool CCProgressBar::init( const CCSize& roSize, CCSprite* pFill, CCSprite* pBord
 
     CCSize oFillSz(roSize.width - fVertBorderWidth * 2, roSize.height - fHorizBorderWidth * 2);
 
-    m_oPt.initWithSprite(pFill);
-    if (m_oPt.getParent())
+    m_pPt = CCProgressTimer::create(pFill);
+    if (m_pPt->getParent())
     {
-        m_oPt.removeFromParentAndCleanup(true);
+        m_pPt->removeFromParentAndCleanup(true);
     }
-    addChild(&m_oPt, bFillOnTop);
-    CCSize oSz = m_oPt.getContentSize();
-    m_oPt.setPosition(getAnchorPointInPoints());
-    m_oPt.setScaleX(oFillSz.width / oSz.width);
-    m_oPt.setScaleY(oFillSz.height / oSz.height);
-    m_oPt.setType(kCCProgressTimerTypeBar);
-    m_oPt.setPercentage(0);
-    m_oPt.setBarChangeRate(ccp(1, 0));
-    m_oPt.setMidpoint(ccp(0, 0));
+    addChild(m_pPt, bFillOnTop);
+    CCSize oSz = m_pPt->getContentSize();
+    m_pPt->setPosition(getAnchorPointInPoints());
+    m_pPt->setScaleX(oFillSz.width / oSz.width);
+    m_pPt->setScaleY(oFillSz.height / oSz.height);
+    m_pPt->setType(kCCProgressTimerTypeBar);
+    m_pPt->setPercentage(0);
+    m_pPt->setBarChangeRate(ccp(1, 0));
+    m_pPt->setMidpoint(ccp(0, 0));
 
     if (pBorder)
     {
@@ -1006,23 +1006,47 @@ void CCProgressBar::setPercentage( float fPercent )
         fPercent = CONST_MAX_PROCESS_BAR_PERCENT;
     }
     //m_oHd.setPosition()
-    m_oPt.setPercentage(fPercent);
+    m_pPt->setPercentage(fPercent);
 }
 
 void CCProgressBar::setPercentage( float fPercent, float fDuration, CCFiniteTimeAction* pEndAction /*= NULL*/ )
 {
-    m_oPt.stopAllActions();
+    m_pPt->stopAllActions();
     if (fPercent > CONST_MAX_PROCESS_BAR_PERCENT)
     {
         fPercent = CONST_MAX_PROCESS_BAR_PERCENT;
     }
-    float fWidth = m_oPt.getScaleX() * m_oPt.getContentSize().width;
-    m_oPt.runAction(CCSequence::create(CCProgressTo::create(fDuration, fPercent), pEndAction, NULL));
+    float fWidth = m_pPt->getScaleX() * m_pPt->getContentSize().width;
+    if (pEndAction)
+    {
+        m_pPt->runAction(CCSequence::create(CCProgressTo::create(fDuration, fPercent), pEndAction, NULL));
+    }
+    else
+    {
+        m_pPt->runAction(CCSequence::create(CCProgressTo::create(fDuration, fPercent), NULL));
+    }
+    
+}
+
+CCFiniteTimeAction* CCProgressBar::setPercentageAction( float fPercent, float fDuration, CCFiniteTimeAction* pEndAction /*= NULL*/ )
+{
+    m_pPt->stopAllActions();
+    if (fPercent > CONST_MAX_PROCESS_BAR_PERCENT)
+    {
+        fPercent = CONST_MAX_PROCESS_BAR_PERCENT;
+    }
+    float fWidth = m_pPt->getScaleX() * m_pPt->getContentSize().width;
+    
+    if (pEndAction)
+    {
+        return CCSequence::create(CCProgressTo::create(fDuration, fPercent), pEndAction, NULL);
+    }
+    return CCSequence::create(CCProgressTo::create(fDuration, fPercent), NULL);
 }
 
 void CCProgressBar::setFillColor( const ccColor3B& roColor )
 {
-    m_oPt.setColor(roColor);
+    m_pPt->setColor(roColor);
 }
 
 const float CCProgressBar::CONST_MAX_PROCESS_BAR_PERCENT = 99.99999;
@@ -1125,3 +1149,76 @@ bool CCCommmButton::init( const char* pNormalImage, const char* pSelectedImage, 
 	m_iKey = iKey;
 	return true;
 }
+
+bool CCLoadingLayer::init( CAsyncLoadingInterface* pLoader, int iStageCount, CCNode* pLoadingBackground, const CCSize& oTransf )
+{
+    //CCLayerColor::init();
+    //m_pLoadingBackground = pLoadingBackground;
+
+    setAnchorPoint(ccp(0.5, 0.5));
+    CCSize oBgSz = pLoadingBackground->getContentSize();
+    if (!oTransf.equals(CCSizeZero))
+    {
+        // 强制设定尺寸
+        setContentSize(oTransf);
+        addChild(pLoadingBackground);
+        pLoadingBackground->setPosition(getAnchorPointInPoints());
+        pLoadingBackground->setScaleX(oTransf.width / oBgSz.width);
+        pLoadingBackground->setScaleY(oTransf.height / oBgSz.height);
+        //pLoadingBackground->setContentSize(oTransf);
+    }
+    else
+    {
+        setContentSize(oBgSz);
+        addChild(pLoadingBackground);
+        pLoadingBackground->setPosition(getAnchorPointInPoints());
+    }
+
+    m_pAsyncLoading = pLoader;
+    m_iLoadingStageCount = iStageCount;
+    m_iLoadingStage = 0;
+    m_pLoadingProgressNode = NULL;
+    m_pLoadingProgressAction = NULL;
+    
+    
+    return true;
+}
+
+void CCLoadingLayer::startLoading()
+{
+    m_pAsyncLoading->onLoading(m_iLoadingStage);
+    if (m_pLoadingProgressNode && m_pLoadingProgressAction)
+    {
+        m_pLoadingProgressNode->runAction(CCSequence::createWithTwoActions(m_pLoadingProgressAction, CCCallFunc::create(this, callfunc_selector(CCLoadingLayer::onLoadingOnceEnd))));
+    }
+    else
+    {
+        runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.0), CCCallFunc::create(this, callfunc_selector(CCLoadingLayer::onLoadingOnceEnd))));
+    }
+}
+
+void CCLoadingLayer::setProgressNodeAndAction( CCNode* pNode, CCFiniteTimeAction* pAction )
+{
+    m_pLoadingProgressNode = pNode;
+    m_pLoadingProgressAction = pAction;
+}
+
+void CCLoadingLayer::onLoadingOnceEnd()
+{
+    ++m_iLoadingStage;
+    if (m_iLoadingStage >= m_iLoadingStageCount)
+    {
+        // 加载完毕
+        m_pAsyncLoading->onLoadingEnd();
+    }
+    else
+    {
+        startLoading();
+    }
+}
+
+float CCLoadingLayer::getPercentage() const
+{
+    return (m_iLoadingStage + 1) * 100.0 / m_iLoadingStageCount;
+}
+

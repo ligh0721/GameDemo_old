@@ -19,13 +19,71 @@
 bool CCWHomeScene::init()
 {
     CCScene::init();
+
+    CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+    CCSprite* pSprite = NULL;
+    
+    m_pLl = CCLoadingLayer::create(this, 4, CCSprite::create("background/Dota.png"), oSz);
+    addChild(m_pLl);
+    m_pLl->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.5));
+
+    M_DEF_FC(pFc);
+    pFc->addSpriteFramesWithFile("UI.plist");
+    
+    m_pPb = CCProgressBar::create(CCSizeMake(oSz.width * 0.7, oSz.height * 0.1), CCSprite::createWithSpriteFrameName("barfill.png"), CCSprite::createWithSpriteFrameName("Loading-BarBorder.png"), 1, 1, false);
+    m_pLl->addChild(m_pPb);
+    m_pPb->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.2));
+    
+    m_pLb = CCLabelTTF::create("", "Hobo Std", 24);
+    m_pLl->addChild(m_pLb);
+    m_pLb->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.2));
+    m_pLb->setColor(ccc3(240, 240, 80));
+
+    m_pLl->startLoading();
+    
+    return true;
+}
+
+void CCWHomeScene::onLoading( int iStage )
+{
+    M_DEF_FC(pFc);
+    switch (iStage)
+    {
+    case 0:
+        pFc->addSpriteFramesWithFile("background.plist");
+        break;
+    case 1:
+        pFc->addSpriteFramesWithFile("tank.plist");
+        break;
+    case 2:
+        pFc->addSpriteFramesWithFile("skill.plist");
+        break;
+    case 3:
+        M_DEF_GM(pGm);
+        M_DEF_OS(pOs);
+        break;
+    }
+
+    //CCLOG("setPercent: %.1f", m_pLl->getPercentage());
+    m_pLl->setProgressNodeAndAction(m_pPb->m_pPt, m_pPb->setPercentageAction(m_pLl->getPercentage(), 0.1));
+    char szBuf[32];
+    sprintf(szBuf, "Loading .. %d%%", (int)m_pLl->getPercentage());
+    m_pLb->setString(szBuf);
+}
+
+void CCWHomeScene::onLoadingEnd()
+{
+    m_pLl->removeFromParentAndCleanup(false);
+    //m_pPb = NULL;
+    //m_pLl = NULL;
+    //Sleep(1000);
+    //return;
+
     m_pHomeSceneLayer = CCWHomeSceneLayer::create();
-    addChild(m_pHomeSceneLayer,1);
+    addChild(m_pHomeSceneLayer, 1);
     //     CGameCtrlLayer* testCtrlLayer=CGameCtrlLayer::create();
     //     addChild(testCtrlLayer,2);
-    addChild(&m_pHomeSceneLayer->m_oGameCtrlLayer,2);
-
-    return true;
+    addChild(&m_pHomeSceneLayer->m_oGameCtrlLayer, 2);
 }
 
 CCWHomeSceneLayer::CCWHomeSceneLayer()
@@ -35,17 +93,13 @@ CCWHomeSceneLayer::CCWHomeSceneLayer()
 bool CCWHomeSceneLayer::init()
 {
     CCWinUnitLayer::initWithColor(ccc4(204, 232, 207, 64));
-
-    //setUnitTickInterval(1.0 / 60);
+    CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+    CCSprite* pSprite = NULL;
+    
     M_DEF_GM(pGm);
     M_DEF_OS(pOs);
-
-    CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
     M_DEF_FC(pFc);
-    pFc->addSpriteFramesWithFile("background.plist");
-    pFc->addSpriteFramesWithFile("UI.plist");
-    pFc->addSpriteFramesWithFile("tank.plist");
-    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("skill.plist");
+    
     //setBackGroundSprite(CCSprite::create("levels/level01/LevelHD.png"));
     setBackGroundSprite(CCSprite::create("LevelDemo2HD.png"));
     setBufferEffectParam(0.9, 10, 0.1);
@@ -57,14 +111,6 @@ bool CCWHomeSceneLayer::init()
     m_iHero = 0;
 
     m_oFr.initWithChangeCallback(this, callfuncO_selector(CCWHomeSceneLayer::onGoldChange)); // 势力资源
-
-    m_oCfg.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnCfgClick));
-    m_oMenu.addChild(&m_oCfg);
-    m_oCfg.setPosition(ccp(oSz.width * 0.9, oSz.height * 0.6));
-
-    m_oStart.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnStartClick));
-    m_oMenu.addChild(&m_oStart);
-    m_oStart.setPosition(ccp(oSz.width * 0.8, oSz.height * 0.6));
 
     M_DEF_UPM(pUpm);
     //pUpm->addPatches("heroes.uip");
@@ -96,7 +142,7 @@ bool CCWHomeSceneLayer::init()
     CGameUnit* pHeroUnit = getHeroUnit();
 
     //addUnit(pHeroUnit);
-    pHeroUnit->setPosition(ccp(804,793));
+    pHeroUnit->setPosition(ccp(804, 793));
     pHeroUnit->setForceByIndex(2);
     pHeroUnit->setAlly(1<<2);
     pHeroUnit->addSkill(CStatusShowPas::create());
@@ -112,8 +158,16 @@ bool CCWHomeSceneLayer::init()
     m_oMenuCtrl.setPosition(CCPointZero);
     m_oGoToTechTree.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png"
         , NULL, this, menu_selector(CCWHomeSceneLayer::onBtnGoClick));
-    m_oGoToTechTree.setPosition(ccp(oSz.width - m_oGoToTechTree.getContentSize().width * 0.5 - 10, m_oGoToTechTree.getContentSize().height * 0.5 + 10));
-    m_oMenuCtrl.addChild(&m_oGoToTechTree);
+    //m_oGoToTechTree.setPosition(ccp(oSz.width - m_oGoToTechTree.getContentSize().width * 0.5 - 10, m_oGoToTechTree.getContentSize().height * 0.5 + 10));
+    //m_oMenuCtrl.addChild(&m_oGoToTechTree);
+
+    m_oCfg.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnCfgClick));
+    //m_oMenuCtrl.addChild(&m_oCfg);
+    //m_oCfg.setPosition(ccp(oSz.width * 0.9, oSz.height * 0.6));
+
+    m_oStart.initWithNormalImage("UI/button01.png", "UI/button01DOWN.png", NULL, this, menu_selector(CCWHomeSceneLayer::onBtnStartClick));
+    m_oMenuCtrl.addChild(&m_oStart);
+    m_oStart.setPosition(ccp(oSz.width - m_oStart.getContentSize().width * 0.5 - 10, m_oStart.getContentSize().height * 0.5 + 10));
 
     m_oHeroHead.initWithNormalSprite(CCSprite::createWithSpriteFrameName(M_SKILL_PATH("jt")), CCSprite::createWithSpriteFrameName(M_SKILL_DOWN_PATH("jt"))
         , CCSprite::createWithSpriteFrameName(M_SKILL_DIS_PATH("jt")), this, menu_selector(CCWHomeSceneLayer::onBtnHeroClick));
@@ -236,7 +290,7 @@ bool CCWHomeSceneLayer::init()
     m_oTargetInfoLayer.setContentSize(CCSizeMake(700, 48));
     m_oTargetInfoLayer.setPosition(ccp(5, 5));
 
-    CCSprite* pSprite = CCSprite::createWithSpriteFrameName("pos.png");
+    pSprite = CCSprite::createWithSpriteFrameName("pos.png");
     m_oGameCtrlLayer.addChild(pSprite);
     pSprite->setPosition(ccp(5, 5));
 
@@ -1090,4 +1144,14 @@ void CCWHomeSceneLayer::onUnitHpChange( CGameUnit* pUnit, float fChanged )
     {
         updateTargetInfo(pUnit);
     }
+}
+
+void CCWHomeSceneLayer::onLoading( int iStage )
+{
+
+}
+
+void CCWHomeSceneLayer::onLoadingEnd()
+{
+
 }
