@@ -531,11 +531,11 @@ public:
     
     struct ANIMATION_INFO
     {
-        ANIMATION_INFO() : fDelay(0.0), fEffect(0.0) {}
-        ANIMATION_INFO(const char* pAnimation_, float fDelay_, float fEffect_) : sAnimation(pAnimation_), fDelay(fDelay_), fEffect(fEffect_) {}
+        ANIMATION_INFO() : fDelay(0.0), iEffect(0) {}
+        ANIMATION_INFO(const char* pAnimation_, float fDelay_, int iEffect_) : sAnimation(pAnimation_), fDelay(fDelay_), iEffect(iEffect_) {}
         string sAnimation;
         float fDelay;
-        float fEffect;
+        int iEffect;
     };
     typedef vector<ANIMATION_INFO> VEC_ANI_INFOS;
     
@@ -652,11 +652,11 @@ public:
     virtual void setFrame(const char* pFrame);
     virtual void setDefaultFrame();
     virtual void prepareMoveAnimation(const char* pAnimation, float fDelay);
-    virtual void prepareAttackAnimation(int iAttackAniCount, ANIMATION_INDEX eAnimation1, const char* pAnimation1, float fDelay1, float fEffect1, ...);
+    virtual void prepareAttackAnimation(int iAttackAniCount, ANIMATION_INDEX eAnimation1, const char* pAnimation1, float fDelay1, int iEffect1, ...);
     virtual void prepareDieAnimation(const char* pAnimation, float fDelay);
-    virtual void prepareAnimation(ANIMATION_INDEX eAnimation, const char* pAnimation, float fDelay, float fEffect);
-    virtual void setAnimation(const char* pAnimation, float fDelay, int iRepeat, float fSpeed, ACTION_TAG eTag, CCFiniteTimeAction* pEndAction = NULL);
-    virtual void setAnimation(ANIMATION_INDEX eAnimation, int iRepeat, float fSpeed, ACTION_TAG eTag, CCFiniteTimeAction* pEndAction = NULL);
+    virtual void prepareAnimation(ANIMATION_INDEX eAnimation, const char* pAnimation, float fDelay, int iEffect);
+    virtual void setAnimation(const char* pAnimation, float fDelay, int iRepeat, float fSpeed, ACTION_TAG eTag, int iEffect = 0, CCObject* pEffectSelector = NULL, SEL_CallFuncN pEffectCallback = NULL, CCFiniteTimeAction* pEndAction = NULL);
+    virtual void setAnimation(ANIMATION_INDEX eAnimation, int iRepeat, float fSpeed, ACTION_TAG eTag, CCObject* pEffectSelector = NULL, SEL_CallFuncN pEffectCallback = NULL, CCFiniteTimeAction* pEndAction = NULL);
     
     virtual void suspend();
     virtual void resume();
@@ -1023,7 +1023,7 @@ public:
     typedef CInitArray<CGameUnit::ANIMATION_INDEX, int> ARR_ATTACK_ANI;
     typedef CInitArray<const char*> ARR_ANI_INFO_NAME;
     typedef CInitArray<float, double> ARR_ANI_INFO_DELAY;
-    typedef CInitArray<float, double> ARR_ANI_INFO_EFFECT;
+    typedef CInitArray<int> ARR_ANI_INFO_EFFECT;
     
 public:
     CUnitInfo(

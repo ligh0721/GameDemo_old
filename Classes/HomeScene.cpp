@@ -50,11 +50,19 @@ bool CCHomeSceneLayer::init()
 
     //CCSprite* pSprite = CCSprite::createWithSpriteFrameName("kr/LevelDemo.png");
     CCSprite* pSprite = CCSprite::create("Home.png");
+    
     //pSprite->setScale(0.5);
     //setBackGroundSprite(pSprite);
     //setBufferEffectParam(0.9, 50, 0.1);
     setBufferEffectParam(0, 0, 0);
 
+    pSprite = CCSprite::createWithSpriteFrameName("ph32.png");
+    addChild(pSprite, 1, 1234);
+    pSprite->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.5));
+
+    schedule(schedule_selector(CCHomeSceneLayer::onTick), 0.1);
+
+    return true;
     /*
     m_oMenu.init();
     addChild(&m_oMenu);
@@ -214,6 +222,18 @@ void CCHomeSceneLayer::onBtnCfgClick(CCObject* pObject)
 
 void CCHomeSceneLayer::onTick( float fDt )
 {
+    static float fHp = 1.0;
+    CCSprite* pSprite = dynamic_cast<CCSprite*>(getChildByTag(1234));
+    pSprite->setColor(ccc3(255 * (1 - fHp), 255 * fHp, 0));
+    if (fHp > 0)
+    {
+        fHp -= 0.01;
+    }
+    else
+    {
+        fHp = 1.0;
+    }
+
     static float fS = 0;
     fS += fDt;
 

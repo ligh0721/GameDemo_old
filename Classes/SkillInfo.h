@@ -37,6 +37,7 @@ public:
 		kAddDamage1,
         kRunBuff1,
         kPoison1,
+        kStaticElec1
     };
 
     struct SKILL_INFO

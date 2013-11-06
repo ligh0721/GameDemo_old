@@ -117,25 +117,28 @@ bool CCWHomeSceneLayer::init()
     m_oUipm.initWithFile("heroes.uip");
     // demo code
     M_DEF_UM(pUm);
-    CGameUnit* midTower = pUm->unitByInfo(COrgUnitInfo::kArcane);
-    addUnit(midTower);
-    midTower->setPosition(ccp(1804,793));
-    midTower->setForceByIndex(2);
-    midTower->setAlly(1<<2);
-    midTower->addSkill(CStatusShowPas::create());
-    //midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
-    midTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
-    midTower->addSkill(pOs->skill(COrgSkillInfo::kSpeedAura1));
-    midTower->setForceResource(&m_oFr);
+    CGameUnit* midTower = NULL;
+//     midTower = pUm->unitByInfo(COrgUnitInfo::kArcane);
+//     addUnit(midTower);
+//     midTower->setPosition(ccp(1804,793));
+//     midTower->setForceByIndex(2);
+//     midTower->setAlly(1<<2);
+//     midTower->addSkill(CStatusShowPas::create());
+//     //midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
+//     midTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
+//     midTower->addSkill(pOs->skill(COrgSkillInfo::kSpeedAura1));
+//     midTower->setForceResource(&m_oFr);
 
     midTower = pUm->unitByInfo(COrgUnitInfo::kTesla);
     addUnit(midTower);
-    midTower->setPosition(ccp(1704, 793));
+    m_iMidTower = midTower->getKey();
+    midTower->setPosition(ccp(1750, 793));
     midTower->setForceByIndex(2);
     midTower->setAlly(1<<2);
     midTower->addSkill(CStatusShowPas::create());
-    //midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange2));
-    midTower->addSkill(pOs->skill(COrgSkillInfo::kHpChange1));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kSlowDown1));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kSpeedAura1));
+    midTower->addSkill(pOs->skill(COrgSkillInfo::kStaticElec1));
     midTower->setForceResource(&m_oFr);
 
 
@@ -191,12 +194,20 @@ bool CCWHomeSceneLayer::init()
     CActiveSkill* pSkill = NULL;
     CPassiveSkill* pSkillPas = NULL;
 
-    // 初始化技能1
-    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSwordStorm1));
-    //pSkill->setCastAniIndex(CGameUnit::kAnimationAct3);
-    pHeroUnit->addSkill(pSkill);
     CCSkillButtonBase* pBtn;
-    pBtn = M_CREATE_SKILL("SwordStorm", pHeroUnit->getKey(), pSkill->getKey(), this);
+
+    // 初始化技能1
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kShockWave1));
+    pSkill->setCastAniIndex(CGameUnit::kAnimationAct2);
+    dynamic_cast<CProjectileWaveAct*>(pSkill)->setProjectileBirthOffset(ccp(0, 25));
+
+    //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kJumpChop1));
+    //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kAddDamage1));
+
+    //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kRunBuff1));
+    //pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
+    pHeroUnit->addSkill(pSkill);
+    pBtn = M_CREATE_SKILL("ShockWave", pHeroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
     // 初始化技能2
@@ -214,18 +225,12 @@ bool CCWHomeSceneLayer::init()
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
 
     // 初始化技能4
-    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kShockWave1));
-    pSkill->setCastAniIndex(CGameUnit::kAnimationAct2);
-    dynamic_cast<CProjectileWaveAct*>(pSkill)->setProjectileBirthOffset(ccp(0, 25));
-
-    //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kJumpChop1));
-    //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kAddDamage1));
-
-    //pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kRunBuff1));
-    //pSkill->setCastAniInfo(CGameUnit::kAnimationAct2, 0.2);
+    pSkill = dynamic_cast<CActiveSkill*>(pOs->skill(COrgSkillInfo::kSwordStorm1));
+    //pSkill->setCastAniIndex(CGameUnit::kAnimationAct3);
     pHeroUnit->addSkill(pSkill);
-    pBtn = M_CREATE_SKILL("ShockWave", pHeroUnit->getKey(), pSkill->getKey(), this);
+    pBtn = M_CREATE_SKILL("SwordStorm", pHeroUnit->getKey(), pSkill->getKey(), this);
     m_oSkillPanel.pushAddButtonExAction(pBtn, CCButtonPanel::kTopToBottom);
+    
 
     /*
     // 初始化技能5
@@ -935,7 +940,7 @@ void CCWHomeSceneLayer::onUnitDie( CGameUnit* pUnit )
     if (pUnit->getKey() == m_iHero)
     {
         // hero die
-        m_stReviveInfo.fReviveTimeLeft = 5;
+        m_stReviveInfo.fReviveTimeLeft = 15;
         m_stReviveInfo.oPos = pUnit->getPosition();
         m_stReviveInfo.dwExp = pUnit->getExp();
         m_stReviveInfo.dwLevel = pUnit->getLevel();
@@ -983,6 +988,18 @@ void CCWHomeSceneLayer::onUnitDie( CGameUnit* pUnit )
         pBtn->runAction(CCSequence::create(CCScaleTo::create(0.25, 1.0, 1.0), CCScaleTo::create(0.25, 0.75, 0.75), NULL));
         pBtn->runAction(CCDelayRelease::create(5.0));
         pBtn->runAction(CCRepeatForever::create(dynamic_cast<CCActionInterval*>(CCSequence::create(CCOrbitCamera::create(1, 10000, 0, 0, 360, 0, 0), CCDelayTime::create(1.5), NULL))));
+    }
+    else if (pUnit->getKey() == m_iMidTower)
+    {
+        CCSize oSz = CCDirector::sharedDirector()->getVisibleSize();
+        CCLabelTTF* pLbl = CCLabelTTF::create("Game Over", "Hobo Std", 64);
+        //m_oGameCtrlLayer.setOpacity(0x7F);
+        m_oGameCtrlLayer.runAction(CCFadeTo::create(0.2, 0xC0));
+        runAction(CCFadeTo::create(0.2, 0xC0));
+        getParent()->addChild(pLbl, 1000);
+        pLbl->setOpacity(0);
+        pLbl->setPosition(ccp(oSz.width * 0.5, oSz.height * 0.5));
+        pLbl->runAction(CCSequence::create(CCFadeInOutScale4::create(0.5, 1.2, 0.8,     0.10, 0.1, 4.0, 0.2), CCCallFuncN::create(this, callfuncN_selector(CCWHomeSceneLayer::onGameOver)), NULL));
     }
     // TODO: Reward
     CGameUnit* u;
@@ -1156,5 +1173,9 @@ void CCWHomeSceneLayer::onLoading( int iStage )
 
 void CCWHomeSceneLayer::onLoadingEnd()
 {
+}
 
+void CCWHomeSceneLayer::onGameOver( CCNode* pNode )
+{
+    onBtnStartClick(NULL);
 }

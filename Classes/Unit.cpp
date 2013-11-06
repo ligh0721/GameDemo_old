@@ -1392,11 +1392,11 @@ void CGameUnit::prepareMoveAnimation( const char* pAnimation, float fDelay )
     prepareAnimation(kAnimationMove, pAnimation, fDelay, 0.0);
 }
 
-void CGameUnit::prepareAttackAnimation( int iAttackAniCount, ANIMATION_INDEX eAnimation1, const char* pAnimation1, float fDelay1, float fEffect1, ... )
+void CGameUnit::prepareAttackAnimation( int iAttackAniCount, ANIMATION_INDEX eAnimation1, const char* pAnimation1, float fDelay1, int iEffect1, ... )
 {
     m_vecAttackAniIndex.resize(iAttackAniCount);
 
-    prepareAnimation(eAnimation1, pAnimation1, fDelay1, fEffect1);
+    prepareAnimation(eAnimation1, pAnimation1, fDelay1, iEffect1);
     m_vecAttackAniIndex[0] = eAnimation1;
 
     va_list argv;
@@ -1406,8 +1406,8 @@ void CGameUnit::prepareAttackAnimation( int iAttackAniCount, ANIMATION_INDEX eAn
         eAnimation1 = (ANIMATION_INDEX)va_arg(argv, int);
         pAnimation1 = (const char*)va_arg(argv, int);
         fDelay1 = (float)va_arg(argv, double);
-        fEffect1 = (float)va_arg(argv, double);
-        prepareAnimation(eAnimation1, pAnimation1, fDelay1, fEffect1);
+        iEffect1 = (int)va_arg(argv, int);
+        prepareAnimation(eAnimation1, pAnimation1, fDelay1, iEffect1);
         m_vecAttackAniIndex[i] = eAnimation1;
     }
 
@@ -1419,7 +1419,7 @@ void CGameUnit::prepareDieAnimation( const char* pAnimation, float fDelay )
     prepareAnimation(kAnimationDie, pAnimation, fDelay, 0.0);
 }
 
-void CGameUnit::prepareAnimation( ANIMATION_INDEX eAnimation, const char* pAnimation, float fDelay, float fEffect )
+void CGameUnit::prepareAnimation( ANIMATION_INDEX eAnimation, const char* pAnimation, float fDelay, int iEffect )
 {
     int iIndex = (int)eAnimation;
     if (iIndex >= (int)m_vecAniInfo.size())
@@ -1429,10 +1429,10 @@ void CGameUnit::prepareAnimation( ANIMATION_INDEX eAnimation, const char* pAnima
     ANIMATION_INFO& rAni = m_vecAniInfo[eAnimation];
     rAni.sAnimation = pAnimation;
     rAni.fDelay = fDelay;
-    rAni.fEffect = fEffect;
+    rAni.iEffect = iEffect;
 }
 
-void CGameUnit::setAnimation( const char* pAnimation, float fDelay, int iRepeat, float fSpeed, ACTION_TAG eTag, CCFiniteTimeAction* pEndAction )
+void CGameUnit::setAnimation( const char* pAnimation, float fDelay, int iRepeat, float fSpeed, ACTION_TAG eTag, int iEffect, CCObject* pEffectSelector, SEL_CallFuncN pEffectCallback, CCFiniteTimeAction* pEndAction )
 {
     if (m_oSprite.getActionByTag(eTag))
     {
@@ -1446,7 +1446,7 @@ void CGameUnit::setAnimation( const char* pAnimation, float fDelay, int iRepeat,
         return;
     }
     pAni->setDelayPerUnit(fDelay);
-    CCAction* pAct = CCAnimate::create(pAni);
+    CCAction* pAct = CCNotifyAnimate::create(pAni, iEffect, pEffectSelector, pEffectCallback);
 
     switch (iRepeat)
     {
@@ -1468,10 +1468,10 @@ void CGameUnit::setAnimation( const char* pAnimation, float fDelay, int iRepeat,
     m_oSprite.runAction(pAct);
 }
 
-void CGameUnit::setAnimation( ANIMATION_INDEX eAnimation, int iRepeat, float fSpeed, ACTION_TAG eTag, CCFiniteTimeAction* pEndAction )
+void CGameUnit::setAnimation( ANIMATION_INDEX eAnimation, int iRepeat, float fSpeed, ACTION_TAG eTag, CCObject* pEffectSelector, SEL_CallFuncN pEffectCallback, CCFiniteTimeAction* pEndAction )
 {
     ANIMATION_INFO& rAni = m_vecAniInfo[eAnimation];
-    setAnimation(rAni.sAnimation.c_str(), rAni.fDelay, iRepeat, fSpeed, eTag, pEndAction);
+    setAnimation(rAni.sAnimation.c_str(), rAni.fDelay, iRepeat, fSpeed, eTag, rAni.iEffect, pEffectSelector, pEffectCallback, pEndAction);
 }
 
 void CGameUnit::setBaseMoveSpeed( float fMoveSpeed )
@@ -1884,10 +1884,10 @@ void CGameUnit::attack( int iTargetKey, bool bIntended /*= true*/)
         float fDelta = getBaseAttackInterval() / fRealAttackInterval;
         ANIMATION_INDEX eAni = m_vecAttackAniIndex[rand() % m_vecAttackAniIndex.size()];
         ANIMATION_INFO& rAni = m_vecAniInfo[eAni];
-        setAnimation(eAni, 0, fDelta, kActAttack, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEnd)));
-        CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(rAni.fEffect / fDelta), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEffect)));
-        pAct->setTag(kActAttackEffect);
-        m_oSprite.runAction(pAct);
+        setAnimation(eAni, 0, fDelta, kActAttack, this, callfuncN_selector(CGameUnit::onActAttackEffect), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEnd)));
+        //CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(rAni.fEffect / fDelta), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActAttackEffect)));
+        //pAct->setTag(kActAttackEffect);
+        //m_oSprite.runAction(pAct);
         return;
     }
 
@@ -2594,10 +2594,10 @@ bool CGameUnit::cast()
     }
     else
     {
-        setAnimation(eAni, 0, 1, kActCast, CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEnd)));
-        CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(m_vecAniInfo[eAni].fEffect), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEffect)));
-        pAct->setTag(kActCastEffect);
-        m_oSprite.runAction(pAct);
+        setAnimation(eAni, 0, 1, kActCast, this, callfuncN_selector(CGameUnit::onActCastEffect), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEnd)));
+        //CCAction* pAct = CCSequenceEx::createWithTwoActions(CCDelayTime::create(m_vecAniInfo[eAni].fEffect), CCCallFuncN::create(this, callfuncN_selector(CGameUnit::onActCastEffect)));
+        //pAct->setTag(kActCastEffect);
+        //m_oSprite.runAction(pAct);
     }
 
     return true;
@@ -3916,7 +3916,7 @@ CUnitInfo::CUnitInfo( const char* pName, const CCPoint& roAnchor, float fHalfOfW
     typedef const char* PCSTR;
     const PCSTR* pAniInfoNames = roArrAniInfoNames;
     const float* pAniInfoDelays = roArrAniInfoDelays;
-    const float* pAniInfoEffects = roArrAniInfoEffects;
+    const int* pAniInfoEffects = roArrAniInfoEffects;
     for (int i = 0; i < n; ++i)
     {
         CGameUnit::ANIMATION_INFO stAni(roArrAniInfoNames[i], roArrAniInfoDelays[i], roArrAniInfoEffects[i]);

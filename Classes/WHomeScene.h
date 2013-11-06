@@ -104,6 +104,8 @@ public:
     virtual void onLoading(int iStage);
     inline virtual void onLoadingEnd();
 
+    void onGameOver(CCNode* pNode);
+
 
 public:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
@@ -150,5 +152,6 @@ public:
     float m_fWaitingNextRound;
     int m_iLastNum;
     bool m_bMissionEnd;
+    int m_iMidTower;
 };
 

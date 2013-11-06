@@ -47,14 +47,14 @@ bool COrgSkillInfo::init()
     m_mapSkills[kHpChange2].sName = "自动痊愈";
     m_mapSkills[kHpChange2].sDesc = "每秒恢复自身最大生命的0.2%";
     
-    pSkill = CHpChangeBuff::create(3, false, 0, 0.1, 0.5, true, -1);
+    pSkill = CHpChangeBuff::create(3, false, 0, 0.1, 0.2, true, -1);
     iKey = pSm->addSkill(pSkill);
     
     pSkill = CAuraPas::create(150, CAuraPas::kOwn | CAuraPas::kAlly, 0.5, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kHpChangeAura1].iIndex = iKey;
     m_mapSkills[kHpChangeAura1].sName = "恢复光环";
-    m_mapSkills[kHpChangeAura1].sDesc = "为周围半径150范围内的友方单位(不含自身)提供每秒5%的最大生命值恢复";
+    m_mapSkills[kHpChangeAura1].sDesc = "为周围半径150范围内的友方单位(不含自身)提供每秒2%的最大生命值恢复";
     
     pSkill = CSpeedBuff::create(1, false, CExtraCoeff(0.5, 0), CExtraCoeff(0.5, 0));
     iKey = pSm->addSkill(pSkill);
@@ -238,11 +238,11 @@ bool COrgSkillInfo::init()
     //pSkill = CSwordStormSkill::create(40, 3.0, 100, CAttackValue(1, CAttackValue::kPhysical, 5.0), CExtraCoeff(0.30, 0), "act4");
     //dynamic_cast<CSwordStormSkill*>(pSkill)->setDelayPerUnit(0.03);
     //iKey = pSm->addSkill(pSkill);
-    pSkill = CSwordStormBuff::create(5, false, 0, 100, CAttackValue(1, CAttackValue::kPhysical, 5.0), CExtraCoeff(0.30, 0), "act4");
+    pSkill = CSwordStormBuff::create(5, false, 0, 100, CAttackValue(1, CAttackValue::kPhysical, 8.0), CExtraCoeff(0.30, 0), "act4");
     dynamic_cast<CSwordStormBuff*>(pSkill)->setDelayPerUnit(0.03);
     iKey = pSm->addSkill(pSkill);
 
-    pSkill = CSelfBuffMakerAct::create(15, iKey, 1);
+    pSkill = CSelfBuffMakerAct::create(25, iKey, 1);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kSwordStorm1].iIndex = iKey;
     m_mapSkills[kSwordStorm1].sName = "剑刃风暴";
@@ -262,7 +262,7 @@ bool COrgSkillInfo::init()
     dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
     iKey = pSm->addSkill(pSkill);
 
-    pSkill = CProjectileWaveAct::create(20.0, 500, CAttackValue(1, CAttackValue::kMagical, 20.0), pPm->getProjectileByIndex(COrgUnitInfo::kWave1), 600, 0, 1);
+    pSkill = CProjectileWaveAct::create(12.0, 500, CAttackValue(1, CAttackValue::kMagical, 20.0), pPm->getProjectileByIndex(COrgUnitInfo::kWave1), 600, 0, 1);
     dynamic_cast<CProjectileWaveAct*>(pSkill)->setWeaponType(CGameUnit::kWTDelayed);
     iKey = pSm->addSkill(pSkill);
     m_mapSkills[kShockWave1].iIndex = iKey;
@@ -313,6 +313,17 @@ bool COrgSkillInfo::init()
     m_mapSkills[kPoison1].iIndex = iKey;
     m_mapSkills[kPoison1].sName = "剧毒";
     m_mapSkills[kPoison1].sDesc = "攻击附带剧毒，使目标每秒受到2点伤害持续3秒，可叠加";
+
+    pSkill = CChainBuff::create(0.5, false, 0, 200, 5, CAttackValue(1, CAttackValue::kMagical, 20.0), pPm->getProjectileByIndex(COrgUnitInfo::kLightning1));
+    dynamic_cast<CChainBuff*>(pSkill)->setWeaponType(CGameUnit::kWTInstant);
+    dynamic_cast<CChainBuff*>(pSkill)->setProjectileScale(0.75);
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CAttackBuffMakerPas::create(30, iKey, 1, CExtraCoeff(1, 0));
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kStaticElec1].iIndex = iKey;
+    m_mapSkills[kStaticElec1].sName = "静电";
+    m_mapSkills[kStaticElec1].sDesc = "攻击附带的电荷，30%几率可以出发一次闪电链，最多跳跃5次";
 
 
     return true;

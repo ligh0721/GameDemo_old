@@ -471,3 +471,85 @@ void CCFadeInOutScale4::startWithTarget( CCNode *pTarget )
     CCSequence::startWithTarget(pTarget);
     m_pTarget->setScale(m_fScaleStart);
 }
+
+bool CCNotifyAnimate::initWithAnimation( CCAnimation* pAnimation, int iNotifyFrameIndex, CCObject* pSelector, SEL_CallFuncN pCallback )
+{
+    if (!CCAnimate::initWithAnimation(pAnimation))
+    {
+        return false;
+    }
+
+    m_iNotifyFrameIndex = iNotifyFrameIndex;
+    m_pSelector = pSelector;
+    m_pCallback = pCallback;
+    return true;
+}
+
+void CCNotifyAnimate::update( float t )
+{
+    // if t==1, ignore. Animation should finish with t==1
+    if( t < 1.0f ) {
+        t *= getAnimation()->getLoops();
+
+        // new loop?  If so, reset frame counter
+        unsigned int loopNumber = (unsigned int)t;
+        if( loopNumber > m_uExecutedLoops ) {
+            m_nNextFrame = 0;
+            m_uExecutedLoops++;
+        }
+
+        // new t for animations
+        t = fmodf(t, 1.0f);
+    }
+
+    CCArray* frames = getAnimation()->getFrames();
+    unsigned int numberOfFrames = frames->count();
+    CCSpriteFrame *frameToDisplay = NULL;
+
+    for( unsigned int i=m_nNextFrame; i < numberOfFrames; i++ ) {
+        float splitTime = m_pSplitTimes->at(i);
+
+        if( splitTime <= t ) {
+            CCAnimationFrame* frame = (CCAnimationFrame*)frames->objectAtIndex(i);
+            frameToDisplay = frame->getSpriteFrame();
+            ((CCSprite*)m_pTarget)->setDisplayFrame(frameToDisplay);
+
+            CCDictionary* dict = frame->getUserInfo();
+            if( dict )
+            {
+                //TODO: [[NSNotificationCenter defaultCenter] postNotificationName:CCAnimationFrameDisplayedNotification object:target_ userInfo:dict];
+            }
+            m_nNextFrame = i+1;
+
+            if (i == m_iNotifyFrameIndex && m_pSelector && m_pCallback)
+            {
+                (m_pSelector->*m_pCallback)(m_pTarget);
+            }
+
+            break;
+        }
+    }
+}
+
+CCObject* CCNotifyAnimate::copyWithZone( CCZone* pZone )
+{
+    CCZone* pNewZone = NULL;
+    CCNotifyAnimate* pCopy = NULL;
+    if(pZone && pZone->m_pCopyObject) 
+    {
+        //in case of being called at sub class
+        pCopy = (CCNotifyAnimate*)(pZone->m_pCopyObject);
+    }
+    else
+    {
+        pCopy = new CCNotifyAnimate();
+        pZone = pNewZone = new CCZone(pCopy);
+    }
+
+    CCActionInterval::copyWithZone(pZone);
+
+    pCopy->initWithAnimation((CCAnimation*)getAnimation()->copy()->autorelease(), m_iNotifyFrameIndex, m_pSelector, m_pCallback);
+
+    CC_SAFE_DELETE(pNewZone);
+    return pCopy;
+}

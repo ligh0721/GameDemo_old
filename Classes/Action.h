@@ -181,3 +181,16 @@ protected:
     float m_fScaleStart;
 };
 
+class CCNotifyAnimate : public CCAnimate
+{
+public:
+    virtual bool initWithAnimation(CCAnimation* pAnimation, int iNotifyFrameIndex, CCObject* pSelector, SEL_CallFuncN pCallback);
+    CREATE_INITWITH_FUNC_PARAM(Animation, CCNotifyAnimate, (CCAnimation *pAnimation, int iNotifyFrameIndex, CCObject* pSelector, SEL_CallFuncN pCallback), pAnimation, iNotifyFrameIndex, pSelector, pCallback);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    virtual void update(float t);
+
+protected:
+    int m_iNotifyFrameIndex;
+    CCObject* m_pSelector;
+    SEL_CallFuncN m_pCallback;
+};
