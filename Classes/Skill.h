@@ -1149,3 +1149,19 @@ public:
     int m_iBuffKey;
 };
 
+class CSunderArmorBuff : public CBuffSkill
+{
+public:
+    virtual bool init(float fDuration, bool bCanBePlural, int iSrcKey, int iPercent);
+    M_CREATE_FUNC_PARAM(CSunderArmorBuff, (float fDuration, bool bCanBePlural, int iSrcKey, int iPercent), fDuration, bCanBePlural, iSrcKey, iPercent);
+    virtual CCObject* copyWithZone(CCZone* pZone);
+    M_GET_TYPE_KEY;
+
+protected:
+    virtual void onBuffAdd();
+    virtual void onBuffDel(bool bCover);
+
+protected:
+    int m_iPercent;
+    float m_fChange;
+};

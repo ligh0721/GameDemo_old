@@ -87,9 +87,6 @@
     <ClCompile Include="..\Classes\SomeScene.cpp">
       <Filter>Classes\Display\source</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\testScene.cpp">
-      <Filter>Classes\Display\source</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\MissionInfo.cpp">
       <Filter>Classes\Logic\source</Filter>
     </ClCompile>
@@ -216,9 +213,6 @@
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SomeScene.h">
-      <Filter>Classes\Display\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\testScene.h">
       <Filter>Classes\Display\include</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MissionInfo.h">

@@ -325,6 +325,14 @@ bool COrgSkillInfo::init()
     m_mapSkills[kStaticElec1].sName = "静电";
     m_mapSkills[kStaticElec1].sDesc = "攻击附带的电荷，30%几率可以出发一次闪电链，最多跳跃5次";
 
+    pSkill = CSunderArmorBuff::create(5, true, 0, 50);
+    iKey = pSm->addSkill(pSkill);
+
+    pSkill = CAttackBuffMakerPas::create(100, iKey, 1, CExtraCoeff(1, 0));
+    iKey = pSm->addSkill(pSkill);
+    m_mapSkills[kSunderArmorBuff1].iIndex = iKey;
+    m_mapSkills[kSunderArmorBuff1].sName = "破甲";
+    m_mapSkills[kSunderArmorBuff1].sDesc = "攻击时摧毁对方50%的护甲";
 
     return true;
 }

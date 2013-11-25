@@ -3542,3 +3542,31 @@ bool CRushBuff::checkConditions( CGameUnit* pUnit, CRushBuff* pBuff )
     return true;
 }
 
+bool CSunderArmorBuff::init( float fDuration, bool bCanBePlural, int iSrcKey, int iPercent )
+{
+    m_iPercent = iPercent;
+    return CBuffSkill::init(fDuration, bCanBePlural, iSrcKey);
+}
+
+CCObject* CSunderArmorBuff::copyWithZone( CCZone* pZone )
+{
+    return CSunderArmorBuff::create(m_fDuration, m_bCanBePlural, m_iSrcKey, m_iPercent);
+}
+
+void CSunderArmorBuff::onBuffAdd()
+{
+    CGameUnit* o = getOwner();
+    //o->m_oExtraArmorValue.setMulriple(o->m_oExtraArmorValue.getMulriple() - m_iPercent / 100.0);
+    m_fChange = o->getRealArmorValue() * m_iPercent / 100.0;
+    o->m_oExtraArmorValue.setAddend(o->m_oExtraArmorValue.getAddend() - m_fChange);
+    CGameUnit* s = getSource();
+    s->setHp(s->getHp() + 50);
+}
+
+void CSunderArmorBuff::onBuffDel( bool bCover )
+{
+    CGameUnit* o = getOwner();
+    //o->m_oExtraArmorValue.setMulriple(o->m_oExtraArmorValue.getMulriple() + m_iPercent / 100.0);
+    o->m_oExtraArmorValue.setAddend(o->m_oExtraArmorValue.getAddend() + m_fChange);
+}
+

@@ -159,7 +159,6 @@
     <ClInclude Include="..\Classes\StartScene.h" />
     <ClInclude Include="..\Classes\StringUtil.h" />
     <ClInclude Include="..\Classes\TechTreeScene.h" />
-    <ClInclude Include="..\Classes\testScene.h" />
     <ClInclude Include="..\Classes\Tower.h" />
     <ClInclude Include="..\Classes\Unit.h" />
     <ClInclude Include="..\Classes\UnitEditorScene.h" />
@@ -202,7 +201,6 @@
     <ClCompile Include="..\Classes\StartScene.cpp" />
     <ClCompile Include="..\Classes\StringUtil.cpp" />
     <ClCompile Include="..\Classes\TechTreeScene.cpp" />
-    <ClCompile Include="..\Classes\testScene.cpp" />
     <ClCompile Include="..\Classes\Tower.cpp" />
     <ClCompile Include="..\Classes\Unit.cpp" />
     <ClCompile Include="..\Classes\UnitEditorScene.cpp" />

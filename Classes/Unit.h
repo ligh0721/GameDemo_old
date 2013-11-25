@@ -418,6 +418,10 @@ public:
     //CArmorValue m_oArmorValue;
     M_SYNTHESIZE(CArmorValue::ARMOR_TYPE, m_eArmorType, ArmorType);
     M_SYNTHESIZE(float, m_fBaseArmorValue, BaseArmorValue);
+
+    virtual float getRealArmorValue() const;
+    virtual void setExArmorValue(const CExtraCoeff& roExArmorValue);
+    virtual CExtraCoeff getExArmorValue() const;
     
     //CExtraValue m_aoExtraArmorValue[M_MAX_ARMOR_TYPE_COUNT];
     CExtraCoeff m_oExtraArmorValue;
